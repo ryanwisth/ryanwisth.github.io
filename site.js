@@ -40,10 +40,10 @@
       setTimeout(function () { t.classList.remove('reveal'); t.style.removeProperty('--d'); }, 1300);
     });
   }, { rootMargin: '0px 0px -7% 0px', threshold: 0.06 });
-  d.querySelectorAll('.section-head, .card, .principle, .band, .figure, .repo-card, .pager, .reel-item').forEach(function (el) {
+  d.querySelectorAll('.section-head, .group-h, .card, .principle, .band, .figure, .film, .repo-card, .pager').forEach(function (el) {
     el.classList.add('reveal');
-    if (el.matches('.card, .principle, .reel-item')) {
-      el.style.setProperty('--d', ([].indexOf.call(el.parentNode.children, el) % (el.matches('.reel-item') ? 4 : 3)) * 90 + 'ms');
+    if (el.matches('.card, .principle')) {
+      el.style.setProperty('--d', ([].indexOf.call(el.parentNode.children, el) % 4) * 80 + 'ms');
     }
     io.observe(el);
   });

@@ -33,13 +33,29 @@
     <a class="back" href="index.html#work">&larr; All case studies</a>
     <p class="kicker">A method the product enforces</p>
     <h1 style="view-transition-name: t-streaks-trainer">A practice app where one miss resets the streak</h1>
-    <p class="lede">A small local web app for streak-based mastery practice on any multiple-choice subject: one topic at a time, easy to hard, where a single miss resets the streak.</p>
+  </div>
 
-  <div class="facts">
-      <div class="fact"><b>10 &middot; 10 &middot; 5</b><span>default streak targets for the easy, medium and hard rungs</span></div>
-      <div class="fact"><b>1 miss</b><span>or one right answer marked as a guess, sends the count back to zero</span></div>
-      <div class="fact"><b>66</b><span>original demo questions, every key checked by code</span></div>
+  <section class="sum" aria-label="Summary">
+    <div class="sum-top">
+      <figure class="figure sum-vis">
+        <div class="shot"><div class="bar"><i></i><i></i><i></i><em>127.0.0.1, a ladder from start to first break, recorded</em></div><video data-auto controls muted loop playsinline preload="none" poster="img/streaks-video.jpg" width="960" height="640" aria-label="A practice session: a ladder is created, two right answers build a streak, a miss resets it to zero and a note has to be written before the next question"><source src="video/streaks-trainer.mp4" type="video/mp4"></video></div>
+    <figcaption>One session on the demo bank: a ladder with custom targets, two right answers, a miss that resets the streak, and the note the app requires before the next question. The circle is the recording script's pointer.</figcaption>
+      </figure>
+      <div class="facts">
+        <div class="fact"><b>10 &middot; 10 &middot; 5</b><span>streak targets: easy, medium, hard</span></div>
+        <div class="fact"><b>1 miss</b><span>or a guess, sends the count back to zero</span></div>
+        <div class="fact"><b>66</b><span>demo questions, every key checked by code</span></div>
+      </div>
     </div>
+    <ol class="method" aria-label="What was set, who wrote it, how it was checked">
+      <li><p class="who">I set</p><ul class="ticks"><li>The server owns the rules</li><li>A guess is not mastery</li><li>No repeats</li></ul></li>
+      <li class="ag"><p class="who">Agents wrote</p><p>most of the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
+      <li><p class="who">I checked</p><ul class="ticks ok"><li>Core loop exercised end to end through the JSON API</li><li>Every demo key checked by code</li><li>Verified by using the app</li><li class="no">Limit: No automated tests</li></ul></li>
+    </ol>
+  </section>
+
+  <div class="prose">
+    <p class="lede">A small local web app for streak-based mastery practice on any multiple-choice subject: one topic at a time, easy to hard, where a single miss resets the streak.</p>
   </div>
 
   <figure class="figure">
@@ -60,11 +76,6 @@
   <figure class="figure">
     <div class="shot"><div class="bar"><i></i><i></i><i></i><em>127.0.0.1, after a miss</em></div><img src="img/streaks-break-note.jpg" alt="The screen after a miss: The streak broke, a prompt asking what broke it and what to do differently, a kind-of-break menu, a text box and a Save and continue button." width="1600" height="872" loading="lazy"></div>
     <figcaption>After a miss on the demo bank. The server will not serve the next question until the break has a written note.</figcaption>
-  </figure>
-
-  <figure class="figure">
-    <div class="shot"><div class="bar"><i></i><i></i><i></i><em>127.0.0.1, a ladder from start to first break, recorded</em></div><video data-auto controls muted loop playsinline preload="none" poster="img/streaks-video.jpg" width="960" height="640" aria-label="A practice session: a ladder is created, two right answers build a streak, a miss resets it to zero and a note has to be written before the next question"><source src="video/streaks-trainer.mp4" type="video/mp4"></video></div>
-    <figcaption>One session on the demo bank: a ladder with custom targets, two right answers, a miss that resets the streak, and the note the app requires before the next question. The circle is the recording script's pointer.</figcaption>
   </figure>
 
   <div class="prose">

@@ -33,13 +33,41 @@
     <a class="back" href="index.html#work">&larr; All case studies</a>
     <p class="kicker">Many parts made to work on one machine</p>
     <h1 style="view-transition-name: t-local-ai-stack">A private AI assistant on one laptop</h1>
-    <p class="lede">A documented reference setup for running a private AI assistant entirely on one Apple-silicon Mac: a local 27B language model, a chat UI, about two dozen tools, voice, document parsing and web search, kept running by a small supervisor.</p>
+  </div>
 
-  <div class="facts">
-      <div class="fact"><b>13.7 &rarr; 37.5</b><span>tokens per second: plain decoding against the top of the measured range with multi-token prediction</span></div>
-      <div class="fact"><b>26</b><span>tool servers mounted in the running setup, reached through one bridge that requires a key</span></div>
-      <div class="fact"><b>60 s</b><span>between supervisor runs; the launcher starts only what is down</span></div>
+  <section class="sum" aria-label="Summary">
+    <div class="sum-top">
+      <figure class="figure sum-vis">
+        <div class="chart-card">
+      <h3>Decoding speed by prediction depth</h3>
+      <p class="sub">Tokens per second on 1,200-token generations of the same prompt, plotted from the repository's result file <code>eval/results/mtp_depth_ab.json</code>. Depth 0 is plain decoding; each step up drafts one more token per pass.</p>
+      <svg class="linechart" viewBox="0 0 640 300" role="img" aria-label="Line chart. Depth 0: 13.7 tokens per second. Depth 1: 22.9. Depth 2: 28.4. Depth 3: 32.5.">
+        <line class="grid" x1="50" y1="250" x2="620" y2="250"/><line class="grid" x1="50" y1="190" x2="620" y2="190"/><line class="grid" x1="50" y1="130" x2="620" y2="130"/><line class="grid" x1="50" y1="70" x2="620" y2="70"/>
+        <text class="axis" x="42" y="254" text-anchor="end">0</text><text class="axis" x="42" y="194" text-anchor="end">10</text><text class="axis" x="42" y="134" text-anchor="end">20</text><text class="axis" x="42" y="74" text-anchor="end">30</text>
+        <path class="area" d="M90,250 L90,168 L250,112.4 L410,79.4 L570,54.8 L570,250 Z"/>
+        <path class="ln1" pathLength="1" d="M90,168 L250,112.4 L410,79.4 L570,54.8"/>
+        <circle class="pt" style="--k:0" cx="90" cy="168" r="6"/><circle class="pt" style="--k:1" cx="250" cy="112.4" r="6"/><circle class="pt" style="--k:2" cx="410" cy="79.4" r="6"/><circle class="pt" style="--k:3" cx="570" cy="54.8" r="6"/>
+        <text class="val" style="--k:0" x="90" y="148" text-anchor="middle">13.7</text><text class="val" style="--k:1" x="250" y="92" text-anchor="middle">22.9</text><text class="val" style="--k:2" x="410" y="59" text-anchor="middle">28.4</text><text class="val" style="--k:3" x="570" y="35" text-anchor="middle">32.5</text>
+        <text class="axis" x="90" y="276" text-anchor="middle">depth 0</text><text class="axis" x="250" y="276" text-anchor="middle">depth 1</text><text class="axis" x="410" y="276" text-anchor="middle">depth 2</text><text class="axis" x="570" y="276" text-anchor="middle">depth 3</text>
+      </svg>
     </div>
+    <figcaption>First run at each depth in the file; its repeat runs at depth 0 and depth 3 read 13.6 and 32.1.</figcaption>
+      </figure>
+      <div class="facts">
+        <div class="fact"><b>13.7 &rarr; 37.5</b><span>tokens per second, plain against multi-token prediction</span></div>
+        <div class="fact"><b>26</b><span>tool servers behind one bridge that requires a key</span></div>
+        <div class="fact"><b>60 s</b><span>between supervisor runs</span></div>
+      </div>
+    </div>
+    <ol class="method" aria-label="What was set, who wrote it, how it was checked">
+      <li><p class="who">I set</p><ul class="ticks"><li>Loopback only</li><li>A supervisor, because shells die</li><li>Narrow what the tools can touch</li></ul></li>
+      <li class="ag"><p class="who">Agents wrote</p><p>most of the scripts and glue code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
+      <li><p class="who">I checked</p><ul class="ticks ok"><li>Speed measured on the machine</li><li>Idle against real use: 37.5 and a median of 23.4</li><li>Bindings checked by listing open sockets</li><li class="no">Limit: Not tested on any other machine</li></ul></li>
+    </ol>
+  </section>
+
+  <div class="prose">
+    <p class="lede">A documented reference setup for running a private AI assistant entirely on one Apple-silicon Mac: a local 27B language model, a chat UI, about two dozen tools, voice, document parsing and web search, kept running by a small supervisor.</p>
   </div>
 
   <figure class="figure">
@@ -72,23 +100,6 @@
       </div>
     </div>
     </div>
-  </figure>
-
-  <figure class="figure">
-    <div class="chart-card">
-      <h3>Decoding speed by prediction depth</h3>
-      <p class="sub">Tokens per second on 1,200-token generations of the same prompt, plotted from the repository's result file <code>eval/results/mtp_depth_ab.json</code>. Depth 0 is plain decoding; each step up drafts one more token per pass.</p>
-      <svg class="linechart" viewBox="0 0 640 300" role="img" aria-label="Line chart. Depth 0: 13.7 tokens per second. Depth 1: 22.9. Depth 2: 28.4. Depth 3: 32.5.">
-        <line class="grid" x1="50" y1="250" x2="620" y2="250"/><line class="grid" x1="50" y1="190" x2="620" y2="190"/><line class="grid" x1="50" y1="130" x2="620" y2="130"/><line class="grid" x1="50" y1="70" x2="620" y2="70"/>
-        <text class="axis" x="42" y="254" text-anchor="end">0</text><text class="axis" x="42" y="194" text-anchor="end">10</text><text class="axis" x="42" y="134" text-anchor="end">20</text><text class="axis" x="42" y="74" text-anchor="end">30</text>
-        <path class="area" d="M90,250 L90,168 L250,112.4 L410,79.4 L570,54.8 L570,250 Z"/>
-        <path class="ln1" pathLength="1" d="M90,168 L250,112.4 L410,79.4 L570,54.8"/>
-        <circle class="pt" style="--k:0" cx="90" cy="168" r="6"/><circle class="pt" style="--k:1" cx="250" cy="112.4" r="6"/><circle class="pt" style="--k:2" cx="410" cy="79.4" r="6"/><circle class="pt" style="--k:3" cx="570" cy="54.8" r="6"/>
-        <text class="val" style="--k:0" x="90" y="148" text-anchor="middle">13.7</text><text class="val" style="--k:1" x="250" y="92" text-anchor="middle">22.9</text><text class="val" style="--k:2" x="410" y="59" text-anchor="middle">28.4</text><text class="val" style="--k:3" x="570" y="35" text-anchor="middle">32.5</text>
-        <text class="axis" x="90" y="276" text-anchor="middle">depth 0</text><text class="axis" x="250" y="276" text-anchor="middle">depth 1</text><text class="axis" x="410" y="276" text-anchor="middle">depth 2</text><text class="axis" x="570" y="276" text-anchor="middle">depth 3</text>
-      </svg>
-    </div>
-    <figcaption>First run at each depth in the file; its repeat runs at depth 0 and depth 3 read 13.6 and 32.1.</figcaption>
   </figure>
 
   <div class="prose">

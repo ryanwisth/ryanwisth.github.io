@@ -33,13 +33,29 @@
     <a class="back" href="index.html#work">&larr; All case studies</a>
     <p class="kicker">A small product shipped end to end</p>
     <h1 style="view-transition-name: t-safari-dark-mode">A Safari dark mode with fitted themes</h1>
-    <p class="lede">A Safari extension for macOS that turns light websites dark in six colour themes and leaves sites that are already dark alone. Photos keep their real colours.</p>
+  </div>
 
-  <div class="facts">
-      <div class="fact"><b>6</b><span>themes, each fitted numerically to a target background and text colour</span></div>
-      <div class="fact"><b>&le; 0.9</b><span>colour error (&Delta;E in OKLab) for every theme's background and text</span></div>
-      <div class="fact"><b>1</b><span>permission: storage only, no network access</span></div>
+  <section class="sum" aria-label="Summary">
+    <div class="sum-top">
+      <figure class="figure sum-vis">
+        <div class="shot"><div class="bar"><i></i><i></i><i></i><em>tools/testpage.html, off then six themes</em></div><video data-auto controls muted loop playsinline preload="none" poster="img/safari-themes-video.jpg" width="960" height="600" aria-label="The test page switching from its original light look through the Dark, Black, Dim, Sepia, Nord and Dracula themes"><source src="video/safari-themes.mp4" type="video/mp4"></video></div>
+    <figcaption>The test page with the extension off, then in each of the six themes. Every frame is a render from the repository's WebKit harness; the cross-fades between them were added for the video.</figcaption>
+      </figure>
+      <div class="facts">
+        <div class="fact"><b>6</b><span>themes, each fitted numerically</span></div>
+        <div class="fact"><b>&le; 0.9</b><span>colour error (&Delta;E in OKLab), every theme</span></div>
+        <div class="fact"><b>1</b><span>permission: storage only</span></div>
+      </div>
     </div>
+    <ol class="method" aria-label="What was set, who wrote it, how it was checked">
+      <li><p class="who">I set</p><ul class="ticks"><li>One filter, not a stylesheet rewriter</li><li>Themes are fitted, not hand-tuned</li><li>Keep photos true</li></ul></li>
+      <li class="ag"><p class="who">The agent wrote</p><p>the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
+      <li><p class="who">I checked</p><ul class="ticks ok"><li>Rendered in WebKit with the extension injected</li><li>Version 1.0.0 builds, signs and registers</li><li class="no">Limit: Not yet confirmed in real Safari</li></ul></li>
+    </ol>
+  </section>
+
+  <div class="prose">
+    <p class="lede">A Safari extension for macOS that turns light websites dark in six colour themes and leaves sites that are already dark alone. Photos keep their real colours.</p>
   </div>
 
   <figure class="figure">
@@ -65,11 +81,6 @@
         <div class="shot"><div class="bar"><i></i><i></i><i></i><em>the popup, light and dark</em></div><img src="img/safari-popup.jpg" alt="The extension popup in light and dark appearance" width="800" height="608" loading="lazy"></div>
       </div>
     </div>
-  </figure>
-
-  <figure class="figure">
-    <div class="shot"><div class="bar"><i></i><i></i><i></i><em>tools/testpage.html, off then six themes</em></div><video data-auto controls muted loop playsinline preload="none" poster="img/safari-themes-video.jpg" width="960" height="600" aria-label="The test page switching from its original light look through the Dark, Black, Dim, Sepia, Nord and Dracula themes"><source src="video/safari-themes.mp4" type="video/mp4"></video></div>
-    <figcaption>The test page with the extension off, then in each of the six themes. Every frame is a render from the repository's WebKit harness; the cross-fades between them were added for the video.</figcaption>
   </figure>
 
   <div class="prose">

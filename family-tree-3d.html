@@ -33,19 +33,31 @@
     <a class="back" href="index.html#work">&larr; All case studies</a>
     <p class="kicker">A visual product from messy data</p>
     <h1 style="view-transition-name: t-family-tree-3d">A 3D family tree in one offline file</h1>
-    <p class="lede">A build pipeline that turns a genealogy export into a single web page you open from disk: a 3D family tree, a migration map, lineage and statistics views, with no server and no connection.</p>
-
-  <div class="facts">
-      <div class="fact"><b>1 file</b><span>holds the whole product and opens with no server and no network</span></div>
-      <div class="fact"><b>0</b><span>third-party code libraries behind the 3D view</span></div>
-      <div class="fact"><b>420</b><span>invented people in the public demo; no real family data ships</span></div>
-    </div>
   </div>
 
-  <figure class="figure">
-    <div class="shot demo"><div class="bar"><i></i><i></i><i></i><em>family-tree-3d.html</em></div><a class="demo-poster" href="demo/family-tree-3d.html"><img src="img/family-tree-3d.jpg" alt="The 3D family tree viewer: a vertical trunk of ancestors with branches coloured by birthplace, a search panel and a timeline" width="1600" height="1000"><span class="play"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 2.5v11l9.5-5.5z"/></svg>Explore the live demo</span></a></div>
+  <section class="sum" aria-label="Summary">
+    <div class="sum-top">
+      <figure class="figure sum-vis">
+        <div class="shot demo"><div class="bar"><i></i><i></i><i></i><em>family-tree-3d.html</em></div><a class="demo-poster" href="demo/family-tree-3d.html"><img src="img/family-tree-3d.jpg" alt="The 3D family tree viewer: a vertical trunk of ancestors with branches coloured by birthplace, a search panel and a timeline" width="1600" height="1000"><span class="play"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 2.5v11l9.5-5.5z"/></svg>Explore the live demo</span></a></div>
     <figcaption>The public demo itself: 420 invented people, up is time, colour is where they were born. Click to load the real page here (about 1 MB), or <a href="demo/family-tree-3d.html">open it full screen</a>.</figcaption>
-  </figure>
+      </figure>
+      <div class="facts">
+        <div class="fact"><b>1 file</b><span>holds the whole product: no server, no network</span></div>
+        <div class="fact"><b>0</b><span>third-party libraries behind the 3D view</span></div>
+        <div class="fact"><b>420</b><span>invented people in the demo; no real family data</span></div>
+      </div>
+    </div>
+    <ol class="method" aria-label="What was set, who wrote it, how it was checked">
+      <li><p class="who">I set</p><ul class="ticks"><li>One file, opened from disk</li><li>A layout that stays readable at size</li><li>Safe to share</li></ul></li>
+      <li class="ag"><p class="who">Agents wrote</p><p>most of the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
+      <li><p class="who">I checked</p><ul class="ticks ok"><li>The build refuses mismatched data</li><li>Two builds: a byte-identical data file</li><li>Payload check: 0 failed</li><li class="no">Limit: No automated test suite</li></ul></li>
+    </ol>
+  </section>
+
+  <div class="prose">
+    <p class="lede">A build pipeline that turns a genealogy export into a single web page you open from disk: a 3D family tree, a migration map, lineage and statistics views, with no server and no connection.</p>
+  </div>
+
   <figure class="figure">
     <ol class="flow c3">
       <li><b>GEDCOM file</b><span>the genealogy export</span></li>

@@ -33,13 +33,36 @@
     <a class="back" href="index.html#work">&larr; All case studies</a>
     <p class="kicker">Research that has to cite its records</p>
     <h1 style="view-transition-name: t-evidence-pipeline">A family tree grown only from records</h1>
-    <p class="lede">A research pipeline where AI agents propose additions to a family tree, free Python checks what code can check, a second model tries to refute each claim, and accepted facts go into an append-only ledger with the quote they rest on.</p>
+  </div>
 
-  <div class="facts">
-      <div class="fact"><b>31</b><span>claims from a fast first pass rejected by the skeptic agents, on the private tree</span></div>
-      <div class="fact"><b>3 of 147</b><span>claims from a careful pass still rejected</span></div>
-      <div class="fact"><b>12 of 16</b><span>claims kept by the free code gate in the offline demo; 4 dropped</span></div>
+  <section class="sum" aria-label="Summary">
+    <div class="sum-top">
+      <figure class="figure sum-vis">
+        <div class="chart-card">
+      <h3>The free gate in the offline demo</h3>
+      <p class="sub">Claims in the demo journal, sorted by code before any skeptic review. Dropped: a child already in the tree, its parent link, a living person, and a fact citing only an online tree.</p>
+      <div class="bars" role="img" aria-label="Bar chart. 16 claims in the demo journal: 12 kept by the gate, 4 dropped.">
+        <div class="row" title="In the journal: 16"><span class="lab">In the journal</span><span class="track"><i class="" style="--v:90%"></i></span><span class="val">16</span></div>
+        <div class="row" title="Kept by the gate: 12"><span class="lab">Kept by the gate</span><span class="track"><i class="" style="--v:67.5%"></i></span><span class="val">12</span></div>
+        <div class="row" title="Dropped: 4"><span class="lab">Dropped</span><span class="track"><i class="" style="--v:22.5%"></i></span><span class="val">4</span></div>
+      </div>
     </div>
+      </figure>
+      <div class="facts">
+        <div class="fact"><b>31</b><span>fast-pass claims rejected by the skeptic agents</span></div>
+        <div class="fact"><b>3 of 147</b><span>careful-pass claims still rejected</span></div>
+        <div class="fact"><b>12 of 16</b><span>claims kept by the free code gate in the demo</span></div>
+      </div>
+    </div>
+    <ol class="method" aria-label="What was set, who wrote it, how it was checked">
+      <li><p class="who">I set</p><ul class="ticks"><li>Agents propose; code checks</li><li>A second model tries to refute</li><li>Nothing is deleted</li></ul></li>
+      <li class="ag"><p class="who">Agents wrote</p><p>most of the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
+      <li><p class="who">I checked</p><ul class="ticks ok"><li>Runs end to end offline with one command</li><li>Merge 423 to 420: 0 lost a fact</li><li>Every base line survives</li><li class="no">Limit: Agent scripts not re-run after the scrub</li></ul></li>
+    </ol>
+  </section>
+
+  <div class="prose">
+    <p class="lede">A research pipeline where AI agents propose additions to a family tree, free Python checks what code can check, a second model tries to refute each claim, and accepted facts go into an append-only ledger with the quote they rest on.</p>
   </div>
 
   <figure class="figure">
@@ -56,18 +79,6 @@
     </ol>
     <figcaption>The whole pipeline, simplified from the README diagram. After step 9 the next round starts again at step 4.</figcaption>
   </figure>
-  <figure class="figure">
-    <div class="chart-card">
-      <h3>The free gate in the offline demo</h3>
-      <p class="sub">Claims in the demo journal, sorted by code before any skeptic review. Dropped: a child already in the tree, its parent link, a living person, and a fact citing only an online tree.</p>
-      <div class="bars" role="img" aria-label="Bar chart. 16 claims in the demo journal: 12 kept by the gate, 4 dropped.">
-        <div class="row" title="In the journal: 16"><span class="lab">In the journal</span><span class="track"><i class="" style="--v:90%"></i></span><span class="val">16</span></div>
-        <div class="row" title="Kept by the gate: 12"><span class="lab">Kept by the gate</span><span class="track"><i class="" style="--v:67.5%"></i></span><span class="val">12</span></div>
-        <div class="row" title="Dropped: 4"><span class="lab">Dropped</span><span class="track"><i class="" style="--v:22.5%"></i></span><span class="val">4</span></div>
-      </div>
-    </div>
-  </figure>
-
   <figure class="figure">
     <div class="term soft"><div class="bar"><i></i><i></i><i></i><em>run_demo.sh</em></div><pre tabindex="0" role="img" aria-label="Terminal output: run_demo.sh"><span class="ln cmd">./run_demo.sh</span><span class="ln dim">demo inputs in …/work/in: 3 duplicate records injected, 16 claims in the journal, 3 saved pages, 1 fixture verdict lane</span><span class="ln dim">…</span><span class="ln hl">== 4. cleanup: prove nothing was dropped</span><span class="ln">  checked 3 merged individuals — 0 lost a fact</span><span class="ln ok">PASSED — every individual accounted for, every fact preserved,</span><span class="ln ok">         no dangling pointers, valid UTF-8, longest line 71 chars.</span><span class="ln dim">…</span><span class="ln hl">== 6. research: gate the finder journal (offline, saved pages only)</span><span class="ln">| lane-a | 5 | 4 | 0 | 3 | 12 | 4 | not-fetched 1, quote-found 2, quote-missing 1 |</span><span class="ln">lanes 1  fetches left 0  (offline: saved pages only)</span><span class="ln"></span><span class="ln hl">== 7. research: fold the (fixture) skeptic verdicts into the ledger</span><span class="ln">lane-a: 4 people, 2 families, 2 facts, 1 notes, 2 sources</span><span class="ln">total new: 4 people, 2 families, 2 facts, 1 notes, 2 sources</span><span class="ln"></span><span class="ln hl">== 8. research: write the ledger into a new GEDCOM (append-only)</span><span class="ln">wrote …/work/research/tree-research.ged: +4 people, +2 families, +2 sources, 20 lines added to 3 existing records</span><span class="ln dim">…</span><span class="ln">ancestors 24  dead ends 13  targets 16 in 7 agents  overflow 4  excluded 0</span></pre></div>
     <figcaption>The offline demo on the invented family, shortened where marked: 12 claims kept and 4 dropped by the gate, then the ledger written back append-only. The skeptic step uses the repository's saved fixture, not a live model.</figcaption>

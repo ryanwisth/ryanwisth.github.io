@@ -33,13 +33,35 @@
     <a class="back" href="index.html#work">&larr; All case studies</a>
     <p class="kicker">A process failure turned into rules</p>
     <h1 style="view-transition-name: t-claim-ledger">Turning a slipping process into enforced rules</h1>
-    <p class="lede">A tool for fact-checking a long AI-written report one claim at a time, riskiest first, with an add-only log of every verdict. It was built by running the method by hand first, measuring where it slipped, and then making those slips impossible.</p>
+  </div>
 
-  <div class="facts">
-      <div class="fact"><b>517</b><span>claims checked in 29 batches in the first report</span></div>
-      <div class="fact"><b>0 of 28</b><span>late corrections still had a "best case" when the rules lived only in the chat</span></div>
-      <div class="fact"><b>27% &rarr; 7%</b><span>problem rate in the first 9 batches against the last 20</span></div>
+  <section class="sum" aria-label="Summary">
+    <div class="sum-top">
+      <figure class="figure sum-vis">
+        <div class="chart-card">
+      <h3>Problems found per first check</h3>
+      <p class="sub">The first ledger, 29 batches. The later batches were 73% of the work.</p>
+      <div class="bars" role="img" aria-label="Bar chart. Batches 1 to 9 found problems in 27% of first checks, batches 10 to 29 in 7%.">
+        <div class="row" title="Batches 1 to 9: 27%"><span class="lab">Batches 1 to 9</span><span class="track"><i class="" style="--v:90%"></i></span><span class="val">27%</span></div>
+        <div class="row" title="Batches 10 to 29: 7%"><span class="lab">Batches 10 to 29<small>73% of the work</small></span><span class="track"><i class="" style="--v:23.3%"></i></span><span class="val">7%</span></div>
+      </div>
     </div>
+      </figure>
+      <div class="facts">
+        <div class="fact"><b>517</b><span>claims checked in 29 batches</span></div>
+        <div class="fact"><b>0 of 28</b><span>late corrections had a &ldquo;best case&rdquo; under chat-only rules</span></div>
+        <div class="fact"><b>27% &rarr; 7%</b><span>problem rate, first 9 batches against the last 20</span></div>
+      </div>
+    </div>
+    <ol class="method" aria-label="What was set, who wrote it, how it was checked">
+      <li><p class="who">I set</p><ul class="ticks"><li>Template in code, not in the conversation</li><li>Riskiest first</li><li>Make self-confirmation visible</li></ul></li>
+      <li class="ag"><p class="who">Agents wrote</p><p>most of the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
+      <li><p class="who">I checked</p><ul class="ticks ok"><li>546 records replayed: the hand-made audit reproduced</li><li>27 end-to-end checks pass</li><li class="no">Limit: Used on one full report so far</li></ul></li>
+    </ol>
+  </section>
+
+  <div class="prose">
+    <p class="lede">A tool for fact-checking a long AI-written report one claim at a time, riskiest first, with an add-only log of every verdict. It was built by running the method by hand first, measuring where it slipped, and then making those slips impossible.</p>
   </div>
 
   <figure class="figure">
@@ -53,17 +75,6 @@
     </ol>
     <figcaption>One round of the ledger, simplified from the README diagram. The log feeds the next queue.</figcaption>
   </figure>
-  <figure class="figure">
-    <div class="chart-card">
-      <h3>Problems found per first check</h3>
-      <p class="sub">The first ledger, 29 batches. The later batches were 73% of the work.</p>
-      <div class="bars" role="img" aria-label="Bar chart. Batches 1 to 9 found problems in 27% of first checks, batches 10 to 29 in 7%.">
-        <div class="row" title="Batches 1 to 9: 27%"><span class="lab">Batches 1 to 9</span><span class="track"><i class="" style="--v:90%"></i></span><span class="val">27%</span></div>
-        <div class="row" title="Batches 10 to 29: 7%"><span class="lab">Batches 10 to 29<small>73% of the work</small></span><span class="track"><i class="" style="--v:23.3%"></i></span><span class="val">7%</span></div>
-      </div>
-    </div>
-  </figure>
-
   <figure class="figure">
     <div class="term soft"><div class="bar"><i></i><i></i><i></i><em>skill/selftest.py</em></div><pre tabindex="0" role="img" aria-label="Terminal output: skill/selftest.py"><span class="ln cmd">python3 -I skill/selftest.py</span><span class="ln ok">PASS: markers sit on the 9 points, not on the 1-word parent 'Staffing:'</span><span class="ln ok">PASS: the original report is backed up before marking</span><span class="ln ok">PASS: queue puts the important ESTIMATE (2-002, P9) first</span><span class="ln ok">PASS: record rejects empty wrong_if, empty best_case on CORRECTED, evidence without a quote</span><span class="ln ok">PASS: record rejects CORRECTED on a point whose text did not change</span><span class="ln ok">PASS: a rejected batch writes nothing to the log</span><span class="ln ok">PASS: record rejects a 15-word quote</span><span class="ln ok">PASS: the edit script rejects an added number that check() does not re-derive</span><span class="ln ok">PASS: a checked point edited outside the ledger comes back as CHANGED</span><span class="ln ok">PASS: the stop rule empties the queue once the rate falls below it</span><span class="ln dim">… 17 more PASS lines</span><span class="ln hl">ALL PASS (…/claim-ledger-test-v5nhmpb6)</span></pre></div>
     <figcaption>The tool's self-test on a throwaway sample report: 10 of its 27 checks shown, each one a rule the tool refuses to bend.</figcaption>

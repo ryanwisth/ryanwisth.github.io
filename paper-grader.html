@@ -33,13 +33,29 @@
     <a class="back" href="index.html#work">&larr; All case studies</a>
     <p class="kicker">AI inside a physical device</p>
     <h1 style="view-transition-name: t-paper-grader">AI feedback written in ink on an e-ink tablet</h1>
-    <p class="lede">Press a Grade button on a reMarkable Paper Pro, and an AI model reviews the handwritten work on that page. It writes its feedback back onto the page as real pen strokes, in a separate layer the user can delete.</p>
+  </div>
 
-  <div class="facts">
-      <div class="fact"><b>0</b><span>erase or delete commands in the tablet bridge, by design</span></div>
-      <div class="fact"><b>2 tiers</b><span>a cheaper model clears clean pages; anything doubtful goes to the full model</span></div>
-      <div class="fact"><b>24 pages</b><span>graded in one batch on the device</span></div>
+  <section class="sum" aria-label="Summary">
+    <div class="sum-top">
+      <figure class="figure sum-vis">
+        <div class="paper"><img src="img/ink-feedback.svg" alt="Two lines of handwriting-style text, one blue and one red, drawn stroke by stroke" width="742" height="219" loading="lazy"></div>
+    <figcaption>Two invented feedback lines run through the project's handwriting module (<code>ems.py</code>, with its pen-width pass), in the tablet's blue and red. These are the strokes the tablet is sent, drawn here as a picture; this is not a capture from the device.</figcaption>
+      </figure>
+      <div class="facts">
+        <div class="fact"><b>0</b><span>erase or delete commands in the tablet bridge</span></div>
+        <div class="fact"><b>2 tiers</b><span>a cheaper model first; doubtful pages go to the full model</span></div>
+        <div class="fact"><b>24 pages</b><span>graded in one batch on the device</span></div>
+      </div>
     </div>
+    <ol class="method" aria-label="What was set, who wrote it, how it was checked">
+      <li><p class="who">I set</p><ul class="ticks"><li>Never touch the student&rsquo;s ink</li><li>Button-triggered only</li><li>Describe what the ink shows, not why</li></ul></li>
+      <li class="ag"><p class="who">Agents wrote</p><p>most of the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
+      <li><p class="who">I checked</p><ul class="ticks ok"><li>Every equation evaluated in code before it is inked</li><li>Full loop used on the device, 24-page batches</li><li class="no">Limit: Paused; one device, one firmware</li></ul></li>
+    </ol>
+  </section>
+
+  <div class="prose">
+    <p class="lede">Press a Grade button on a reMarkable Paper Pro, and an AI model reviews the handwritten work on that page. It writes its feedback back onto the page as real pen strokes, in a separate layer the user can delete.</p>
   </div>
 
   <figure class="figure">
@@ -52,11 +68,6 @@
       <li><b>Ink on the feedback layer</b><span>handwriting strokes on the same page</span></li>
     </ol>
     <figcaption>From button press to ink, simplified from the README diagram.</figcaption>
-  </figure>
-
-  <figure class="figure">
-    <div class="paper"><img src="img/ink-feedback.svg" alt="Two lines of handwriting-style text, one blue and one red, drawn stroke by stroke" width="742" height="219" loading="lazy"></div>
-    <figcaption>Two invented feedback lines run through the project's handwriting module (<code>ems.py</code>, with its pen-width pass), in the tablet's blue and red. These are the strokes the tablet is sent, drawn here as a picture; this is not a capture from the device.</figcaption>
   </figure>
 
   <div class="prose">

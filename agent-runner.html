@@ -33,13 +33,29 @@
     <a class="back" href="index.html#work">&larr; All case studies</a>
     <p class="kicker">Guardrails for unattended AI work</p>
     <h1 style="view-transition-name: t-agent-runner">Long agent jobs with the bill checked first</h1>
-    <p class="lede">A small command-line runner that sends a written brief to Claude through the Claude Agent SDK, with explicit auth, budget and turn guards, and loops fresh passes until the brief's done file appears.</p>
+  </div>
 
-  <div class="facts">
-      <div class="fact"><b>2</b><span>billing paths, an API key or a subscription login; the run aborts before any work if the session reports the wrong one</span></div>
-      <div class="fact"><b>$20</b><span>default budget per pass, passed to the SDK's built-in dollar budget</span></div>
-      <div class="fact"><b>0</b><span>retries: the loop stops on the first capped or failed pass and says why</span></div>
+  <section class="sum" aria-label="Summary">
+    <div class="sum-top">
+      <figure class="figure sum-vis">
+        <div class="term soft"><div class="bar"><i></i><i></i><i></i><em>run_brief.py --help</em></div><pre tabindex="0" role="img" aria-label="Terminal output: run_brief.py --help"><span class="ln cmd">python run_brief.py --help</span><span class="ln">usage: run_brief.py [-h] --model MODEL [--cwd CWD] [--budget-usd BUDGET_USD]</span><span class="ln">                    [--max-turns MAX_TURNS] [--resume SESSION_ID] [--say SAY]</span><span class="ln dim">                    …</span><span class="ln">                    [--auth {console,max}]</span><span class="ln">                    [--effort {low,medium,high,xhigh,max}]</span><span class="ln">                    [brief]</span><span class="ln"></span><span class="ln">Send a Markdown brief through the Claude Agent SDK, on a Console API key or a Claude subscription login.</span><span class="ln"></span><span class="ln">--auth console (default): needs ANTHROPIC_API_KEY in the environment (never printed or saved).</span><span class="ln hl">--auth max: drops any ANTHROPIC_API_KEY and runs on the CLI's claude.ai login (subscription</span><span class="ln hl">usage, no key, no Console balance); aborts before any work if the init reports an API key source.</span><span class="ln"></span><span class="ln">options:</span><span class="ln">  --model MODEL         model id or alias, no default</span><span class="ln">  --cwd CWD             folder the agent works in (default: current folder)</span><span class="ln">  --budget-usd BUDGET_USD</span><span class="ln">  --max-turns MAX_TURNS</span><span class="ln">                        SDK max_turns cap per pass (default: no cap)</span><span class="ln dim">  …</span></pre></div>
+    <figcaption>The runner's own help text, shortened where marked. No agent pass is shown here: a real one spends account usage.</figcaption>
+      </figure>
+      <div class="facts">
+        <div class="fact"><b>2</b><span>billing paths; the wrong one aborts before any work</span></div>
+        <div class="fact"><b>$20</b><span>default budget per pass</span></div>
+        <div class="fact"><b>0</b><span>retries: the loop stops on the first failed pass</span></div>
+      </div>
     </div>
+    <ol class="method" aria-label="What was set, who wrote it, how it was checked">
+      <li><p class="who">I set</p><ul class="ticks"><li>Who pays is checked, not assumed</li><li>Use the built-in budget</li><li>Stop on the first failure</li></ul></li>
+      <li class="ag"><p class="who">An agent wrote</p><p>the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
+      <li><p class="who">I checked</p><ul class="ticks ok"><li>Key-source string found by a live test</li><li>Auth guard, fresh run and resume tested first</li><li class="no">Limit: No automated tests</li></ul></li>
+    </ol>
+  </section>
+
+  <div class="prose">
+    <p class="lede">A small command-line runner that sends a written brief to Claude through the Claude Agent SDK, with explicit auth, budget and turn guards, and loops fresh passes until the brief's done file appears.</p>
   </div>
 
   <figure class="figure">
@@ -52,11 +68,6 @@
       <li class="key"><b>Clean end, or stop</b><span>a clean pass loops again; a cap or an error stops the loop</span></li>
     </ol>
     <figcaption>Simplified from the README diagram.</figcaption>
-  </figure>
-
-  <figure class="figure">
-    <div class="term soft"><div class="bar"><i></i><i></i><i></i><em>run_brief.py --help</em></div><pre tabindex="0" role="img" aria-label="Terminal output: run_brief.py --help"><span class="ln cmd">python run_brief.py --help</span><span class="ln">usage: run_brief.py [-h] --model MODEL [--cwd CWD] [--budget-usd BUDGET_USD]</span><span class="ln">                    [--max-turns MAX_TURNS] [--resume SESSION_ID] [--say SAY]</span><span class="ln dim">                    …</span><span class="ln">                    [--auth {console,max}]</span><span class="ln">                    [--effort {low,medium,high,xhigh,max}]</span><span class="ln">                    [brief]</span><span class="ln"></span><span class="ln">Send a Markdown brief through the Claude Agent SDK, on a Console API key or a Claude subscription login.</span><span class="ln"></span><span class="ln">--auth console (default): needs ANTHROPIC_API_KEY in the environment (never printed or saved).</span><span class="ln hl">--auth max: drops any ANTHROPIC_API_KEY and runs on the CLI's claude.ai login (subscription</span><span class="ln hl">usage, no key, no Console balance); aborts before any work if the init reports an API key source.</span><span class="ln"></span><span class="ln">options:</span><span class="ln">  --model MODEL         model id or alias, no default</span><span class="ln">  --cwd CWD             folder the agent works in (default: current folder)</span><span class="ln">  --budget-usd BUDGET_USD</span><span class="ln">  --max-turns MAX_TURNS</span><span class="ln">                        SDK max_turns cap per pass (default: no cap)</span><span class="ln dim">  …</span></pre></div>
-    <figcaption>The runner's own help text, shortened where marked. No agent pass is shown here: a real one spends account usage.</figcaption>
   </figure>
 
   <div class="prose">

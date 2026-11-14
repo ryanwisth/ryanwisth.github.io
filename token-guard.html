@@ -33,13 +33,35 @@
     <a class="back" href="index.html#work">&larr; All case studies</a>
     <p class="kicker">Rules in code, not in the prompt</p>
     <h1 style="view-transition-name: t-token-guard">Spending rules an AI agent cannot forget</h1>
-    <p class="lede">Four small hooks and nine cost-tiered subagent types that stop a Claude Code session, and the agents it spawns, from spending far more tokens than the work needs.</p>
+  </div>
 
-  <div class="facts">
-      <div class="fact"><b>39%</b><span>of one week's cache reads happened above the soft context line, mostly inside long unattended turns</span></div>
-      <div class="fact"><b>482 of 662</b><span>spawned agents still ran as the heavy default type after the lean types existed</span></div>
-      <div class="fact"><b>4,816</b><span>image reads held in context in one week</span></div>
+  <section class="sum" aria-label="Summary">
+    <div class="sum-top">
+      <figure class="figure sum-vis">
+        <div class="chart-card">
+      <h3>Median first-call tokens</h3>
+      <p class="sub">The size of a spawned agent's first call, from my session logs: the heavy default type against the lean types.</p>
+      <div class="bars" role="img" aria-label="Bar chart. Default agent type 53.8k tokens, lean types 16k to 20k.">
+        <div class="row" title="Default agent type: 53.8k"><span class="lab">Default agent type</span><span class="track"><i class="" style="--v:89.7%"></i></span><span class="val">53.8k</span></div>
+        <div class="row" title="Lean types: 16k to 20k"><span class="lab">Lean types</span><span class="track"><i class="cut" style="--v:26.7%"></i><i class="range" style="--v:33.3%;--from:26.7%"></i></span><span class="val">16k to 20k</span></div>
+      </div>
     </div>
+      </figure>
+      <div class="facts">
+        <div class="fact"><b>39%</b><span>of one week&rsquo;s cache reads, above the soft context line</span></div>
+        <div class="fact"><b>482 of 662</b><span>agents on the heavy default type</span></div>
+        <div class="fact"><b>4,816</b><span>image reads held in context in one week</span></div>
+      </div>
+    </div>
+    <ol class="method" aria-label="What was set, who wrote it, how it was checked">
+      <li><p class="who">I set</p><ul class="ticks"><li>Enforce at the tool call, not in the prompt</li><li>Two context lines, not one</li><li>Deny the default agent type</li></ul></li>
+      <li class="ag"><p class="who">Agents wrote</p><p>most of the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
+      <li><p class="who">I checked</p><ul class="ticks ok"><li>Each hook checked against the next week&rsquo;s scan</li><li>15 sample cases, allow and deny paths</li><li class="no">Limit: No automated test suite</li></ul></li>
+    </ol>
+  </section>
+
+  <div class="prose">
+    <p class="lede">Four small hooks and nine cost-tiered subagent types that stop a Claude Code session, and the agents it spawns, from spending far more tokens than the work needs.</p>
   </div>
 
   <figure class="figure">
@@ -62,17 +84,6 @@
       </div>
     </div>
   </figure>
-  <figure class="figure">
-    <div class="chart-card">
-      <h3>Median first-call tokens</h3>
-      <p class="sub">The size of a spawned agent's first call, from my session logs: the heavy default type against the lean types.</p>
-      <div class="bars" role="img" aria-label="Bar chart. Default agent type 53.8k tokens, lean types 16k to 20k.">
-        <div class="row" title="Default agent type: 53.8k"><span class="lab">Default agent type</span><span class="track"><i class="" style="--v:89.7%"></i></span><span class="val">53.8k</span></div>
-        <div class="row" title="Lean types: 16k to 20k"><span class="lab">Lean types</span><span class="track"><i class="cut" style="--v:26.7%"></i><i class="range" style="--v:33.3%;--from:26.7%"></i></span><span class="val">16k to 20k</span></div>
-      </div>
-    </div>
-  </figure>
-
   <figure class="figure">
     <div class="term soft"><div class="bar"><i></i><i></i><i></i><em>hooks/agent_guard.py</em></div><pre tabindex="0" role="img" aria-label="Terminal output: hooks/agent_guard.py"><span class="ln cmd">printf '%s' '{"tool_name":"Agent","tool_input":{"prompt":"x"}}' | python3 hooks/agent_guard.py</span><span class="ln">{"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": <b class="bad">"deny"</b>, "permissionDecisionReason": <span class="hl">"Agent call has no `model`. Rule: pin model on every spawn (sonnet for mechanical, haiku for sweeps, opus for judgment); omitting it inherits the session model. Better: use a lean-* subagent_type, which carries its model, a turn cap and no MCP tool schemas: lean-sweep (haiku, 10 turns), lean-reader / lean-reader-long (sonnet, 15/40), …"}}</span></span><span class="ln"></span><span class="ln cmd">printf '%s' '{"tool_name":"Agent","tool_input":{"subagent_type":"lean-sweep","prompt":"x"}}' | python3 hooks/agent_guard.py</span><span class="ln dim">(no output: the call is allowed)</span></pre></div>
     <figcaption>The README's try-by-hand example, run as written: a spawn with no model is denied and the message says what to do instead (shortened where marked). A lean agent type passes silently.</figcaption>

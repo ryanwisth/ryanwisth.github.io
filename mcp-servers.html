@@ -33,13 +33,35 @@
     <a class="back" href="index.html#work">&larr; All case studies</a>
     <p class="kicker">Tools shaped for the model that reads them</p>
     <h1 style="view-transition-name: t-mcp-servers">Giving a local model tools it can use</h1>
-    <p class="lede">Six small MCP (Model Context Protocol) servers that give a locally hosted language model what it lacks: live world events, market prices and company fundamentals, a dependency vulnerability audit, a read-only study coach and equation OCR.</p>
+  </div>
 
-  <div class="facts">
-      <div class="fact"><b>90 tools</b><span>and about 100k tokens of schema in one hosted server built for large cloud models</span></div>
-      <div class="fact"><b>15 or fewer</b><span>tools in each server here, with small defaults and capped replies</span></div>
-      <div class="fact"><b>12,000</b><span>characters is the reply cap on the data servers, and truncation is announced, never silent</span></div>
+  <section class="sum" aria-label="Summary">
+    <div class="sum-top">
+      <figure class="figure sum-vis">
+        <div class="chart-card">
+      <h3>Characters per daily price bar</h3>
+      <p class="sub">The price-history tool, before and after a format change. JSON hit the 12,000-character cap after about 81 daily bars; with CSV and resampling, a five-year request returns the whole window.</p>
+      <div class="bars" role="img" aria-label="Bar chart. JSON objects about 149 characters per bar, CSV about 48.">
+        <div class="row" title="JSON objects: about 149"><span class="lab">JSON objects</span><span class="track"><i class="" style="--v:90%"></i></span><span class="val">about 149</span></div>
+        <div class="row" title="CSV: about 48"><span class="lab">CSV</span><span class="track"><i class="" style="--v:29%"></i></span><span class="val">about 48</span></div>
+      </div>
     </div>
+      </figure>
+      <div class="facts">
+        <div class="fact"><b>90 tools</b><span>in one hosted server built for cloud models</span></div>
+        <div class="fact"><b>15 or fewer</b><span>tools in each server here</span></div>
+        <div class="fact"><b>12,000</b><span>character reply cap; truncation is announced</span></div>
+      </div>
+    </div>
+    <ol class="method" aria-label="What was set, who wrote it, how it was checked">
+      <li><p class="who">I set</p><ul class="ticks"><li>Shape tools for the model that reads them</li><li>Arithmetic in code, not in the model</li><li>Read-only by design</li></ul></li>
+      <li class="ag"><p class="who">Agents wrote</p><p>most of the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
+      <li><p class="who">I checked</p><ul class="ticks ok"><li>Company data: live data, 2026-09-18</li><li>Vulnerability audit: in-memory client</li><li>Study coach: all six tools returned data</li><li class="no">Limit: Market prices: not yet run with a key</li></ul></li>
+    </ol>
+  </section>
+
+  <div class="prose">
+    <p class="lede">Six small MCP (Model Context Protocol) servers that give a locally hosted language model what it lacks: live world events, market prices and company fundamentals, a dependency vulnerability audit, a read-only study coach and equation OCR.</p>
   </div>
 
   <figure class="figure">
@@ -51,17 +73,6 @@
     </ol>
     <figcaption>Simplified from the README diagram. The first three servers reach live data services; the last three wrap local tools.</figcaption>
   </figure>
-  <figure class="figure">
-    <div class="chart-card">
-      <h3>Characters per daily price bar</h3>
-      <p class="sub">The price-history tool, before and after a format change. JSON hit the 12,000-character cap after about 81 daily bars; with CSV and resampling, a five-year request returns the whole window.</p>
-      <div class="bars" role="img" aria-label="Bar chart. JSON objects about 149 characters per bar, CSV about 48.">
-        <div class="row" title="JSON objects: about 149"><span class="lab">JSON objects</span><span class="track"><i class="" style="--v:90%"></i></span><span class="val">about 149</span></div>
-        <div class="row" title="CSV: about 48"><span class="lab">CSV</span><span class="track"><i class="" style="--v:29%"></i></span><span class="val">about 48</span></div>
-      </div>
-    </div>
-  </figure>
-
   <figure class="figure">
     <div class="term"><div class="bar"><i></i><i></i><i></i><em>drill/server.py through an in-memory client</em></div><pre tabindex="0" role="img" aria-label="Terminal output: drill/server.py through an in-memory client"><span class="ln dim"># list the tools, then call one against the practice engine serving its 21-item sample bank</span><span class="ln hl">6 tools</span><span class="ln">  drill_sections     List the sections in the question bank with their live item counts. Ca…</span><span class="ln">  drill_archetypes   Mastery table: one row per archetype (mistake pattern) with status, st…</span><span class="ln">  drill_progress     Practice summary for a recent window: attempts, accuracy, on-time answ…</span><span class="ln">  drill_sets         Recent timed sets with their scores and ids (use an id with drill_pace…</span><span class="ln">  drill_pace         Pacing report for one finished timed set: checkpoints against plan, it…</span><span class="ln">  drill_audit        Question-bank health: unverified items, retired items and archetypes r…</span><span class="ln"></span><span class="ln hl">&gt; drill_sections()   [124 characters]</span><span class="ln">[</span><span class="ln"> {</span><span class="ln">  "section": "Logic",</span><span class="ln">  "archetypes": 2,</span><span class="ln">  "items": 6</span><span class="ln"> },</span><span class="ln"> {</span><span class="ln">  "section": "Math",</span><span class="ln">  "archetypes": 5,</span><span class="ln">  "items": 14</span><span class="ln"> }</span><span class="ln">]</span></pre></div>
     <figcaption>The smallest of the six servers, listed and called through fastmcp's in-memory client: six tools, descriptions cut at 70 characters by the listing script, and a 124-character reply. One sample item had been retired by a practice run, so Math shows 14 live items.</figcaption>

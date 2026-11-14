@@ -33,13 +33,32 @@
     <a class="back" href="index.html#work">&larr; All case studies</a>
     <p class="kicker">Hardware research, safe first</p>
     <h1 style="view-transition-name: t-display-research">Decoding a colour e-ink display, safely</h1>
-    <p class="lede">Interoperability research that worked out how the reMarkable Paper Pro drives its colour e-ink panel, from the waveform files on disk to the bits in each frame, well enough to draw on the screen with our own code instead of the vendor's library.</p>
+  </div>
 
-  <div class="facts">
-      <div class="fact"><b>314</b><span>waveform files in the OS image, all decoded, all passing their checksums</span></div>
-      <div class="fact"><b>9 &times; 9</b><span>update modes by temperature bands, each mapped</span></div>
-      <div class="fact"><b>0.13 s</b><span>for the fast black-and-white mode (11 frames), against about 1 s for full colour (86)</span></div>
+  <section class="sum" aria-label="Summary">
+    <div class="sum-top">
+      <figure class="figure sum-vis">
+        <div class="duo">
+      <figure><p class="tagline">Source image</p><img src="img/panel-source.png" alt="A generated colour test card: a full hue sweep, a grey ramp and eight saturated swatches" width="960" height="600" loading="lazy"></figure>
+      <figure><p class="tagline">Simulated panel</p><img src="img/panel-simulated.jpg" alt="The same test card through the panel model: muted, low-contrast colours, with greens and reds pulled toward grey" width="960" height="600" loading="lazy"></figure>
     </div>
+    <figcaption>A generated test card, and the same card through <code>panel-model/panel_sim.py</code>, the forward colour model fitted from a photo of the panel. A simulation of how the panel renders colour, not a photo of the device.</figcaption>
+      </figure>
+      <div class="facts">
+        <div class="fact"><b>314</b><span>waveform files decoded, all passing checksums</span></div>
+        <div class="fact"><b>9 &times; 9</b><span>update modes by temperature bands, each mapped</span></div>
+        <div class="fact"><b>0.13 s</b><span>fast black-and-white, against about 1 s for colour</span></div>
+      </div>
+    </div>
+    <ol class="method" aria-label="What was set, who wrote it, how it was checked">
+      <li><p class="who">I set</p><ul class="ticks"><li>Static first, device second</li><li>Read-only before write</li><li>The first write was a known-safe one</li></ul></li>
+      <li class="ag"><p class="who">Agents wrote</p><p>most of the code and analysis</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
+      <li><p class="who">I checked</p><ul class="ticks ok"><li>314 files pass CRC-32 and header checksums</li><li>Captured frames compared with decoded waveforms</li><li class="no">Limit: One tablet, one OS version</li></ul></li>
+    </ol>
+  </section>
+
+  <div class="prose">
+    <p class="lede">Interoperability research that worked out how the reMarkable Paper Pro drives its colour e-ink panel, from the waveform files on disk to the bits in each frame, well enough to draw on the screen with our own code instead of the vendor's library.</p>
   </div>
 
   <figure class="figure">
@@ -62,14 +81,6 @@
         <div class="row" title="Full colour (STANDARD): 86"><span class="lab">Full colour (STANDARD)<small>about 1 s</small></span><span class="track"><i class="" style="--v:89.6%"></i></span><span class="val">86</span></div>
       </div>
     </div>
-  </figure>
-
-  <figure class="figure">
-    <div class="duo">
-      <figure><p class="tagline">Source image</p><img src="img/panel-source.png" alt="A generated colour test card: a full hue sweep, a grey ramp and eight saturated swatches" width="960" height="600" loading="lazy"></figure>
-      <figure><p class="tagline">Simulated panel</p><img src="img/panel-simulated.jpg" alt="The same test card through the panel model: muted, low-contrast colours, with greens and reds pulled toward grey" width="960" height="600" loading="lazy"></figure>
-    </div>
-    <figcaption>A generated test card, and the same card through <code>panel-model/panel_sim.py</code>, the forward colour model fitted from a photo of the panel. A simulation of how the panel renders colour, not a photo of the device.</figcaption>
   </figure>
 
   <div class="prose">
