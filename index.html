@@ -7,10 +7,12 @@
 <meta name="description" content="Nine short case studies of AI tools built by directing coding agents: the problem, what was directed, how results were verified, and the outcome.">
 <meta property="og:title" content="Ryan Wisth: AI project case studies">
 <meta property="og:description" content="Working AI tools built by directing coding agents, with the checks that proved them.">
-<meta property="og:image" content="https://ryanwisth.github.io/img/family-tree-3d.jpg">
+<meta property="og:image" content="https://ryanwisth.github.io/img/card.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#f7f7f5" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0e1015" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%234338ca'/%3E%3Cstop offset='1' stop-color='%230e7490'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Ctext x='16' y='21' font-family='Arial' font-weight='700' font-size='13' fill='white' text-anchor='middle'%3ERW%3C/text%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -21,6 +23,7 @@
       <a href="#work">Case studies</a>
       <a class="hide-sm" href="#how">How I work</a>
       <a href="https://github.com/ryanwisth">GitHub</a>
+      <button class="theme-toggle" type="button" hidden aria-label="Switch between light and dark"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
     </nav>
   </div>
 </header>
@@ -62,16 +65,17 @@
           <div class="stat"><b>3 of 147</b><span>claims from a careful research pass still rejected by a skeptic agent</span></div>
           <div class="body">
             <span class="tag">Trust in AI output</span>
-            <h3>Making AI work checkable</h3>
+            <h3 style="view-transition-name: t-checking-ai-work">Making AI work checkable</h3>
             <p>One principle in three tools: the AI proposes, code enforces the rules, and a second pass tries to refute the first.</p>
             <span class="more">Read case study &rarr;</span>
           </div>
         </a>
         <a class="card" href="family-tree-3d.html">
+          <span class="badge"><span class="dot"></span>Live demo inside</span>
           <img class="thumb" src="img/family-tree-3d.jpg" alt="The 3D family tree viewer showing an invented 420-person family" loading="lazy" width="1600" height="1000">
           <div class="body">
             <span class="tag">A visual product from messy data</span>
-            <h3>A 3D family tree in one offline file</h3>
+            <h3 style="view-transition-name: t-family-tree-3d">A 3D family tree in one offline file</h3>
             <p>A genealogy export becomes one web page with a 3D tree, a map and statistics, opened from disk.</p>
             <span class="more">Read case study &rarr;</span>
           </div>
@@ -80,7 +84,7 @@
           <div class="stat"><b>3, 7, 21</b><span>days until a mastered mistake pattern comes back for a check</span></div>
           <div class="body">
             <span class="tag">Product rules from a user problem</span>
-            <h3>A practice app built around the mistake</h3>
+            <h3 style="view-transition-name: t-practice-engine">A practice app built around the mistake</h3>
             <p>A practice app that drills each mistake pattern until it is mastered under time.</p>
             <span class="more">Read case study &rarr;</span>
           </div>
@@ -89,7 +93,7 @@
           <div class="stat"><b>24 pages</b><span>graded in one batch on the device</span></div>
           <div class="body">
             <span class="tag">AI inside a physical device</span>
-            <h3>AI feedback written in ink on an e-ink tablet</h3>
+            <h3 style="view-transition-name: t-paper-grader">AI feedback written in ink on an e-ink tablet</h3>
             <p>A Grade button has a model review handwritten work and write feedback onto the page, never over the student's ink.</p>
             <span class="more">Read case study &rarr;</span>
           </div>
@@ -98,7 +102,7 @@
           <div class="stat"><b>9 of 9</b><span>designer rules hashed as hypotheses before any result; none confirmed</span></div>
           <div class="body">
             <span class="tag">Research honest enough to fail</span>
-            <h3>A study built so it could fail</h3>
+            <h3 style="view-transition-name: t-pinball-study">A study built so it could fail</h3>
             <p>Hypotheses written and hashed before any result; none held, and the write-up says so.</p>
             <span class="more">Read case study &rarr;</span>
           </div>
@@ -107,7 +111,7 @@
           <div class="stat"><b>27% &rarr; 7%</b><span>problem rate, first 9 batches against the last 20</span></div>
           <div class="body">
             <span class="tag">A process failure turned into rules</span>
-            <h3>Turning a slipping process into enforced rules</h3>
+            <h3 style="view-transition-name: t-claim-ledger">Turning a slipping process into enforced rules</h3>
             <p>A fact-checking method run by hand on 517 claims, audited for where it slipped, then rebuilt as a tool.</p>
             <span class="more">Read case study &rarr;</span>
           </div>
@@ -116,7 +120,7 @@
           <div class="stat"><b>482 of 662</b><span>spawned agents were still running as the heavy default type</span></div>
           <div class="body">
             <span class="tag">Measuring cost before cutting it</span>
-            <h3>Finding where the AI budget went</h3>
+            <h3 style="view-transition-name: t-token-scan">Finding where the AI budget went</h3>
             <p>Session-log scans that turned "usage ran out early" into specific causes, each then fixed in code.</p>
             <span class="more">Read case study &rarr;</span>
           </div>
@@ -125,7 +129,7 @@
           <div class="stat"><b>314</b><span>waveform files decoded, all passing their checksums</span></div>
           <div class="body">
             <span class="tag">Hardware research, safe first</span>
-            <h3>Decoding a colour e-ink display, safely</h3>
+            <h3 style="view-transition-name: t-display-research">Decoding a colour e-ink display, safely</h3>
             <p>Static analysis, then read-only capture, then the first write: our own frames on the panel.</p>
             <span class="more">Read case study &rarr;</span>
           </div>
@@ -134,7 +138,7 @@
           <img class="thumb" src="img/safari-all-themes.jpg" alt="The same test page rendered in all six dark themes" loading="lazy" width="1000" height="965">
           <div class="body">
             <span class="tag">A small product shipped end to end</span>
-            <h3>A Safari dark mode with fitted themes</h3>
+            <h3 style="view-transition-name: t-safari-dark-mode">A Safari dark mode with fitted themes</h3>
             <p>Six themes fitted numerically, one permission, packaged without Xcode.</p>
             <span class="more">Read case study &rarr;</span>
           </div>
@@ -173,5 +177,6 @@
     <span>&copy; Ryan Wisth</span>
   </div>
 </footer>
+<script src="site.js"></script>
 </body>
 </html>

@@ -1,0 +1,1004 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Family Constellation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+/* A deliberately single-world design: this is an instrument for reading a dense
+   point field, and pale lines at low alpha on a dark ground carry far more
+   structure than the inverse. Every colour is painted explicitly so the page
+   holds on any host background. */
+:root{
+  --ground:#0b1013;        /* near-black, biased blue */
+  --panel:#121a20;
+  --panel-2:#18222a;
+  --rule:#243039;
+  --ink:#e7eef2;
+  --ink-dim:#93a4b0;
+  --ink-faint:#5d6d78;
+  --line:#2f4250;          /* parent-child links at rest */
+  --accent:#ffe9b8;        /* the traced line — warm, outside every region hue */
+  --accent-deep:#f0b429;
+  --r0:#5b9fe8;
+  --r1:#e8b04a;
+  --r2:#e05a63;
+  --r3:#a077e0;
+  --r4:#3fb5a5;
+  --r5:#f0733f;
+  --r6:#e072b0;
+  --r7:#8fc23f;
+  --r8:#56c8e0;
+  --r9:#9aa5b8;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --serif:"IBM Plex Serif",Georgia,"Times New Roman",serif;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{
+  background:var(--ground);color:var(--ink);
+  font:400 14px/1.5 var(--sans);
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+#app{display:flex;height:100%;width:100%}
+
+/* ---------------------------------------------------------------- rail */
+#rail{
+  width:300px;flex:0 0 300px;height:100%;
+  background:var(--panel);border-right:1px solid var(--rule);
+  display:flex;flex-direction:column;overflow:hidden;
+  padding-top:env(safe-area-inset-top,0px);
+}
+#rail header{padding:18px 18px 14px;border-bottom:1px solid var(--rule)}
+h1{
+  margin:0 0 2px;font:600 19px/1.15 var(--serif);letter-spacing:-.01em;
+  text-wrap:balance;
+}
+.sub{margin:0;color:var(--ink-dim);font-size:12.5px;line-height:1.45}
+.sub em{font-style:normal;font-family:var(--mono);color:var(--ink)}
+
+.scroll{flex:1;overflow-y:auto;overscroll-behavior:contain}
+section{padding:14px 18px;border-bottom:1px solid var(--rule)}
+.lbl{
+  font:500 10.5px/1 var(--sans);letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ink-faint);margin:0 0 9px;
+}
+
+/* search */
+.searchwrap{position:relative}
+#q{
+  width:100%;padding:8px 10px;border-radius:6px;
+  background:var(--panel-2);border:1px solid var(--rule);
+  color:var(--ink);font:400 13px var(--sans);
+}
+#q:focus{outline:2px solid var(--accent-deep);outline-offset:1px;border-color:transparent}
+#q::placeholder{color:var(--ink-faint)}
+#hits{list-style:none;margin:8px 0 0;padding:0;max-height:210px;overflow-y:auto}
+#hits li{padding:0}
+#hits button{
+  display:block;width:100%;text-align:left;cursor:pointer;
+  background:none;border:0;border-radius:5px;padding:5px 8px;
+  color:var(--ink);font:400 13px var(--sans);
+}
+#hits button:hover,#hits button:focus-visible{background:var(--panel-2);outline:none}
+#hits .yr{font-family:var(--mono);color:var(--ink-faint);font-size:11.5px;margin-left:6px}
+
+/* legend */
+ul.legend{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1px}
+ul.legend button{
+  display:grid;grid-template-columns:11px 1fr auto;gap:9px;align-items:center;
+  width:100%;background:none;border:0;cursor:pointer;padding:4px 6px;border-radius:5px;
+  color:var(--ink);font:400 12.5px var(--sans);text-align:left;
+}
+ul.legend button:hover,ul.legend button:focus-visible{background:var(--panel-2);outline:none}
+ul.legend .sw{width:11px;height:11px;border-radius:3px}
+ul.legend .n{font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);font-variant-numeric:tabular-nums}
+ul.legend [aria-pressed="false"]{opacity:.34}
+
+/* detail */
+#detail .who{font:600 17px/1.25 var(--serif);margin:0 0 3px;text-wrap:balance}
+#detail .when{font-family:var(--mono);font-size:12.5px;color:var(--ink-dim);margin:0 0 2px}
+#detail .where{font-size:12.5px;color:var(--ink-dim);margin:0 0 12px;display:flex;align-items:center;gap:6px}
+#detail .where .sw{width:9px;height:9px;border-radius:2px;flex:0 0 9px}
+.rel{margin:0 0 10px}
+.rel h4{
+  font:500 10.5px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-faint);margin:0 0 5px;
+}
+.rel ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:4px}
+.rel button{
+  background:var(--panel-2);border:1px solid var(--rule);border-radius:5px;
+  padding:3px 8px;cursor:pointer;color:var(--ink);font:400 12px var(--sans);
+}
+.rel button:hover,.rel button:focus-visible{border-color:var(--accent-deep);outline:none}
+.rel .yr{font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);margin-left:5px}
+
+#path{margin-top:10px}
+#path ol{list-style:none;margin:0;padding:0;font-size:12.5px}
+#path li{padding:3px 0 3px 16px;position:relative;line-height:1.35}
+#path li::before{
+  content:"";position:absolute;left:4px;top:11px;width:5px;height:5px;border-radius:50%;
+  background:var(--accent-deep);
+}
+#path li:not(:last-child)::after{
+  content:"";position:absolute;left:6px;top:16px;bottom:-3px;width:1px;background:var(--rule);
+}
+#path .via{color:var(--ink-faint);font-size:11px;font-family:var(--mono)}
+.hint{color:var(--ink-faint);font-size:12.5px;line-height:1.5;margin:0}
+
+button.act{
+  width:100%;margin-top:4px;padding:7px 10px;border-radius:6px;cursor:pointer;
+  background:var(--panel-2);border:1px solid var(--rule);color:var(--ink);
+  font:500 12.5px var(--sans);
+}
+button.act:hover,button.act:focus-visible{border-color:var(--accent-deep);outline:none}
+button.act[aria-pressed="true"]{background:var(--accent-deep);border-color:var(--accent-deep);color:#1a1205}
+
+footer{padding:12px 18px;border-top:1px solid var(--rule)}
+footer p{margin:0;font-size:11px;line-height:1.5;color:var(--ink-faint)}
+footer b{color:var(--ink-dim);font-weight:500}
+
+/* ---------------------------------------------------------------- stage */
+#stage{flex:1;position:relative;min-width:0;height:100%}
+canvas{display:block;width:100%;height:100%;cursor:grab;touch-action:none}
+canvas.drag{cursor:grabbing}
+#zoom{
+  position:absolute;right:14px;bottom:14px;display:flex;gap:6px;
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+#zoom button{
+  width:32px;height:32px;border-radius:7px;cursor:pointer;
+  background:rgba(18,26,32,.92);border:1px solid var(--rule);color:var(--ink);
+  font:500 15px/1 var(--sans);backdrop-filter:blur(6px);
+}
+#zoom button:hover,#zoom button:focus-visible{border-color:var(--accent-deep);outline:none}
+#zoom button.wide{width:auto;padding:0 11px;font-size:12px}
+#tip{
+  position:absolute;pointer-events:none;opacity:0;transform:translate(-50%,-140%);
+  background:rgba(11,16,19,.95);border:1px solid var(--rule);border-radius:6px;
+  padding:5px 9px;font-size:12.5px;white-space:nowrap;transition:opacity .12s;
+  box-shadow:0 6px 20px rgba(0,0,0,.5);
+}
+#tip .yr{font-family:var(--mono);color:var(--ink-faint);margin-left:6px;font-size:11.5px}
+#readout{
+  position:absolute;left:14px;top:14px;font:400 11.5px var(--mono);
+  color:var(--ink-faint);pointer-events:none;
+  padding-top:env(safe-area-inset-top,0px);
+}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+@media (max-width:860px){
+  #app{flex-direction:column}
+  #rail{width:100%;flex:0 0 auto;max-height:46%;border-right:0;border-bottom:1px solid var(--rule)}
+  #stage{flex:1}
+}
+
+/* ---- the full record ------------------------------------------------
+   The rail answers "who is this and who are they connected to" in 300px.
+   A life has 40 facts and 20 record transcripts behind it, which that column
+   cannot hold, so the record gets its own panel on the other side. The two
+   are not duplicates: the rail is for moving around the family, this is for
+   reading one person. */
+#record{width:460px;flex:0 0 460px;height:100%;background:var(--panel);
+  border-left:1px solid var(--rule);display:flex;flex-direction:column;overflow:hidden;
+  padding-top:env(safe-area-inset-top,0px)}
+#record[hidden]{display:none}
+#record>header{display:flex;gap:10px;align-items:flex-start;padding:16px 16px 12px;
+  border-bottom:1px solid var(--rule)}
+#record>header>div{flex:1;min-width:0}
+#record .rname{margin:0 0 3px;font:600 18px/1.2 var(--serif);text-wrap:balance}
+#record .rsub{margin:0;font-family:var(--mono);font-size:12px;color:var(--ink-dim);
+  display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}
+#record .rsub .sw{width:9px;height:9px;border-radius:2px}
+#rec-close{background:none;border:1px solid var(--rule);color:var(--ink-dim);cursor:pointer;
+  border-radius:6px;width:28px;height:28px;font:400 16px/1 var(--sans);flex:0 0 28px}
+#rec-close:hover,#rec-close:focus-visible{border-color:var(--accent-deep);color:var(--ink);outline:none}
+#record-body{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:0 0 40px}
+#record-body .rsec{padding:13px 16px;border-bottom:1px solid var(--rule)}
+#record-body h4{margin:0 0 9px;font:500 10.5px/1 var(--sans);letter-spacing:.09em;
+  text-transform:uppercase;color:var(--ink-faint);display:flex;justify-content:space-between;
+  align-items:baseline;gap:8px}
+#record-body h4 b{font:400 11px var(--mono);color:var(--ink-faint)}
+
+/* one fact: a date column that lines up, and the rest beside it */
+.fct{display:grid;grid-template-columns:82px 1fr;gap:3px 11px;margin:0 0 9px;
+  font-size:12.5px;line-height:1.45}
+.fct:last-child{margin-bottom:0}
+.fct .d{font-family:var(--mono);font-size:11.5px;color:var(--accent-deep);
+  font-variant-numeric:tabular-nums;padding-top:1px;word-break:break-word}
+.fct .d.none{color:var(--ink-faint)}
+.fct .k{font-weight:600;color:var(--ink)}
+.fct .v{color:var(--ink-dim)}
+.fct .x{color:var(--ink-faint);font-size:11.5px}
+/* Two kinds of note, and they do not mean the same thing: what a merge
+   discarded is a caveat about the fact, what the tree's author wrote is
+   part of it. Only the first gets the warning colour. */
+.fct .nb{grid-column:2;font-size:11px;line-height:1.4;
+  border-left:2px solid var(--rule);padding-left:8px;margin-top:2px;color:var(--ink-faint)}
+.fct .nb.merge{color:var(--warn)}
+.fct .b{grid-column:2}
+
+/* a source citation */
+.cit{margin:0 0 8px;border:1px solid var(--rule);border-radius:7px;overflow:hidden;
+  background:var(--panel-2)}
+.cit:last-child{margin-bottom:0}
+.cit>button{display:flex;width:100%;gap:8px;align-items:flex-start;text-align:left;
+  background:none;border:0;cursor:pointer;padding:8px 10px;color:var(--ink);
+  font:400 12.5px/1.35 var(--sans)}
+.cit>button:hover,.cit>button:focus-visible{background:var(--rule);outline:none}
+.cit .tt{flex:1;min-width:0}
+.cit .pg{display:block;color:var(--ink-faint);font-size:11px;font-family:var(--mono);
+  margin-top:2px;overflow-wrap:anywhere}
+.cit .cv{flex:0 0 auto;color:var(--ink-faint);font-size:11px;transition:transform .12s}
+.cit[data-open="1"] .cv{transform:rotate(90deg)}
+.cit pre{margin:0;padding:2px 10px 10px;font:400 11.5px/1.5 var(--mono);color:var(--ink-dim);
+  white-space:pre-wrap;overflow-wrap:anywhere;max-height:320px;overflow-y:auto}
+.cit a{color:var(--accent-deep)}
+.kind{font:500 9.5px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;
+  border-radius:3px;padding:3px 5px;white-space:nowrap;flex:0 0 auto}
+.kind.k0{background:#1e3a2b;color:#7fd1a0}   /* Collection — an actual record */
+.kind.k1{background:#3a2f1e;color:#e0b464}   /* Discovery */
+.kind.k2{background:#2a2f3a;color:#8fa3c4}   /* Smart Matching — another tree */
+.rnote{font-size:12px;line-height:1.5;color:var(--ink-dim);margin:0 0 8px;
+  white-space:pre-wrap;overflow-wrap:anywhere}
+.rmsg{padding:16px;color:var(--ink-faint);font-size:12.5px;line-height:1.5}
+#record-body .prov{font-size:11px;line-height:1.45;color:var(--ink-faint);margin:9px 0 0}
+@media (max-width:1180px){ #record{width:380px;flex:0 0 380px} }
+@media (max-width:900px){
+  #record{position:fixed;inset:0;width:auto;flex:none;z-index:60;border-left:0}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="rail">
+    <header>
+      <h1>Family Constellation</h1>
+      <p class="sub"><em id="s-people"></em> people · <em id="s-span"></em> · one connected family</p>
+    </header>
+
+    <div class="scroll">
+      <section>
+        <p class="lbl">Find a person</p>
+        <div class="searchwrap">
+          <input id="q" type="search" placeholder="Search names…" autocomplete="off" spellcheck="false">
+        </div>
+        <ul id="hits"></ul>
+      </section>
+
+      <section id="detail">
+        <p class="lbl">Selected</p>
+        <div id="detail-body"></div>
+      </section>
+
+      <section>
+        <p class="lbl">Where they were born</p>
+        <ul class="legend" id="legend"></ul>
+      </section>
+    </div>
+
+    <footer>
+      <p><b>How to read it.</b> Down the page is time — <span id="f-span"></span>.
+      Across is descent: each vertical band is one line of the family, children
+      placed beside their parents. Lines join parent to child.</p>
+      <p style="margin-top:8px"><b>Living people are in here.</b> This is a local
+      file about your own family; it was not published anywhere.</p>
+    </footer>
+  </div>
+
+  <div id="stage">
+    <canvas id="cv"></canvas>
+    <div id="readout"></div>
+    <div id="tip"></div>
+    <div id="zoom">
+      <button id="z-line" class="wide" aria-pressed="true" title="Highlight the root person's direct line">Root's line</button>
+      <button id="z-fit" class="wide" title="Fit the whole family">Fit</button>
+      <button id="z-out" title="Zoom out">−</button>
+      <button id="z-in" title="Zoom in">+</button>
+    </div>
+  </div>
+<aside id="record" hidden aria-label="Full record">
+  <header>
+    <div><p class="rname" id="rec-name"></p><p class="rsub" id="rec-sub"></p></div>
+    <button id="rec-close" title="Close the record (Esc)" aria-label="Close the record">&times;</button>
+  </header>
+  <div id="record-body"></div>
+</aside>
+</div>
+
+<script type="application/json" id="tree-data">{"count":420,"names":["Johann Varnquist","Margaret Kestrander","Frederick Varnquist","Eva Ashgrove-Lunt","William Varnquist","Anna Morrowind","Thomas Varnquist","Mary Ollendrake","Walter Varnquist","Clara Brennholt","Robert Varnquist","Mary Castellune","Frederick Varnquist","Catherine Teshmore","Catherine Varnquist","John Holtzbrand","Lena Holtzbrand","Peter Holtzbrand","Simon Holtzbrand","Helen Holtzbrand","Martha Holtzbrand","Peter Pembrask","Edward Pembrask","Sarah Holtzbrand","Frances Varnquist","Charles Saltmere","Albert Saltmere","Frederick Saltmere","Ruth Quillane","John Saltmere","Martin Saltmere","David Saltmere","Alice Saltmere","Edward Calderhoff","Frances Calderhoff","Margaret Calderhoff","Thomas Calderhoff","Simon Saltmere","Robert Varnquist","Louisa Druvelle","Peter Varnquist","Anna Orbeline","Emma Varnquist","Margaret Varnquist","Robert Varnquist","Martha Velkamp","David Varnquist","Helen Holtzbrand","John Varnquist","Rose Castellune","Clara Varnquist","Margaret Varnquist","David Varnquist","Nora Varnquist","Hugo Holtzbrand","Alice Holtzbrand","Elizabeth Varnquist","Nora Varnquist","John Brimsworth","Lena Brimsworth","Martin Holtzbrand","Ruth Holtzbrand","Robert Holtzbrand","Grace Holtzbrand","Thomas Varnquist","Alice Ellisandt","Grace Varnquist","Martha Varnquist","Rose Varnquist","Frederick Varnquist","Laura Ollendrake","Peter Varnquist","Elizabeth Ellisandt","Julia Varnquist","Edward Varnquist","George Varnquist","Ruth Thornquay","Nora Varnquist","George Orbeline","Peter Orbeline","Ruth Orbeline","Anna Orbeline","Rose Varnquist","Samuel Teshmore","Henry Teshmore","Catherine Teshmore","Edward Teshmore","Peter Varnquist","Felix Varnquist","Emma Marrowby","Charles Varnquist","Ruth Castellune","Charles Varnquist","Robert Varnquist","Laura Varnquist","Arthur Druvelle","Helen Druvelle","Robert Druvelle","Laura Varnquist","John Ellisandt","Ruth Ellisandt","Henry Ellisandt","George Ellisandt","Eva Varnquist","Felix Thornquay","Walter Thornquay","Mary Thornquay","Albert Thornquay","Alice Brennholt","Ida Thornquay","Elizabeth Thornquay","Frances Varnquist","Peter Saltmere","Samuel Saltmere","Elizabeth Saltmere","Samuel Brennholt","Helen Brennholt","Ruth Brennholt","Catherine Brennholt","Helen Saltmere","Alice Varnquist","Walter Varnquist","Arthur Varnquist","Joseph Varnquist","Laura Fennaway","Ida Varnquist","Simon Varnquist","Samuel Varnquist","Louisa Varnquist","Joseph Marrowby","Edward Marrowby","Felix Marrowby","Rose Marrowby","Nora Varnquist","Felix Orbeline","George Orbeline","Emma Orbeline","Felix Ollendrake","Paul Ollendrake","Frederick Ollendrake","Grace Ollendrake","Margaret Orbeline","George Saltmere","Margaret Saltmere","John Ollendrake","Martin Ollendrake","Charles Ollendrake","Clara Ollendrake","Elizabeth Varnquist","Charles Varnquist","Nora Varnquist","John Thornquay","Margaret Thornquay","Laura Thornquay","Elizabeth Varnquist","Henry Marrowby","Samuel Marrowby","Lena Marrowby","Simon Ashgrove-Lunt","Thomas Ashgrove-Lunt","Laura Corvantis","Clara Ashgrove-Lunt","Daniel Ashgrove-Lunt","Louisa Varnquist","Elizabeth Varnquist","Edward Morrowind","Nora Morrowind","Felix Orbeline","Martin Orbeline","Samuel Orbeline","Felix Orbeline","Ida Orbeline","Ruth Morrowind","Lena Morrowind","Martha Morrowind","Rose Morrowind","Thomas Corvantis","Felix Corvantis","Ruth Varnquist","Edward Varnquist","John Varnquist","Alice Castellune","Hugo Varnquist","Daniel Varnquist","Grace Ashgrove-Lunt","Edward Varnquist","Laura Varnquist","Laura Varnquist","Helen Varnquist","David Quillane","Helen Quillane","Martin Kestrander","Joseph Kestrander","Ida Kestrander","Clara Kestrander","Joseph Varnquist","Samuel Varnquist","Margaret Varnquist","Eva Varnquist","Anna Kestrander","Thomas Varnquist","Felix Varnquist","Samuel Varnquist","Margaret Varnquist","David Kestrander","Alice Quillane","Clara Quillane","Frances Quillane","Joseph Pembrask","Peter Pembrask","Margaret Thornquay","Paul Pembrask","Ruth Pembrask","Julia Pembrask","Frederick Pembrask","Henry Pembrask","Felix Varnquist","Margaret Pembrask","Margaret Varnquist","George Varnquist","Hugo Varnquist","Elizabeth Varnquist","Albert Ashgrove-Lunt","Louisa Ashgrove-Lunt","David Calderhoff","Helen Calderhoff","Lena Calderhoff","Alice Calderhoff","Robert Calderhoff","Felix Calderhoff","Louisa Ashgrove-Lunt","William Holtzbrand","Charles Holtzbrand","Daniel Ashgrove-Lunt","Sarah Morrowind","Grace Ashgrove-Lunt","Hugo Corvantis","Helen Corvantis","Robert Saltmere","David Saltmere","Ida Saltmere","Joseph Ashgrove-Lunt","Mary Velkamp","Rose Ashgrove-Lunt","Clara Ashgrove-Lunt","David Ashgrove-Lunt","Ruth Lindqvane","Edward Ashgrove-Lunt","Helen Teshmore","Ruth Ashgrove-Lunt","Ruth Ashgrove-Lunt","Frederick Ashgrove-Lunt","Frances Ashgrove-Lunt","Alice Ashgrove-Lunt","Catherine Ashgrove-Lunt","Edward Druvelle","Peter Druvelle","Joseph Druvelle","Emma Druvelle","Edward Ashgrove-Lunt","Frederick Ashgrove-Lunt","Simon Ashgrove-Lunt","Felix Varnquist","Alice Kestrander","Elizabeth Varnquist","Laura Varnquist","Eva Varnquist","Daniel Pembrask","Joseph Pembrask","Rose Varnquist","Martha Pembrask","Paul Pembrask","Martin Pembrask","Henry Pembrask","Eva Brennholt","Helen Pembrask","Walter Varnquist","Walter Varnquist","Laura Varnquist","David Varnquist","Thomas Varnquist","Felix Varnquist","Simon Varnquist","Emma Ollendrake","Thomas Varnquist","Peter Pembrask","Mary Pembrask","Edward Holtzbrand","George Holtzbrand","Emma Calderhoff","Simon Holtzbrand","Grace Ashgrove-Lunt","Alice Holtzbrand","Helen Holtzbrand","Walter Holtzbrand","Grace Holtzbrand","Martin Quillane","Julia Quillane","Simon Velkamp","William Velkamp","Anna Teshmore","Mary Velkamp","George Velkamp","Simon Velkamp","Nora Velkamp","Sarah Velkamp","Samuel Saltmere","Margaret Saltmere","William Saltmere","Albert Saltmere","Catherine Saltmere","Grace Velkamp","Henry Velkamp","Frederick Quillane","Frances Corvantis","Charles Quillane","Rose Fennaway","Walter Quillane","David Quillane","Laura Quillane","Peter Quillane","Martha Quillane","Ruth Quillane","Catherine Quillane","Frederick Brennholt","Samuel Brennholt","Samuel Brennholt","George Brennholt","Frances Brennholt","Henry Brennholt","Catherine Brennholt","Helen Quillane","Henry Calderhoff","Julia Calderhoff","Frederick Calderhoff","Peter Calderhoff","Albert Calderhoff","Arthur Calderhoff","Elizabeth Calderhoff","Thomas Marrowby","Martha Marrowby","Samuel Marrowby","Arthur Marrowby","Martha Quillane","David Calderhoff","Daniel Calderhoff","Daniel Calderhoff","Martin Calderhoff","Martha Castellune","Simon Calderhoff","Ruth Calderhoff","Julia Calderhoff","Martha Calderhoff","Ruth Calderhoff","Clara Holtzbrand","Martin Saltmere","Catherine Saltmere","Julia Saltmere","Sarah Holtzbrand","Hugo Quillane","Ruth Quillane","Arthur Quillane","Laura Holtzbrand","Martin Quillane","Helen Castellune","Hugo Quillane","Helen Quillane","Joseph Fennaway","Joseph Fennaway","David Fennaway","Frances Varnquist","Charles Fennaway","Anna Fennaway","Ruth Fennaway","Walter Fennaway","Nora Fennaway","Martha Fennaway","Nora Quillane","Albert Quillane","Julia Ollendrake","Catherine Quillane","Louisa Quillane","George Quillane","Charles Quillane","Martha Quillane","Albert Quillane","Rose Pembrask","Paul Quillane","Edward Quillane","Anna Quillane","Frederick Lindqvane","Ida Lindqvane","Martin Lindqvane","William Lindqvane","Albert Varnquist","Emma Ellisandt","David Varnquist","Frederick Varnquist","Grace Ollendrake","Mary Varnquist","Frederick Saltmere","Lena Saltmere","Joseph Calderhoff","Catherine Calderhoff","Hugo Saltmere","Robert Saltmere","Charles Saltmere","Henry Calderhoff","Charles Calderhoff","Nora Saltmere","Clara Saltmere","Walter Saltmere","Martha Druvelle","Martin Saltmere","Catherine Pembrask","Charles Saltmere","Margaret Saltmere","Arthur Saltmere","John Saltmere","Robert Varnquist"],"birth":[1640,1640,1672,1674,1697,1700,1724,1720,1754,1757,1785,1782,1819,1822,1844,1843,1870,1873,1876,1877,1879,1882,1911,1880,1847,1843,1873,1875,1875,1900,1902,1904,1905,1902,1936,1937,1939,1876,1849,1852,1876,1876,1902,1905,1907,1908,1937,1934,1969,1966,1994,1995,1998,1971,1970,2004,1972,1939,1937,1973,1972,2003,2004,2006,1942,1941,1968,1970,1973,1878,1875,1902,1904,1929,1930,1905,1904,1928,1927,1955,1956,1957,1931,1934,1959,1962,1963,1932,1908,1909,1936,1935,1960,1961,1964,1967,1993,1996,1939,1937,1965,1966,1968,1941,1937,1966,1968,1969,1967,1996,1999,1911,1908,1937,1938,1935,1963,1964,1965,1940,1912,1913,1879,1881,1877,1908,1910,1911,1912,1913,1942,1945,1947,1915,1915,1948,1951,1951,1981,1983,1986,1952,1948,1985,1982,2017,2020,2023,1918,1883,1822,1819,1850,1851,1823,1819,1852,1855,1854,1886,1887,1914,1888,1825,1828,1831,1854,1851,1880,1883,1886,1889,1856,1859,1861,1864,1860,1891,1788,1789,1755,1751,1782,1757,1757,1790,1791,1793,1725,1721,1751,1747,1778,1780,1783,1782,1806,1807,1809,1786,1786,1814,1816,1817,1789,1753,1755,1756,1755,1780,1782,1811,1812,1815,1816,1818,1726,1724,1750,1727,1728,1700,1702,1724,1724,1749,1750,1753,1755,1757,1727,1729,1750,1728,1728,1754,1750,1788,1785,1814,1815,1755,1757,1783,1785,1787,1788,1820,1816,1849,1851,1853,1854,1822,1758,1755,1789,1792,1795,1759,1760,1763,1702,1699,1732,1703,1673,1673,1699,1698,1731,1734,1736,1700,1698,1730,1732,1759,1762,1764,1765,1766,1768,1769,1793,1733,1701,1704,1733,1731,1763,1762,1793,1766,1769,1771,1774,1800,1797,1829,1826,1859,1860,1831,1832,1835,1833,1864,1866,1868,1870,1837,1839,1802,1798,1828,1827,1860,1863,1831,1834,1836,1839,1803,1804,1832,1834,1836,1838,1840,1843,1806,1805,1838,1841,1842,1845,1848,1851,1848,1883,1886,1889,1808,1805,1840,1842,1843,1841,1867,1869,1872,1873,1876,1734,1731,1764,1766,1737,1739,1771,1773,1772,1804,1803,1831,1834,1832,1867,1870,1873,1902,1905,1907,1910,1911,1913,1836,1806,1807,1833,1836,1807,1810,1811,1812,1813,1845,1847,1774,1774,1808,1810,1812,1674,1675,1709,1711,1711,1741,1743,1768,1770,1800,1803,1823,1825,1801,1804,1771,1773,1776,1776,1801,1798,1834,1836,1803,1806,1744],"death":[1702,1730,1755,1764,1766,1752,1805,1797,1820,1834,1858,1834,1879,1830,1934,1920,1956,1934,1948,1938,1951,1972,1912,1888,1933,1915,1941,1876,1936,1952,1974,1965,1957,1937,0,0,0,1937,1930,1920,1956,1953,1937,1982,1987,1960,0,1995,0,1974,0,0,0,0,0,0,0,0,2014,0,0,0,0,0,0,0,0,0,0,1959,1961,1979,1956,1964,1938,1977,1972,1936,2008,0,0,0,1992,2015,0,0,0,2022,1976,1970,0,2003,0,0,0,0,0,0,2000,0,0,0,0,0,0,0,0,0,0,0,0,1946,1989,0,2015,2012,0,0,0,0,1920,1914,1887,1953,1949,1943,1918,1997,2002,1981,0,0,0,1923,1923,0,0,0,0,0,0,0,0,0,0,0,0,0,1979,1960,1823,1820,1936,1886,1824,1827,1924,1916,1862,1921,1888,2004,1965,1915,1914,1921,1931,1941,1966,1891,1894,1941,1937,1927,1951,1941,1921,1952,1878,1875,1827,1819,1783,1792,1818,1791,1792,1870,1802,1773,1812,1755,1855,1848,1860,1872,1841,1868,1877,1794,1821,1849,1824,1818,1861,1754,1832,1817,1816,1848,1863,1863,1813,1883,1824,1853,1727,1801,1818,1813,1796,1786,1770,1796,1796,1817,1831,1839,1763,1843,1799,1819,1822,1789,1814,1840,1802,1840,1875,1886,1867,1763,1792,1873,1846,1868,1874,1906,1868,1850,1903,1861,1906,1857,1759,1841,1790,1869,1830,1836,1841,1764,1779,1780,1822,1775,1754,1759,1780,1706,1766,1742,1797,1768,1788,1731,1767,1767,1814,1765,1842,1827,1849,1770,1845,1801,1769,1794,1805,1817,1853,1763,1874,1838,1837,1852,1782,1808,1798,1915,1834,1860,1946,1903,1884,1836,1901,1925,1874,1903,1931,1927,1916,1810,1879,1918,1828,1950,1944,1839,1835,1837,1891,1804,1812,1909,1895,1837,1873,1926,1915,1887,1895,1890,1849,1877,1897,1909,1928,1856,1955,1921,1950,1880,1886,1912,1894,1915,1876,1944,1930,1944,1934,1877,1820,1817,1816,1847,1823,1791,1857,1825,1853,1894,1804,1899,1895,1909,1875,1947,1925,1937,1982,1997,2000,1997,1948,1897,1807,1884,1841,1897,1893,1818,1812,1864,1885,1906,1933,1860,1860,1843,1900,1820,1735,1736,1717,1783,1779,1776,1820,1776,1831,1881,1875,1895,1911,1873,1894,1848,1834,1784,1784,1809,1884,1902,1837,1838,1858,1834],"x":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255,256,257,258,259,260,261,262,263,264,265,266,267,268,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,286,287,288,289,290,291,292,293,294,295,296,297,298,299,300,301,302,303,304,305,306,307,308,309,310,311,312,313,314,315,316,317,318,319,320,321,322,323,324,325,326,327,328,329,330,331,332,333,334,335,336,337,338,339,340,341,342,343,344,345,346,347,348,349,350,351,352,353,354,355,356,357,358,359,360,361,362,363,364,365,366,367,368,369,370,371,372,373,374,375,376,377,378,379,380,381,382,383,384,385,386,387,388,389,390,391,392,393,394,395,396,397,398,399,400,401,402,403,404,405,406,407,408,409,410,411,412,413,414,415,416,417,418,419],"y":[1640.0,1640.0,1672.0,1674.0,1697.0,1700.0,1724.0,1720.0,1754.0,1757.0,1785.0,1782.0,1819.0,1822.0,1844.0,1843.0,1870.0,1873.0,1876.0,1877.0,1879.0,1882.0,1911.0,1880.0,1847.0,1843.0,1873.0,1875.0,1875.0,1900.0,1902.0,1904.0,1905.0,1902.0,1936.0,1937.0,1939.0,1876.0,1849.0,1852.0,1876.0,1876.0,1902.0,1905.0,1907.0,1908.0,1937.0,1934.0,1969.0,1966.0,1994.0,1995.0,1998.0,1971.0,1970.0,2004.0,1972.0,1939.0,1937.0,1973.0,1972.0,2003.0,2004.0,2006.0,1942.0,1941.0,1968.0,1970.0,1973.0,1878.0,1875.0,1902.0,1904.0,1929.0,1930.0,1905.0,1904.0,1928.0,1927.0,1955.0,1956.0,1957.0,1931.0,1934.0,1959.0,1962.0,1963.0,1932.0,1908.0,1909.0,1936.0,1935.0,1960.0,1961.0,1964.0,1967.0,1993.0,1996.0,1939.0,1937.0,1965.0,1966.0,1968.0,1941.0,1937.0,1966.0,1968.0,1969.0,1967.0,1996.0,1999.0,1911.0,1908.0,1937.0,1938.0,1935.0,1963.0,1964.0,1965.0,1940.0,1912.0,1913.0,1879.0,1881.0,1877.0,1908.0,1910.0,1911.0,1912.0,1913.0,1942.0,1945.0,1947.0,1915.0,1915.0,1948.0,1951.0,1951.0,1981.0,1983.0,1986.0,1952.0,1948.0,1985.0,1982.0,2017.0,2020.0,2023.0,1918.0,1883.0,1822.0,1819.0,1850.0,1851.0,1823.0,1819.0,1852.0,1855.0,1854.0,1886.0,1887.0,1914.0,1888.0,1825.0,1828.0,1831.0,1854.0,1851.0,1880.0,1883.0,1886.0,1889.0,1856.0,1859.0,1861.0,1864.0,1860.0,1891.0,1788.0,1789.0,1755.0,1751.0,1782.0,1757.0,1757.0,1790.0,1791.0,1793.0,1725.0,1721.0,1751.0,1747.0,1778.0,1780.0,1783.0,1782.0,1806.0,1807.0,1809.0,1786.0,1786.0,1814.0,1816.0,1817.0,1789.0,1753.0,1755.0,1756.0,1755.0,1780.0,1782.0,1811.0,1812.0,1815.0,1816.0,1818.0,1726.0,1724.0,1750.0,1727.0,1728.0,1700.0,1702.0,1724.0,1724.0,1749.0,1750.0,1753.0,1755.0,1757.0,1727.0,1729.0,1750.0,1728.0,1728.0,1754.0,1750.0,1788.0,1785.0,1814.0,1815.0,1755.0,1757.0,1783.0,1785.0,1787.0,1788.0,1820.0,1816.0,1849.0,1851.0,1853.0,1854.0,1822.0,1758.0,1755.0,1789.0,1792.0,1795.0,1759.0,1760.0,1763.0,1702.0,1699.0,1732.0,1703.0,1673.0,1673.0,1699.0,1698.0,1731.0,1734.0,1736.0,1700.0,1698.0,1730.0,1732.0,1759.0,1762.0,1764.0,1765.0,1766.0,1768.0,1769.0,1793.0,1733.0,1701.0,1704.0,1733.0,1731.0,1763.0,1762.0,1793.0,1766.0,1769.0,1771.0,1774.0,1800.0,1797.0,1829.0,1826.0,1859.0,1860.0,1831.0,1832.0,1835.0,1833.0,1864.0,1866.0,1868.0,1870.0,1837.0,1839.0,1802.0,1798.0,1828.0,1827.0,1860.0,1863.0,1831.0,1834.0,1836.0,1839.0,1803.0,1804.0,1832.0,1834.0,1836.0,1838.0,1840.0,1843.0,1806.0,1805.0,1838.0,1841.0,1842.0,1845.0,1848.0,1851.0,1848.0,1883.0,1886.0,1889.0,1808.0,1805.0,1840.0,1842.0,1843.0,1841.0,1867.0,1869.0,1872.0,1873.0,1876.0,1734.0,1731.0,1764.0,1766.0,1737.0,1739.0,1771.0,1773.0,1772.0,1804.0,1803.0,1831.0,1834.0,1832.0,1867.0,1870.0,1873.0,1902.0,1905.0,1907.0,1910.0,1911.0,1913.0,1836.0,1806.0,1807.0,1833.0,1836.0,1807.0,1810.0,1811.0,1812.0,1813.0,1845.0,1847.0,1774.0,1774.0,1808.0,1810.0,1812.0,1674.0,1675.0,1709.0,1711.0,1711.0,1741.0,1743.0,1768.0,1770.0,1800.0,1803.0,1823.0,1825.0,1801.0,1804.0,1771.0,1773.0,1776.0,1776.0,1801.0,1798.0,1834.0,1836.0,1803.0,1806.0,1744.0],"branch":[4,1,1,2,2,2,2,4,6,6,6,6,1,4,4,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,3,0,0,0,0,0,3,3,3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,3,0,3,3,3,3,3,3,3,3,0,0,0,0,3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,3,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,3,3,3,3,0,0,0,0,0,3,0,0,0,6,6,0,0,6,3,3,3,0,0,0,0,0,2,6,0,0,0,3,0,0,0,0,0,0,0,0,0,6,6,4,4,4,4,4,5,4,2,2,2,2,2,2,4,2,2,2,2,2,2,2,6,6,2,2,2,2,2,2,6,1,4,1,5,1,2,2,2,2,2,5,2,1,1,4,1,2,1,4,4,5,6,6,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,0,0,1,1,1,1,1,1,1,1,6,1,4,4,2,1,1,4,4,6,4,4,1,1,1,2,2,2,2,2,2,5,2,2,1,1,1,1,5,5,5,5,5,5,5,5,5,5,5,0,0,0,5,5,5,0,0,0,0,0,5,5,6,6,5,0,3,0,1,6,6,1,2,1,1,1,1,1,1,1,5,5,5,5,2,1,5,3,3,0,3,3,5,4,4,4,2,0,0,0,0,3,0,1,1,6,1,1,1,1,1,2,4,4,4,4,3,3,0,0,0,0,0,0,0,0,4,2,2,2,2,2,2,1,2,2,2,6,2,2,4,2,5,1,2,5,2,2,2,2,1,1,1,1,6,1,1,1,2,2,5,5,1,4,4,4,1,5,5],"flags":[17,9,17,9,17,9,17,9,17,9,17,9,17,9,8,16,8,16,16,8,8,16,16,8,8,16,16,16,8,16,80,16,8,16,136,136,144,16,17,9,17,9,8,8,17,73,149,72,209,8,137,137,145,137,144,137,137,136,16,136,208,136,144,136,144,136,136,136,136,16,8,16,8,8,16,16,8,8,16,144,200,136,8,16,144,136,208,16,16,8,144,72,144,208,136,144,136,144,8,208,136,208,144,136,144,144,136,144,136,136,200,8,16,144,8,80,136,136,136,136,8,16,80,16,8,8,16,16,8,16,144,144,136,72,16,208,200,208,144,144,136,136,144,136,208,208,144,200,8,16,8,16,8,8,8,16,16,8,16,16,8,8,16,72,8,16,8,16,16,16,16,8,8,72,8,8,16,16,72,16,16,72,16,16,8,16,8,72,8,16,8,16,16,8,8,80,80,8,8,8,16,16,16,8,16,72,8,8,16,80,72,16,8,8,16,16,16,8,8,16,16,8,16,8,16,8,8,8,16,16,8,80,16,16,72,8,16,72,16,16,8,16,8,72,8,16,8,16,8,72,8,16,8,8,8,16,16,16,8,16,16,16,16,8,8,8,8,16,16,72,8,16,16,16,8,8,16,16,8,80,16,16,16,8,80,16,8,16,16,8,16,8,72,8,16,72,16,8,16,16,8,8,16,16,8,8,16,8,16,16,8,8,16,16,72,80,8,16,16,8,16,8,8,8,80,80,16,16,8,16,8,8,16,8,16,16,16,16,8,16,8,16,16,8,16,16,16,16,8,16,72,8,8,8,72,16,8,8,8,16,8,16,8,16,8,16,8,16,16,16,8,16,8,8,80,8,8,8,16,8,8,8,16,16,72,16,8,16,16,8,16,72,16,16,16,8,16,16,8,8,16,8,16,8,16,16,16,16,80,72,72,16,8,16,8,80,8,16,16,16],"dist":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,2,2,2,2,2,3,3,2,1,2,2,2,3,3,3,3,3,4,4,4,4,2,0,0,0,0,1,1,0,0,0,1,0,1,0,0,0,0,1,0,0,1,2,2,3,3,3,3,1,2,2,2,2,1,2,2,3,3,3,2,3,3,4,4,4,4,3,4,4,4,4,3,2,3,3,4,4,4,4,5,5,5,3,4,4,4,4,3,4,4,4,4,5,5,5,2,3,3,3,4,4,4,4,3,2,2,1,1,2,2,2,2,2,3,3,3,3,2,3,3,3,4,4,4,4,3,4,4,5,5,5,5,2,1,1,2,2,2,1,2,2,2,3,3,4,4,3,1,1,2,2,3,3,3,3,3,2,2,2,2,3,3,1,1,1,2,2,1,2,2,2,2,1,2,2,3,3,3,3,4,4,4,4,3,4,4,4,4,3,2,2,2,3,3,4,4,4,4,4,4,1,2,2,1,1,1,2,2,3,3,3,3,3,3,2,3,3,2,3,3,4,4,5,5,5,3,4,4,4,4,5,5,6,6,6,6,6,5,3,4,4,4,4,3,3,3,1,2,2,1,1,2,2,3,3,3,3,2,3,3,4,4,4,4,4,4,4,5,5,3,2,3,3,4,4,5,5,4,4,4,5,5,6,6,7,7,7,6,6,6,7,7,7,7,7,6,6,5,6,6,7,7,7,6,6,6,6,5,6,6,6,6,6,6,6,5,6,6,6,6,6,6,6,7,7,7,7,5,6,6,6,6,7,7,7,7,7,7,3,4,4,4,3,4,4,4,5,5,6,6,6,7,7,7,8,8,8,8,8,8,8,6,5,6,6,6,5,5,5,5,6,6,6,4,5,5,5,5,1,2,2,2,3,3,4,4,5,5,6,6,6,5,5,4,4,4,5,5,6,6,6,5,5,3],"rad":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.32,0.4693,0.4693,0.4693,0.4693,0.4693,0.4693,0.6315,0.6315,0.4693,0.32,0.4693,0.4693,0.4693,0.6315,0.6315,0.6315,0.6315,0.6315,0.7715,0.7715,0.7715,0.7715,0.4693,0.0,0.0,0.0,0.0,0.32,0.32,0.0,0.0,0.0,0.32,0.0,0.32,0.0,0.0,0.0,0.0,0.32,0.0,0.0,0.32,0.4693,0.4693,0.6315,0.6315,0.6315,0.6315,0.32,0.4693,0.4693,0.4693,0.4693,0.32,0.4693,0.4693,0.6315,0.6315,0.6315,0.4693,0.6315,0.6315,0.7715,0.7715,0.7715,0.7715,0.6315,0.7715,0.7715,0.7715,0.7715,0.6315,0.4693,0.6315,0.6315,0.7715,0.7715,0.7715,0.7715,0.8653,0.8653,0.8653,0.6315,0.7715,0.7715,0.7715,0.7715,0.6315,0.7715,0.7715,0.7715,0.7715,0.8653,0.8653,0.8653,0.4693,0.6315,0.6315,0.6315,0.7715,0.7715,0.7715,0.7715,0.6315,0.4693,0.4693,0.32,0.32,0.4693,0.4693,0.4693,0.4693,0.4693,0.6315,0.6315,0.6315,0.6315,0.4693,0.6315,0.6315,0.6315,0.7715,0.7715,0.7715,0.7715,0.6315,0.7715,0.7715,0.8653,0.8653,0.8653,0.8653,0.4693,0.32,0.32,0.4693,0.4693,0.4693,0.32,0.4693,0.4693,0.4693,0.6315,0.6315,0.7715,0.7715,0.6315,0.32,0.32,0.4693,0.4693,0.6315,0.6315,0.6315,0.6315,0.6315,0.4693,0.4693,0.4693,0.4693,0.6315,0.6315,0.32,0.32,0.32,0.4693,0.4693,0.32,0.4693,0.4693,0.4693,0.4693,0.32,0.4693,0.4693,0.6315,0.6315,0.6315,0.6315,0.7715,0.7715,0.7715,0.7715,0.6315,0.7715,0.7715,0.7715,0.7715,0.6315,0.4693,0.4693,0.4693,0.6315,0.6315,0.7715,0.7715,0.7715,0.7715,0.7715,0.7715,0.32,0.4693,0.4693,0.32,0.32,0.32,0.4693,0.4693,0.6315,0.6315,0.6315,0.6315,0.6315,0.6315,0.4693,0.6315,0.6315,0.4693,0.6315,0.6315,0.7715,0.7715,0.8653,0.8653,0.8653,0.6315,0.7715,0.7715,0.7715,0.7715,0.8653,0.8653,0.9297,0.9297,0.9297,0.9297,0.9297,0.8653,0.6315,0.7715,0.7715,0.7715,0.7715,0.6315,0.6315,0.6315,0.32,0.4693,0.4693,0.32,0.32,0.4693,0.4693,0.6315,0.6315,0.6315,0.6315,0.4693,0.6315,0.6315,0.7715,0.7715,0.7715,0.7715,0.7715,0.7715,0.7715,0.8653,0.8653,0.6315,0.4693,0.6315,0.6315,0.7715,0.7715,0.8653,0.8653,0.7715,0.7715,0.7715,0.8653,0.8653,0.9297,0.9297,0.9771,0.9771,0.9771,0.9297,0.9297,0.9297,0.9771,0.9771,0.9771,0.9771,0.9771,0.9297,0.9297,0.8653,0.9297,0.9297,0.9771,0.9771,0.9771,0.9297,0.9297,0.9297,0.9297,0.8653,0.9297,0.9297,0.9297,0.9297,0.9297,0.9297,0.9297,0.8653,0.9297,0.9297,0.9297,0.9297,0.9297,0.9297,0.9297,0.9771,0.9771,0.9771,0.9771,0.8653,0.9297,0.9297,0.9297,0.9297,0.9771,0.9771,0.9771,0.9771,0.9771,0.9771,0.6315,0.7715,0.7715,0.7715,0.6315,0.7715,0.7715,0.7715,0.8653,0.8653,0.9297,0.9297,0.9297,0.9771,0.9771,0.9771,0.9958,0.9958,0.9958,0.9958,0.9958,0.9958,0.9958,0.9297,0.8653,0.9297,0.9297,0.9297,0.8653,0.8653,0.8653,0.8653,0.9297,0.9297,0.9297,0.7715,0.8653,0.8653,0.8653,0.8653,0.32,0.4693,0.4693,0.4693,0.6315,0.6315,0.7715,0.7715,0.8653,0.8653,0.9297,0.9297,0.9297,0.8653,0.8653,0.7715,0.7715,0.7715,0.8653,0.8653,0.9297,0.9297,0.9297,0.8653,0.8653,0.6315],"theta":[1.1594,2.3263,2.6778,3.0294,3.2912,3.553,3.7026,3.6278,3.7325,3.7624,4.2112,3.9868,4.4057,4.6002,4.3097,4.2561,4.2695,4.2829,4.2963,4.3097,4.3365,4.3277,4.3454,4.3634,4.4743,4.3963,4.4093,4.4808,4.4299,4.4427,4.4554,4.4681,4.5062,4.4852,4.4992,4.5132,4.5272,4.5523,5.221,5.8419,5.8718,5.9017,5.8619,5.8817,6.0064,6.1111,6.1336,6.1336,6.1635,6.1635,6.2308,6.2458,6.2607,6.1934,6.1934,6.2757,6.2159,5.9708,5.9342,5.9781,5.9539,5.97,5.9861,6.0023,6.0563,6.0328,6.0485,6.0642,6.0799,5.0344,4.7296,4.7595,4.7455,4.7595,4.7735,4.8611,4.7984,4.8326,4.8138,4.8264,4.8389,4.8514,4.8896,4.8708,4.8833,4.8959,4.9084,4.9238,5.0763,4.9608,5.0103,4.9771,4.9882,4.9992,5.0269,5.0139,5.0269,5.0399,5.0818,5.0636,5.0757,5.0878,5.0999,5.1533,5.1201,5.1311,5.1422,5.1699,5.1569,5.1699,5.1828,5.2675,5.2261,5.238,5.2735,5.2539,5.2669,5.28,5.293,5.309,5.3273,5.3393,5.3943,5.5742,5.4278,5.44,5.4522,5.4644,5.501,5.4809,5.4943,5.5077,5.5211,5.623,5.5482,5.5597,5.5942,5.5753,5.5879,5.6006,5.6132,5.6632,5.6337,5.6691,5.6497,5.6626,5.6756,5.6886,5.7206,5.7541,3.8232,3.8072,3.8232,3.8392,3.9118,3.8646,3.8781,3.9253,3.8968,3.9253,3.9159,3.9347,3.9538,3.98,4.0823,4.0047,4.05,4.0227,4.0363,4.05,4.0636,4.0773,4.0952,4.1081,4.121,4.1469,4.1384,4.1554,3.7226,3.7424,3.5908,3.581,3.6005,3.65,3.6256,3.6419,3.6582,3.6744,3.2573,3.0964,3.1954,3.1195,3.1312,3.1429,3.1779,3.1586,3.1715,3.1843,3.1971,3.2362,3.217,3.2298,3.2427,3.2555,3.2713,3.2944,3.3068,3.3687,3.3258,3.3748,3.3434,3.3559,3.3685,3.3811,3.3937,3.4063,3.4675,3.4586,3.4765,3.4946,3.5082,2.6509,2.4142,2.4628,2.4316,2.4441,2.4565,2.469,2.4815,2.4939,2.5235,2.5155,2.5315,2.7177,2.5683,2.607,2.5837,2.6129,2.5992,2.6129,2.6266,2.7121,2.6541,2.6647,2.6752,2.728,2.6914,2.728,2.7059,2.7169,2.728,2.739,2.75,2.7645,2.8117,2.7935,2.8056,2.8178,2.83,2.8449,2.856,2.867,2.947,2.9381,2.9559,2.9739,0.9871,0.2468,0.282,0.2626,0.2756,0.2885,0.3014,0.3878,0.3262,0.3878,0.344,0.3549,0.3659,0.3768,0.3878,0.3987,0.4207,0.4134,0.4279,0.4494,1.0988,0.5456,0.8952,0.5968,0.6154,0.6093,0.6216,0.6341,0.6434,0.9232,0.6853,0.7562,0.7014,0.721,0.7118,0.721,0.7302,0.7406,0.7484,0.7758,0.7593,0.7675,0.7758,0.7841,0.7924,0.8033,0.8111,0.8648,0.8321,0.8525,0.8429,0.8525,0.8621,0.8729,0.8811,0.8893,0.8974,0.9399,0.9147,0.9231,0.9315,0.9399,0.9483,0.9567,0.9651,1.0234,0.9833,0.9914,0.9994,1.0074,1.0154,1.0234,1.0475,1.0342,1.0431,1.0519,1.0607,1.1194,1.0831,1.0911,1.0992,1.1316,1.1108,1.1191,1.1274,1.1357,1.144,1.1523,1.2606,1.2483,1.2606,1.2728,1.4694,1.3087,1.3182,1.4552,1.3431,1.4121,1.3592,1.3674,1.4161,1.3807,1.3886,1.424,1.4003,1.4082,1.4161,1.424,1.4319,1.4398,1.4477,1.4649,1.494,1.4839,1.494,1.5041,1.5155,1.5242,1.5328,1.5543,1.5442,1.5543,1.5645,1.6111,1.5955,1.6059,1.6163,1.6267,2.0074,1.8619,1.874,2.0195,1.9024,2.0195,1.9265,1.973,1.9419,1.9678,1.9556,1.9678,1.98,1.9938,2.0042,2.0195,2.0299,2.0764,2.0452,2.0712,2.059,2.0712,2.0834,2.0972,2.1076,2.1367],"maxDist":8,"edges":[[0,2],[0,266],[0,394],[1,2],[1,266],[1,394],[2,265],[2,4],[2,221],[2,262],[3,265],[3,4],[3,221],[3,262],[4,6],[4,188],[4,216],[4,219],[4,220],[5,6],[5,188],[5,216],[5,219],[5,220],[6,8],[6,180],[6,183],[7,8],[7,180],[7,183],[8,10],[8,178],[8,179],[9,10],[9,178],[9,179],[10,12],[10,150],[10,154],[10,163],[10,164],[11,12],[11,150],[11,154],[11,163],[11,164],[12,14],[12,24],[12,38],[13,14],[13,24],[13,38],[14,16],[14,17],[14,18],[14,19],[14,20],[14,23],[15,16],[15,17],[15,18],[15,19],[15,20],[15,23],[20,22],[21,22],[24,26],[24,27],[24,37],[25,26],[25,27],[25,37],[27,29],[27,30],[27,31],[27,32],[28,29],[28,30],[28,31],[28,32],[32,34],[32,35],[32,36],[33,34],[33,35],[33,36],[38,40],[38,69],[38,122],[38,123],[38,149],[39,40],[39,69],[39,122],[39,123],[39,149],[40,42],[40,43],[40,44],[41,42],[41,43],[41,44],[44,46],[44,57],[44,64],[45,46],[45,57],[45,64],[46,48],[46,53],[46,56],[47,48],[47,53],[47,56],[48,50],[48,51],[48,52],[49,50],[49,51],[49,52],[53,55],[54,55],[57,59],[58,59],[59,61],[59,62],[59,63],[60,61],[60,62],[60,63],[64,66],[64,67],[64,68],[65,66],[65,67],[65,68],[69,71],[69,75],[69,88],[69,111],[69,120],[69,121],[70,71],[70,75],[70,88],[70,111],[70,120],[70,121],[71,73],[71,74],[72,73],[72,74],[75,77],[75,82],[75,87],[76,77],[76,82],[76,87],[77,79],[77,80],[77,81],[78,79],[78,80],[78,81],[82,84],[82,85],[82,86],[83,84],[83,85],[83,86],[88,90],[88,98],[88,103],[89,90],[89,98],[89,103],[90,92],[90,93],[90,94],[91,92],[91,93],[91,94],[94,96],[94,97],[95,96],[95,97],[98,100],[98,101],[98,102],[99,100],[99,101],[99,102],[103,105],[103,106],[103,107],[104,105],[104,106],[104,107],[107,109],[107,110],[108,109],[108,110],[111,113],[111,114],[111,119],[112,113],[112,114],[112,119],[114,116],[114,117],[114,118],[115,116],[115,117],[115,118],[123,125],[123,126],[123,127],[123,128],[123,133],[123,148],[124,125],[124,126],[124,127],[124,128],[124,133],[124,148],[128,130],[128,131],[128,132],[129,130],[129,131],[129,132],[133,135],[133,136],[133,141],[134,135],[134,136],[134,141],[136,138],[136,139],[136,140],[137,138],[137,139],[137,140],[141,143],[142,143],[143,145],[143,146],[143,147],[144,145],[144,146],[144,147],[150,152],[150,153],[151,152],[151,153],[154,156],[154,157],[155,156],[155,157],[157,159],[157,162],[158,159],[158,162],[159,161],[160,161],[164,166],[164,172],[164,173],[164,174],[164,175],[165,166],[165,172],[165,173],[165,174],[165,175],[166,168],[166,169],[166,170],[166,171],[167,168],[167,169],[167,170],[167,171],[175,177],[176,177],[180,182],[181,182],[183,185],[183,186],[183,187],[184,185],[184,186],[184,187],[188,190],[188,205],[188,206],[188,207],[189,190],[189,205],[189,206],[189,207],[190,192],[190,193],[190,194],[190,199],[190,204],[191,192],[191,193],[191,194],[191,199],[191,204],[194,196],[194,197],[194,198],[195,196],[195,197],[195,198],[199,201],[199,202],[199,203],[200,201],[200,202],[200,203],[207,209],[208,209],[209,211],[209,212],[209,213],[209,214],[209,215],[210,211],[210,212],[210,213],[210,214],[210,215],[216,218],[217,218],[221,223],[221,230],[221,233],[222,223],[222,230],[222,233],[223,225],[223,226],[223,227],[223,228],[223,229],[224,225],[224,226],[224,227],[224,228],[224,229],[230,232],[231,232],[233,235],[233,241],[233,254],[233,259],[233,260],[233,261],[234,235],[234,241],[234,254],[234,259],[234,260],[234,261],[235,237],[236,237],[237,239],[237,240],[238,239],[238,240],[241,243],[241,244],[241,245],[242,243],[242,244],[242,245],[245,247],[245,253],[246,247],[246,253],[247,249],[247,250],[247,251],[247,252],[248,249],[248,250],[248,251],[248,252],[254,256],[254,257],[254,258],[255,256],[255,257],[255,258],[262,264],[263,264],[266,268],[266,273],[266,286],[267,268],[267,273],[267,286],[268,270],[268,271],[268,272],[269,270],[269,271],[269,272],[273,275],[273,285],[274,275],[274,285],[275,277],[275,278],[275,279],[275,280],[275,281],[275,282],[276,277],[276,278],[276,279],[276,280],[276,281],[276,282],[282,284],[283,284],[286,288],[286,354],[286,358],[287,288],[287,354],[287,358],[288,290],[288,293],[288,294],[288,295],[289,290],[289,293],[289,294],[289,295],[290,292],[291,292],[295,297],[295,313],[295,323],[295,331],[295,343],[296,297],[296,313],[296,323],[296,331],[296,343],[297,299],[297,303],[297,304],[297,305],[297,311],[297,312],[298,299],[298,303],[298,304],[298,305],[298,311],[298,312],[299,301],[299,302],[300,301],[300,302],[305,307],[305,308],[305,309],[305,310],[306,307],[306,308],[306,309],[306,310],[313,315],[313,319],[313,320],[313,321],[313,322],[314,315],[314,319],[314,320],[314,321],[314,322],[315,317],[315,318],[316,317],[316,318],[323,325],[323,326],[323,327],[323,328],[323,329],[323,330],[324,325],[324,326],[324,327],[324,328],[324,329],[324,330],[331,333],[331,334],[331,335],[331,336],[331,337],[331,338],[332,333],[332,334],[332,335],[332,336],[332,337],[332,338],[338,340],[338,341],[338,342],[339,340],[339,341],[339,342],[343,345],[343,346],[343,347],[344,345],[344,346],[344,347],[347,349],[347,350],[347,351],[347,352],[347,353],[348,349],[348,350],[348,351],[348,352],[348,353],[354,356],[354,357],[355,356],[355,357],[358,360],[358,361],[358,389],[359,360],[359,361],[359,389],[361,363],[361,378],[361,382],[361,383],[361,384],[361,385],[362,363],[362,378],[362,382],[362,383],[362,384],[362,385],[363,365],[363,366],[363,377],[364,365],[364,366],[364,377],[366,368],[366,369],[367,368],[367,369],[369,371],[369,372],[369,373],[369,374],[369,375],[369,376],[370,371],[370,372],[370,373],[370,374],[370,375],[370,376],[378,380],[378,381],[379,380],[379,381],[385,387],[385,388],[386,387],[386,388],[389,391],[389,392],[389,393],[390,391],[390,392],[390,393],[394,396],[394,397],[395,396],[395,397],[397,399],[397,419],[398,399],[398,419],[399,401],[399,409],[399,410],[399,411],[400,401],[400,409],[400,410],[400,411],[401,403],[401,407],[401,408],[402,403],[402,407],[402,408],[403,405],[403,406],[404,405],[404,406],[411,413],[411,417],[411,418],[412,413],[412,417],[412,418],[413,415],[413,416],[414,415],[414,416]],"marriages":[[0,1],[2,3],[4,5],[6,7],[8,9],[10,11],[12,13],[14,15],[20,21],[24,25],[27,28],[32,33],[38,39],[40,41],[44,45],[46,47],[48,49],[53,54],[57,58],[59,60],[64,65],[69,70],[71,72],[75,76],[77,78],[82,83],[88,89],[90,91],[94,95],[98,99],[103,104],[107,108],[111,112],[114,115],[123,124],[128,129],[133,134],[136,137],[141,142],[143,144],[150,151],[154,155],[157,158],[159,160],[164,165],[166,167],[175,176],[180,181],[183,184],[188,189],[190,191],[194,195],[199,200],[207,208],[209,210],[216,217],[221,222],[223,224],[230,231],[233,234],[235,236],[237,238],[241,242],[245,246],[247,248],[254,255],[262,263],[266,267],[268,269],[273,274],[275,276],[282,283],[286,287],[288,289],[290,291],[295,296],[297,298],[299,300],[305,306],[313,314],[315,316],[323,324],[331,332],[338,339],[343,344],[347,348],[354,355],[358,359],[361,362],[363,364],[366,367],[369,370],[378,379],[385,386],[389,390],[394,395],[397,398],[399,400],[401,402],[403,404],[411,412],[413,414]],"parents":[[],[],[0,1],[],[2,3],[],[5,4],[],[6,7],[],[8,9],[],[10,11],[],[12,13],[],[15,14],[15,14],[15,14],[15,14],[15,14],[],[20,21],[15,14],[12,13],[],[24,25],[24,25],[],[27,28],[27,28],[27,28],[27,28],[],[33,32],[33,32],[33,32],[24,25],[12,13],[],[38,39],[],[40,41],[40,41],[40,41],[],[44,45],[],[46,47],[],[48,49],[48,49],[48,49],[46,47],[],[53,54],[46,47],[44,45],[],[58,57],[],[59,60],[59,60],[59,60],[44,45],[],[65,64],[65,64],[65,64],[38,39],[],[69,70],[],[72,71],[72,71],[69,70],[],[76,75],[],[77,78],[77,78],[77,78],[76,75],[],[82,83],[82,83],[82,83],[76,75],[69,70],[],[89,88],[],[90,91],[90,91],[90,91],[],[94,95],[94,95],[89,88],[],[98,99],[98,99],[98,99],[89,88],[],[103,104],[103,104],[103,104],[],[107,108],[107,108],[69,70],[],[112,111],[112,111],[],[114,115],[114,115],[114,115],[112,111],[69,70],[69,70],[38,39],[38,39],[],[124,123],[124,123],[124,123],[124,123],[],[128,129],[128,129],[128,129],[124,123],[],[133,134],[133,134],[],[136,137],[136,137],[136,137],[133,134],[],[141,142],[],[143,144],[143,144],[143,144],[124,123],[38,39],[10,11],[],[151,150],[151,150],[10,11],[],[155,154],[155,154],[],[157,158],[],[159,160],[157,158],[10,11],[10,11],[],[164,165],[],[167,166],[167,166],[167,166],[167,166],[164,165],[164,165],[164,165],[164,165],[],[175,176],[8,9],[8,9],[6,7],[],[180,181],[6,7],[],[183,184],[183,184],[183,184],[5,4],[],[188,189],[],[191,190],[191,190],[191,190],[],[194,195],[194,195],[194,195],[191,190],[],[199,200],[199,200],[199,200],[191,190],[188,189],[188,189],[188,189],[],[208,207],[],[209,210],[209,210],[209,210],[209,210],[209,210],[5,4],[],[217,216],[5,4],[5,4],[2,3],[],[222,221],[],[224,223],[224,223],[224,223],[224,223],[224,223],[222,221],[],[231,230],[222,221],[],[234,233],[],[235,236],[],[237,238],[237,238],[234,233],[],[241,242],[241,242],[241,242],[],[245,246],[],[247,248],[247,248],[247,248],[247,248],[245,246],[234,233],[],[254,255],[254,255],[254,255],[234,233],[234,233],[234,233],[2,3],[],[263,262],[2,3],[0,1],[],[266,267],[],[269,268],[269,268],[269,268],[266,267],[],[274,273],[],[275,276],[275,276],[275,276],[275,276],[275,276],[275,276],[],[282,283],[274,273],[266,267],[],[287,286],[],[288,289],[],[290,291],[288,289],[288,289],[288,289],[],[295,296],[],[297,298],[],[299,300],[299,300],[297,298],[297,298],[297,298],[],[305,306],[305,306],[305,306],[305,306],[297,298],[297,298],[295,296],[],[313,314],[],[315,316],[315,316],[313,314],[313,314],[313,314],[313,314],[295,296],[],[323,324],[323,324],[323,324],[323,324],[323,324],[323,324],[295,296],[],[331,332],[331,332],[331,332],[331,332],[331,332],[331,332],[],[338,339],[338,339],[338,339],[295,296],[],[343,344],[343,344],[343,344],[],[347,348],[347,348],[347,348],[347,348],[347,348],[287,286],[],[354,355],[354,355],[287,286],[],[358,359],[358,359],[],[361,362],[],[363,364],[363,364],[],[366,367],[366,367],[],[369,370],[369,370],[369,370],[369,370],[369,370],[369,370],[363,364],[361,362],[],[378,379],[378,379],[361,362],[361,362],[361,362],[361,362],[],[385,386],[385,386],[358,359],[],[389,390],[389,390],[389,390],[0,1],[],[394,395],[394,395],[],[398,397],[],[399,400],[],[401,402],[],[403,404],[403,404],[401,402],[401,402],[399,400],[399,400],[399,400],[],[411,412],[],[413,414],[413,414],[411,412],[411,412],[398,397]],"children":[[2,266,394],[2,266,394],[265,4,221,262],[265,4,221,262],[6,188,216,219,220],[6,188,216,219,220],[8,180,183],[8,180,183],[10,178,179],[10,178,179],[12,150,154,163,164],[12,150,154,163,164],[14,24,38],[14,24,38],[16,17,18,19,20,23],[16,17,18,19,20,23],[],[],[],[],[22],[22],[],[],[26,27,37],[26,27,37],[],[29,30,31,32],[29,30,31,32],[],[],[],[34,35,36],[34,35,36],[],[],[],[],[40,69,122,123,149],[40,69,122,123,149],[42,43,44],[42,43,44],[],[],[46,57,64],[46,57,64],[48,53,56],[48,53,56],[50,51,52],[50,51,52],[],[],[],[55],[55],[],[],[59],[59],[61,62,63],[61,62,63],[],[],[],[66,67,68],[66,67,68],[],[],[],[71,75,88,111,120,121],[71,75,88,111,120,121],[73,74],[73,74],[],[],[77,82,87],[77,82,87],[79,80,81],[79,80,81],[],[],[],[84,85,86],[84,85,86],[],[],[],[],[90,98,103],[90,98,103],[92,93,94],[92,93,94],[],[],[96,97],[96,97],[],[],[100,101,102],[100,101,102],[],[],[],[105,106,107],[105,106,107],[],[],[109,110],[109,110],[],[],[113,114,119],[113,114,119],[],[116,117,118],[116,117,118],[],[],[],[],[],[],[],[125,126,127,128,133,148],[125,126,127,128,133,148],[],[],[],[130,131,132],[130,131,132],[],[],[],[135,136,141],[135,136,141],[],[138,139,140],[138,139,140],[],[],[],[143],[143],[145,146,147],[145,146,147],[],[],[],[],[],[152,153],[152,153],[],[],[156,157],[156,157],[],[159,162],[159,162],[161],[161],[],[],[],[166,172,173,174,175],[166,172,173,174,175],[168,169,170,171],[168,169,170,171],[],[],[],[],[],[],[],[177],[177],[],[],[],[182],[182],[],[185,186,187],[185,186,187],[],[],[],[190,205,206,207],[190,205,206,207],[192,193,194,199,204],[192,193,194,199,204],[],[],[196,197,198],[196,197,198],[],[],[],[201,202,203],[201,202,203],[],[],[],[],[],[],[209],[209],[211,212,213,214,215],[211,212,213,214,215],[],[],[],[],[],[218],[218],[],[],[],[223,230,233],[223,230,233],[225,226,227,228,229],[225,226,227,228,229],[],[],[],[],[],[232],[232],[],[235,241,254,259,260,261],[235,241,254,259,260,261],[237],[237],[239,240],[239,240],[],[],[243,244,245],[243,244,245],[],[],[247,253],[247,253],[249,250,251,252],[249,250,251,252],[],[],[],[],[],[256,257,258],[256,257,258],[],[],[],[],[],[],[264],[264],[],[],[268,273,286],[268,273,286],[270,271,272],[270,271,272],[],[],[],[275,285],[275,285],[277,278,279,280,281,282],[277,278,279,280,281,282],[],[],[],[],[],[284],[284],[],[],[288,354,358],[288,354,358],[290,293,294,295],[290,293,294,295],[292],[292],[],[],[],[297,313,323,331,343],[297,313,323,331,343],[299,303,304,305,311,312],[299,303,304,305,311,312],[301,302],[301,302],[],[],[],[],[307,308,309,310],[307,308,309,310],[],[],[],[],[],[],[315,319,320,321,322],[315,319,320,321,322],[317,318],[317,318],[],[],[],[],[],[],[325,326,327,328,329,330],[325,326,327,328,329,330],[],[],[],[],[],[],[333,334,335,336,337,338],[333,334,335,336,337,338],[],[],[],[],[],[340,341,342],[340,341,342],[],[],[],[345,346,347],[345,346,347],[],[],[349,350,351,352,353],[349,350,351,352,353],[],[],[],[],[],[356,357],[356,357],[],[],[360,361,389],[360,361,389],[],[363,378,382,383,384,385],[363,378,382,383,384,385],[365,366,377],[365,366,377],[],[368,369],[368,369],[],[371,372,373,374,375,376],[371,372,373,374,375,376],[],[],[],[],[],[],[],[380,381],[380,381],[],[],[],[],[],[387,388],[387,388],[],[],[391,392,393],[391,392,393],[],[],[],[396,397],[396,397],[],[399,419],[399,419],[401,409,410,411],[401,409,410,411],[403,407,408],[403,407,408],[405,406],[405,406],[],[],[],[],[],[],[413,417,418],[413,417,418],[415,416],[415,416],[],[],[],[],[]],"spouses":[[1],[0],[3],[2],[5],[4],[7],[6],[9],[8],[11],[10],[13],[12],[15],[14],[],[],[],[],[21],[20],[],[],[25],[24],[],[28],[27],[],[],[],[33],[32],[],[],[],[],[39],[38],[41],[40],[],[],[45],[44],[47],[46],[49],[48],[],[],[],[54],[53],[],[],[58],[57],[60],[59],[],[],[],[65],[64],[],[],[],[70],[69],[72],[71],[],[],[76],[75],[78],[77],[],[],[],[83],[82],[],[],[],[],[89],[88],[91],[90],[],[],[95],[94],[],[],[99],[98],[],[],[],[104],[103],[],[],[108],[107],[],[],[112],[111],[],[115],[114],[],[],[],[],[],[],[],[124],[123],[],[],[],[129],[128],[],[],[],[134],[133],[],[137],[136],[],[],[],[142],[141],[144],[143],[],[],[],[],[],[151],[150],[],[],[155],[154],[],[158],[157],[160],[159],[],[],[],[165],[164],[167],[166],[],[],[],[],[],[],[],[176],[175],[],[],[],[181],[180],[],[184],[183],[],[],[],[189],[188],[191],[190],[],[],[195],[194],[],[],[],[200],[199],[],[],[],[],[],[],[208],[207],[210],[209],[],[],[],[],[],[217],[216],[],[],[],[222],[221],[224],[223],[],[],[],[],[],[231],[230],[],[234],[233],[236],[235],[238],[237],[],[],[242],[241],[],[],[246],[245],[248],[247],[],[],[],[],[],[255],[254],[],[],[],[],[],[],[263],[262],[],[],[267],[266],[269],[268],[],[],[],[274],[273],[276],[275],[],[],[],[],[],[283],[282],[],[],[287],[286],[289],[288],[291],[290],[],[],[],[296],[295],[298],[297],[300],[299],[],[],[],[],[306],[305],[],[],[],[],[],[],[314],[313],[316],[315],[],[],[],[],[],[],[324],[323],[],[],[],[],[],[],[332],[331],[],[],[],[],[],[339],[338],[],[],[],[344],[343],[],[],[348],[347],[],[],[],[],[],[355],[354],[],[],[359],[358],[],[362],[361],[364],[363],[],[367],[366],[],[370],[369],[],[],[],[],[],[],[],[379],[378],[],[],[],[],[],[386],[385],[],[],[390],[389],[],[],[],[395],[394],[],[398],[397],[400],[399],[402],[401],[404],[403],[],[],[],[],[],[],[412],[411],[414],[413],[],[],[],[],[]],"ids":["@I1@","@I2@","@I3@","@I6@","@I7@","@I11@","@I12@","@I17@","@I18@","@I21@","@I22@","@I25@","@I26@","@I31@","@I32@","@I220@","@I221@","@I222@","@I223@","@I224@","@I225@","@I316@","@I317@","@I226@","@I33@","@I68@","@I69@","@I70@","@I85@","@I86@","@I87@","@I88@","@I89@","@I310@","@I311@","@I312@","@I313@","@I71@","@I34@","@I35@","@I36@","@I41@","@I42@","@I43@","@I44@","@I45@","@I46@","@I49@","@I50@","@I53@","@I54@","@I55@","@I56@","@I51@","@I97@","@I98@","@I52@","@I47@","@I124@","@I125@","@I144@","@I145@","@I146@","@I147@","@I48@","@I302@","@I303@","@I304@","@I305@","@I37@","@I90@","@I91@","@I193@","@I194@","@I195@","@I92@","@I112@","@I113@","@I267@","@I268@","@I269@","@I270@","@I114@","@I283@","@I284@","@I285@","@I286@","@I115@","@I93@","@I101@","@I102@","@I140@","@I141@","@I142@","@I143@","@I334@","@I335@","@I336@","@I103@","@I148@","@I149@","@I150@","@I151@","@I104@","@I116@","@I117@","@I118@","@I119@","@I171@","@I172@","@I173@","@I94@","@I318@","@I319@","@I320@","@I389@","@I390@","@I391@","@I392@","@I321@","@I95@","@I96@","@I38@","@I39@","@I276@","@I277@","@I278@","@I279@","@I280@","@I357@","@I358@","@I359@","@I360@","@I281@","@I306@","@I307@","@I308@","@I393@","@I394@","@I395@","@I396@","@I309@","@I314@","@I315@","@I353@","@I354@","@I355@","@I356@","@I282@","@I40@","@I27@","@I152@","@I153@","@I154@","@I28@","@I105@","@I106@","@I107@","@I256@","@I257@","@I294@","@I295@","@I258@","@I29@","@I30@","@I62@","@I63@","@I183@","@I184@","@I185@","@I186@","@I187@","@I64@","@I65@","@I66@","@I67@","@I99@","@I100@","@I23@","@I24@","@I19@","@I76@","@I77@","@I20@","@I411@","@I412@","@I413@","@I414@","@I13@","@I57@","@I58@","@I196@","@I197@","@I198@","@I199@","@I227@","@I228@","@I229@","@I230@","@I200@","@I407@","@I408@","@I409@","@I410@","@I201@","@I59@","@I60@","@I61@","@I174@","@I175@","@I415@","@I416@","@I417@","@I418@","@I419@","@I420@","@I14@","@I138@","@I139@","@I15@","@I16@","@I8@","@I81@","@I82@","@I328@","@I329@","@I330@","@I331@","@I332@","@I333@","@I83@","@I326@","@I327@","@I84@","@I131@","@I132@","@I274@","@I275@","@I366@","@I367@","@I368@","@I133@","@I155@","@I156@","@I157@","@I158@","@I168@","@I169@","@I259@","@I260@","@I261@","@I262@","@I263@","@I170@","@I134@","@I376@","@I377@","@I378@","@I379@","@I135@","@I136@","@I137@","@I9@","@I344@","@I345@","@I10@","@I4@","@I72@","@I73@","@I322@","@I323@","@I324@","@I325@","@I74@","@I238@","@I239@","@I287@","@I288@","@I289@","@I290@","@I291@","@I292@","@I293@","@I361@","@I362@","@I240@","@I75@","@I108@","@I109@","@I126@","@I127@","@I254@","@I255@","@I128@","@I129@","@I130@","@I159@","@I160@","@I206@","@I207@","@I271@","@I272@","@I273@","@I208@","@I209@","@I210@","@I241@","@I242@","@I243@","@I244@","@I245@","@I211@","@I212@","@I161@","@I296@","@I297@","@I397@","@I398@","@I399@","@I298@","@I299@","@I300@","@I301@","@I162@","@I400@","@I401@","@I402@","@I403@","@I404@","@I405@","@I406@","@I163@","@I346@","@I347@","@I348@","@I349@","@I350@","@I351@","@I352@","@I372@","@I373@","@I374@","@I375@","@I164@","@I246@","@I247@","@I248@","@I249@","@I383@","@I384@","@I385@","@I386@","@I387@","@I388@","@I110@","@I217@","@I218@","@I219@","@I111@","@I120@","@I121@","@I122@","@I176@","@I177@","@I202@","@I203@","@I204@","@I264@","@I265@","@I266@","@I337@","@I338@","@I339@","@I340@","@I341@","@I342@","@I343@","@I205@","@I178@","@I235@","@I236@","@I237@","@I179@","@I180@","@I181@","@I182@","@I363@","@I364@","@I365@","@I123@","@I250@","@I251@","@I252@","@I253@","@I5@","@I78@","@I79@","@I80@","@I165@","@I166@","@I188@","@I189@","@I213@","@I214@","@I380@","@I381@","@I382@","@I215@","@I216@","@I190@","@I191@","@I192@","@I231@","@I232@","@I369@","@I370@","@I371@","@I233@","@I234@","@I167@"],"rootIndex":46,"stamp":"17adb3f627a81407","meIndex":48,"ev":[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],"surn":["Varnquist","Kestrander","Varnquist","Ashgrove-Lunt","Varnquist","Morrowind","Varnquist","Ollendrake","Varnquist","Brennholt","Varnquist","Castellune","Varnquist","Teshmore","Varnquist","Holtzbrand","Holtzbrand","Holtzbrand","Holtzbrand","Holtzbrand","Holtzbrand","Pembrask","Pembrask","Holtzbrand","Varnquist","Saltmere","Saltmere","Saltmere","Quillane","Saltmere","Saltmere","Saltmere","Saltmere","Calderhoff","Calderhoff","Calderhoff","Calderhoff","Saltmere","Varnquist","Druvelle","Varnquist","Orbeline","Varnquist","Varnquist","Varnquist","Velkamp","Varnquist","Holtzbrand","Varnquist","Castellune","Varnquist","Varnquist","Varnquist","Varnquist","Holtzbrand","Holtzbrand","Varnquist","Varnquist","Brimsworth","Brimsworth","Holtzbrand","Holtzbrand","Holtzbrand","Holtzbrand","Varnquist","Ellisandt","Varnquist","Varnquist","Varnquist","Varnquist","Ollendrake","Varnquist","Ellisandt","Varnquist","Varnquist","Varnquist","Thornquay","Varnquist","Orbeline","Orbeline","Orbeline","Orbeline","Varnquist","Teshmore","Teshmore","Teshmore","Teshmore","Varnquist","Varnquist","Marrowby","Varnquist","Castellune","Varnquist","Varnquist","Varnquist","Druvelle","Druvelle","Druvelle","Varnquist","Ellisandt","Ellisandt","Ellisandt","Ellisandt","Varnquist","Thornquay","Thornquay","Thornquay","Thornquay","Brennholt","Thornquay","Thornquay","Varnquist","Saltmere","Saltmere","Saltmere","Brennholt","Brennholt","Brennholt","Brennholt","Saltmere","Varnquist","Varnquist","Varnquist","Varnquist","Fennaway","Varnquist","Varnquist","Varnquist","Varnquist","Marrowby","Marrowby","Marrowby","Marrowby","Varnquist","Orbeline","Orbeline","Orbeline","Ollendrake","Ollendrake","Ollendrake","Ollendrake","Orbeline","Saltmere","Saltmere","Ollendrake","Ollendrake","Ollendrake","Ollendrake","Varnquist","Varnquist","Varnquist","Thornquay","Thornquay","Thornquay","Varnquist","Marrowby","Marrowby","Marrowby","Ashgrove-Lunt","Ashgrove-Lunt","Corvantis","Ashgrove-Lunt","Ashgrove-Lunt","Varnquist","Varnquist","Morrowind","Morrowind","Orbeline","Orbeline","Orbeline","Orbeline","Orbeline","Morrowind","Morrowind","Morrowind","Morrowind","Corvantis","Corvantis","Varnquist","Varnquist","Varnquist","Castellune","Varnquist","Varnquist","Ashgrove-Lunt","Varnquist","Varnquist","Varnquist","Varnquist","Quillane","Quillane","Kestrander","Kestrander","Kestrander","Kestrander","Varnquist","Varnquist","Varnquist","Varnquist","Kestrander","Varnquist","Varnquist","Varnquist","Varnquist","Kestrander","Quillane","Quillane","Quillane","Pembrask","Pembrask","Thornquay","Pembrask","Pembrask","Pembrask","Pembrask","Pembrask","Varnquist","Pembrask","Varnquist","Varnquist","Varnquist","Varnquist","Ashgrove-Lunt","Ashgrove-Lunt","Calderhoff","Calderhoff","Calderhoff","Calderhoff","Calderhoff","Calderhoff","Ashgrove-Lunt","Holtzbrand","Holtzbrand","Ashgrove-Lunt","Morrowind","Ashgrove-Lunt","Corvantis","Corvantis","Saltmere","Saltmere","Saltmere","Ashgrove-Lunt","Velkamp","Ashgrove-Lunt","Ashgrove-Lunt","Ashgrove-Lunt","Lindqvane","Ashgrove-Lunt","Teshmore","Ashgrove-Lunt","Ashgrove-Lunt","Ashgrove-Lunt","Ashgrove-Lunt","Ashgrove-Lunt","Ashgrove-Lunt","Druvelle","Druvelle","Druvelle","Druvelle","Ashgrove-Lunt","Ashgrove-Lunt","Ashgrove-Lunt","Varnquist","Kestrander","Varnquist","Varnquist","Varnquist","Pembrask","Pembrask","Varnquist","Pembrask","Pembrask","Pembrask","Pembrask","Brennholt","Pembrask","Varnquist","Varnquist","Varnquist","Varnquist","Varnquist","Varnquist","Varnquist","Ollendrake","Varnquist","Pembrask","Pembrask","Holtzbrand","Holtzbrand","Calderhoff","Holtzbrand","Ashgrove-Lunt","Holtzbrand","Holtzbrand","Holtzbrand","Holtzbrand","Quillane","Quillane","Velkamp","Velkamp","Teshmore","Velkamp","Velkamp","Velkamp","Velkamp","Velkamp","Saltmere","Saltmere","Saltmere","Saltmere","Saltmere","Velkamp","Velkamp","Quillane","Corvantis","Quillane","Fennaway","Quillane","Quillane","Quillane","Quillane","Quillane","Quillane","Quillane","Brennholt","Brennholt","Brennholt","Brennholt","Brennholt","Brennholt","Brennholt","Quillane","Calderhoff","Calderhoff","Calderhoff","Calderhoff","Calderhoff","Calderhoff","Calderhoff","Marrowby","Marrowby","Marrowby","Marrowby","Quillane","Calderhoff","Calderhoff","Calderhoff","Calderhoff","Castellune","Calderhoff","Calderhoff","Calderhoff","Calderhoff","Calderhoff","Holtzbrand","Saltmere","Saltmere","Saltmere","Holtzbrand","Quillane","Quillane","Quillane","Holtzbrand","Quillane","Castellune","Quillane","Quillane","Fennaway","Fennaway","Fennaway","Varnquist","Fennaway","Fennaway","Fennaway","Fennaway","Fennaway","Fennaway","Quillane","Quillane","Ollendrake","Quillane","Quillane","Quillane","Quillane","Quillane","Quillane","Pembrask","Quillane","Quillane","Quillane","Lindqvane","Lindqvane","Lindqvane","Lindqvane","Varnquist","Ellisandt","Varnquist","Varnquist","Ollendrake","Varnquist","Saltmere","Saltmere","Calderhoff","Calderhoff","Saltmere","Saltmere","Saltmere","Calderhoff","Calderhoff","Saltmere","Saltmere","Saltmere","Druvelle","Saltmere","Pembrask","Saltmere","Saltmere","Saltmere","Saltmere","Varnquist"],"aka":[[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]],"labels":[{"t":"Varnquist","i":38,"n":98}],"life":[62,90,83,90,69,52,81,77,66,77,73,52,60,8,90,77,86,61,72,61,72,90,1,8,86,72,68,1,61,52,72,61,52,35,-1,-1,-1,61,81,68,80,77,35,77,80,52,-1,61,-1,8,-1,-1,-1,-1,-1,-1,-1,-1,77,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,81,86,77,52,35,8,72,68,8,81,-1,-1,-1,61,81,-1,-1,-1,90,68,61,-1,68,-1,-1,-1,-1,-1,-1,61,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,35,81,-1,77,77,-1,-1,-1,-1,8,1,8,72,72,35,8,86,90,68,-1,-1,-1,8,8,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,61,77,1,1,86,35,1,8,72,61,8,35,1,90,77,90,86,90,77,90,86,8,8,52,81,68,90,77,61,61,90,86,72,68,1,35,61,1,1,77,77,52,61,8,77,68,77,90,35,61,68,8,35,35,8,1,72,1,77,61,61,68,81,52,1,68,8,35,1,77,68,86,68,86,68,72,72,68,81,86,8,86,72,90,72,61,86,86,52,52,90,72,52,8,35,90,61,81,86,86,52,1,52,8,52,35,1,86,1,77,35,77,81,1,77,81,90,72,81,86,81,8,35,8,61,68,90,1,35,8,52,1,77,61,81,1,52,68,68,90,72,86,90,1,81,72,68,81,8,8,1,86,8,1,86,72,52,1,68,61,8,35,61,90,77,8,81,90,1,90,81,8,1,1,52,1,8,77,61,1,35,86,72,81,90,52,8,35,52,61,77,8,72,35,61,72,81,72,52,72,35,77,61,72,61,1,86,86,52,81,86,52,86,52,81,90,1,68,61,77,8,77,52,35,77,90,90,86,35,61,1,77,8,61,86,8,1,52,72,61,86,86,86,35,90,8,61,61,8,72,68,35,77,8,61,81,72,72,86,72,90,77,61,8,8,8,86,68,1,35,52,90],"moved":[0,1,0,1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,1,0,1,0,-1,-1,-1,1,0,0,0,0,0,0,0,1,-1,0,-1,0,-1,-1,-1,-1,-1,-1,-1,-1,0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,1,0,0,1,-1,-1,-1,0,0,-1,-1,-1,0,1,1,-1,0,-1,-1,-1,-1,-1,-1,0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,-1,0,1,-1,-1,-1,-1,0,1,0,0,0,1,0,0,0,0,-1,-1,-1,0,0,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,1,1,0,0,0,1,0,1,0,0,0,0,1,0,0,0,0,0,0,1,1,0,0,0,0,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,1,1,0,0,0,1,0,0,0,1,1,0,0,1,1,0,0,1,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,1,0,1,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0,1,1,0,0,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,0,0,0,1,0,1,0,0,1,1,0,0,1,1,1,1,1,1,0,0,1,1,1,1,1,0,1,0,0,1,0,0,0],"findings":{"familySize":[],"lifespan":[[1750,68,83],[1800,56.0,100],[1850,61,63]],"lifespanCut":1923,"flows":[["United States","Canada",11],["Nordic countries","United States",9],["Canada","United States",6],["Nordic countries","Low Countries",6],["Low Countries","Nordic countries",6],["France","Low Countries",5],["France","Nordic countries",5],["Nordic countries","British Isles",4]],"movedCount":94,"placedCount":351},"statsView":{"charts":[{"id":"population","kind":"stack","title":"How many were born, and where","note":"People per 50 years, stacked by where they were born. Each region peaks in turn: France in the 1750s, Nordic countries in the 1800s, Low Countries in the 1800s, Central Europe in the 1800s, United States in the 1900s and Canada in the 1900s. From the 1850s the United States is 83% of recorded births. The grey band is the 0 people whose birthplace the tree never recorded.","x":[1700,1750,1800,1850,1900,1950],"unit":"people","xlab":"born","splits":{"Region":{"United States":[0,0,7,52,54,34],"Nordic countries":[16,24,27,0,0,0],"France":[15,26,19,0,0,0],"Canada":[0,0,3,11,12,11],"Central Europe":[5,10,16,0,0,0],"Low Countries":[5,12,17,0,0,0],"unrecorded":[0,0,0,0,0,0]}},"chapter":"moving","finding":"France came first (1750s); from the 1850s the United States is 83% of recorded births"},{"id":"lifespan","kind":"line","title":"How long they lived","note":"Median age at death, by 50 years of birth. Cohorts born after 1923 are excluded, because when most of a cohort is still living the only recorded deaths are the early ones, and lifespan appears to collapse.","x":[1700,1750,1800,1850,1900],"unit":"years","zero":false,"xlab":"born","splits":{"All":{"Everyone":[72,68,56.0,61,61.0]},"Sex":{"Men":[null,67.0,68,null,null],"Women":[null,68,52,null,null]},"Region":{}},"chapter":"life","finding":"Median lifespan fell from 72 to 61 years"},{"id":"familysize","kind":"line","title":"Children per couple","note":"Median, by the 50 years in which the couple married. Read the last band carefully: living children are often left out of a tree, so some of that final drop is the record, not the family.","x":[],"unit":"children","zero":true,"xlab":"married","splits":{"All":{"Every couple":[]},"Region":{}},"chapter":"children"},{"id":"marriageage","kind":"line","title":"Age at marriage","note":"Median age on the wedding day.","x":[],"unit":"years old","zero":false,"xlab":"married","splits":{"Sex":{"Men":[],"Women":[]},"All":{"Everyone":[]}},"chapter":"marriage"},{"id":"childmortality","kind":"line","title":"Died before eighteen","note":"Share of a birth cohort dying as a child. This is a floor, not a rate: infants who died were often never written down at all, so the real figure was higher.","x":[1700,1750,1800,1850,1900],"unit":"%","zero":true,"xlab":"born","splits":{"All":{"Everyone":[11.6,22.9,31.0,19.0,16.7]},"Region":{}},"chapter":"life","finding":"At least 31% died before eighteen in the 1800s; 17% by the 1900s"},{"id":"agedist","kind":"hist","title":"Age at death, everyone","note":"The whole distribution rather than its middle. The bar at the far left is children; the hump on the right is everyone who got through childhood.","x":["0","5","35","50","60","65","70","75","80","85","90"],"unit":"people","zero":true,"xlab":"age at death","splits":{"Sex":{"Men":[14,28,13,11,17,14,20,17,15,16,17],"Women":[21,14,14,17,22,12,11,16,12,17,13]},"All":{"Everyone":[35,42,27,28,39,26,31,33,27,33,30]}},"chapter":"life","finding":"Deaths peak at 5–9, with a second peak at 60–64 (39 people)"},{"id":"birthmonth","kind":"hist","title":"What month they were born","note":"312 people whose birth month is recorded. November is the peak and March the trough, which puts conceptions most often in February and least often in June. Fewest children conceived at harvest is the ordinary rhythm of a farming population, still legible four centuries on.","x":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"unit":"births","zero":true,"splits":{"All":{"Births":[26,26,18,28,23,25,29,27,20,28,36,26]}},"chapter":"children","finding":"November has the most births, March the fewest"},{"id":"flows","kind":"bars","title":"Where they went","note":"People who died in a different region from the one they were born in. Only those with both places recorded can be counted.","x":["United States → Canada","Nordic countries → United States","Canada → United States","Low Countries → Nordic countries","Nordic countries → Low Countries","France → Low Countries","France → Nordic countries","Central Europe → United States","Nordic countries → British Isles","France → British Isles"],"unit":"people","splits":{"All":{"Moved":[11,9,6,6,6,5,5,4,4,4]}},"chapter":"moving","finding":"The biggest move: 11 people, United States → Canada"},{"id":"generation","kind":"line","title":"How long a generation took","note":"Median years between a parent's birth and a child's, on 634 parent-child pairs. 33 years at the longest, in the 1750s; 29 by the 1900s. A shorter generation is mostly people marrying earlier and stopping earlier, and it is why a tree reaches further back in years than the number of generations suggests.","x":[1700.0,1750.0,1800.0,1850.0,1900.0],"unit":"years","zero":false,"xlab":"parent born","splits":{"All":{"Parent to child":[31.0,33.0,32.0,31.0,29.0]}},"chapter":"children","finding":"A generation took 33 years in the 1750s, 29 by the 1900s"},{"id":"motherhood","kind":"line","title":"A mother's first child and her last","note":"Median age.","x":[],"unit":"years old","zero":false,"xlab":"mother born","splits":{"All":{"At her first":[],"At her last":[]}},"chapter":"children"},{"id":"spacing","kind":"line","title":"Years between one child and the next","note":"Median gap, on 215 consecutive pairs. It does not move: 2 years in every band, from the 1800s to the 1800s. Family size fell by having children for fewer years, not by spacing them further apart, which is what the mother's-last-child chart shows from the other side.","x":[1800.0],"unit":"years","zero":true,"xlab":"earlier child born","splits":{"All":{"Gap":[2.0]}},"chapter":"children","finding":"2 years between one child and the next, in every band for 0 years"},{"id":"agegap","kind":"line","title":"How much older the husband was","note":"Median years, by the year of the wedding.","x":[],"unit":"years","zero":true,"xlab":"married","splits":{"All":{"Husband older by":[]}},"chapter":"marriage"},{"id":"widowhood","kind":"line","title":"Years spent widowed","note":"Median years a surviving spouse outlived the other, counting only couples where both death dates are known.","x":[],"unit":"years","zero":true,"xlab":"survivor born","splits":{"All":{"Widows":[],"Widowers":[]}},"chapter":"marriage"},{"id":"marrmonth","kind":"hist","title":"What month they married","note":"71 weddings with a full date. April is the peak and November the trough, 9.0 times as many.","x":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"unit":"weddings","zero":true,"splits":{"All":{"Weddings":[8,3,7,9,5,8,8,5,7,7,1,3]}},"chapter":"marriage","finding":"April had 9.0 times the weddings of November"},{"id":"deathmonth","kind":"hist","title":"What month they died","note":"260 people whose death month is recorded. March takes 80% more than July. Winter mortality is one of the most reliable patterns in any pre-modern population, and it is plainly here.","x":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"unit":"deaths","zero":true,"splits":{"All":{"Deaths":[18,26,27,19,23,20,15,22,23,19,23,25]}},"chapter":"life","finding":"March took 80% more lives than July"},{"id":"moved","kind":"line","title":"How far from home they died","note":"Share of a birth cohort who died more than 100 km, and more than 1,000 km, from where they were born, on 351 people with both places mapped. Over 1,000 km peaks at 27% for those born in the 1900s. Read this as which migration was under way rather than as whether people were becoming more mobile. A median distance was tried first and was useless: it swung between 0 km and 0 km band to band, because the population changes rather than the behaviour.","x":[1700.0,1750.0,1800.0,1850.0,1900.0],"unit":"%","zero":true,"xlab":"born","splits":{"All":{"Over 100 km":[41.9,37.3,37.0,34.9,33.3],"Over 1,000 km":[11.6,13.3,26.0,27.0,27.1]}},"chapter":"moving","finding":"27% of those born in the 1900s died over 1,000 km from their birthplace"},{"id":"namefashion","kind":"line","title":"How many shared the same few names","note":"Share of a birth cohort given one of the ten commonest first names of that cohort. In the 1750s, 79% of girls got one of ten names, and Clara alone, with its spellings in other languages, was 12%. By the 1800s it is 77%.","x":[1750,1800],"unit":"%","zero":true,"xlab":"born","splits":{"Sex":{"Boys":[82.5,68.4],"Girls":[79.1,76.7]}},"chapter":"names","finding":"In the 1750s, 79% of girls got one of ten names; by the 1800s, 77%"},{"id":"middlenames","kind":"line","title":"Who had more than one given name","note":"Share of a birth cohort given two or more given names: 0% in the 1700s, 0% by the 1950s. It rises alongside the fall in name-sharing above, and for the same reason: families needed a way to tell apart the fourth Johann.","x":[1700,1750,1800,1850,1900,1950],"unit":"%","zero":true,"xlab":"born","splits":{"All":{"Two or more":[0,0,0,0,0,0]}},"chapter":"names","finding":"Two or more given names: 0% in the 1700s, 0% by the 1950s","tile":{"value":"0","unit":"%","from":1700,"to":1950}},{"id":"namedafter","kind":"line","title":"Eldest sons named for their father's father","note":"On 41 eldest sons whose paternal grandfather is also in the tree. Spelling is folded across languages first (Johann, Johannes, Hans, Jean and John count as one name), without which this measures 7% instead of 7% overall. Treat it as a floor: a custom this loose leaves cases no matching rule will catch.","x":[],"unit":"%","zero":true,"xlab":"son born","splits":{"All":{"Named for him":[]}},"chapter":"names"},{"id":"marrydistance","kind":"line","title":"How far away they found a spouse","note":"Share of weddings where the two were born more than 50 km apart. Only weddings where both birthplaces could be mapped are counted.","x":[],"unit":"%","zero":true,"xlab":"married","splits":{"All":{"Over 50 km apart":[]}},"chapter":"marriage"},{"id":"dateprecision","kind":"line","title":"How exactly the birth dates are known","note":"Share of recorded births carrying a day and a month, not just a year: 74% in the 1700s, 73% by the 1950s. Read it beside the completeness chart: that one says whether a fact exists at all, this one says how sharp it is. Separately, 17% of 351 ages at death end in 0 or 5, against 20% by chance, so these ages were copied from documents rather than remembered.","x":[1700,1750,1800,1850,1900,1950],"unit":"%","zero":true,"xlab":"born","splits":{"All":{"Full date":[74.4,69.9,79.0,77.8,69.7,73.3]}},"chapter":"quality","finding":"Exact birth dates: 74% in the 1700s, 73% by the 1950s"},{"id":"pedigree","kind":"line","log":true,"title":"How far back the line is complete","note":"Ancestors of the person at the centre, per generation back, against the number that must exist. The two match for 1 generation; by generation 8, 2 of 256 are known, and the tree is following a few well-documented lines rather than the whole fan.","x":["1","2","3","4","5","6","7","8","9","10"],"unit":"ancestors (log scale)","xlab":"generations back","splits":{"All":{"Found":[2,2,2,2,2,2,2,2,2,2],"Must exist":[2,4,8,16,32,64,128,256,512,1024]}},"chapter":"quality","finding":"Complete for 1 generation; by generation 8, 2 of 256 ancestors are known"},{"id":"coverage","kind":"line","title":"How complete the records are","note":"Share of each birth cohort with the fact recorded. Read this one before trusting any other chart: where a line runs low, that century is thin, and a trend measured across it is measuring the record-keeping as much as the family. The two exceptions are the last bands, where 'death recorded' falls because those people are alive.","x":[1700,1750,1800,1850,1900,1950],"unit":"%","zero":true,"max":100,"xlab":"born","splits":{"All":{"Exact birth date":[74.4,69.9,79.0,77.8,69.7,73.3],"Death recorded":[100,100,100,100,72.7,2.2],"Birthplace":[100,100,100,100,100,100],"Both parents":[62.8,72.3,80.0,82.5,72.7,84.4]}},"chapter":"quality","finding":"Records are most complete for the 1850s births (90%) and thinnest for the 1900s (79%)"}],"records":[{"title":"Longest lived","note":"An age this high is as often a copied-wrong year as a real record-breaker. Shown as the file has them.","rows":[{"name":"Margaret Kestrander","when":"1640–1730","i":1,"value":"90 years"},{"name":"Simon Holtzbrand","when":"1763–1853","i":290,"value":"90 years"},{"name":"Martin Quillane","when":"1804–1894","i":363,"value":"90 years"},{"name":"Henry Calderhoff","when":"1805–1895","i":332,"value":"90 years"},{"name":"Ruth Varnquist","when":"1788–1878","i":178,"value":"90 years"},{"name":"Charles Calderhoff","when":"1804–1894","i":408,"value":"90 years"}]},{"title":"Most children","note":"Counting every marriage, so a widower who remarried appears with both families summed.","rows":[{"name":"Frederick Varnquist","when":"1878–1959","i":69,"value":"6 children"},{"name":"Laura Ollendrake","when":"1875–1961","i":70,"value":"6 children"},{"name":"Daniel Ashgrove Lunt","when":"1728–1789","i":233,"value":"6 children"},{"name":"Sarah Morrowind","when":"1728–1814","i":234,"value":"6 children"},{"name":"Arthur Quillane","when":"1773–1825","i":361,"value":"6 children"},{"name":"Laura Holtzbrand","when":"1772–1853","i":362,"value":"6 children"}]}],"tables":{"occupations":[["Sailor",26],["Blacksmith",22],["Tailor",21],["Farmer",19],["Teacher",18],["Miller",18],["Clerk",18],["Baker",17],["Engineer",17],["Merchant",17],["Carpenter",14],["Printer",13],["Nurse",10]],"surnames":[["Varnquist",98],["Saltmere",38],["Quillane",36],["Calderhoff",31],["Holtzbrand",26],["Ashgrove Lunt",26],["Pembrask",21],["Brennholt",14],["Orbeline",14],["Ollendrake",13],["Marrowby",12],["Thornquay",11],["Fennaway",11],["Velkamp",11]],"regions":[["United States",152],["Nordic countries",73],["France",63],["Canada",39],["Central Europe",35],["Low Countries",34],["British Isles",24]]},"headline":{"people":420,"families":102,"span":[1640,2023],"lifespanFrom":72,"lifespanTo":61.0,"moved":94},"lifeCut":1923,"regionNote":{"recorded":420,"inferred":0,"legend":"Where they were born — or, for the 0 people with no recorded birthplace, where their family was.","table":"Recorded birthplaces only, grouped into regions. The 0 people in the unrecorded row are coloured by their family's region in the model, which is why the legend's counts are larger."},"chapters":[["happened","Things that happened"],["life","Life & death"],["marriage","Marriage"],["children","Children"],["moving","Moving"],["names","Names"],["quality","Record quality"]],"surnames":{"rows":[{"s":"Varnquist","n":98,"h":[6,34,20,38,0],"y":[1640,1998],"r":[["United States",34],["France",25],["Canada",10]],"line":11,"blood":93},{"s":"Saltmere","n":38,"h":[0,9,19,10,0],"y":[1731,1985],"r":[["United States",19],["Nordic countries",10],["France",3]],"blood":30},{"s":"Quillane","n":36,"h":[0,10,26,0,0],"y":[1721,1875],"r":[["France",14],["Nordic countries",6],["Low Countries",5]],"blood":32},{"s":"Calderhoff","n":31,"h":[0,8,19,4,0],"y":[1724,1939],"r":[["United States",8],["Nordic countries",7],["Central Europe",6]],"blood":25},{"s":"Ashgrove-Lunt","n":26,"h":[1,15,9,1,0],"y":[1674,1914],"r":[["Nordic countries",14],["United States",6],["Low Countries",2]],"line":1,"blood":22},{"s":"Holtzbrand","n":26,"h":[0,12,7,3,4],"y":[1704,2006],"r":[["United States",11],["Low Countries",5],["Nordic countries",4]],"line":1,"blood":20},{"s":"Pembrask","n":21,"h":[2,11,7,1,0],"y":[1673,1911],"r":[["Nordic countries",7],["Central Europe",5],["France",4]],"blood":15},{"s":"Brennholt","n":14,"h":[1,1,7,5,0],"y":[1698,1967],"r":[["Nordic countries",8],["United States",5],["British Isles",1]],"line":1,"blood":10},{"s":"Orbeline","n":14,"h":[0,0,6,8,0],"y":[1851,1957],"r":[["United States",9],["Canada",5]],"line":1,"blood":11},{"s":"Ollendrake","n":13,"h":[0,3,2,5,3],"y":[1711,2023],"r":[["Canada",6],["France",3],["United States",3]],"line":1,"blood":7},{"s":"Marrowby","n":12,"h":[0,0,7,5,0],"y":[1819,1947],"r":[["Canada",7],["United States",5]],"blood":8},{"s":"Fennaway","n":11,"h":[0,0,5,6,0],"y":[1827,1913],"r":[["United States",9],["Canada",2]],"blood":8},{"s":"Thornquay","n":11,"h":[0,1,3,7,0],"y":[1782,1999],"r":[["United States",7],["Canada",2],["British Isles",1]],"blood":7},{"s":"Velkamp","n":11,"h":[0,2,8,1,0],"y":[1757,1908],"r":[["Low Countries",7],["United States",3],["Nordic countries",1]],"line":1,"blood":9},{"s":"Druvelle","n":9,"h":[0,5,1,3,0],"y":[1755,1996],"r":[["United States",4],["Nordic countries",4],["Low Countries",1]],"line":1,"blood":6},{"s":"Kestrander","n":8,"h":[2,6,0,0,0],"y":[1640,1789],"r":[["France",5],["Central Europe",2],["Nordic countries",1]],"line":1,"blood":6},{"s":"Morrowind","n":8,"h":[0,2,6,0,0],"y":[1700,1864],"r":[["United States",6],["France",1],["Nordic countries",1]],"line":1,"blood":6},{"s":"Ellisandt","n":7,"h":[1,0,0,6,0],"y":[1675,1968],"r":[["United States",6],["France",1]],"blood":3},{"s":"Teshmore","n":7,"h":[0,0,3,4,0],"y":[1816,1963],"r":[["United States",5],["Nordic countries",1],["Central Europe",1]],"line":1,"blood":4},{"s":"Castellune","n":6,"h":[0,2,2,2,0],"y":[1751,1966],"r":[["United States",3],["Central Europe",2],["British Isles",1]],"line":1,"blood":1},{"s":"Corvantis","n":6,"h":[0,3,3,0,0],"y":[1750,1891],"r":[["United States",3],["Nordic countries",2],["British Isles",1]],"blood":2},{"s":"Lindqvane","n":5,"h":[0,2,3,0,0],"y":[1774,1812],"r":[["France",2],["Nordic countries",1],["Central Europe",1]],"blood":3},{"s":"Brimsworth","n":2,"h":[0,0,0,2,0],"y":[1937,1973],"r":[["United States",2]],"blood":1}],"centuries":[1600,1700,1800,1900,2000],"groups":23,"singles":0,"people":420,"spellings":23,"me":"@I50@","lineSize":22,"bloodSize":329,"keptApart":[["smith","Smith (English), not Smit (Dutch)"]],"rule":"Spellings are grouped when they differ only by accents, umlauts written out (ö = oe), doubled letters, ck/k, th/t, dt/t, tz/z, ph/f, y/i or ie/i, or by the Cyrillic alphabet."}},"regionNames":["United States","Nordic countries","France","Canada","Central Europe","Low Countries","British Isles"],"regionSizes":[152,73,63,39,35,34,24],"branchNames":["Johann Varnquist"],"branchSizes":[420],"stats":{"people":420,"families":102,"edges":634,"marriages":102,"estimated":0,"yearMin":1640,"yearMax":2023,"lineSize":28,"living":69,"livingRule":"no death, burial or cremation recorded, and born in 1926 or later (recorded or estimated year)","regionKnown":420,"regionDirect":420}}</script>
+<script type="text/plain" id="tree-details">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</script>
+<script>
+(function(){
+"use strict";
+// This view is what the 3-D one sends people to when WebGL is unavailable, so
+// it has to survive the same things: unreadable data, a data file built by an
+// older version of the script, missing optional fields.
+function bail(html){
+  document.getElementById("app").innerHTML =
+    '<div style="display:grid;place-items:center;height:100%;padding:28px;text-align:center;' +
+    'color:var(--ink-dim);font-size:13px;line-height:1.7">' + html + '</div>';
+}
+let D;
+try { D = JSON.parse(document.getElementById("tree-data").textContent); }
+catch (err){
+  bail('<div><b style="color:var(--ink)">The family data in this file could not be read.</b>' +
+       '<br>Rebuild it with <b style="color:var(--ink)">build_tree_view.py</b>.</div>');
+  return;
+}
+const N = D ? (D.count | 0) : 0;
+if (!N || !Array.isArray(D.names) || D.names.length !== N){
+  bail('<div><b style="color:var(--ink)">The family data in this file is incomplete.</b>' +
+       '<br>Rebuild it with <b style="color:var(--ink)">build_tree_view.py</b>.</div>');
+  return;
+}
+{
+  const arr = (a, fill) => (Array.isArray(a) && a.length === N) ? a : new Array(N).fill(fill);
+  const nested = a => arr(a, null).map(v => Array.isArray(v) ? v.filter(x => x >= 0 && x < N) : []);
+  D.birth = arr(D.birth, 0); D.death = arr(D.death, 0);
+  D.branch = arr(D.branch, 0); D.flags = arr(D.flags, 0);
+  D.x = arr(D.x, 0); D.y = arr(D.y, 1800);
+  D.parents = nested(D.parents); D.children = nested(D.children); D.spouses = nested(D.spouses);
+  D.edges = Array.isArray(D.edges)
+    ? D.edges.filter(e => Array.isArray(e) && e[0] >= 0 && e[0] < N && e[1] >= 0 && e[1] < N) : [];
+  D.regionNames = Array.isArray(D.regionNames) ? D.regionNames : [];
+  D.regionSizes = Array.isArray(D.regionSizes) ? D.regionSizes : [];
+  D.stats = D.stats || {};
+  D.stats.yearMin = D.stats.yearMin || Math.min.apply(null, D.y);
+  D.stats.yearMax = D.stats.yearMax || Math.max.apply(null, D.y);
+  D.stats.people  = D.stats.people  || N;
+  if (typeof D.rootIndex !== "number" || D.rootIndex < 0 || D.rootIndex >= N) D.rootIndex = -1;
+}
+const RC = ["--r0","--r1","--r2","--r3","--r4","--r5","--r6","--r7","--r8","--r9"]
+  .map(v => getComputedStyle(document.documentElement).getPropertyValue(v).trim());
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const regionColor = i => RC[i] || "#8a97a2";
+const COL = {
+  ground: css("--ground"), line: css("--line"), accent: css("--accent"),
+  accentDeep: css("--accent-deep"), ink: css("--ink"), dim: css("--ink-dim"),
+  faint: css("--ink-faint"), rule: css("--rule")
+};
+
+// ---- world space -------------------------------------------------------
+// x is the descent walk order; y is the birth year, stretched so the field
+// reads as a landscape river rather than a thin ribbon.
+const YSCALE = 20;
+const Y0 = D.stats.yearMin;
+const wx = i => D.x[i];
+const wy = i => (D.y[i] - Y0) * YSCALE;
+const WORLD = {
+  x0: 0, x1: N,
+  y0: 0, y1: (D.stats.yearMax - Y0) * YSCALE
+};
+
+const cv = document.getElementById("cv");
+const ctx = cv.getContext("2d", { alpha: false });
+let DPR = 1, VW = 0, VH = 0;
+const view = { s: 1, tx: 0, ty: 0 };     // screen = world * s + t
+let selected = -1, hoverI = -1, showLine = true;
+const hidden = new Set();                 // region indices toggled off
+let lineSet = new Set();                  // the traced highlight
+let pathIdx = [];                         // path from selected to root
+
+// ---- flags -------------------------------------------------------------
+const IN_LINE = 1, ESTIMATED = 2, IS_ROOT = 4, FEMALE = 8, MALE = 16;
+
+// ---- resize ------------------------------------------------------------
+// The pane can be resized at any time and is not always at its final size when
+// the script first runs, so the canvas re-fits itself on every size change
+// until the reader pans or zooms — after that the view is theirs to keep.
+let userMoved = false;
+
+function resize(){
+  const r = cv.getBoundingClientRect();
+  if (r.width < 2 || r.height < 2) return;      // laid out but not yet sized
+  DPR = Math.min(window.devicePixelRatio || 1, 2);
+  VW = Math.round(r.width);
+  VH = Math.round(r.height);
+  cv.width = Math.round(VW * DPR);
+  cv.height = Math.round(VH * DPR);
+  if (userMoved) draw(); else fit();
+}
+
+const SPANX = WORLD.x1 - WORLD.x0, SPANY = WORLD.y1 - WORLD.y0;
+
+function fit(){
+  const padL = 18, padR = 56, padT = 18, padB = 18;
+  const availX = Math.max(60, VW - padL - padR);
+  const availY = Math.max(60, VH - padT - padB);
+  const s = Math.min(availX / SPANX, availY / SPANY);
+  view.s = s > 0 && isFinite(s) ? s : 0.02;
+  view.tx = padL + (availX - SPANX * view.s) / 2;
+  view.ty = padT + (availY - SPANY * view.s) / 2;
+  userMoved = false;
+  draw();
+}
+
+const sx = i => wx(i) * view.s + view.tx;
+const sy = i => wy(i) * view.s + view.ty;
+
+// ---- spatial index for hit testing ------------------------------------
+const CELL = 64;
+const gw = Math.ceil((WORLD.x1 - WORLD.x0) / CELL);
+const gh = Math.ceil((WORLD.y1 - WORLD.y0) / CELL);
+const grid = new Map();
+for (let i = 0; i < N; i++){
+  const gx = Math.floor(wx(i) / CELL), gy = Math.floor(wy(i) / CELL);
+  const k = gy * gw + gx;
+  let b = grid.get(k); if (!b) grid.set(k, b = []);
+  b.push(i);
+}
+function pick(px, py, radiusPx){
+  const wxp = (px - view.tx) / view.s, wyp = (py - view.ty) / view.s;
+  const r = radiusPx / view.s;
+  const gx0 = Math.floor((wxp - r) / CELL), gx1 = Math.floor((wxp + r) / CELL);
+  const gy0 = Math.floor((wyp - r) / CELL), gy1 = Math.floor((wyp + r) / CELL);
+  let best = -1, bd = r * r;
+  for (let gy = gy0; gy <= gy1; gy++){
+    for (let gx = gx0; gx <= gx1; gx++){
+      const b = grid.get(gy * gw + gx); if (!b) continue;
+      for (const i of b){
+        if (hidden.has(D.branch[i])) continue;
+        const dx = wx(i) - wxp, dy = wy(i) - wyp, d = dx*dx + dy*dy;
+        if (d < bd){ bd = d; best = i; }
+      }
+    }
+  }
+  return best;
+}
+
+// ---- drawing -----------------------------------------------------------
+let raf = 0;
+function draw(){ if (!raf) raf = requestAnimationFrame(render); }
+
+function render(){
+  raf = 0;
+  ctx.save();
+  ctx.scale(DPR, DPR);
+  ctx.fillStyle = COL.ground;
+  ctx.fillRect(0, 0, VW, VH);
+
+  const s = view.s;
+  const dotR = Math.max(0.85, Math.min(4.2, s * 26));
+  const showEdges = true;
+
+  // parent -> child links
+  if (showEdges){
+    ctx.lineWidth = Math.max(0.35, Math.min(1.1, s * 7));
+    ctx.strokeStyle = COL.line;
+    ctx.globalAlpha = s > 0.02 ? 0.55 : 0.34;
+    ctx.beginPath();
+    const E = D.edges;
+    for (let k = 0; k < E.length; k++){
+      const a = E[k][0], b = E[k][1];
+      if (hidden.has(D.branch[a]) || hidden.has(D.branch[b])) continue;
+      const ax = sx(a), ay = sy(a);
+      if (ax < -200 || ax > VW + 200) { const bxq = sx(b); if (bxq < -200 || bxq > VW + 200) continue; }
+      ctx.moveTo(ax, ay);
+      ctx.lineTo(sx(b), sy(b));
+    }
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  // people, batched by region so each colour is one path
+  for (let r = 0; r < RC.length; r++){
+    if (hidden.has(r)) continue;
+    ctx.fillStyle = regionColor(r);
+    ctx.beginPath();
+    for (let i = 0; i < N; i++){
+      if (D.branch[i] !== r) continue;
+      const x = sx(i); if (x < -8 || x > VW + 8) continue;
+      const y = sy(i); if (y < -8 || y > VH + 8) continue;
+      ctx.moveTo(x + dotR, y);
+      ctx.arc(x, y, dotR, 0, 6.28318);
+    }
+    ctx.fill();
+  }
+
+  // the traced line, drawn over everything
+  if (showLine && lineSet.size){
+    ctx.strokeStyle = COL.accent;
+    ctx.lineWidth = Math.max(0.8, Math.min(2.2, s * 14));
+    ctx.globalAlpha = 0.85;
+    ctx.beginPath();
+    for (let k = 0; k < D.edges.length; k++){
+      const a = D.edges[k][0], b = D.edges[k][1];
+      if (!lineSet.has(a) || !lineSet.has(b)) continue;
+      ctx.moveTo(sx(a), sy(a)); ctx.lineTo(sx(b), sy(b));
+    }
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+    const hr = Math.max(1.5, dotR * 1.7);
+    ctx.fillStyle = COL.accent;
+    ctx.shadowColor = COL.accentDeep; ctx.shadowBlur = 8;
+    ctx.beginPath();
+    for (const i of lineSet){
+      const x = sx(i), y = sy(i);
+      if (x < -8 || x > VW + 8 || y < -8 || y > VH + 8) continue;
+      ctx.moveTo(x + hr, y); ctx.arc(x, y, hr, 0, 6.28318);
+    }
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+
+  // selection ring
+  if (selected >= 0){
+    const x = sx(selected), y = sy(selected);
+    ctx.strokeStyle = COL.accentDeep; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(x, y, Math.max(6, dotR * 2.6), 0, 6.28318); ctx.stroke();
+  }
+  if (hoverI >= 0 && hoverI !== selected){
+    const x = sx(hoverI), y = sy(hoverI);
+    ctx.strokeStyle = COL.ink; ctx.globalAlpha = .7; ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.arc(x, y, Math.max(5, dotR * 2.2), 0, 6.28318); ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+
+  drawAxis();
+  ctx.restore();
+}
+
+function drawAxis(){
+  const w = 52, x = VW - w;
+  const g = ctx.createLinearGradient(x - 16, 0, x, 0);
+  g.addColorStop(0, "rgba(11,16,19,0)"); g.addColorStop(1, COL.ground);
+  ctx.fillStyle = g; ctx.fillRect(x - 16, 0, 16, VH);
+  ctx.fillStyle = COL.ground; ctx.fillRect(x, 0, w, VH);
+
+  const yTop = (0 - view.ty) / view.s / YSCALE + Y0;
+  const yBot = (VH - view.ty) / view.s / YSCALE + Y0;
+  const span = yBot - yTop;
+  const step = span > 400 ? 100 : span > 150 ? 50 : span > 60 ? 20 : span > 24 ? 10 : 5;
+  ctx.font = '400 10.5px "IBM Plex Mono",monospace';
+  ctx.textAlign = "left"; ctx.textBaseline = "middle";
+  for (let yr = Math.ceil(yTop / step) * step; yr <= yBot; yr += step){
+    const py = (yr - Y0) * YSCALE * view.s + view.ty;
+    if (py < 10 || py > VH - 6) continue;
+    ctx.strokeStyle = COL.rule; ctx.globalAlpha = .75;
+    ctx.beginPath(); ctx.moveTo(x + 2, py); ctx.lineTo(x + 7, py); ctx.stroke();
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = COL.faint;
+    ctx.fillText(String(yr), x + 11, py);
+  }
+}
+
+// ---- interaction -------------------------------------------------------
+let dragging = false, lastX = 0, lastY = 0, moved = 0;
+cv.addEventListener("pointerdown", e => {
+  dragging = true; moved = 0; lastX = e.clientX; lastY = e.clientY;
+  cv.setPointerCapture(e.pointerId); cv.classList.add("drag");
+});
+cv.addEventListener("pointermove", e => {
+  const r = cv.getBoundingClientRect();
+  if (dragging){
+    const dx = e.clientX - lastX, dy = e.clientY - lastY;
+    moved += Math.abs(dx) + Math.abs(dy);
+    view.tx += dx; view.ty += dy; lastX = e.clientX; lastY = e.clientY;
+    userMoved = true; hideTip(); draw(); return;
+  }
+  const px = e.clientX - r.left, py = e.clientY - r.top;
+  const i = pick(px, py, 9);
+  if (i !== hoverI){ hoverI = i; draw(); }
+  if (i >= 0) showTip(i, px, py); else hideTip();
+  readout(px, py);
+});
+cv.addEventListener("pointerup", e => {
+  dragging = false; cv.classList.remove("drag");
+  if (moved < 5){
+    const r = cv.getBoundingClientRect();
+    const i = pick(e.clientX - r.left, e.clientY - r.top, 10);
+    if (i >= 0) select(i);
+  }
+});
+cv.addEventListener("pointerleave", () => { hideTip(); hoverI = -1; draw(); });
+cv.addEventListener("wheel", e => {
+  e.preventDefault();
+  const r = cv.getBoundingClientRect();
+  const px = e.clientX - r.left, py = e.clientY - r.top;
+  zoomAt(px, py, Math.exp(-e.deltaY * 0.0016));
+}, { passive:false });
+
+function zoomAt(px, py, k){
+  const ns = Math.max(0.0006, Math.min(6, view.s * k));
+  const kk = ns / view.s;
+  view.tx = px - (px - view.tx) * kk;
+  view.ty = py - (py - view.ty) * kk;
+  view.s = ns;
+  userMoved = true;
+  draw();
+}
+
+const tip = document.getElementById("tip");
+function showTip(i, px, py){
+  tip.innerHTML = esc(D.names[i]) + '<span class="yr">' + years(i) + '</span>';
+  tip.style.left = px + "px"; tip.style.top = py + "px"; tip.style.opacity = 1;
+}
+function hideTip(){ tip.style.opacity = 0; }
+
+const ro = document.getElementById("readout");
+function readout(px, py){
+  const yr = Math.round((py - view.ty) / view.s / YSCALE + Y0);
+  ro.textContent = yr >= D.stats.yearMin - 40 && yr <= D.stats.yearMax + 40 ? yr : "";
+}
+
+// ---- selection ---------------------------------------------------------
+function relatives(i){
+  const anc = new Set([i]); let st = [i];
+  while (st.length){ const p = st.pop(); for (const q of D.parents[p]) if (!anc.has(q)){ anc.add(q); st.push(q); } }
+  const des = new Set([i]); st = [i];
+  while (st.length){ const p = st.pop(); for (const q of D.children[p]) if (!des.has(q)){ des.add(q); st.push(q); } }
+  const all = new Set(anc); for (const q of des) all.add(q);
+  return all;
+}
+
+function pathTo(a, b){
+  if (a === b) return [a];
+  const prev = new Int32Array(N).fill(-1);
+  const seen = new Uint8Array(N); seen[a] = 1;
+  const qq = [a];
+  for (let h = 0; h < qq.length; h++){
+    const p = qq[h];
+    const nb = D.parents[p].concat(D.children[p], D.spouses[p]);
+    for (const q of nb){
+      if (seen[q]) continue;
+      seen[q] = 1; prev[q] = p; qq.push(q);
+      if (q === b){
+        const out = [b]; let c = b;
+        while (prev[c] !== -1){ c = prev[c]; out.push(c); }
+        return out.reverse();
+      }
+    }
+  }
+  return [];
+}
+
+function relation(a, b){
+  if (D.parents[b].includes(a)) return "parent";
+  if (D.children[b].includes(a)) return "child";
+  if (D.spouses[b].includes(a)) return "spouse";
+  return "";
+}
+
+function select(i, center){
+  selected = i;
+  lineSet = relatives(i);
+  showLine = true;
+  document.getElementById("z-line").setAttribute("aria-pressed", "true");
+  pathIdx = D.rootIndex >= 0 && i !== D.rootIndex ? pathTo(i, D.rootIndex) : [];
+  renderDetail(); renderRecord();
+  if (center){
+    userMoved = true;
+    const target = Math.max(view.s, 0.03);
+    view.s = target;
+    view.tx = VW/2 - wx(i) * view.s;
+    view.ty = VH/2 - wy(i) * view.s;
+  }
+  draw();
+}
+
+function years(i){
+  const b = D.birth[i], d = D.death[i];
+  if (!b && !d) return "—";
+  return (b || "?") + (d ? "–" + d : "");
+}
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c])); }
+
+function chip(j){
+  return '<li><button data-i="' + j + '">' + esc(D.names[j]) +
+         '<span class="yr">' + years(j) + '</span></button></li>';
+}
+
+function renderDetail(){
+  const el = document.getElementById("detail-body");
+  if (selected < 0){
+    el.innerHTML = '<p class="hint">Click any point to see who it is, who they were born to, and how they connect to your father.</p>';
+    return;
+  }
+  const i = selected;
+  const rn = D.regionNames[D.branch[i]] || "unknown";
+  let h = '<p class="who">' + esc(D.names[i]) + '</p>';
+  h += '<p class="when">' + years(i) + (D.flags[i] & ESTIMATED ? '  · year estimated' : '') + '</p>';
+  h += '<p class="where"><span class="sw" style="background:' + RC[D.branch[i]] + '"></span>' + esc(rn) + '</p>';
+
+  const groups = [["Parents", D.parents[i]], ["Spouses", D.spouses[i]], ["Children", D.children[i]]];
+  for (const [t, arr] of groups){
+    if (!arr.length) continue;
+    h += '<div class="rel"><h4>' + t + ' <span style="color:var(--ink-faint)">' + arr.length + '</span></h4><ul>';
+    for (const j of arr.slice(0, 24)) h += chip(j);
+    if (arr.length > 24) h += '<li><span class="yr">+' + (arr.length - 24) + ' more</span></li>';
+    h += '</ul></div>';
+  }
+
+  if (pathIdx.length > 1){
+    h += '<div id="path"><h4 style="font:500 10.5px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);margin:12px 0 6px">' +
+         'Connection to ' + esc(D.names[D.rootIndex]) + ' · ' + (pathIdx.length - 1) + ' steps</h4><ol>';
+    for (let k = 0; k < pathIdx.length; k++){
+      const j = pathIdx[k];
+      const rel = k > 0 ? relation(pathIdx[k-1], j) : "";
+      h += '<li><button data-i="' + j + '" style="background:none;border:0;padding:0;color:var(--ink);font:400 12.5px var(--sans);cursor:pointer;text-align:left">' +
+           esc(D.names[j]) + '</button>' +
+           (rel ? ' <span class="via">' + rel + '</span>' : '') + '</li>';
+    }
+    h += '</ol></div>';
+  } else if (selected === D.rootIndex){
+    h += '<p class="hint" style="margin-top:10px">This is the person the highlighted line is drawn from.</p>';
+  }
+  el.innerHTML = h;
+}
+
+document.getElementById("detail").addEventListener("click", e => {
+  const b = e.target.closest("button[data-i]");
+  if (b) select(+b.dataset.i, true);
+});
+
+// ======================================================================
+// the full record
+// ======================================================================
+// 29 MB of facts and transcripts sits gzipped and base64'd in the page, so
+// the model draws without parsing any of it. The first time someone opens a
+// person it is unpacked once and kept. Everything here degrades to a message
+// rather than a broken panel: an old browser with no DecompressionStream, a
+// build whose detail blob was not written, a person the GEDCOM says nothing
+// about beyond a name.
+let DET = null, detState = "idle";
+const recEl = document.getElementById("record");
+const recBody = document.getElementById("record-body");
+
+function detYear(s){ const m = /(\d{4})/.exec(s || ""); return m ? +m[1] : 0; }
+
+async function loadDetails(){
+  if (detState !== "idle") return;
+  const node = document.getElementById("tree-details");
+  const b64 = node ? (node.textContent || "").trim() : "";
+  // The build step swaps a placeholder for the payload by plain text
+  // substitution, so this file must never contain that placeholder spelled
+  // out -- it would rewrite this very line. Hence the join.
+  const EMPTY = ["__", "DETAILS", "__"].join("");
+  if (!b64 || b64 === EMPTY){ detState = "absent"; renderRecord(); return; }
+  detState = "loading"; renderRecord();
+  try {
+    const bin = atob(b64);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    if (typeof DecompressionStream !== "function") throw new Error("no gzip");
+    const ds = new DecompressionStream("gzip");
+    const stream = new Blob([bytes]).stream().pipeThrough(ds);
+    const text = await new Response(stream).text();
+    const blob = JSON.parse(text);
+    if (!blob || !Array.isArray(blob.rows)) throw new Error("shape");
+    DET = blob; detState = "ready";
+  } catch (err){ detState = "failed"; }
+  renderRecord();
+}
+
+function citHTML(c, titles, types){
+  const ti = c[0], ki = c[1], page = c[2] || "", txt = c[3] || "";
+  const title = (ti >= 0 && titles[ti]) ? titles[ti] : "Unnamed source";
+  const kind = (ki >= 0 && types[ki]) ? types[ki] : "";
+  const kc = kind === "Collection" ? "k0" : kind === "Discovery" ? "k1" : "k2";
+  const isURL = /^https?:\/\//.test(page);
+  let h = '<div class="cit"' + (txt ? ' data-open="0"' : '') + '>';
+  h += txt ? '<button type="button" aria-expanded="false">' : '<div style="padding:8px 10px;display:flex;gap:8px;align-items:flex-start">';
+  h += '<span class="tt">' + esc(title);
+  if (page && !isURL) h += '<span class="pg">' + esc(page) + '</span>';
+  h += '</span>';
+  if (kind) h += '<span class="kind ' + kc + '">' + esc(kind) + '</span>';
+  h += txt ? '<span class="cv">&#9656;</span></button>' : '</div>';
+  if (txt) h += '<pre hidden>' + esc(txt) +
+       (isURL ? '\n\n<a href="' + esc(page) + '" target="_blank" rel="noopener noreferrer">' +
+                'open the record at myheritage.com</a>' : '') + '</pre>';
+  return h + '</div>';
+}
+
+function renderRecord(){
+  if (selected < 0){ recEl.hidden = true; recBody.innerHTML = ""; return; }
+  const i = selected;
+  recEl.hidden = false;
+  document.getElementById("rec-name").textContent = D.names[i];
+  let sub = '<span>' + esc(years(i)) + '</span>';
+  if (D.regionNames[D.branch[i]])
+    sub += '<span><span class="sw" style="display:inline-block;background:' +
+           regionColor(D.branch[i]) + '"></span> ' + esc(D.regionNames[D.branch[i]]) + '</span>';
+  sub += '<span>' + D.dist[i] + ' step' + (D.dist[i] === 1 ? '' : 's') + ' out</span>';
+  document.getElementById("rec-sub").innerHTML = sub;
+
+  if (detState === "idle" || detState === "loading"){
+    recBody.innerHTML = '<p class="rmsg">Opening the records…</p>';
+    if (detState === "idle") loadDetails();
+    return;
+  }
+  if (detState === "absent" || detState === "failed"){
+    recBody.innerHTML = '<p class="rmsg">' + (detState === "absent"
+      ? 'This file was built without the record detail. Rebuild it with <b>build_tree_view.py</b>, which writes <b>tree-data-details.b64</b> beside the tree data.'
+      : 'The record detail in this file could not be unpacked. It needs a browser with <b>DecompressionStream</b> — Safari 16.4, Chrome 80 or Firefox 113 and later.') + '</p>';
+    return;
+  }
+
+  const row = DET.rows[i];
+  if (!row || typeof row !== "object"){
+    recBody.innerHTML = '<p class="rmsg">The tree records nothing about this person beyond their name and their place in the family.</p>';
+    return;
+  }
+  const T = DET.srcTitles || [], K = DET.srcTypes || [];
+  let h = "";
+
+  // --- facts, in the order they happened ------------------------------
+  const facts = Array.isArray(row.f) ? row.f.slice() : [];
+  if (facts.length){
+    facts.forEach((f, k) => { f._o = k; });
+    facts.sort((a, b) => {
+      const ya = detYear(a[1]), yb = detYear(b[1]);
+      if (ya && yb && ya !== yb) return ya - yb;
+      if (ya && !yb) return -1;
+      if (!ya && yb) return 1;
+      return a._o - b._o;
+    });
+    h += '<div class="rsec"><h4>What is recorded <b>' + facts.length + '</b></h4>';
+    for (const f of facts){
+      h += '<div class="fct"><div class="d' + (f[1] ? '' : ' none') + '">' +
+           esc(f[1] || "no date") + '</div><div><span class="k">' + esc(f[0]) + '</span>' +
+           (f[2] ? ' <span class="v">' + esc(f[2]) + '</span>' : '') + '</div>';
+      if (f[3]) h += '<div class="b x">' + esc(f[3]) + '</div>';
+      if (f[4]) h += '<div class="nb' + (/^(a )?merged record/.test(f[4]) ? ' merge' : '') +
+                     '">' + esc(f[4]) + '</div>';
+      h += '</div>';
+    }
+    h += '</div>';
+  }
+
+  // --- other names -----------------------------------------------------
+  if (Array.isArray(row.n) && row.n.length){
+    h += '<div class="rsec"><h4>Other names <b>' + row.n.length + '</b></h4>';
+    for (const n of row.n)
+      h += '<div class="fct"><div class="d none">' + esc(n[0]) +
+           '</div><div class="v">' + esc(n[1]) + '</div></div>';
+    h += '</div>';
+  }
+
+  // --- notes, reference numbers ---------------------------------------
+  if (Array.isArray(row.x) && row.x.length){
+    h += '<div class="rsec"><h4>Notes</h4>';
+    for (const x of row.x)
+      h += '<p class="rnote"><b style="color:var(--ink)">' + esc(x[0]) + '</b> ' + esc(x[1]) + '</p>';
+    h += '</div>';
+  }
+
+  // --- sources ---------------------------------------------------------
+  // Actual record collections first, then MyHeritage's own Discovery, then
+  // Smart Matches, which are other users' trees. That is the order of how
+  // much weight a citation carries, and the panel should not flatten it.
+  const cits = Array.isArray(row.c) ? row.c.slice() : [];
+  if (cits.length){
+    const rank = c => { const k = (c[1] >= 0 && K[c[1]]) || "";
+      return k === "Collection" ? 0 : k === "Discovery" ? 1 : 2; };
+    cits.sort((a, b) => rank(a) - rank(b));
+    const nColl = cits.filter(c => rank(c) === 0).length;
+    h += '<div class="rsec"><h4>Sources <b>' + cits.length + '</b></h4>';
+    for (const c of cits) h += citHTML(c, T, K);
+    h += '<p class="prov">' + (nColl
+      ? nColl + ' of these ' + (nColl === 1 ? 'is' : 'are') + ' an actual record collection. '
+      : 'None of these is an actual record collection. ') +
+      'The rest are matches against other people’s trees, which are a lead rather than evidence.</p>';
+    h += '</div>';
+  }
+
+  recBody.innerHTML = h || '<p class="rmsg">The tree records nothing about this person beyond their name and their place in the family.</p>';
+  recBody.scrollTop = 0;
+}
+
+recBody.addEventListener("click", e => {
+  const b = e.target.closest(".cit > button"); if (!b) return;
+  const box = b.parentNode, pre = box.querySelector("pre");
+  const open = box.getAttribute("data-open") === "1";
+  box.setAttribute("data-open", open ? "0" : "1");
+  b.setAttribute("aria-expanded", open ? "false" : "true");
+  if (pre) pre.hidden = open;
+});
+document.getElementById("rec-close").addEventListener("click", () => {
+  recEl.hidden = true;
+  try{ document.getElementById("cv").focus({preventScroll:true}); }catch(_){ }
+});
+
+
+// ---- search ------------------------------------------------------------
+const qEl = document.getElementById("q"), hitsEl = document.getElementById("hits");
+const lower = D.names.map(s => s.toLowerCase());
+let tmr = 0;
+qEl.addEventListener("input", () => { clearTimeout(tmr); tmr = setTimeout(runSearch, 110); });
+function runSearch(){
+  const q = qEl.value.trim().toLowerCase();
+  if (q.length < 2){ hitsEl.innerHTML = ""; return; }
+  const out = [];
+  for (let i = 0; i < N && out.length < 60; i++){
+    if (lower[i].includes(q)) out.push(i);
+  }
+  out.sort((a, b) => (lower[a].indexOf(q) - lower[b].indexOf(q)) || (D.birth[a] - D.birth[b]));
+  hitsEl.innerHTML = out.slice(0, 40).map(i =>
+    '<li><button data-i="' + i + '">' + esc(D.names[i]) + '<span class="yr">' + years(i) + '</span></button></li>'
+  ).join("") || '<li><span class="hint" style="padding:4px 8px;display:block">No one by that name.</span></li>';
+}
+hitsEl.addEventListener("click", e => {
+  const b = e.target.closest("button[data-i]");
+  if (b) select(+b.dataset.i, true);
+});
+
+// ---- legend ------------------------------------------------------------
+const legEl = document.getElementById("legend");
+legEl.innerHTML = D.regionNames.map((n, i) =>
+  '<li><button data-r="' + i + '" aria-pressed="true">' +
+  '<span class="sw" style="background:' + regionColor(i) + '"></span>' +
+  '<span>' + esc(n) + '</span>' +
+  '<span class="n">' + D.regionSizes[i].toLocaleString() + '</span></button></li>'
+).join("");
+legEl.addEventListener("click", e => {
+  const b = e.target.closest("button[data-r]");
+  if (!b) return;
+  const r = +b.dataset.r;
+  if (hidden.has(r)){ hidden.delete(r); b.setAttribute("aria-pressed", "true"); }
+  else { hidden.add(r); b.setAttribute("aria-pressed", "false"); }
+  draw();
+});
+
+// ---- controls ----------------------------------------------------------
+document.getElementById("z-in").onclick  = () => zoomAt(VW/2, VH/2, 1.45);
+document.getElementById("z-out").onclick = () => zoomAt(VW/2, VH/2, 1/1.45);
+document.getElementById("z-fit").onclick = () => fit();
+const lineBtn = document.getElementById("z-line");
+lineBtn.onclick = () => {
+  showLine = !showLine;
+  lineBtn.setAttribute("aria-pressed", showLine ? "true" : "false");
+  draw();
+};
+
+// ---- keyboard ----------------------------------------------------------
+cv.setAttribute("tabindex", "0");
+cv.setAttribute("role", "application");
+cv.setAttribute("aria-label", "Family tree map. Arrow keys pan, plus and minus zoom.");
+cv.addEventListener("keydown", e => {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  const step = e.shiftKey ? 160 : 55;
+  let used = true;
+  switch (e.key){
+    case "ArrowLeft":  view.tx += step; userMoved = true; break;
+    case "ArrowRight": view.tx -= step; userMoved = true; break;
+    case "ArrowUp":    view.ty += step; userMoved = true; break;
+    case "ArrowDown":  view.ty -= step; userMoved = true; break;
+    case "+": case "=": zoomAt(VW/2, VH/2, 1.45); break;
+    case "-": case "_": zoomAt(VW/2, VH/2, 1/1.45); break;
+    case "0": fit(); break;
+    case "Escape": selected = -1; lineSet = new Set(); pathIdx = []; renderDetail(); renderRecord(); break;
+    default: used = false;
+  }
+  if (used){ e.preventDefault(); draw(); }
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "/" && document.activeElement !== qEl && !e.metaKey && !e.ctrlKey){
+    e.preventDefault(); qEl.focus(); qEl.select();
+  }
+});
+
+// ---- boot --------------------------------------------------------------
+document.getElementById("s-people").textContent = D.stats.people.toLocaleString();
+document.getElementById("s-span").textContent = D.stats.yearMin + "–" + D.stats.yearMax;
+document.getElementById("f-span").textContent = D.stats.yearMin + " at the top to " + D.stats.yearMax + " at the bottom";
+qEl.placeholder = "Search " + D.stats.people.toLocaleString() + " names…";
+
+if (D.rootIndex >= 0) select(D.rootIndex);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) draw(); });
+window.addEventListener("resize", resize);
+if (window.ResizeObserver){
+  new ResizeObserver(resize).observe(document.getElementById("stage"));
+}
+resize();
+requestAnimationFrame(() => { resize(); });
+})();
+</script>
+</body>
+</html>
