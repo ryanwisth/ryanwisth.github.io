@@ -5,52 +5,108 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Turning a slipping process into enforced rules | Ryan Wisth</title>
 <meta name="description" content="Case study: a fact-checking method for long AI-written reports, run by hand on 517 claims, audited for where its discipline slipped, then rebuilt as a tool that enforces the rules.">
+<meta property="og:title" content="Turning a slipping process into enforced rules | Ryan Wisth">
+<meta property="og:description" content="Case study: a fact-checking method for long AI-written reports, run by hand on 517 claims, audited for where its discipline slipped, then rebuilt as a tool that enforces the rules.">
+<meta property="og:image" content="https://ryanwisth.github.io/img/family-tree-3d.jpg">
+<meta name="theme-color" content="#f7f7f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1015" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%234338ca'/%3E%3Cstop offset='1' stop-color='%230e7490'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Ctext x='16' y='21' font-family='Arial' font-weight='700' font-size='13' fill='white' text-anchor='middle'%3ERW%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="site"><a href="index.html">&larr; Ryan Wisth, case studies</a></header>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="mark">RW</span>Ryan Wisth</a>
+    <nav class="topnav">
+      <a href="index.html#work">Case studies</a>
+      <a class="hide-sm" href="index.html#how">How I work</a>
+      <a href="https://github.com/ryanwisth">GitHub</a>
+    </nav>
+  </div>
+</header>
+
 <main>
-  <p class="kicker">Case study: a process failure turned into rules</p>
-  <h1>Turning a slipping process into enforced rules</h1>
-  <p class="lede">A tool for fact-checking a long AI-written report one claim at a time, riskiest first, with an add-only log of every verdict. It was built by running the method by hand first, measuring where it slipped, and then making those slips impossible.</p>
+  <div class="prose case-head">
+    <a class="back" href="index.html#work">&larr; All case studies</a>
+    <p class="kicker">A process failure turned into rules</p>
+    <h1>Turning a slipping process into enforced rules</h1>
+    <p class="lede">A tool for fact-checking a long AI-written report one claim at a time, riskiest first, with an add-only log of every verdict. It was built by running the method by hand first, measuring where it slipped, and then making those slips impossible.</p>
 
   <div class="facts">
-    <div class="fact"><b>517</b><span>claims checked in 29 batches in the first report</span></div>
-    <div class="fact"><b>0 of 28</b><span>late corrections still had a "best case" when the rules lived only in the chat</span></div>
-    <div class="fact"><b>27% &rarr; 7%</b><span>problem rate in the first 9 batches against the last 20</span></div>
+      <div class="fact"><b>517</b><span>claims checked in 29 batches in the first report</span></div>
+      <div class="fact"><b>0 of 28</b><span>late corrections still had a "best case" when the rules lived only in the chat</span></div>
+      <div class="fact"><b>27% &rarr; 7%</b><span>problem rate in the first 9 batches against the last 20</span></div>
+    </div>
   </div>
 
-  <h2>The problem</h2>
-  <p>A long research report written by an AI model reads well and is wrong in places, and nobody can tell where by reading it. Asking the model to "double-check" gives a second confident pass with no record of what was checked or how.</p>
-  <p>The first attempt at a fix, rules written into the conversation, worked early and then decayed.</p>
+  <figure class="figure">
+    <ol class="flow c3">
+      <li><b>Sync</b><span>every point in the report gets an invisible ID</span></li>
+      <li><b>Queue</b><span>re-checks, changed points, then importance times weakness</span></li>
+      <li><b>Batch of about 20</b><span>statement, wrong_if, best_case, evidence, verdict</span></li>
+      <li class="key"><b>Batch script</b><span>check, apply and record together</span></li>
+      <li><b>Add-only log</b><span>verdicts.jsonl</span></li>
+      <li class="key"><b>Audit</b><span>problem rate and template drift by batch</span></li>
+    </ol>
+    <figcaption>One round of the ledger, simplified from the README diagram. The log feeds the next queue.</figcaption>
+  </figure>
+  <figure class="figure">
+    <div class="chart-card">
+      <h3>Problems found per first check</h3>
+      <p class="sub">The first ledger, 29 batches. The later batches were 73% of the work.</p>
+      <div class="bars" role="img" aria-label="Bar chart. Batches 1 to 9 found problems in 27% of first checks, batches 10 to 29 in 7%.">
+        <div class="row" title="Batches 1 to 9: 27%"><span class="lab">Batches 1 to 9</span><span class="track"><i class="" style="--v:90%"></i></span><span class="val">27%</span></div>
+        <div class="row" title="Batches 10 to 29: 7%"><span class="lab">Batches 10 to 29<small>73% of the work</small></span><span class="track"><i class="" style="--v:23.3%"></i></span><span class="val">7%</span></div>
+      </div>
+    </div>
+  </figure>
 
-  <h2>What I directed</h2>
-  <p>I ran the first ledger with the agent, audited where its discipline slipped, set the rules the tool must enforce, and checked the tool against the first ledger's real records. The agents wrote most of the code.</p>
-  <ul>
-    <li><b>Put the template in code, not in the conversation.</b> By the late batches, "best case" had fallen to 0 of 28 corrections and "what would make it wrong" to 57% of records. Now one incomplete record rejects the whole batch and nothing is written.</li>
-    <li><b>Riskiest first.</b> Re-checks go first, then points whose text changed, then open claims ranked by importance times weakness. That order found the first report's biggest error in the first batches.</li>
-    <li><b>Make self-confirmation visible.</b> The same model writes and checks, which is the method's weak point. Every verdict is tagged by evidence type, and a verdict resting only on the project's own notes is labelled that way and listed for a person to verify.</li>
-    <li><b>Stopping is a cost decision for a person.</b> Batches 10 to 29 were 73% of the work and found problems in 7% of first checks. The tool reports the rate and an estimate of what is left; whether to stop, sample or continue is left to a person.</li>
-  </ul>
+  <div class="prose">
+    <h2>The problem</h2>
+    <p>A long research report written by an AI model reads well and is wrong in places, and nobody can tell where by reading it. Asking the model to "double-check" gives a second confident pass with no record of what was checked or how.</p>
+    <p>The first attempt at a fix, rules written into the conversation, worked early and then decayed.</p>
 
-  <h2>How the results were verified</h2>
-  <ul>
-    <li>Replaying the first ledger's 546 records through the new audit reproduces the hand-made audit, including the drift it found.</li>
-    <li>A self-test runs 27 end-to-end checks on a throwaway report and passes on the published copy.</li>
-    <li>The stop rule counts first checks only, after the audit showed 42 of 66 early problems came from re-checks and inflated the early rate.</li>
-  </ul>
+    <h2>What I directed</h2>
+    <p>I ran the first ledger with the agent, audited where its discipline slipped, set the rules the tool must enforce, and checked the tool against the first ledger's real records. The agents wrote most of the code.</p>
+    <ul>
+      <li><b>Put the template in code, not in the conversation.</b> By the late batches, "best case" had fallen to 0 of 28 corrections and "what would make it wrong" to 57% of records. Now one incomplete record rejects the whole batch and nothing is written.</li>
+      <li><b>Riskiest first.</b> Re-checks go first, then points whose text changed, then open claims ranked by importance times weakness. That order found the first report's biggest error in the first batches.</li>
+      <li><b>Make self-confirmation visible.</b> The same model writes and checks, which is the method's weak point. Every verdict is tagged by evidence type, and a verdict resting only on the project's own notes is labelled that way and listed for a person to verify.</li>
+      <li><b>Stopping is a cost decision for a person.</b> Batches 10 to 29 were 73% of the work and found problems in 7% of first checks. The tool reports the rate and an estimate of what is left; whether to stop, sample or continue is left to a person.</li>
+    </ul>
 
-  <h2>The outcome</h2>
-  <p>A Claude Code skill and command-line tool in daily use since October 2026. Every point in a report gets a stable ID, corrections rewrite the report in place through a script that re-derives every new number, and the history stays in an append-only log.</p>
+    <h2>How the results were verified</h2>
+    <ul>
+      <li>Replaying the first ledger's 546 records through the new audit reproduces the hand-made audit, including the drift it found.</li>
+      <li>A self-test runs 27 end-to-end checks on a throwaway report and passes on the published copy.</li>
+      <li>The stop rule counts first checks only, after the audit showed 42 of 66 early problems came from re-checks and inflated the early rate.</li>
+    </ul>
 
-  <h2>Honest limits</h2>
-  <ul>
-    <li>Used on one full report so far, and Markdown reports only.</li>
-    <li>The tool enforces the form of a check, not its quality. A model can still write a weak test; the audit shows the trend, and a person should re-check a sample.</li>
-  </ul>
+    <h2>The outcome</h2>
+    <p>A Claude Code skill and command-line tool in daily use since October 2026. Every point in a report gets a stable ID, corrections rewrite the report in place through a script that re-derives every new number, and the history stays in an append-only log.</p>
 
-  <p><a class="repo" href="https://github.com/ryanwisth/claim-ledger">View the repository</a></p>
+    <h2>Honest limits</h2>
+    <ul>
+      <li>Used on one full report so far, and Markdown reports only.</li>
+      <li>The tool enforces the form of a check, not its quality. A model can still write a weak test; the audit shows the trend, and a person should re-check a sample.</li>
+    </ul>
+
+    <div class="repo-card">
+      <p><b>ryanwisth/claim-ledger</b>The code, with its real status and limits.</p>
+      <a class="btn primary" href="https://github.com/ryanwisth/claim-ledger">View the repository &rarr;</a>
+    </div>
+    <nav class="pager" aria-label="More case studies">
+      <a class="prev" href="pinball-study.html"><small>&larr; Previous</small>A study built so it could fail</a>
+      <a class="next" href="token-scan.html"><small>Next &rarr;</small>Finding where the AI budget went</a>
+    </nav>
+  </div>
 </main>
-<footer class="site">Every figure on this page comes from the project's own README.</footer>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Every figure on this page comes from the project's own README.</span>
+    <span>&copy; Ryan Wisth</span>
+  </div>
+</footer>
 </body>
 </html>

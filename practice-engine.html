@@ -5,57 +5,106 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>A practice app built around the mistake | Ryan Wisth</title>
 <meta name="description" content="Case study: a local practice app that drills each mistake pattern until it is mastered under time, with product rules set from a user problem.">
+<meta property="og:title" content="A practice app built around the mistake | Ryan Wisth">
+<meta property="og:description" content="Case study: a local practice app that drills each mistake pattern until it is mastered under time, with product rules set from a user problem.">
+<meta property="og:image" content="https://ryanwisth.github.io/img/practice-engine.jpg">
+<meta name="theme-color" content="#f7f7f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1015" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%234338ca'/%3E%3Cstop offset='1' stop-color='%230e7490'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Ctext x='16' y='21' font-family='Arial' font-weight='700' font-size='13' fill='white' text-anchor='middle'%3ERW%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="site"><a href="index.html">&larr; Ryan Wisth, case studies</a></header>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="mark">RW</span>Ryan Wisth</a>
+    <nav class="topnav">
+      <a href="index.html#work">Case studies</a>
+      <a class="hide-sm" href="index.html#how">How I work</a>
+      <a href="https://github.com/ryanwisth">GitHub</a>
+    </nav>
+  </div>
+</header>
+
 <main>
-  <p class="kicker">Case study: product rules from a user problem</p>
-  <h1>A practice app built around the mistake</h1>
-  <p class="lede">A local practice app for any multiple-choice subject. It groups questions by the mistake they test, drills each mistake pattern until it is mastered under time, and grades timed sets on pacing as well as score.</p>
+  <div class="prose case-head">
+    <a class="back" href="index.html#work">&larr; All case studies</a>
+    <p class="kicker">Product rules from a user problem</p>
+    <h1>A practice app built around the mistake</h1>
+    <p class="lede">A local practice app for any multiple-choice subject. It groups questions by the mistake they test, drills each mistake pattern until it is mastered under time, and grades timed sets on pacing as well as score.</p>
 
   <div class="facts">
-    <div class="fact"><b>3 in a row</b><span>correct and on time, on 3 different questions, to master a pattern</span></div>
-    <div class="fact"><b>3, 7, 21</b><span>days until a mastered pattern comes back for a check</span></div>
-    <div class="fact"><b>2 files</b><span>one Python file and one HTML file run the app, with nothing to install</span></div>
+      <div class="fact"><b>3 in a row</b><span>correct and on time, on 3 different questions, to master a pattern</span></div>
+      <div class="fact"><b>3, 7, 21</b><span>days until a mastered pattern comes back for a check</span></div>
+      <div class="fact"><b>2 files</b><span>one Python file and one HTML file run the app, with nothing to install</span></div>
+    </div>
   </div>
 
-  <h2>The problem</h2>
-  <p>Practice by topic treats every miss in "percents" the same. But most misses come from one specific error: adding two percent changes instead of multiplying them, or averaging times instead of adding rates.</p>
-  <p>Practicing the whole chapter again does not target that error.</p>
+  <figure class="figure">
+    <div class="shot"><div class="bar"><i></i><i></i><i></i><em>127.0.0.1:8780, drill view</em></div><img src="img/practice-engine.jpg" alt="The drill screen after a correct answer: the mistake pattern, the time against target, the streak and the explanation" width="1600" height="1231" loading="lazy"></div>
+    <figcaption>The drill view on the repository's sample bank: the mistake pattern, the time against target and the streak, shown after each answer.</figcaption>
+  </figure>
+  <figure class="figure">
+    <ol class="flow c5">
+      <li><b>Your questions</b><span>CSV or JSON, validated on import</span></li>
+      <li><b>Verified items</b><span>grouped by the mistake they test</span></li>
+      <li><b>Drill or timed set</b><span>answer and seconds recorded</span></li>
+      <li class="key"><b>Mastered</b><span>a streak of correct, on-time answers on distinct items</span></li>
+      <li><b>Decay check</b><span>after 3, 7 and 21 days; a miss reopens it</span></li>
+    </ol>
+    <figcaption>Simplified from the README diagram. A wrong answer also retires that item from serving.</figcaption>
+  </figure>
 
-  <h2>What I directed</h2>
-  <p>I set the goals, the learning rules and the acceptance checks. The agents wrote the code.</p>
-  <ul>
-    <li><b>The unit of practice is the mistake, not the topic.</b> Each question belongs to one mistake pattern, and the app drills that pattern directly.</li>
-    <li><b>Speed is part of mastery.</b> Knowing how to do something slowly is not the same as doing it under a clock, so a slow right answer does not extend the streak.</li>
-    <li><b>Mastery must span different questions.</b> A streak on one repeated question proves memory.</li>
-    <li><b>A missed question is retired.</b> Once its explanation has been shown, a later correct answer may be recall, so the question is never served again.</li>
-    <li><b>Pacing is a separate grade.</b> A timed set can score well and still be paced badly. The report separates time that bought a right answer from time sunk into a wrong one.</li>
-  </ul>
+  <div class="prose">
+    <h2>The problem</h2>
+    <p>Practice by topic treats every miss in "percents" the same. But most misses come from one specific error: adding two percent changes instead of multiplying them, or averaging times instead of adding rates.</p>
+    <p>Practicing the whole chapter again does not target that error.</p>
 
-  <h2>How the results were verified</h2>
-  <ul>
-    <li>Tested by building the sample bank, running the app on localhost and exercising the drill, answer, timed-set, progress, pacing and audit functions.</li>
-    <li>The 21 sample questions each carry a machine check, and only checked questions are served.</li>
-    <li>A built-in audit flags bad answer keys, duplicate choices, near-clone questions and patterns with too few questions.</li>
-    <li>I verified the rules by using the tool for my own study.</li>
-  </ul>
+    <h2>What I directed</h2>
+    <p>I set the goals, the learning rules and the acceptance checks. The agents wrote the code.</p>
+    <ul>
+      <li><b>The unit of practice is the mistake, not the topic.</b> Each question belongs to one mistake pattern, and the app drills that pattern directly.</li>
+      <li><b>Speed is part of mastery.</b> Knowing how to do something slowly is not the same as doing it under a clock, so a slow right answer does not extend the streak.</li>
+      <li><b>Mastery must span different questions.</b> A streak on one repeated question proves memory.</li>
+      <li><b>A missed question is retired.</b> Once its explanation has been shown, a later correct answer may be recall, so the question is never served again.</li>
+      <li><b>Pacing is a separate grade.</b> A timed set can score well and still be paced badly. The report separates time that bought a right answer from time sunk into a wrong one.</li>
+    </ul>
 
-  <h2>The outcome</h2>
-  <p>A working local app that anyone can load with their own questions from a spreadsheet file. The importer rejects the whole file if any row fails validation.</p>
-  <p>The public version is a generic, reduced build of a larger personal practice tool. A companion server in <a href="https://github.com/ryanwisth/local-llm-mcp-servers">local-llm-mcp-servers</a> lets a local AI model read how practice is going, read-only.</p>
+    <h2>How the results were verified</h2>
+    <ul>
+      <li>Tested by building the sample bank, running the app on localhost and exercising the drill, answer, timed-set, progress, pacing and audit functions.</li>
+      <li>The 21 sample questions each carry a machine check, and only checked questions are served.</li>
+      <li>A built-in audit flags bad answer keys, duplicate choices, near-clone questions and patterns with too few questions.</li>
+      <li>I verified the rules by using the tool for my own study.</li>
+    </ul>
 
-  <h2>Honest limits</h2>
-  <ul>
-    <li>There are no automated tests in the repository yet.</li>
-    <li>Single user with no sign-in, meant to run on your own computer only.</li>
-    <li>Questions are text only, with no images or formulas.</li>
-    <li>The interface has not been checked across browsers.</li>
-  </ul>
+    <h2>The outcome</h2>
+    <p>A working local app that anyone can load with their own questions from a spreadsheet file. The importer rejects the whole file if any row fails validation.</p>
+    <p>The public version is a generic, reduced build of a larger personal practice tool. A companion server in <a href="https://github.com/ryanwisth/local-llm-mcp-servers">local-llm-mcp-servers</a> lets a local AI model read how practice is going, read-only.</p>
 
-  <p><a class="repo" href="https://github.com/ryanwisth/adaptive-drill-engine">View the repository</a></p>
+    <h2>Honest limits</h2>
+    <ul>
+      <li>There are no automated tests in the repository yet.</li>
+      <li>Single user with no sign-in, meant to run on your own computer only.</li>
+      <li>Questions are text only, with no images or formulas.</li>
+      <li>The interface has not been checked across browsers.</li>
+    </ul>
+
+    <div class="repo-card">
+      <p><b>ryanwisth/adaptive-drill-engine</b>The code, with its real status and limits.</p>
+      <a class="btn primary" href="https://github.com/ryanwisth/adaptive-drill-engine">View the repository &rarr;</a>
+    </div>
+    <nav class="pager" aria-label="More case studies">
+      <a class="prev" href="family-tree-3d.html"><small>&larr; Previous</small>A 3D family tree in one offline file</a>
+      <a class="next" href="paper-grader.html"><small>Next &rarr;</small>AI feedback written in ink on an e-ink tablet</a>
+    </nav>
+  </div>
 </main>
-<footer class="site">Every figure on this page comes from the project's own README.</footer>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Every figure on this page comes from the project's own README.</span>
+    <span>&copy; Ryan Wisth</span>
+  </div>
+</footer>
 </body>
 </html>

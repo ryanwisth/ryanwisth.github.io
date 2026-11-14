@@ -5,55 +5,111 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>A study built so it could fail | Ryan Wisth</title>
 <meta name="description" content="Case study: testing whether pinball table design predicts player ratings, with hypotheses written and hashed before any result. The hypotheses failed, and the write-up says so.">
+<meta property="og:title" content="A study built so it could fail | Ryan Wisth">
+<meta property="og:description" content="Case study: testing whether pinball table design predicts player ratings, with hypotheses written and hashed before any result. The hypotheses failed, and the write-up says so.">
+<meta property="og:image" content="https://ryanwisth.github.io/img/family-tree-3d.jpg">
+<meta name="theme-color" content="#f7f7f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1015" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%234338ca'/%3E%3Cstop offset='1' stop-color='%230e7490'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Ctext x='16' y='21' font-family='Arial' font-weight='700' font-size='13' fill='white' text-anchor='middle'%3ERW%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="site"><a href="index.html">&larr; Ryan Wisth, case studies</a></header>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="mark">RW</span>Ryan Wisth</a>
+    <nav class="topnav">
+      <a href="index.html#work">Case studies</a>
+      <a class="hide-sm" href="index.html#how">How I work</a>
+      <a href="https://github.com/ryanwisth">GitHub</a>
+    </nav>
+  </div>
+</header>
+
 <main>
-  <p class="kicker">Case study: research honest enough to fail</p>
-  <h1>A study built so it could fail</h1>
-  <p class="lede">A research tool that converts pinball table layouts, measures their geometry, plays them with simulated players at four skill levels, and tests whether any of that predicts how much people enjoy a table. The answer was no, and the write-up says so.</p>
+  <div class="prose case-head">
+    <a class="back" href="index.html#work">&larr; All case studies</a>
+    <p class="kicker">Research honest enough to fail</p>
+    <h1>A study built so it could fail</h1>
+    <p class="lede">A research tool that converts pinball table layouts, measures their geometry, plays them with simulated players at four skill levels, and tests whether any of that predicts how much people enjoy a table. The answer was no, and the write-up says so.</p>
 
   <div class="facts">
-    <div class="fact"><b>9</b><span>designer rules written down as hypotheses before any result, none confirmed</span></div>
-    <div class="fact"><b>79 &rarr; 94</b><span>real tables tested, then retested after adding lower-rated ones</span></div>
-    <div class="fact"><b>5%</b><span>better than guessing the average rating, no better than year and maker alone</span></div>
+      <div class="fact"><b>9</b><span>designer rules written down as hypotheses before any result, none confirmed</span></div>
+      <div class="fact"><b>79 &rarr; 94</b><span>real tables tested, then retested after adding lower-rated ones</span></div>
+      <div class="fact"><b>5%</b><span>better than guessing the average rating, no better than year and maker alone</span></div>
+    </div>
   </div>
 
-  <h2>The problem</h2>
-  <p>The goal was to score an original table design before anyone had played it: learn what separates well-rated tables from the rest, then apply that to the new design.</p>
-  <p>The easy trap in a study like this is to try many measures and report the ones that happen to fit.</p>
+  <figure class="figure">
+    <ol class="flow c5">
+      <li class="key"><b>Hypotheses first</b><span>written and hashed before results</span></li>
+      <li><b>Convert tables</b><span>table files into one common board format</span></li>
+      <li><b>Measure</b><span>geometry, toys, simulated play, rules</span></li>
+      <li><b>Rating model</b><span>judged leave-one-out</span></li>
+      <li class="key"><b>Pre-registered tests</b><span>verdicts fixed in advance</span></li>
+    </ol>
+    <figcaption>The study, simplified from the README diagram.</figcaption>
+  </figure>
+  <figure class="figure">
+    <div class="chart-card">
+      <h3>Prediction error, lower is better</h3>
+      <p class="sub">Leave-one-out RMSE (root-mean-square error) on player ratings. The model barely beats guessing the mean, and year, maker and build flags alone do as well.</p>
+      <div class="bars" role="img" aria-label="Bar chart. Guess the mean 0.448, best ensemble 0.425, year maker and build flags alone 0.421.">
+        <div class="row" title="Guess the mean rating: 0.448"><span class="lab">Guess the mean rating</span><span class="track"><i class="base" style="--v:89.6%"></i></span><span class="val">0.448</span></div>
+        <div class="row" title="Best ensemble: 0.425"><span class="lab">Best ensemble</span><span class="track"><i class="" style="--v:85.0%"></i></span><span class="val">0.425</span></div>
+        <div class="row" title="Year, maker and build flags alone: 0.421"><span class="lab">Year, maker and build flags alone</span><span class="track"><i class="" style="--v:84.2%"></i></span><span class="val">0.421</span></div>
+      </div>
+    </div>
+  </figure>
 
-  <h2>What I directed</h2>
-  <p>I set the research question, the plan and its pass/fail gates, chose between options at each decision point, and checked the results. The agents wrote the code and ran the experiments.</p>
-  <ul>
-    <li><b>Hypotheses before results.</b> Designer rules of thumb were written down with predicted directions, a fixed test and a fixed verdict rule, then hashed, before any measure was compared with a rating.</li>
-    <li><b>One common board format.</b> The simulator never sees a source file, so an original design can be measured exactly like a converted commercial table.</li>
-    <li><b>Port the physics, do not invent it.</b> A hand-tuned flipper was replaced by a port of an established simulator's flipper model and checked against an independent port.</li>
-    <li><b>Controls in every model.</b> Year and maker are always included, so era and brand are not mistaken for "fun".</li>
-    <li><b>Trust only what holds up.</b> The expert bot did not reliably beat the intermediate one, so every hypothesis uses the intermediate bot and the expert-based test is marked low-trust.</li>
-  </ul>
+  <div class="prose">
+    <h2>The problem</h2>
+    <p>The goal was to score an original table design before anyone had played it: learn what separates well-rated tables from the rest, then apply that to the new design.</p>
+    <p>The easy trap in a study like this is to try many measures and report the ones that happen to fit.</p>
 
-  <h2>How the results were verified</h2>
-  <ul>
-    <li>Every rating model was judged by leave-one-out cross-validation against the simple baseline of predicting the mean.</li>
-    <li>Each hypothesis was tested with bootstrap intervals on two separate measures of success: public rating and production run.</li>
-    <li>The hashes of the hypothesis files are stored with the results, so an edit after the fact shows.</li>
-  </ul>
+    <h2>What I directed</h2>
+    <p>I set the research question, the plan and its pass/fail gates, chose between options at each decision point, and checked the results. The agents wrote the code and ran the experiments.</p>
+    <ul>
+      <li><b>Hypotheses before results.</b> Designer rules of thumb were written down with predicted directions, a fixed test and a fixed verdict rule, then hashed, before any measure was compared with a rating.</li>
+      <li><b>One common board format.</b> The simulator never sees a source file, so an original design can be measured exactly like a converted commercial table.</li>
+      <li><b>Port the physics, do not invent it.</b> A hand-tuned flipper was replaced by a port of an established simulator's flipper model and checked against an independent port.</li>
+      <li><b>Controls in every model.</b> Year and maker are always included, so era and brand are not mistaken for "fun".</li>
+      <li><b>Trust only what holds up.</b> The expert bot did not reliably beat the intermediate one, so every hypothesis uses the intermediate bot and the expert-based test is marked low-trust.</li>
+    </ul>
 
-  <h2>The outcome</h2>
-  <p>The hypothesis failed. The best model's error was 0.425 against 0.448 for guessing the mean, and year, maker and build flags alone did as well. Of the 9 rules, none passed as predicted, and two went the opposite way, about what chance gives.</p>
-  <p>The best reading is that ratings mostly reward theme, licence, rules depth, sound and code, which a 2D simulator cannot see. What remains useful is the instrument: a converter, a simulator and bots that can check a design for stuck balls, unmakeable ramps and drains down the middle.</p>
+    <h2>How the results were verified</h2>
+    <ul>
+      <li>Every rating model was judged by leave-one-out cross-validation against the simple baseline of predicting the mean.</li>
+      <li>Each hypothesis was tested with bootstrap intervals on two separate measures of success: public rating and production run.</li>
+      <li>The hashes of the hypothesis files are stored with the results, so an edit after the fact shows.</li>
+    </ul>
 
-  <h2>Honest limits</h2>
-  <ul>
-    <li>The scorer is not a usable fun predictor, and nothing in the project claims it is.</li>
-    <li>The design-check use of the simulator was not built out. Ramps on converted tables are rarely made, and 18% of ramps could not be made by any aimed shot.</li>
-    <li>The published hypothesis files had a few non-substantive sentences and labels removed, so they no longer match the hashes recorded during the study; the README states both.</li>
-  </ul>
+    <h2>The outcome</h2>
+    <p>The hypothesis failed. The best model's error was 0.425 against 0.448 for guessing the mean, and year, maker and build flags alone did as well. Of the 9 rules, none passed as predicted, and two went the opposite way, about what chance gives.</p>
+    <p>The best reading is that ratings mostly reward theme, licence, rules depth, sound and code, which a 2D simulator cannot see. What remains useful is the instrument: a converter, a simulator and bots that can check a design for stuck balls, unmakeable ramps and drains down the middle.</p>
 
-  <p><a class="repo" href="https://github.com/ryanwisth/pinball-fun-scorer">View the repository</a></p>
+    <h2>Honest limits</h2>
+    <ul>
+      <li>The scorer is not a usable fun predictor, and nothing in the project claims it is.</li>
+      <li>The design-check use of the simulator was not built out. Ramps on converted tables are rarely made, and 18% of ramps could not be made by any aimed shot.</li>
+      <li>The published hypothesis files had a few non-substantive sentences and labels removed, so they no longer match the hashes recorded during the study; the README states both.</li>
+    </ul>
+
+    <div class="repo-card">
+      <p><b>ryanwisth/pinball-fun-scorer</b>The code, with its real status and limits.</p>
+      <a class="btn primary" href="https://github.com/ryanwisth/pinball-fun-scorer">View the repository &rarr;</a>
+    </div>
+    <nav class="pager" aria-label="More case studies">
+      <a class="prev" href="paper-grader.html"><small>&larr; Previous</small>AI feedback written in ink on an e-ink tablet</a>
+      <a class="next" href="claim-ledger.html"><small>Next &rarr;</small>Turning a slipping process into enforced rules</a>
+    </nav>
+  </div>
 </main>
-<footer class="site">Every figure on this page comes from the project's own README.</footer>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Every figure on this page comes from the project's own README.</span>
+    <span>&copy; Ryan Wisth</span>
+  </div>
+</footer>
 </body>
 </html>

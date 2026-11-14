@@ -5,55 +5,111 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Decoding a colour e-ink display, safely | Ryan Wisth</title>
 <meta name="description" content="Case study: interoperability research that decoded how the reMarkable Paper Pro drives its colour e-ink panel, then drew on it with its own frames, read-only first.">
+<meta property="og:title" content="Decoding a colour e-ink display, safely | Ryan Wisth">
+<meta property="og:description" content="Case study: interoperability research that decoded how the reMarkable Paper Pro drives its colour e-ink panel, then drew on it with its own frames, read-only first.">
+<meta property="og:image" content="https://ryanwisth.github.io/img/family-tree-3d.jpg">
+<meta name="theme-color" content="#f7f7f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1015" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%234338ca'/%3E%3Cstop offset='1' stop-color='%230e7490'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Ctext x='16' y='21' font-family='Arial' font-weight='700' font-size='13' fill='white' text-anchor='middle'%3ERW%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="site"><a href="index.html">&larr; Ryan Wisth, case studies</a></header>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="mark">RW</span>Ryan Wisth</a>
+    <nav class="topnav">
+      <a href="index.html#work">Case studies</a>
+      <a class="hide-sm" href="index.html#how">How I work</a>
+      <a href="https://github.com/ryanwisth">GitHub</a>
+    </nav>
+  </div>
+</header>
+
 <main>
-  <p class="kicker">Case study: hardware research, safe first</p>
-  <h1>Decoding a colour e-ink display, safely</h1>
-  <p class="lede">Interoperability research that worked out how the reMarkable Paper Pro drives its colour e-ink panel, from the waveform files on disk to the bits in each frame, well enough to draw on the screen with our own code instead of the vendor's library.</p>
+  <div class="prose case-head">
+    <a class="back" href="index.html#work">&larr; All case studies</a>
+    <p class="kicker">Hardware research, safe first</p>
+    <h1>Decoding a colour e-ink display, safely</h1>
+    <p class="lede">Interoperability research that worked out how the reMarkable Paper Pro drives its colour e-ink panel, from the waveform files on disk to the bits in each frame, well enough to draw on the screen with our own code instead of the vendor's library.</p>
 
   <div class="facts">
-    <div class="fact"><b>314</b><span>waveform files in the OS image, all decoded, all passing their checksums</span></div>
-    <div class="fact"><b>9 &times; 9</b><span>update modes by temperature bands, each mapped</span></div>
-    <div class="fact"><b>0.13 s</b><span>for the fast black-and-white mode (11 frames), against about 1 s for full colour (86)</span></div>
+      <div class="fact"><b>314</b><span>waveform files in the OS image, all decoded, all passing their checksums</span></div>
+      <div class="fact"><b>9 &times; 9</b><span>update modes by temperature bands, each mapped</span></div>
+      <div class="fact"><b>0.13 s</b><span>for the fast black-and-white mode (11 frames), against about 1 s for full colour (86)</span></div>
+    </div>
   </div>
 
-  <h2>The problem</h2>
-  <p>The tablet's screen is driven by a closed library. Without knowing what that library sends to the panel, nobody can write software that draws on the display directly, test how its update modes behave, or reason about colour.</p>
-  <p>The risk is real: driving an e-ink panel with the wrong signals can leave permanent ghosting or damage it.</p>
+  <figure class="figure">
+    <ol class="flow c3">
+      <li><b>Public OS update file</b><span>not included in the repository</span></li>
+      <li><b>Decode the waveforms</b><span>byte mask, header and LZ77, to the standard format</span></li>
+      <li><b>Static analysis</b><span>the rendering library is read, never run</span></li>
+      <li class="key"><b>Read-only capture</b><span>stock UI frames checked against the decoded waveforms</span></li>
+      <li class="key"><b>Frame plan</b><span>hashed and bound to a temperature window</span></li>
+      <li><b>Writer</b><span>one page flip per vblank, on the panel</span></li>
+    </ol>
+    <figcaption>Safe first: read, then capture, then write. Simplified from the README diagram.</figcaption>
+  </figure>
+  <figure class="figure">
+    <div class="chart-card">
+      <h3>Frames per screen update</h3>
+      <p class="sub">At an 85 Hz design rate; the colour figure is at room temperature.</p>
+      <div class="bars" role="img" aria-label="Bar chart. Fast black-and-white takes 11 frames, full colour takes 86.">
+        <div class="row" title="Fast black-and-white (A2): 11"><span class="lab">Fast black-and-white (A2)<small>about 0.13 s</small></span><span class="track"><i class="" style="--v:11.5%"></i></span><span class="val">11</span></div>
+        <div class="row" title="Full colour (STANDARD): 86"><span class="lab">Full colour (STANDARD)<small>about 1 s</small></span><span class="track"><i class="" style="--v:89.6%"></i></span><span class="val">86</span></div>
+      </div>
+    </div>
+  </figure>
 
-  <h2>What I directed</h2>
-  <p>I set the goals, the safety rules and the acceptance checks, ran the device steps, and judged the results on the panel. The agents wrote most of the code and the analysis.</p>
-  <ul>
-    <li><b>Static first, device second.</b> Everything that could be learned from the public software update was learned there before touching the tablet. The device was used to confirm, not to explore.</li>
-    <li><b>Read-only before write.</b> The capture tool never takes control of the display. Writing came only after the decoded files predicted the frames the stock software actually sends.</li>
-    <li><b>The first write was a known-safe one.</b> It replayed a sequence the panel already receives at every boot.</li>
-    <li><b>No vendor code during a draw.</b> Frames are built off the device; the tablet only plays frames whose hashes check out.</li>
-    <li><b>Protect the panel by design.</b> Each plan is built so every pixel's drive nets to zero or close to it, and the player refuses a plan built for a different temperature band.</li>
-  </ul>
+  <div class="prose">
+    <h2>The problem</h2>
+    <p>The tablet's screen is driven by a closed library. Without knowing what that library sends to the panel, nobody can write software that draws on the display directly, test how its update modes behave, or reason about colour.</p>
+    <p>The risk is real: driving an e-ink panel with the wrong signals can leave permanent ghosting or damage it.</p>
 
-  <h2>How the results were verified</h2>
-  <ul>
-    <li>All 314 waveform files decode and pass their CRC-32 and header checksums.</li>
-    <li>A checker compared frames captured from the stock software against the decoded waveforms, with synthetic self-tests for the checker itself.</li>
-    <li>Each finding is labelled by evidence level: verified on the device, verified by static analysis only, or inferred and not yet verified.</li>
-  </ul>
+    <h2>What I directed</h2>
+    <p>I set the goals, the safety rules and the acceptance checks, ran the device steps, and judged the results on the panel. The agents wrote most of the code and the analysis.</p>
+    <ul>
+      <li><b>Static first, device second.</b> Everything that could be learned from the public software update was learned there before touching the tablet. The device was used to confirm, not to explore.</li>
+      <li><b>Read-only before write.</b> The capture tool never takes control of the display. Writing came only after the decoded files predicted the frames the stock software actually sends.</li>
+      <li><b>The first write was a known-safe one.</b> It replayed a sequence the panel already receives at every boot.</li>
+      <li><b>No vendor code during a draw.</b> Frames are built off the device; the tablet only plays frames whose hashes check out.</li>
+      <li><b>Protect the panel by design.</b> Each plan is built so every pixel's drive nets to zero or close to it, and the player refuses a plan built for a different temperature band.</li>
+    </ul>
 
-  <h2>The outcome</h2>
-  <p>Our own frames drew on the panel: a boot-sequence replay, a black-and-white test card, colour cards in three update modes, a partial update with no full clear, and two grey levels.</p>
-  <p>The repository ships the decoders, the frame builder, a tablet-side player with a watchdog, and a written specification of the waveform format. No vendor code, firmware or waveform data is distributed.</p>
+    <h2>How the results were verified</h2>
+    <ul>
+      <li>All 314 waveform files decode and pass their CRC-32 and header checksums.</li>
+      <li>A checker compared frames captured from the stock software against the decoded waveforms, with synthetic self-tests for the checker itself.</li>
+      <li>Each finding is labelled by evidence level: verified on the device, verified by static analysis only, or inferred and not yet verified.</li>
+    </ul>
 
-  <h2>Honest limits</h2>
-  <ul>
-    <li>Tested on one tablet, one OS version (3.27.3.0), near room temperature.</li>
-    <li>Not yet verified: the voltage per drive value, a high-temperature mode switch, the dither's exact match with on-device output, and the colour accuracy of each swatch.</li>
-    <li>Unofficial research, not affiliated with reMarkable or E Ink. The write path is at the user's own risk.</li>
-  </ul>
+    <h2>The outcome</h2>
+    <p>Our own frames drew on the panel: a boot-sequence replay, a black-and-white test card, colour cards in three update modes, a partial update with no full clear, and two grey levels.</p>
+    <p>The repository ships the decoders, the frame builder, a tablet-side player with a watchdog, and a written specification of the waveform format. No vendor code, firmware or waveform data is distributed.</p>
 
-  <p><a class="repo" href="https://github.com/ryanwisth/paper-pro-display-re">View the repository</a></p>
+    <h2>Honest limits</h2>
+    <ul>
+      <li>Tested on one tablet, one OS version (3.27.3.0), near room temperature.</li>
+      <li>Not yet verified: the voltage per drive value, a high-temperature mode switch, the dither's exact match with on-device output, and the colour accuracy of each swatch.</li>
+      <li>Unofficial research, not affiliated with reMarkable or E Ink. The write path is at the user's own risk.</li>
+    </ul>
+
+    <div class="repo-card">
+      <p><b>ryanwisth/paper-pro-display-re</b>The code, with its real status and limits.</p>
+      <a class="btn primary" href="https://github.com/ryanwisth/paper-pro-display-re">View the repository &rarr;</a>
+    </div>
+    <nav class="pager" aria-label="More case studies">
+      <a class="prev" href="token-scan.html"><small>&larr; Previous</small>Finding where the AI budget went</a>
+      <a class="next" href="safari-dark-mode.html"><small>Next &rarr;</small>A Safari dark mode with fitted themes</a>
+    </nav>
+  </div>
 </main>
-<footer class="site">Every figure on this page comes from the project's own README.</footer>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Every figure on this page comes from the project's own README.</span>
+    <span>&copy; Ryan Wisth</span>
+  </div>
+</footer>
 </body>
 </html>
