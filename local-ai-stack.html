@@ -74,6 +74,23 @@
     </div>
   </figure>
 
+  <figure class="figure">
+    <div class="chart-card">
+      <h3>Decoding speed by prediction depth</h3>
+      <p class="sub">Tokens per second on 1,200-token generations of the same prompt, plotted from the repository's result file <code>eval/results/mtp_depth_ab.json</code>. Depth 0 is plain decoding; each step up drafts one more token per pass.</p>
+      <svg class="linechart" viewBox="0 0 640 300" role="img" aria-label="Line chart. Depth 0: 13.7 tokens per second. Depth 1: 22.9. Depth 2: 28.4. Depth 3: 32.5.">
+        <line class="grid" x1="50" y1="250" x2="620" y2="250"/><line class="grid" x1="50" y1="190" x2="620" y2="190"/><line class="grid" x1="50" y1="130" x2="620" y2="130"/><line class="grid" x1="50" y1="70" x2="620" y2="70"/>
+        <text class="axis" x="42" y="254" text-anchor="end">0</text><text class="axis" x="42" y="194" text-anchor="end">10</text><text class="axis" x="42" y="134" text-anchor="end">20</text><text class="axis" x="42" y="74" text-anchor="end">30</text>
+        <path class="area" d="M90,250 L90,168 L250,112.4 L410,79.4 L570,54.8 L570,250 Z"/>
+        <path class="ln1" pathLength="1" d="M90,168 L250,112.4 L410,79.4 L570,54.8"/>
+        <circle class="pt" style="--k:0" cx="90" cy="168" r="6"/><circle class="pt" style="--k:1" cx="250" cy="112.4" r="6"/><circle class="pt" style="--k:2" cx="410" cy="79.4" r="6"/><circle class="pt" style="--k:3" cx="570" cy="54.8" r="6"/>
+        <text class="val" style="--k:0" x="90" y="148" text-anchor="middle">13.7</text><text class="val" style="--k:1" x="250" y="92" text-anchor="middle">22.9</text><text class="val" style="--k:2" x="410" y="59" text-anchor="middle">28.4</text><text class="val" style="--k:3" x="570" y="35" text-anchor="middle">32.5</text>
+        <text class="axis" x="90" y="276" text-anchor="middle">depth 0</text><text class="axis" x="250" y="276" text-anchor="middle">depth 1</text><text class="axis" x="410" y="276" text-anchor="middle">depth 2</text><text class="axis" x="570" y="276" text-anchor="middle">depth 3</text>
+      </svg>
+    </div>
+    <figcaption>First run at each depth in the file; its repeat runs at depth 0 and depth 3 read 13.6 and 32.1.</figcaption>
+  </figure>
+
   <div class="prose">
     <h2>The problem</h2>
     <p>Cloud assistants send every prompt, file and tool call off the machine. This stack keeps all of it on one MacBook Pro with 64 GB of memory: the model, the chat history, the tools and the search engine run locally and listen only on 127.0.0.1.</p>

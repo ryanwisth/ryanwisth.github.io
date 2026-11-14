@@ -64,6 +64,11 @@
     </div>
   </figure>
 
+  <figure class="figure">
+    <div class="term soft"><div class="bar"><i></i><i></i><i></i><em>three tools, one rule each</em></div><pre tabindex="0" role="img" aria-label="Terminal output: three tools, one rule each"><span class="ln cmd">./run_demo.sh</span><span class="ln dim">…</span><span class="ln">== 6. research: gate the finder journal (offline, saved pages only)</span><span class="ln">| lane-a | 5 | 4 | 0 | 3 | 12 | 4 | not-fetched 1, quote-found 2, quote-missing 1 |</span><span class="ln"></span><span class="ln cmd">python3 -I skill/selftest.py</span><span class="ln dim">…</span><span class="ln ok">PASS: record rejects empty wrong_if, empty best_case on CORRECTED, evidence without a quote</span><span class="ln ok">PASS: a rejected batch writes nothing to the log</span><span class="ln dim">…</span><span class="ln"></span><span class="ln cmd">printf '%s' '{"tool_name":"Agent","tool_input":{"prompt":"x"}}' | python3 hooks/agent_guard.py</span><span class="ln">{"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": <b class="bad">"deny"</b>, "permissionDecisionReason": <span class="hl">"Agent call has no `model`. Rule: pin model on every spawn (sonnet for mechanical, haiku for sweeps, opus for judgment); …"}}</span></span></pre></div>
+    <figcaption>One real line or two from each tool, run on its own sample data and shortened where marked: the evidence gate keeps 12 claims and drops 4, the ledger refuses a verdict with no evidence quote, and the guard denies an agent call with no model.</figcaption>
+  </figure>
+
   <div class="prose">
     <h2>The problem</h2>
     <p>AI output reads well and is wrong in places, and nobody can tell where by reading it. Asking the model to "double-check" gives a second confident pass with no record of what was checked or how.</p>

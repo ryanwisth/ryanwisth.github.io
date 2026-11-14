@@ -62,6 +62,11 @@
     </div>
   </figure>
 
+  <figure class="figure">
+    <div class="term"><div class="bar"><i></i><i></i><i></i><em>drill/server.py through an in-memory client</em></div><pre tabindex="0" role="img" aria-label="Terminal output: drill/server.py through an in-memory client"><span class="ln dim"># list the tools, then call one against the practice engine serving its 21-item sample bank</span><span class="ln hl">6 tools</span><span class="ln">  drill_sections     List the sections in the question bank with their live item counts. Ca…</span><span class="ln">  drill_archetypes   Mastery table: one row per archetype (mistake pattern) with status, st…</span><span class="ln">  drill_progress     Practice summary for a recent window: attempts, accuracy, on-time answ…</span><span class="ln">  drill_sets         Recent timed sets with their scores and ids (use an id with drill_pace…</span><span class="ln">  drill_pace         Pacing report for one finished timed set: checkpoints against plan, it…</span><span class="ln">  drill_audit        Question-bank health: unverified items, retired items and archetypes r…</span><span class="ln"></span><span class="ln hl">&gt; drill_sections()   [124 characters]</span><span class="ln">[</span><span class="ln"> {</span><span class="ln">  "section": "Logic",</span><span class="ln">  "archetypes": 2,</span><span class="ln">  "items": 6</span><span class="ln"> },</span><span class="ln"> {</span><span class="ln">  "section": "Math",</span><span class="ln">  "archetypes": 5,</span><span class="ln">  "items": 14</span><span class="ln"> }</span><span class="ln">]</span></pre></div>
+    <figcaption>The smallest of the six servers, listed and called through fastmcp's in-memory client: six tools, descriptions cut at 70 characters by the listing script, and a 124-character reply. One sample item had been retired by a practice run, so Math shows 14 live items.</figcaption>
+  </figure>
+
   <div class="prose">
     <h2>The problem</h2>
     <p>A local model knows nothing after its training cutoff and cannot look anything up. Public data services do publish their own MCP servers or APIs, but they are built for large cloud models: one hosted server lists 90 tools and about 100k tokens of schema, which at a local model's speeds costs minutes per new chat and most of the context window.</p>

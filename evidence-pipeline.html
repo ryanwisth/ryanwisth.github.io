@@ -68,6 +68,11 @@
     </div>
   </figure>
 
+  <figure class="figure">
+    <div class="term soft"><div class="bar"><i></i><i></i><i></i><em>run_demo.sh</em></div><pre tabindex="0" role="img" aria-label="Terminal output: run_demo.sh"><span class="ln cmd">./run_demo.sh</span><span class="ln dim">demo inputs in …/work/in: 3 duplicate records injected, 16 claims in the journal, 3 saved pages, 1 fixture verdict lane</span><span class="ln dim">…</span><span class="ln hl">== 4. cleanup: prove nothing was dropped</span><span class="ln">  checked 3 merged individuals — 0 lost a fact</span><span class="ln ok">PASSED — every individual accounted for, every fact preserved,</span><span class="ln ok">         no dangling pointers, valid UTF-8, longest line 71 chars.</span><span class="ln dim">…</span><span class="ln hl">== 6. research: gate the finder journal (offline, saved pages only)</span><span class="ln">| lane-a | 5 | 4 | 0 | 3 | 12 | 4 | not-fetched 1, quote-found 2, quote-missing 1 |</span><span class="ln">lanes 1  fetches left 0  (offline: saved pages only)</span><span class="ln"></span><span class="ln hl">== 7. research: fold the (fixture) skeptic verdicts into the ledger</span><span class="ln">lane-a: 4 people, 2 families, 2 facts, 1 notes, 2 sources</span><span class="ln">total new: 4 people, 2 families, 2 facts, 1 notes, 2 sources</span><span class="ln"></span><span class="ln hl">== 8. research: write the ledger into a new GEDCOM (append-only)</span><span class="ln">wrote …/work/research/tree-research.ged: +4 people, +2 families, +2 sources, 20 lines added to 3 existing records</span><span class="ln dim">…</span><span class="ln">ancestors 24  dead ends 13  targets 16 in 7 agents  overflow 4  excluded 0</span></pre></div>
+    <figcaption>The offline demo on the invented family, shortened where marked: 12 claims kept and 4 dropped by the gate, then the ledger written back append-only. The skeptic step uses the repository's saved fixture, not a live model.</figcaption>
+  </figure>
+
   <div class="prose">
     <h2>The problem</h2>
     <p>Online family trees copy each other. A "source" on a big genealogy site is often just another user's tree, so two trees agreeing is not evidence; it is often the same mistake copied twice.</p>

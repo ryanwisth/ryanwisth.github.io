@@ -54,6 +54,11 @@
     <figcaption>Simplified from the README diagram.</figcaption>
   </figure>
 
+  <figure class="figure">
+    <div class="term soft"><div class="bar"><i></i><i></i><i></i><em>run_brief.py --help</em></div><pre tabindex="0" role="img" aria-label="Terminal output: run_brief.py --help"><span class="ln cmd">python run_brief.py --help</span><span class="ln">usage: run_brief.py [-h] --model MODEL [--cwd CWD] [--budget-usd BUDGET_USD]</span><span class="ln">                    [--max-turns MAX_TURNS] [--resume SESSION_ID] [--say SAY]</span><span class="ln dim">                    …</span><span class="ln">                    [--auth {console,max}]</span><span class="ln">                    [--effort {low,medium,high,xhigh,max}]</span><span class="ln">                    [brief]</span><span class="ln"></span><span class="ln">Send a Markdown brief through the Claude Agent SDK, on a Console API key or a Claude subscription login.</span><span class="ln"></span><span class="ln">--auth console (default): needs ANTHROPIC_API_KEY in the environment (never printed or saved).</span><span class="ln hl">--auth max: drops any ANTHROPIC_API_KEY and runs on the CLI's claude.ai login (subscription</span><span class="ln hl">usage, no key, no Console balance); aborts before any work if the init reports an API key source.</span><span class="ln"></span><span class="ln">options:</span><span class="ln">  --model MODEL         model id or alias, no default</span><span class="ln">  --cwd CWD             folder the agent works in (default: current folder)</span><span class="ln">  --budget-usd BUDGET_USD</span><span class="ln">  --max-turns MAX_TURNS</span><span class="ln">                        SDK max_turns cap per pass (default: no cap)</span><span class="ln dim">  …</span></pre></div>
+    <figcaption>The runner's own help text, shortened where marked. No agent pass is shown here: a real one spends account usage.</figcaption>
+  </figure>
+
   <div class="prose">
     <h2>The problem</h2>
     <p>Long agent jobs (build a guide, refactor a folder, work through a checklist) are easier to hand off as a written brief than as a live chat. Running them unattended raises three practical questions: which account pays, how to stop a run that goes over budget, and how to continue a job that does not finish in one pass.</p>

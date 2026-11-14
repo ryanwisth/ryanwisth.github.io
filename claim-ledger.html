@@ -64,6 +64,11 @@
     </div>
   </figure>
 
+  <figure class="figure">
+    <div class="term soft"><div class="bar"><i></i><i></i><i></i><em>skill/selftest.py</em></div><pre tabindex="0" role="img" aria-label="Terminal output: skill/selftest.py"><span class="ln cmd">python3 -I skill/selftest.py</span><span class="ln ok">PASS: markers sit on the 9 points, not on the 1-word parent 'Staffing:'</span><span class="ln ok">PASS: the original report is backed up before marking</span><span class="ln ok">PASS: queue puts the important ESTIMATE (2-002, P9) first</span><span class="ln ok">PASS: record rejects empty wrong_if, empty best_case on CORRECTED, evidence without a quote</span><span class="ln ok">PASS: record rejects CORRECTED on a point whose text did not change</span><span class="ln ok">PASS: a rejected batch writes nothing to the log</span><span class="ln ok">PASS: record rejects a 15-word quote</span><span class="ln ok">PASS: the edit script rejects an added number that check() does not re-derive</span><span class="ln ok">PASS: a checked point edited outside the ledger comes back as CHANGED</span><span class="ln ok">PASS: the stop rule empties the queue once the rate falls below it</span><span class="ln dim">… 17 more PASS lines</span><span class="ln hl">ALL PASS (…/claim-ledger-test-v5nhmpb6)</span></pre></div>
+    <figcaption>The tool's self-test on a throwaway sample report: 10 of its 27 checks shown, each one a rule the tool refuses to bend.</figcaption>
+  </figure>
+
   <div class="prose">
     <h2>The problem</h2>
     <p>A long research report written by an AI model reads well and is wrong in places, and nobody can tell where by reading it. Asking the model to "double-check" gives a second confident pass with no record of what was checked or how.</p>

@@ -73,6 +73,11 @@
     </div>
   </figure>
 
+  <figure class="figure">
+    <div class="term soft"><div class="bar"><i></i><i></i><i></i><em>hooks/agent_guard.py</em></div><pre tabindex="0" role="img" aria-label="Terminal output: hooks/agent_guard.py"><span class="ln cmd">printf '%s' '{"tool_name":"Agent","tool_input":{"prompt":"x"}}' | python3 hooks/agent_guard.py</span><span class="ln">{"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": <b class="bad">"deny"</b>, "permissionDecisionReason": <span class="hl">"Agent call has no `model`. Rule: pin model on every spawn (sonnet for mechanical, haiku for sweeps, opus for judgment); omitting it inherits the session model. Better: use a lean-* subagent_type, which carries its model, a turn cap and no MCP tool schemas: lean-sweep (haiku, 10 turns), lean-reader / lean-reader-long (sonnet, 15/40), …"}}</span></span><span class="ln"></span><span class="ln cmd">printf '%s' '{"tool_name":"Agent","tool_input":{"subagent_type":"lean-sweep","prompt":"x"}}' | python3 hooks/agent_guard.py</span><span class="ln dim">(no output: the call is allowed)</span></pre></div>
+    <figcaption>The README's try-by-hand example, run as written: a spawn with no model is denied and the message says what to do instead (shortened where marked). A lean agent type passes silently.</figcaption>
+  </figure>
+
   <div class="prose">
     <h2>The problem</h2>
     <p>An AI coding agent re-reads its whole conversation on every tool call. Three habits make that expensive without making the work better:</p>

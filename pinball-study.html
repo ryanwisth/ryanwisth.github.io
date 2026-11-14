@@ -64,6 +64,21 @@
     </div>
   </figure>
 
+  <figure class="figure">
+    <div class="split">
+      <div class="shot"><div class="bar"><i></i><i></i><i></i><em>sim/trace.py</em></div><video data-auto controls muted loop playsinline preload="none" poster="img/pinball-trace.jpg" width="362" height="800" aria-label="A top-down pinball board with the ball's path drawn as a growing yellow line over one simulated minute"><source src="video/pinball-trace.mp4" type="video/mp4"></video></div>
+      <div class="side">
+        <ul class="legend">
+          <li><i style="background:#ffff66"></i>The ball's path, growing paler as the minute goes on</li>
+          <li><i style="background:#00c8ff"></i>The flippers</li>
+          <li><i style="background:#1e321e"></i>The area the ball can reach</li>
+        </ul>
+        <div class="term soft"><div class="bar"><i></i><i></i><i></i><em>one simulated minute</em></div><pre tabindex="0" role="img" aria-label="Terminal output of the trace command"><span class="ln cmd">python3 sample/make_demo_board.py</span><span class="ln">wrote …/boards/demo | grid (1050, 476) | reach 0.714 | elements 23 | zones 5</span><span class="ln cmd">python3 -I sim/trace.py demo bot2 1 3600 trace.png</span><span class="ln hl">stuck 4 launch 6 drain 5 flips 17</span></pre></div>
+      </div>
+    </div>
+    <figcaption>The intermediate bot playing the repository's invented demo board for one simulated minute (3,600 steps at 60 Hz). Each video frame is the trace script's own picture, one per simulated second. No commercial table is shown.</figcaption>
+  </figure>
+
   <div class="prose">
     <h2>The problem</h2>
     <p>The goal was to score an original table design before anyone had played it: learn what separates well-rated tables from the rest, then apply that to the new design.</p>

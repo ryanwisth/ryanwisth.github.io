@@ -64,6 +64,14 @@
     </div>
   </figure>
 
+  <figure class="figure">
+    <div class="duo">
+      <figure><p class="tagline">Source image</p><img src="img/panel-source.png" alt="A generated colour test card: a full hue sweep, a grey ramp and eight saturated swatches" width="960" height="600" loading="lazy"></figure>
+      <figure><p class="tagline">Simulated panel</p><img src="img/panel-simulated.jpg" alt="The same test card through the panel model: muted, low-contrast colours, with greens and reds pulled toward grey" width="960" height="600" loading="lazy"></figure>
+    </div>
+    <figcaption>A generated test card, and the same card through <code>panel-model/panel_sim.py</code>, the forward colour model fitted from a photo of the panel. A simulation of how the panel renders colour, not a photo of the device.</figcaption>
+  </figure>
+
   <div class="prose">
     <h2>The problem</h2>
     <p>The tablet's screen is driven by a closed library. Without knowing what that library sends to the panel, nobody can write software that draws on the display directly, test how its update modes behave, or reason about colour.</p>

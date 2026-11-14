@@ -71,6 +71,11 @@
     </div>
   </figure>
 
+  <figure class="figure">
+    <div class="term"><div class="bar"><i></i><i></i><i></i><em>usage_by_model.py</em></div><pre tabindex="0" role="img" aria-label="Terminal output: usage_by_model.py"><span class="ln cmd">python3 -I usage_by_model.py 2026-01-05T00:00:00Z --root sample-transcripts</span><span class="ln">since 2026-01-05T00:00:00Z: 3 transcript files, 290 model calls</span><span class="ln hl">model                      calls   input  cache-write  cache-read   output   units(M)  share</span><span class="ln">claude-haiku-5-5             128    0.0M        0.2M       11.6M     0.1M       2.0  43.5%</span><span class="ln">claude-sonnet-5-5            111    0.0M        0.2M       12.4M     0.1M       2.0  43.0%</span><span class="ln">claude-opus-5-5               51    0.0M        0.1M        3.0M     0.0M       0.6  13.5%</span><span class="ln"></span><span class="ln hl">by day (units, M):      claude-haiku-5-5  claude-sonnet-5-   claude-opus-5-5</span><span class="ln">Mon 05                               0.2               0.1               0.1</span><span class="ln">Tue 06                               0.2               0.2               0.1</span><span class="ln">Wed 07                               0.2               0.3               0.1</span><span class="ln dim">…</span><span class="ln"></span><span class="ln hl">by project folder (units, M):</span><span class="ln">notes-app                                    claude-haiku:0.6  claude-sonne:2.0</span><span class="ln">website                                      claude-haiku:1.3</span><span class="ln">data-cleanup                                 claude-haiku:0.1  claude-opus-:0.6</span></pre></div>
+    <figcaption>One of the scan scripts run on a small set of invented session logs (290 made-up calls in three made-up project folders), so the layout is real and the numbers mean nothing. The figures in the tiles above come from the real scans.</figcaption>
+  </figure>
+
   <div class="prose">
     <h2>The problem</h2>
     <p>Claude Code's usage meter shows a total, not a cause. When a week's usage ran out early, the useful questions were which projects, sessions and habits spent it.</p>

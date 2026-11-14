@@ -46,10 +46,37 @@
           <a class="btn" href="https://github.com/ryanwisth"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>github.com/ryanwisth</a>
         </div>
       </div>
-      <div class="collage" aria-hidden="true">
-        <div class="shot a"><div class="bar"><i></i><i></i><i></i><em>family-tree-3d.html</em></div><img src="img/family-tree-3d.jpg" alt="" width="1600" height="1000"></div>
-        <div class="shot b"><div class="bar"><i></i><i></i><i></i><em>adaptive-drill-engine</em></div><img src="img/practice-engine.jpg" alt="" width="1600" height="1231"></div>
-        <div class="float"><b>3 of 147</b><span>claims from a careful research pass still rejected by a skeptic agent</span></div>
+      <div class="collage">
+        <div class="shot a"><div class="bar" aria-hidden="true"><i></i><i></i><i></i><em>family-tree-3d.html</em></div><video data-auto controls muted loop playsinline preload="none" poster="img/family-tree-video.jpg" width="960" height="600" aria-label="The 3D family tree demo turning and zooming, on an invented family"><source src="video/family-tree-3d.mp4" type="video/mp4"></video></div>
+        <div class="shot b" aria-hidden="true"><div class="bar"><i></i><i></i><i></i><em>adaptive-drill-engine</em></div><img src="img/practice-engine.jpg" alt="" width="1600" height="1231"></div>
+        <div class="float" aria-hidden="true"><b>3 of 147</b><span>claims from a careful research pass still rejected by a skeptic agent</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section reel-section" aria-labelledby="reel-h">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="reel-h">Seen running</h2>
+        <p>Real captures of the projects on their own sample data. Nothing here is a mock-up.</p>
+      </div>
+      <div class="reel">
+        <div class="reel-item">
+          <span class="shot"><video data-auto controls muted loop playsinline preload="none" poster="img/practice-engine-video.jpg" width="960" height="640" aria-label="A practice session in the drill app: answers, feedback and the progress page"><source src="video/practice-engine.mp4" type="video/mp4"></video></span>
+          <a class="cap" href="practice-engine.html"><b>A practice session</b>The drill app naming the mistake pattern after each answer.</a>
+        </div>
+        <div class="reel-item">
+          <span class="shot"><video data-auto controls muted loop playsinline preload="none" poster="img/safari-themes-video.jpg" width="960" height="600" aria-label="A test page switching through six dark themes"><source src="video/safari-themes.mp4" type="video/mp4"></video></span>
+          <a class="cap" href="safari-dark-mode.html"><b>Six fitted themes</b>One test page, rendered by the WebKit harness in each theme.</a>
+        </div>
+        <div class="reel-item">
+          <span class="shot tallcrop"><video data-auto controls muted loop playsinline preload="none" poster="img/pinball-trace.jpg" width="362" height="800" aria-label="A simulated pinball ball's path drawn over a board for one minute"><source src="video/pinball-trace.mp4" type="video/mp4"></video></span>
+          <a class="cap" href="pinball-study.html"><b>A simulated minute of pinball</b>The intermediate bot on an invented board.</a>
+        </div>
+        <div class="reel-item">
+          <span class="shot inkshot"><img src="img/ink-feedback.svg" alt="Handwriting-style feedback drawn stroke by stroke" width="742" height="219" loading="lazy"></span>
+          <a class="cap" href="paper-grader.html"><b>Feedback in ink</b>Strokes from the handwriting module, as sent to an e-ink tablet.</a>
+        </div>
       </div>
     </div>
   </section>
@@ -70,9 +97,9 @@
             <span class="more">Read case study &rarr;</span>
           </div>
         </a>
-        <a class="card" href="family-tree-3d.html">
+        <a class="card" href="family-tree-3d.html" data-preview="video/family-tree-3d.mp4">
           <span class="badge"><span class="dot"></span>Live demo inside</span>
-          <img class="thumb" src="img/family-tree-3d.jpg" alt="The 3D family tree viewer showing an invented 420-person family" loading="lazy" width="1600" height="1000">
+          <span class="thumb-wrap"><img class="thumb" src="img/family-tree-3d.jpg" alt="The 3D family tree viewer showing an invented 420-person family" loading="lazy" width="1600" height="1000"></span>
           <div class="body">
             <span class="tag">A visual product from messy data</span>
             <h3 style="view-transition-name: t-family-tree-3d">A 3D family tree in one offline file</h3>
@@ -179,8 +206,8 @@
             <span class="more">Read case study &rarr;</span>
           </div>
         </a>
-        <a class="card" href="streaks-trainer.html">
-          <img class="thumb" src="img/streaks-practice.jpg" alt="The practice view of the streak trainer: a streak counter with dots above a multiple-choice question" loading="lazy" width="1600" height="1216">
+        <a class="card" href="streaks-trainer.html" data-preview="video/streaks-trainer.mp4">
+          <span class="thumb-wrap"><img class="thumb" src="img/streaks-practice.jpg" alt="The practice view of the streak trainer: a streak counter with dots above a multiple-choice question" loading="lazy" width="1600" height="1216"></span>
           <div class="body">
             <span class="tag">A method the product enforces</span>
             <h3 style="view-transition-name: t-streaks-trainer">A practice app where one miss resets the streak</h3>
@@ -188,8 +215,8 @@
             <span class="more">Read case study &rarr;</span>
           </div>
         </a>
-        <a class="card" href="safari-dark-mode.html">
-          <img class="thumb" src="img/safari-all-themes.jpg" alt="The same test page rendered in all six dark themes" loading="lazy" width="1000" height="965">
+        <a class="card" href="safari-dark-mode.html" data-preview="video/safari-themes.mp4">
+          <span class="thumb-wrap"><img class="thumb" src="img/safari-all-themes.jpg" alt="The same test page rendered in all six dark themes" loading="lazy" width="1000" height="965"></span>
           <div class="body">
             <span class="tag">A small product shipped end to end</span>
             <h3 style="view-transition-name: t-safari-dark-mode">A Safari dark mode with fitted themes</h3>
