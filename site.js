@@ -37,7 +37,8 @@
       var t = en.target;
       io.unobserve(t);
       t.classList.add('in');
-      setTimeout(function () { t.classList.remove('reveal'); t.style.removeProperty('--d'); }, 1300);
+      if (t.matches('.section-head:first-child')) { var sec = t.closest('.section'); if (sec) sec.classList.add('unzipped'); } // the zip runs
+      setTimeout(function () { t.classList.remove('reveal'); t.style.removeProperty('--d'); }, 1800);
     });
   }, { rootMargin: '0px 0px -7% 0px', threshold: 0.06 });
   d.querySelectorAll('.section-head, .group-h, .card, .principle, .band, .figure, .film, .repo-card, .pager').forEach(function (el) {
@@ -60,8 +61,7 @@
       var x = e.clientX - q.left, y = e.clientY - q.top;
       c.style.setProperty('--mx', x + 'px');
       c.style.setProperty('--my', y + 'px');
-      c.style.setProperty('--ry', ((x / q.width - .5) * 3.2).toFixed(2) + 'deg');
-      c.style.setProperty('--rx', ((.5 - y / q.height) * 3.2).toFixed(2) + 'deg');
+      c.style.setProperty('--tz', ((.5 - x / q.width) * 3).toFixed(2) + 'deg'); // the pinched side lifts
     });
     // cards with a capture play it over the thumbnail while hovered or focused
     var src = c.getAttribute('data-preview'), wrap = c.querySelector('.thumb-wrap'), v;
@@ -116,43 +116,72 @@
     });
   });
 
-  // ---------- the guide ball ----------
-  // Timed, once, on the first screen: a ball travels a thin line through the gaps between
-  // boxes and each spot lights as it arrives. Any scroll, key or tap ends the run at once.
+  // ---------- the guide: a strand of yarn ----------
+  // Timed, once, on the first screen: yarn is laid through the gaps between boxes, slack at first, and pulled
+  // taut at each stop; its head is a button and each spot is sewn down as it arrives. Any scroll, key or tap ends the run.
   function guide(host, dim, build, onlit) {
     var ov = d.createElement('div');
     ov.className = 'guide'; ov.setAttribute('aria-hidden', 'true');
-    ov.innerHTML = '<svg focusable="false"><defs><linearGradient id="gg" gradientUnits="userSpaceOnUse"><stop class="s1" offset="0"/><stop class="s2" offset="1"/></linearGradient></defs><path class="g-track"/><path class="g-trail" pathLength="1"/></svg><i class="g-ball"></i>';
-    var track = ov.querySelector('.g-track'), trail = ov.querySelector('.g-trail'), grad = ov.querySelector('linearGradient'), ball = ov.lastChild;
-    var pts, cum, total, state = 0, cur = 0, anims = [], timer; // state: 0 waiting, 1 running, 2 done
+    ov.innerHTML = '<svg focusable="false"><path class="g-track"/><path class="g-trail"/><path class="g-m" visibility="hidden"/></svg><i class="g-ball"></i>';
+    var track = ov.querySelector('.g-track'), trail = ov.querySelector('.g-trail'), meter = ov.querySelector('.g-m'), ball = ov.lastChild;
+    var pts, cum, slack, snapT, mid, travel = null, state = 0, cur = 0, timer; // state: 0 waiting, 1 running, 2 done
     function R(el) {
       var h = host.getBoundingClientRect(), r = el.getBoundingClientRect();
       return { l: r.left - h.left, t: r.top - h.top, r: r.right - h.left, b: r.bottom - h.top, cx: (r.left + r.right) / 2 - h.left, cy: (r.top + r.bottom) / 2 - h.top };
     }
+    function dOf(k) { // the strand as far as stop k; a slack leg sags (level legs) or bows outward (upright legs)
+      var s = 'M' + pts[0].x + ' ' + pts[0].y, i, a, b, mx, my, v;
+      for (i = 1; i <= k; i++) {
+        a = pts[i - 1]; b = pts[i]; mx = (a.x + b.x) / 2; my = (a.y + b.y) / 2; v = slack[i] || 0;
+        if (Math.abs(b.y - a.y) < 1) my += Math.min(12, Math.abs(b.x - a.x) * .14) * v;
+        else mx += (a.x < mid ? -1 : 1) * Math.min(8, Math.abs(b.y - a.y) * .1) * v;
+        s += 'Q' + mx.toFixed(1) + ' ' + my.toFixed(1) + ' ' + b.x + ' ' + b.y;
+      }
+      return s;
+    }
+    function lenTo(k) { if (k < 1) return 0; meter.setAttribute('d', dOf(k)); return meter.getTotalLength(); }
     function layout() {
       pts = build(R, innerWidth <= 620 ? 9 : 12);
-      cum = [0];
-      var path = 'M' + pts[0].x + ' ' + pts[0].y, i, z = pts[pts.length - 1];
+      mid = host.getBoundingClientRect().width / 2; cum = [0]; slack = [0]; snapT = [0];
+      var path = 'M' + pts[0].x + ' ' + pts[0].y, i;
       for (i = 1; i < pts.length; i++) {
         cum.push(cum[i - 1] + Math.abs(pts[i].x - pts[i - 1].x) + Math.abs(pts[i].y - pts[i - 1].y)); // every leg is level or upright
-        path += 'L' + pts[i].x + ' ' + pts[i].y;
+        path += 'L' + pts[i].x + ' ' + pts[i].y; slack[i] = 0; snapT[i] = 0;
       }
-      total = cum[cum.length - 1] || 1;
-      track.setAttribute('d', path); trail.setAttribute('d', path);
-      grad.setAttribute('x1', pts[0].x); grad.setAttribute('y1', pts[0].y); grad.setAttribute('x2', z.x); grad.setAttribute('y2', z.y);
+      track.setAttribute('d', path); trail.setAttribute('d', dOf(pts.length - 1));
     }
     function pos(i) { return 'translate(' + pts[i].x + 'px,' + pts[i].y + 'px)'; }
     function each(hit, fn) { if (hit) (hit.length ? [].slice.call(hit) : [hit]).forEach(fn); }
     function finish() {
       if (state === 2) return;
-      state = 2; clearTimeout(timer);
-      anims.forEach(function (a) { a.cancel(); }); anims = [];
+      state = 2; clearTimeout(timer); travel = null;
       layout();
       pts.forEach(function (p) { each(p.hit, function (el) { el.classList.add('lit'); }); });
-      trail.style.strokeDashoffset = 0; ball.style.transform = pos(pts.length - 1);
+      trail.style.strokeDasharray = 'none'; trail.classList.add('on'); ball.style.transform = pos(pts.length - 1);
       ball.classList.remove('hit'); ball.classList.add('show', 'rest');
     }
-    function leg() { // the ball is sitting on stop `cur`
+    function frame(now) {
+      if (state !== 1) return;
+      var i, t, k, e, a, b, len, p;
+      for (i = 1; i < pts.length; i++) if (snapT[i]) { // a leg just pulled taut springs past straight, then rests
+        t = (now - snapT[i]) / 520;
+        if (t >= 1) { slack[i] = 0; snapT[i] = 0; } else slack[i] = Math.exp(-5 * t) * Math.cos(9 * t);
+      }
+      trail.setAttribute('d', dOf(pts.length - 1));
+      if (travel) {
+        if (!travel.t0) travel.t0 = now;
+        k = Math.min(1, (now - travel.t0) / travel.dur); e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+        a = lenTo(travel.a); b = lenTo(travel.n); len = a + (b - a) * e;
+        trail.style.strokeDasharray = len.toFixed(1) + ' 99999';
+        p = trail.getPointAtLength(len); ball.style.transform = 'translate(' + p.x.toFixed(1) + 'px,' + p.y.toFixed(1) + 'px)';
+        if (k >= 1) {
+          for (i = travel.a + 1; i <= travel.n; i++) snapT[i] = now;
+          cur = travel.n; travel = null; ball.style.transform = pos(cur); leg();
+        }
+      } else trail.style.strokeDasharray = lenTo(cur).toFixed(1) + ' 99999';
+      requestAnimationFrame(frame);
+    }
+    function leg() { // the button is sitting on stop `cur`
       if (state !== 1) return;
       var p = pts[cur], n = cur + 1;
       each(p.hit, function (el, k) {
@@ -160,23 +189,14 @@
       });
       ball.classList.remove('hit'); void ball.offsetWidth; ball.classList.add('hit');
       while (n < pts.length && !pts[n].hit) n++;
-      if (n >= pts.length) { timer = setTimeout(finish, 600); return; }
+      if (n >= pts.length) { timer = setTimeout(finish, 900); return; }
       timer = setTimeout(function () {
         if (state !== 1) return;
-        var a = cur, span = cum[n] - cum[a] || 1, kf = [], j;
-        for (j = a; j <= n; j++) kf.push({ transform: pos(j), offset: j === a ? 0 : j === n ? 1 : (cum[j] - cum[a]) / span });
-        var o = { duration: Math.max(260, Math.min(820, span * 1.1)), easing: 'cubic-bezier(.45,0,.2,1)', fill: 'forwards' };
-        var m = ball.animate(kf, o), t = trail.animate([{ strokeDashoffset: 1 - cum[a] / total }, { strokeDashoffset: 1 - cum[n] / total }], o);
-        anims = [m, t];
-        m.onfinish = function () {
-          if (state !== 1) return;
-          cur = n; ball.style.transform = pos(n); trail.style.strokeDashoffset = 1 - cum[n] / total;
-          m.cancel(); t.cancel(); anims = [];
-          leg();
-        };
+        for (var i = cur + 1; i <= n; i++) { slack[i] = 1; snapT[i] = 0; } // the next legs are paid out slack
+        travel = { a: cur, n: n, t0: 0, dur: Math.max(380, Math.min(950, (cum[n] - cum[cur] || 1) * 1.25)) };
       }, p.dwell || (p.hit && p.hit.length ? 240 + 170 * p.hit.length : 300));
     }
-    // spots wait dimmed from the first paint, so nothing flashes bright and then dims
+    // spots wait unstitched from the first paint, so nothing flashes bright and then dims
     host.classList.add('g-host', 'g-run');
     dim.forEach(function (el) { el.classList.add('g-stop'); });
     host.appendChild(ov);
@@ -187,11 +207,12 @@
       if (state) return;
       try { layout(); } catch (e) { state = 2; host.classList.remove('g-run'); ov.remove(); return; }
       state = 1; ball.style.transform = pos(0); ball.classList.add('show');
+      requestAnimationFrame(frame);
       timer = setTimeout(leg, 200);
-    }, 1000);
-    setTimeout(finish, 14000);
+    }, 1100);
+    setTimeout(finish, 16000);
   }
-  var top0 = (window.scrollY || 0) < 40 && typeof d.body.animate === 'function';
+  var top0 = (window.scrollY || 0) < 40;
 
   // home: headline, I set, Agents write, I verify, then the "15 case studies" button
   var hh = d.querySelector('.hero-grid > div'), guided = false;
@@ -241,24 +262,42 @@
     cio.observe(b);
   });
 
-  // home gutter: a stop is filled once its heading has passed the ball, and its chip pulses on arrival.
-  // Read from positions on scroll (five boxes, once a frame) so a jump past a group cannot leave a stop stale.
-  var gs = d.querySelectorAll('.groups .group, #how');
-  if (gs.length > 1) {
-    var tick = 0, rail = d.querySelector('.rail'), mark = function () {
-      tick = 0;
-      var line = innerHeight * .45;
-      // one ball at a time: the hero's ball hands over once the gutter ball starts to follow
-      r.classList.toggle('railed', !!rail && rail.offsetParent !== null && gs[0].getBoundingClientRect().top < line);
-      gs.forEach(function (g) {
-        var q = g.getBoundingClientRect();
-        g.classList.toggle('on', q.top < line);
-        g.classList.toggle('cur', q.top < line && q.bottom > line);
+  // home: one thread winds down the case studies, past a button on each group label. It is drawn as far as the
+  // reading line (45% down the window), read from scroll position once a frame, so a jump cannot leave it stale.
+  var th = d.querySelector('.thread'), grs = d.querySelectorAll('.groups .group');
+  if (th && grs.length) {
+    th.innerHTML = '<svg focusable="false"><path class="th-holes"/><path class="th-line"/></svg><i class="th-head"></i>';
+    var holes = th.querySelector('.th-holes'), yarn = th.querySelector('.th-line'), head = th.lastChild, stops = [], tlen = 0, tick = 0;
+    var lay = function () {
+      stops = []; th.classList.remove('live');
+      if (th.offsetParent === null) return; // hidden on narrow screens
+      var H = th.getBoundingClientRect(), s = '', px = 0, pb = 0;
+      [].forEach.call(grs, function (g, i) {
+        var q = g.getBoundingClientRect(), h = g.querySelector('.group-h').getBoundingClientRect();
+        var right = (h.left + h.right) / 2 > H.left + H.width / 2, x = right ? H.width + 14 : -14;
+        var bx = (right ? h.right - 35 : h.left + 35) - H.left, by = h.top + 35 - H.top, t = q.top - H.top;
+        s += i ? 'C' + px + ' ' + (pb + 50) + ' ' + x + ' ' + (t - 50) + ' ' + x + ' ' + (t + 10) : 'M' + x + ' ' + (t - 24);
+        s += 'L' + x + ' ' + (by - 22) + 'Q' + x + ' ' + by + ' ' + bx + ' ' + by + 'Q' + x + ' ' + by + ' ' + x + ' ' + (by + 22);
+        pb = q.bottom - H.top - 10; s += 'L' + x + ' ' + pb;
+        stops.push(by); px = x;
       });
+      s += 'L' + px + ' ' + (pb + 30);
+      holes.setAttribute('d', s); yarn.setAttribute('d', s); tlen = yarn.getTotalLength(); th.classList.add('live');
     };
-    addEventListener('scroll', function () { if (!tick) tick = requestAnimationFrame(mark); }, { passive: true });
-    addEventListener('resize', mark);
-    mark();
+    var run = function () {
+      tick = 0;
+      if (!stops.length) return;
+      var y = innerHeight * .45 - th.getBoundingClientRect().top, lo = 0, hi = tlen, m, k, p;
+      for (k = 0; k < 18; k++) { m = (lo + hi) / 2; if (yarn.getPointAtLength(m).y < y) lo = m; else hi = m; }
+      yarn.style.strokeDasharray = lo.toFixed(1) + ' 99999';
+      p = yarn.getPointAtLength(lo); head.style.transform = 'translate(' + p.x.toFixed(1) + 'px,' + p.y.toFixed(1) + 'px)';
+      head.style.opacity = lo < 2 ? 0 : 1;
+      [].forEach.call(grs, function (g, i) { g.classList.toggle('on', stops[i] <= y); });
+    };
+    addEventListener('scroll', function () { if (!tick) tick = requestAnimationFrame(run); }, { passive: true });
+    addEventListener('resize', function () { lay(); run(); });
+    addEventListener('load', function () { lay(); run(); });
+    lay(); run();
   }
 
   // screen captures: play while on screen, pause off screen, with a pause button
