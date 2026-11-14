@@ -722,7 +722,6 @@ video { max-width: 100%; height: auto; }
 .sum-vis .chart-grid { grid-template-columns: 1fr; }
 .sum .facts { grid-template-columns: 1fr; grid-auto-rows: 1fr; margin: 0; gap: 10px; }
 .sum .method { margin: 0; grid-template-columns: minmax(0, 1.15fr) minmax(0, .7fr) minmax(0, 1.15fr); }
-.sum + .prose .lede { margin-top: 44px; }
 .bigfig b { display: block; font-size: 44px; line-height: 1.05; letter-spacing: -.03em; color: var(--accent); margin-top: 14px; }
 .bigfig .sub { margin: 6px 0 0; }
 @media (min-width: 821px) { .sum .fact { display: flex; flex-direction: column; justify-content: center; } }
@@ -1147,3 +1146,9 @@ footer.site { border-top: 1.5px solid var(--ink); color: var(--muted); }
   .rail-ball, .rail-fill, .guide { display: none; }
   * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
 }
+
+/* clarity pass: the one-sentence "what it is" sits under the title, before any figure */
+.case-head .lede { margin: 18px 0 0; max-width: 46em; font-size: 19px; line-height: 1.5; color: var(--text); }
+@media (max-width: 620px) { .case-head .lede { font-size: 17px; margin-top: 14px; } }
+/* Safari drops the side dashes of a 1.5 px dashed border on 3x screens; 2 px draws all four */
+.method > li.ag { border-width: 2px; }

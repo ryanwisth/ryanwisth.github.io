@@ -34,6 +34,7 @@
     <a class="back" href="index.html#work">&larr; All case studies</a>
     <p class="kicker">Measuring cost before cutting it</p>
     <h1 style="view-transition-name: t-token-scan">Finding where the AI budget went</h1>
+    <p class="lede">Read-only scripts that scan Claude Code's own session logs and report where the tokens went: by project, model, day, session and tool. They turned "the weekly allowance ran out early" into specific causes that could be fixed.</p>
   </div>
 
   <section class="sum" aria-label="Summary">
@@ -41,8 +42,8 @@
       <figure class="figure sum-vis">
         <div class="chart-grid">
     <div class="chart-card">
-      <h3>Median first-call tokens</h3>
-      <p class="sub">The size of a spawned agent's first call.</p>
+      <h3>Size of a helper agent&rsquo;s first call</h3>
+      <p class="sub">Median tokens in a spawned agent's first call.</p>
       <div class="bars" role="img" aria-label="Bar chart. Default agent type 53.8k tokens, lean types 16k to 20k.">
         <div class="row" title="Default agent type: 53.8k"><span class="lab">Default agent type</span><span class="track"><i class="" style="--v:89.7%"></i></span><span class="val">53.8k</span></div>
         <div class="row" title="Lean types: 16k to 20k"><span class="lab">Lean types</span><span class="track"><i class="cut" style="--v:26.7%"></i><i class="range" style="--v:33.3%;--from:26.7%"></i></span><span class="val">16k to 20k</span></div>
@@ -59,8 +60,8 @@
     </div>
       </figure>
       <div class="facts">
-        <div class="fact"><b>482 of 662</b><span>spawned agents on the heavy default type</span></div>
-        <div class="fact"><b>53.8k</b><span>median first call, against 16k to 20k for lean types</span></div>
+        <div class="fact"><b>482 of 662</b><span>helper agents ran as the heavy default type</span></div>
+        <div class="fact"><b>53.8k</b><span>tokens in a default agent&rsquo;s median first call, against 16k to 20k for lean types</span></div>
         <div class="fact"><b>4,816</b><span>image reads held in context over one week</span></div>
       </div>
     </div>
@@ -70,10 +71,6 @@
       <li><p class="who">I checked</p><ul class="ticks ok"><li>Used for a real weekly usage review</li><li>Findings acted on in the token guard</li><li class="no">Limit: Public copy checked on a synthetic log only</li></ul></li>
     </ol>
   </section>
-
-  <div class="prose">
-    <p class="lede">Read-only scripts that scan Claude Code's own session logs and report where the tokens went: by project, model, day, session and tool. They turned "the weekly allowance ran out early" into specific causes that could be fixed.</p>
-  </div>
 
   <figure class="figure">
     <ol class="flow c3">

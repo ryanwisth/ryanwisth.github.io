@@ -34,14 +34,15 @@
     <a class="back" href="index.html#work">&larr; All case studies</a>
     <p class="kicker">Rules in code, not in the prompt</p>
     <h1 style="view-transition-name: t-token-guard">Spending rules an AI agent cannot forget</h1>
+    <p class="lede">Four small hooks and nine cost-tiered subagent types that stop a Claude Code session, and the agents it spawns, from spending far more tokens than the work needs.</p>
   </div>
 
   <section class="sum" aria-label="Summary">
     <div class="sum-top">
       <figure class="figure sum-vis">
         <div class="chart-card">
-      <h3>Median first-call tokens</h3>
-      <p class="sub">The size of a spawned agent's first call, from my session logs: the heavy default type against the lean types.</p>
+      <h3>Size of a helper agent&rsquo;s first call</h3>
+      <p class="sub">Median tokens in a spawned agent's first call, from my session logs: the heavy default type against the lean types.</p>
       <div class="bars" role="img" aria-label="Bar chart. Default agent type 53.8k tokens, lean types 16k to 20k.">
         <div class="row" title="Default agent type: 53.8k"><span class="lab">Default agent type</span><span class="track"><i class="" style="--v:89.7%"></i></span><span class="val">53.8k</span></div>
         <div class="row" title="Lean types: 16k to 20k"><span class="lab">Lean types</span><span class="track"><i class="cut" style="--v:26.7%"></i><i class="range" style="--v:33.3%;--from:26.7%"></i></span><span class="val">16k to 20k</span></div>
@@ -49,8 +50,8 @@
     </div>
       </figure>
       <div class="facts">
-        <div class="fact"><b>39%</b><span>of one week&rsquo;s cache reads, above the soft context line</span></div>
-        <div class="fact"><b>482 of 662</b><span>agents on the heavy default type</span></div>
+        <div class="fact"><b>39%</b><span>of one week&rsquo;s re-read context came after a chat passed the 200k-token warning line</span></div>
+        <div class="fact"><b>482 of 662</b><span>helper agents ran as the heavy default type before the guard</span></div>
         <div class="fact"><b>4,816</b><span>image reads held in context in one week</span></div>
       </div>
     </div>
@@ -60,10 +61,6 @@
       <li><p class="who">I checked</p><ul class="ticks ok"><li>Each hook checked against the next week&rsquo;s scan</li><li>15 sample cases, allow and deny paths</li><li class="no">Limit: No automated test suite</li></ul></li>
     </ol>
   </section>
-
-  <div class="prose">
-    <p class="lede">Four small hooks and nine cost-tiered subagent types that stop a Claude Code session, and the agents it spawns, from spending far more tokens than the work needs.</p>
-  </div>
 
   <figure class="figure">
     <ol class="flow c4">
