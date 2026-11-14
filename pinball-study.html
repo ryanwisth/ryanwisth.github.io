@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A study built so it could fail | Ryan Wisth</title>
+<meta name="description" content="Case study: testing whether pinball table design predicts player ratings, with hypotheses written and hashed before any result. The hypotheses failed, and the write-up says so.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site"><a href="index.html">&larr; Ryan Wisth, case studies</a></header>
+<main>
+  <p class="kicker">Case study: research honest enough to fail</p>
+  <h1>A study built so it could fail</h1>
+  <p class="lede">A research tool that converts pinball table layouts, measures their geometry, plays them with simulated players at four skill levels, and tests whether any of that predicts how much people enjoy a table. The answer was no, and the write-up says so.</p>
+
+  <div class="facts">
+    <div class="fact"><b>9</b><span>designer rules written down as hypotheses before any result, none confirmed</span></div>
+    <div class="fact"><b>79 &rarr; 94</b><span>real tables tested, then retested after adding lower-rated ones</span></div>
+    <div class="fact"><b>5%</b><span>better than guessing the average rating, no better than year and maker alone</span></div>
+  </div>
+
+  <h2>The problem</h2>
+  <p>The goal was to score an original table design before anyone had played it: learn what separates well-rated tables from the rest, then apply that to the new design.</p>
+  <p>The easy trap in a study like this is to try many measures and report the ones that happen to fit.</p>
+
+  <h2>What I directed</h2>
+  <p>I set the research question, the plan and its pass/fail gates, chose between options at each decision point, and checked the results. The agents wrote the code and ran the experiments.</p>
+  <ul>
+    <li><b>Hypotheses before results.</b> Designer rules of thumb were written down with predicted directions, a fixed test and a fixed verdict rule, then hashed, before any measure was compared with a rating.</li>
+    <li><b>One common board format.</b> The simulator never sees a source file, so an original design can be measured exactly like a converted commercial table.</li>
+    <li><b>Port the physics, do not invent it.</b> A hand-tuned flipper was replaced by a port of an established simulator's flipper model and checked against an independent port.</li>
+    <li><b>Controls in every model.</b> Year and maker are always included, so era and brand are not mistaken for "fun".</li>
+    <li><b>Trust only what holds up.</b> The expert bot did not reliably beat the intermediate one, so every hypothesis uses the intermediate bot and the expert-based test is marked low-trust.</li>
+  </ul>
+
+  <h2>How the results were verified</h2>
+  <ul>
+    <li>Every rating model was judged by leave-one-out cross-validation against the simple baseline of predicting the mean.</li>
+    <li>Each hypothesis was tested with bootstrap intervals on two separate measures of success: public rating and production run.</li>
+    <li>The hashes of the hypothesis files are stored with the results, so an edit after the fact shows.</li>
+  </ul>
+
+  <h2>The outcome</h2>
+  <p>The hypothesis failed. The best model's error was 0.425 against 0.448 for guessing the mean, and year, maker and build flags alone did as well. Of the 9 rules, none passed as predicted, and two went the opposite way, about what chance gives.</p>
+  <p>The best reading is that ratings mostly reward theme, licence, rules depth, sound and code, which a 2D simulator cannot see. What remains useful is the instrument: a converter, a simulator and bots that can check a design for stuck balls, unmakeable ramps and drains down the middle.</p>
+
+  <h2>Honest limits</h2>
+  <ul>
+    <li>The scorer is not a usable fun predictor, and nothing in the project claims it is.</li>
+    <li>The design-check use of the simulator was not built out. Ramps on converted tables are rarely made, and 18% of ramps could not be made by any aimed shot.</li>
+    <li>The published hypothesis files had a few non-substantive sentences and labels removed, so they no longer match the hashes recorded during the study; the README states both.</li>
+  </ul>
+
+  <p><a class="repo" href="https://github.com/ryanwisth/pinball-fun-scorer">View the repository</a></p>
+</main>
+<footer class="site">Every figure on this page comes from the project's own README.</footer>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI feedback written in ink on an e-ink tablet | Ryan Wisth</title>
+<meta name="description" content="Case study: a Grade button on a reMarkable Paper Pro that has an AI model review handwritten work and write its feedback back onto the page as real pen strokes.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site"><a href="index.html">&larr; Ryan Wisth, case studies</a></header>
+<main>
+  <p class="kicker">Case study: AI inside a physical device</p>
+  <h1>AI feedback written in ink on an e-ink tablet</h1>
+  <p class="lede">Press a Grade button on a reMarkable Paper Pro, and an AI model reviews the handwritten work on that page. It writes its feedback back onto the page as real pen strokes, in a separate layer the user can delete.</p>
+
+  <div class="facts">
+    <div class="fact"><b>0</b><span>erase or delete commands in the tablet bridge, by design</span></div>
+    <div class="fact"><b>2 tiers</b><span>a cheaper model clears clean pages; anything doubtful goes to the full model</span></div>
+    <div class="fact"><b>24 pages</b><span>graded in one batch on the device</span></div>
+  </div>
+
+  <h2>The problem</h2>
+  <p>Working problems by hand on paper-like e-ink is good for learning. But getting feedback usually means retyping the work into a computer or photographing it.</p>
+  <p>The goal was to close that loop on the device itself: write, tap Grade, and a few seconds later the margin shows a verdict, the mistake struck through, and the worked continuation from where things went wrong.</p>
+
+  <h2>What I directed</h2>
+  <p>I set the goals, the safety rules, the acceptance checks and the design specs, and tested each stage on the tablet. The agents wrote most of the code.</p>
+  <ul>
+    <li><b>Never touch the student's ink.</b> Feedback goes into its own "AI Feedback" layer. A free-space finder places each note in empty space or on a continuation page; skipping a mark beats writing over someone's work.</li>
+    <li><b>Button-triggered only.</b> Nothing grades in the background. The Grade button grades the current page, a set number of pages, or the whole notebook.</li>
+    <li><b>Describe what the ink shows, not why.</b> The tablet stores strokes in the order they were written, so the reviewer sees the sequence, not only the final page. The prompt forbids guessing why a mistake happened, and statements about motives or feelings are filtered out.</li>
+    <li><b>Show the work where it is needed.</b> A wrong or blank page gets the full worked continuation. A correct, efficient page gets almost nothing.</li>
+    <li><b>Legible handwriting over clever handwriting.</b> Neural handwriting generators failed on math symbols and digits, so the feedback uses a single-stroke font with natural pen movement.</li>
+  </ul>
+
+  <h2>How the results were verified</h2>
+  <ul>
+    <li>Every equation the reviewer wants to write is evaluated in code before it is inked. False ones are dropped.</li>
+    <li>A fingerprint of the student's strokes stops an unchanged page from being graded twice.</li>
+    <li>The full loop (button press, capture, review, ink in the feedback layer) was built and used on the device in August 2026, including 24-page batches.</li>
+    <li>A scale bug that drew ink 18% too large on Letter-size worksheets was traced to the coordinate math and fixed with one shared source for page coordinates.</li>
+  </ul>
+
+  <h2>The outcome</h2>
+  <p>A working grader on one tablet: tap a button, get checked, handwritten-looking feedback on the page in seconds, without the student's own writing ever being changed.</p>
+  <p>The public version leaves out the private question bank. Without it, the reviewer grades from the handwriting alone and is told it cannot see the question.</p>
+
+  <h2>Honest limits</h2>
+  <ul>
+    <li>Tested on one device and one firmware version, 3.27.3. The extension stack is tied to that firmware.</li>
+    <li>The Letter-size scale fix was verified numerically, not yet on paper. Zoom handling was verified on synthetic cases only.</li>
+    <li>There is no automated test suite in the repository; the original test pages contained private handwriting.</li>
+    <li>The project is paused, and the grading service is not currently running.</li>
+  </ul>
+
+  <p><a class="repo" href="https://github.com/ryanwisth/remarkable-paper-grader">View the repository</a></p>
+</main>
+<footer class="site">Every figure on this page comes from the project's own README.</footer>
+</body>
+</html>
