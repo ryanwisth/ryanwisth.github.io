@@ -518,6 +518,9 @@ video { max-width: 100%; height: auto; }
 .vid:hover .vid-toggle, .vid-toggle:focus-visible, .vid.paused .vid-toggle { opacity: 1; }
 @media (hover: none) { .vid-toggle { opacity: .85; } }
 .vid-toggle:hover { background: rgba(67, 56, 202, .92); }
+.vid-sound { position: absolute; left: 10px; bottom: 10px; z-index: 2; min-height: 44px; padding: 0 16px; border: 0; border-radius: 22px; background: rgba(67, 56, 202, .94); color: #fff; font: 600 14px var(--sans); cursor: pointer; }
+.vid-sound:hover, .vid-sound:focus-visible { background: #3730a3; }
+.vid-sound[aria-pressed="true"] { background: rgba(14, 16, 21, .62); }
 .vid-toggle svg { width: 16px; height: 16px; }
 .vid-toggle .i-play, .vid.paused .vid-toggle .i-pause { display: none; }
 .vid.paused .vid-toggle .i-play { display: block; }

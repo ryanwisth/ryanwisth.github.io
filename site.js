@@ -128,6 +128,19 @@
     v.addEventListener('pause', function () { box.classList.toggle('paused', !!v.dataset.held); });
     v.addEventListener('play', function () { box.classList.remove('paused'); });
     box.appendChild(btn);
+    // a clip with a soundtrack starts muted (browsers require it); this button turns the sound on
+    if (v.hasAttribute('data-sound')) {
+      var sb = d.createElement('button');
+      sb.type = 'button'; sb.className = 'vid-sound';
+      var label = function () { sb.textContent = v.muted ? '\u266A Sound on' : '\u266A Sound off'; sb.setAttribute('aria-pressed', v.muted ? 'false' : 'true'); };
+      sb.addEventListener('click', function (e) {
+        e.preventDefault();
+        v.muted = !v.muted;
+        if (!v.muted) { v.currentTime = 0; delete v.dataset.held; var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+        label();
+      });
+      label(); box.appendChild(sb);
+    }
     vio.observe(v);
   });
 })();
