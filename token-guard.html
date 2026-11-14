@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spending rules an AI agent cannot forget | Ryan Wisth</title>
+<meta name="description" content="Case study: four hooks and nine cost-tiered subagent types that stop a Claude Code session, and the agents it spawns, from spending far more tokens than the work needs.">
+<meta property="og:title" content="Spending rules an AI agent cannot forget | Ryan Wisth">
+<meta property="og:description" content="Case study: four hooks and nine cost-tiered subagent types that stop a Claude Code session, and the agents it spawns, from spending far more tokens than the work needs.">
+<meta property="og:image" content="https://ryanwisth.github.io/img/card.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#f7f7f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1015" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%234338ca'/%3E%3Cstop offset='1' stop-color='%230e7490'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Ctext x='16' y='21' font-family='Arial' font-weight='700' font-size='13' fill='white' text-anchor='middle'%3ERW%3C/text%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="case">
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="mark">RW</span>Ryan Wisth</a>
+    <nav class="topnav">
+      <a href="index.html#work">Case studies</a>
+      <a class="hide-sm" href="index.html#how">How I work</a>
+      <a href="https://github.com/ryanwisth">GitHub</a>
+      <button class="theme-toggle" type="button" hidden aria-label="Switch between light and dark"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="prose case-head">
+    <a class="back" href="index.html#work">&larr; All case studies</a>
+    <p class="kicker">Rules in code, not in the prompt</p>
+    <h1 style="view-transition-name: t-token-guard">Spending rules an AI agent cannot forget</h1>
+    <p class="lede">Four small hooks and nine cost-tiered subagent types that stop a Claude Code session, and the agents it spawns, from spending far more tokens than the work needs.</p>
+
+  <div class="facts">
+      <div class="fact"><b>39%</b><span>of one week's cache reads happened above the soft context line, mostly inside long unattended turns</span></div>
+      <div class="fact"><b>482 of 662</b><span>spawned agents still ran as the heavy default type after the lean types existed</span></div>
+      <div class="fact"><b>4,816</b><span>image reads held in context in one week</span></div>
+    </div>
+  </div>
+
+  <figure class="figure">
+    <ol class="flow c4">
+      <li><b>Prompt check</b><span>one hook runs, warns or blocks by the size of the session's context</span></li>
+      <li><b>Tool call</b><span>every call passes three more hooks before it runs</span></li>
+      <li class="key"><b>Deny the wasteful call</b><span>no model named, the heavy agent type, a large file with no slice, a wide image, or past 260k and not saving state</span></li>
+      <li class="key"><b>The denial says the fix</b><span>so the agent corrects itself on the next call</span></li>
+    </ol>
+    <figcaption>Simplified from the README diagram. A call that breaks no rule runs as normal.</figcaption>
+  </figure>
+  <figure class="figure">
+    <div class="chart-card">
+      <h3>The per-prompt check</h3>
+      <p class="sub">What happens to a new prompt, by the size of the session's context. From the README diagram.</p>
+      <div class="band3">
+        <div class="ok"><b>Under 200k</b>The turn runs.</div>
+        <div class="warn"><b>200k to 240k</b>The turn runs, told to save state and wrap up.</div>
+        <div class="stop"><b>Over 240k</b>The prompt is blocked, with a paste-ready opener for a fresh chat.</div>
+      </div>
+    </div>
+  </figure>
+  <figure class="figure">
+    <div class="chart-card">
+      <h3>Median first-call tokens</h3>
+      <p class="sub">The size of a spawned agent's first call, from my session logs: the heavy default type against the lean types.</p>
+      <div class="bars" role="img" aria-label="Bar chart. Default agent type 53.8k tokens, lean types 16k to 20k.">
+        <div class="row" title="Default agent type: 53.8k"><span class="lab">Default agent type</span><span class="track"><i class="" style="--v:89.7%"></i></span><span class="val">53.8k</span></div>
+        <div class="row" title="Lean types: 16k to 20k"><span class="lab">Lean types</span><span class="track"><i class="cut" style="--v:26.7%"></i><i class="range" style="--v:33.3%;--from:26.7%"></i></span><span class="val">16k to 20k</span></div>
+      </div>
+    </div>
+  </figure>
+
+  <div class="prose">
+    <h2>The problem</h2>
+    <p>An AI coding agent re-reads its whole conversation on every tool call. Three habits make that expensive without making the work better:</p>
+    <ul>
+      <li><b>Long sessions.</b> A chat at 250k tokens of context pays 250k on every call, including the call that renames a variable.</li>
+      <li><b>Unpinned subagents.</b> A spawned agent with no model named inherits the session's model, so one "fan out 20 agents" step runs 20 copies of the most expensive model.</li>
+      <li><b>Heavy tool results.</b> One whole-file read of a large log, or one full-size screenshot, stays in context for every later call.</li>
+    </ul>
+    <p>Written rules in a prompt did not hold: the agent agreed with them and broke them an hour later.</p>
+
+    <h2>What I directed</h2>
+    <p>I found each leak by measuring my own session logs, set the rule and the thresholds, and checked that each hook changed the numbers in the following week's scan. The agents wrote most of the code.</p>
+    <ul>
+      <li><b>Enforce at the tool call, not in the prompt.</b> A rule in a system prompt is advice. A denied tool call is a fact the agent has to work around, and the denial text tells it how.</li>
+      <li><b>Two context lines, not one.</b> The soft line gives the agent a turn to save its state while it still has room; the hard line guarantees the session ends. A single hard stop loses the state.</li>
+      <li><b>A per-call guard as well as a per-prompt guard.</b> The prompt hook only fires when a person types, and 39% of one week's cache reads happened above the soft line, mostly inside long unattended turns. The per-call hook closes that gap.</li>
+      <li><b>Saving state is always allowed.</b> Past the hard line the agent can still edit its state file and run shell commands, so a blocked session ends with its state written down and not a dead end.</li>
+      <li><b>Deny the default agent type.</b> Nine lean types each fix a model, a turn cap and a short tool list, so a spawned agent starts small and cannot run away. Making lean the only path that passes fixed the 482 of 662; an opt-out line covers the rare agent that needs browser or MCP (Model Context Protocol) tools.</li>
+      <li><b>Fail open.</b> On any parse error or missing transcript the hooks exit silently and the tool call proceeds.</li>
+    </ul>
+
+    <h2>How the results were verified</h2>
+    <ul>
+      <li>Each hook was added after measuring a specific leak in real session logs, and I checked that it changed the numbers in the following week's scan. The measuring side is its own case study: <a href="token-scan.html">Finding where the AI budget went</a>.</li>
+      <li>Sample hook inputs were piped through each script: 15 cases covering the allow and deny paths for all four hooks behave as described.</li>
+    </ul>
+
+    <h2>The outcome</h2>
+    <p>In daily use on one machine since October 2026. Every denial message says what to do instead, so the agent corrects itself on the next call without me stepping in.</p>
+    <p>The thresholds are environment variables, so the lines can be moved without editing the hooks.</p>
+
+    <h2>Honest limits</h2>
+    <ul>
+      <li>There is no automated test suite.</li>
+      <li>The thresholds were tuned for one person's usage and plan. Treat them as starting points.</li>
+      <li>The per-call hook measures the lead chat's context, so once the lead chat is over the limit it also stops that chat's subagents, even when their own context is small.</li>
+      <li>The token count is the last call's context size, not a prediction of the next one.</li>
+      <li>The image check uses a tool that ships with macOS; on other systems it is skipped.</li>
+    </ul>
+
+    <div class="repo-card">
+      <p><b>ryanwisth/claude-code-token-guard</b>The code, with its real status and limits.</p>
+      <a class="btn primary" href="https://github.com/ryanwisth/claude-code-token-guard">View the repository &rarr;</a>
+    </div>
+    <nav class="pager" aria-label="More case studies">
+      <a class="prev" href="claim-ledger.html"><small>&larr; Previous</small>Turning a slipping process into enforced rules</a>
+      <a class="next" href="token-scan.html"><small>Next &rarr;</small>Finding where the AI budget went</a>
+    </nav>
+  </div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Every figure on this page comes from the project's own README.</span>
+    <span>&copy; Ryan Wisth</span>
+  </div>
+</footer>
+<script src="site.js"></script>
+</body>
+</html>

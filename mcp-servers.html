@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Giving a local model tools it can use | Ryan Wisth</title>
+<meta name="description" content="Case study: six small MCP servers that give a locally hosted language model live world events, market data, a dependency audit, a study coach and equation OCR, shaped for a mid-sized model.">
+<meta property="og:title" content="Giving a local model tools it can use | Ryan Wisth">
+<meta property="og:description" content="Case study: six small MCP servers that give a locally hosted language model live world events, market data, a dependency audit, a study coach and equation OCR, shaped for a mid-sized model.">
+<meta property="og:image" content="https://ryanwisth.github.io/img/card.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#f7f7f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1015" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%234338ca'/%3E%3Cstop offset='1' stop-color='%230e7490'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Ctext x='16' y='21' font-family='Arial' font-weight='700' font-size='13' fill='white' text-anchor='middle'%3ERW%3C/text%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="case">
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="mark">RW</span>Ryan Wisth</a>
+    <nav class="topnav">
+      <a href="index.html#work">Case studies</a>
+      <a class="hide-sm" href="index.html#how">How I work</a>
+      <a href="https://github.com/ryanwisth">GitHub</a>
+      <button class="theme-toggle" type="button" hidden aria-label="Switch between light and dark"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="prose case-head">
+    <a class="back" href="index.html#work">&larr; All case studies</a>
+    <p class="kicker">Tools shaped for the model that reads them</p>
+    <h1 style="view-transition-name: t-mcp-servers">Giving a local model tools it can use</h1>
+    <p class="lede">Six small MCP (Model Context Protocol) servers that give a locally hosted language model what it lacks: live world events, market prices and company fundamentals, a dependency vulnerability audit, a read-only study coach and equation OCR.</p>
+
+  <div class="facts">
+      <div class="fact"><b>90 tools</b><span>and about 100k tokens of schema in one hosted server built for large cloud models</span></div>
+      <div class="fact"><b>15 or fewer</b><span>tools in each server here, with small defaults and capped replies</span></div>
+      <div class="fact"><b>12,000</b><span>characters is the reply cap on the data servers, and truncation is announced, never silent</span></div>
+    </div>
+  </div>
+
+  <figure class="figure">
+    <ol class="flow c4">
+      <li><b>Local model</b><span>in a chat app or an agent</span></li>
+      <li><b>MCP client</b><span>starts each server and talks to it over stdio</span></li>
+      <li class="key"><b>Six thin servers</b><span>short tool lists, capped replies, arithmetic done in code</span></li>
+      <li><b>Live services and local tools</b><span>three data services; a vulnerability scanner, a practice app and an OCR model</span></li>
+    </ol>
+    <figcaption>Simplified from the README diagram. The first three servers reach live data services; the last three wrap local tools.</figcaption>
+  </figure>
+  <figure class="figure">
+    <div class="chart-card">
+      <h3>Characters per daily price bar</h3>
+      <p class="sub">The price-history tool, before and after a format change. JSON hit the 12,000-character cap after about 81 daily bars; with CSV and resampling, a five-year request returns the whole window.</p>
+      <div class="bars" role="img" aria-label="Bar chart. JSON objects about 149 characters per bar, CSV about 48.">
+        <div class="row" title="JSON objects: about 149"><span class="lab">JSON objects</span><span class="track"><i class="" style="--v:90%"></i></span><span class="val">about 149</span></div>
+        <div class="row" title="CSV: about 48"><span class="lab">CSV</span><span class="track"><i class="" style="--v:29%"></i></span><span class="val">about 48</span></div>
+      </div>
+    </div>
+  </figure>
+
+  <div class="prose">
+    <h2>The problem</h2>
+    <p>A local model knows nothing after its training cutoff and cannot look anything up. Public data services do publish their own MCP servers or APIs, but they are built for large cloud models: one hosted server lists 90 tools and about 100k tokens of schema, which at a local model's speeds costs minutes per new chat and most of the context window.</p>
+    <p>Others need an interactive login that a simple bridge cannot refresh. So each server here is a thin, hand-shaped wrapper that a mid-sized local model can pick from and read without drowning in the answer.</p>
+
+    <h2>What I directed</h2>
+    <p>I set the goals and constraints (a local model's token budget, read-only, no trading tools), wrote the acceptance checks, and verified the results against the live services and my local model stack. The agents wrote most of the code to that specification.</p>
+    <ul>
+      <li><b>Shape tools for the model that will read them.</b> The audience is a local model in the tens of billions of parameters, not a frontier cloud model. Each tool list is short, each description says when to use the tool, defaults are small, and tools that can only fail on the free plan are left out entirely, because a dead tool is noise the model has to read past.</li>
+      <li><b>Do arithmetic in code, not in the model.</b> The comparison tool returns ranked percent changes rather than raw bars. Arithmetic over long number series is where small models go wrong, and a wrong number reads as a real one.</li>
+      <li><b>Make empty data loud.</b> A bad ticker does not raise an error upstream; it comes back as empty values. The server checks for that and returns an explicit error, because a model handed nulls tends to report them as data.</li>
+      <li><b>Measure before raising a cap.</b> The history tool was hitting the reply cap, so the format changed instead of the cap.</li>
+      <li><b>Read-only by design.</b> There are no trading or order tools anywhere, and the study-coach server leaves out every route that would fetch or answer a question.</li>
+      <li><b>Errors a model can read.</b> Errors come back as plain-English strings the model can relay, never as stack traces, and missing credentials return a setup message instead of failing or hanging.</li>
+    </ul>
+
+    <h2>How the results were verified</h2>
+    <ul>
+      <li><b>Company data server: working.</b> Verified with live data on 2026-09-18, mounted in a local chat front end and in real use.</li>
+      <li><b>Vulnerability audit: working.</b> Checked on 2026-11-13 through an in-memory client, covering findings, a missing path and a missing scanner.</li>
+      <li><b>Study coach: working against the sample bank.</b> Checked on 2026-11-13 against the practice app serving its 21-item sample bank; all six tools returned data.</li>
+      <li><b>World events server: built.</b> 15 tools listed, the no-login and expired-login paths return the setup message, and a quota-free self-test ran against the live endpoint.</li>
+    </ul>
+
+    <h2>The outcome</h2>
+    <p>Six servers, each one Python file that runs with one command. The study coach reads from another project here, the <a href="practice-engine.html">practice app built around the mistake</a>.</p>
+    <p>The README gives each server's status separately, from "working" to "built, not yet run with a key".</p>
+
+    <h2>Honest limits</h2>
+    <ul>
+      <li>World events: no account login had been done, so reply sizes on real data are unverified.</li>
+      <li>Market prices: built, not yet run with a key. The free-plan behavior was probed with keyless requests only.</li>
+      <li>Equation OCR: used in the original stack and not re-run for the public copy; only the tool listing and the bad-image error path were re-checked.</li>
+      <li>No automated test suite is included, and the study coach's replies on a long practice history are unmeasured.</li>
+      <li>The third-party limits in the README carry the date they were checked. Plans change.</li>
+    </ul>
+
+    <div class="repo-card">
+      <p><b>ryanwisth/local-llm-mcp-servers</b>The code, with its real status and limits.</p>
+      <a class="btn primary" href="https://github.com/ryanwisth/local-llm-mcp-servers">View the repository &rarr;</a>
+    </div>
+    <nav class="pager" aria-label="More case studies">
+      <a class="prev" href="agent-runner.html"><small>&larr; Previous</small>Long agent jobs with the bill checked first</a>
+      <a class="next" href="local-ai-stack.html"><small>Next &rarr;</small>A private AI assistant on one laptop</a>
+    </nav>
+  </div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Every figure on this page comes from the project's own README.</span>
+    <span>&copy; Ryan Wisth</span>
+  </div>
+</footer>
+<script src="site.js"></script>
+</body>
+</html>

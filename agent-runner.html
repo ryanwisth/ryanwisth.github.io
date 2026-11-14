@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Long agent jobs with the bill checked first | Ryan Wisth</title>
+<meta name="description" content="Case study: a small command-line runner that sends a written brief to Claude through the Claude Agent SDK, with auth, budget and turn guards, and loops fresh passes until the job&#x27;s done file appears.">
+<meta property="og:title" content="Long agent jobs with the bill checked first | Ryan Wisth">
+<meta property="og:description" content="Case study: a small command-line runner that sends a written brief to Claude through the Claude Agent SDK, with auth, budget and turn guards, and loops fresh passes until the job&#x27;s done file appears.">
+<meta property="og:image" content="https://ryanwisth.github.io/img/card.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#f7f7f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1015" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%234338ca'/%3E%3Cstop offset='1' stop-color='%230e7490'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Ctext x='16' y='21' font-family='Arial' font-weight='700' font-size='13' fill='white' text-anchor='middle'%3ERW%3C/text%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="case">
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="mark">RW</span>Ryan Wisth</a>
+    <nav class="topnav">
+      <a href="index.html#work">Case studies</a>
+      <a class="hide-sm" href="index.html#how">How I work</a>
+      <a href="https://github.com/ryanwisth">GitHub</a>
+      <button class="theme-toggle" type="button" hidden aria-label="Switch between light and dark"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="prose case-head">
+    <a class="back" href="index.html#work">&larr; All case studies</a>
+    <p class="kicker">Guardrails for unattended AI work</p>
+    <h1 style="view-transition-name: t-agent-runner">Long agent jobs with the bill checked first</h1>
+    <p class="lede">A small command-line runner that sends a written brief to Claude through the Claude Agent SDK, with explicit auth, budget and turn guards, and loops fresh passes until the brief's done file appears.</p>
+
+  <div class="facts">
+      <div class="fact"><b>2</b><span>billing paths, an API key or a subscription login; the run aborts before any work if the session reports the wrong one</span></div>
+      <div class="fact"><b>$20</b><span>default budget per pass, passed to the SDK's built-in dollar budget</span></div>
+      <div class="fact"><b>0</b><span>retries: the loop stops on the first capped or failed pass and says why</span></div>
+    </div>
+  </div>
+
+  <figure class="figure">
+    <ol class="flow c3">
+      <li><b>Loop</b><span>is the done file there? If so, stop and print the result</span></li>
+      <li><b>One pass</b><span>a clean context that reads the project's own progress notes</span></li>
+      <li class="key"><b>Auth check</b><span>the session's reported key source must match the flag, or the run aborts with no work done</span></li>
+      <li><b>Agent works</b><span>in the chosen folder, under the budget and turn caps</span></li>
+      <li><b>Logs</b><span>one readable, one raw, with the key scrubbed from both</span></li>
+      <li class="key"><b>Clean end, or stop</b><span>a clean pass loops again; a cap or an error stops the loop</span></li>
+    </ol>
+    <figcaption>Simplified from the README diagram.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <h2>The problem</h2>
+    <p>Long agent jobs (build a guide, refactor a folder, work through a checklist) are easier to hand off as a written brief than as a live chat. Running them unattended raises three practical questions: which account pays, how to stop a run that goes over budget, and how to continue a job that does not finish in one pass.</p>
+    <p>The first is easy to get wrong. A run authenticated with an API key bills that key's account; a run on the subscription login draws on the subscription instead. If an API key happens to be set, it silently wins over the login.</p>
+
+    <h2>What I directed</h2>
+    <p>I specified the options, the guards and their acceptance tests, and verified the results before using it on real work. An AI coding agent wrote the code from my written brief.</p>
+    <ul>
+      <li><b>Who pays is checked, not assumed.</b> The billing path is a flag, and the runner aborts before the first tool call if the key source the session itself reports does not match.</li>
+      <li><b>Use the built-in budget rather than counting cost by hand.</b> The SDK reports cost only in its final result message, so a hand-rolled running total could not stop a run in time.</li>
+      <li><b>Fresh passes over one long session.</b> Context grows with every tool result; a new pass that reads short progress notes is cheaper than dragging a full transcript along.</li>
+      <li><b>Stop on the first failure.</b> A pass that crashed or hit a cap usually needs a person to look before more money is spent, so the loop does not retry.</li>
+      <li><b>Written rules still apply.</b> The runner loads user and project settings, so the operator's standing rules apply to unattended runs too.</li>
+      <li><b>Spend nothing on a bad command.</b> The loop validates its arguments before spending anything.</li>
+    </ul>
+
+    <h2>How the results were verified</h2>
+    <ul>
+      <li>The exact key-source string was found by a live test with the smallest model rather than guessed.</li>
+      <li>The auth guard, settings loading, and a fresh run plus a resume were tested with the smallest model before the first real brief.</li>
+    </ul>
+
+    <h2>The outcome</h2>
+    <p>Working, and used for real multi-pass jobs in October 2026. The subscription login became the loop's default on 2026-10-25.</p>
+    <p>Each pass leaves a readable log and a raw one. A crash still prints the session id, so a follow-up can pick up in the same session.</p>
+
+    <h2>Honest limits</h2>
+    <ul>
+      <li>No automated tests.</li>
+      <li>Stopping a pass by hand part-way can leave the working folder mid-edit.</li>
+      <li>The loop script needs zsh.</li>
+      <li>By default the agent runs tools without asking, so the runner should be pointed at a folder it is allowed to change, or given a stricter mode.</li>
+    </ul>
+
+    <div class="repo-card">
+      <p><b>ryanwisth/agent-sdk-runner</b>The code, with its real status and limits.</p>
+      <a class="btn primary" href="https://github.com/ryanwisth/agent-sdk-runner">View the repository &rarr;</a>
+    </div>
+    <nav class="pager" aria-label="More case studies">
+      <a class="prev" href="token-scan.html"><small>&larr; Previous</small>Finding where the AI budget went</a>
+      <a class="next" href="mcp-servers.html"><small>Next &rarr;</small>Giving a local model tools it can use</a>
+    </nav>
+  </div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Every figure on this page comes from the project's own README.</span>
+    <span>&copy; Ryan Wisth</span>
+  </div>
+</footer>
+<script src="site.js"></script>
+</body>
+</html>

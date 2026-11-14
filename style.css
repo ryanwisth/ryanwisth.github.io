@@ -455,9 +455,9 @@ footer.site a { color: var(--muted); }
   .cards, .principles { grid-template-columns: 1fr; }
   .card .stat { aspect-ratio: auto; min-height: 120px; }
   .facts { grid-template-columns: 1fr; gap: 10px; }
-  .fact { display: flex; align-items: baseline; gap: 14px; }
+  .fact { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
   .fact b { font-size: 24px; flex: 0 0 auto; min-width: 5.2ch; }
-  .fact span { margin-top: 0; }
+  .fact span { margin-top: 0; flex: 1 1 15ch; }
   .lede { font-size: 18px; }
   .case-head { padding-top: 32px; }
   .figure img.narrow { max-width: 720px; margin: 0 auto; }

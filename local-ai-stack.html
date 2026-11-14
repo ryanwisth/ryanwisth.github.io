@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A private AI assistant on one laptop | Ryan Wisth</title>
+<meta name="description" content="Case study: a documented reference setup for a private AI assistant running entirely on one Apple-silicon Mac, with a local 27B model, tools, voice, document parsing and web search, kept up by a supervisor.">
+<meta property="og:title" content="A private AI assistant on one laptop | Ryan Wisth">
+<meta property="og:description" content="Case study: a documented reference setup for a private AI assistant running entirely on one Apple-silicon Mac, with a local 27B model, tools, voice, document parsing and web search, kept up by a supervisor.">
+<meta property="og:image" content="https://ryanwisth.github.io/img/card.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#f7f7f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1015" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%234338ca'/%3E%3Cstop offset='1' stop-color='%230e7490'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Ctext x='16' y='21' font-family='Arial' font-weight='700' font-size='13' fill='white' text-anchor='middle'%3ERW%3C/text%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="case">
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="mark">RW</span>Ryan Wisth</a>
+    <nav class="topnav">
+      <a href="index.html#work">Case studies</a>
+      <a class="hide-sm" href="index.html#how">How I work</a>
+      <a href="https://github.com/ryanwisth">GitHub</a>
+      <button class="theme-toggle" type="button" hidden aria-label="Switch between light and dark"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="prose case-head">
+    <a class="back" href="index.html#work">&larr; All case studies</a>
+    <p class="kicker">Many parts made to work on one machine</p>
+    <h1 style="view-transition-name: t-local-ai-stack">A private AI assistant on one laptop</h1>
+    <p class="lede">A documented reference setup for running a private AI assistant entirely on one Apple-silicon Mac: a local 27B language model, a chat UI, about two dozen tools, voice, document parsing and web search, kept running by a small supervisor.</p>
+
+  <div class="facts">
+      <div class="fact"><b>13.7 &rarr; 37.5</b><span>tokens per second: plain decoding against the top of the measured range with multi-token prediction</span></div>
+      <div class="fact"><b>26</b><span>tool servers mounted in the running setup, reached through one bridge that requires a key</span></div>
+      <div class="fact"><b>60 s</b><span>between supervisor runs; the launcher starts only what is down</span></div>
+    </div>
+  </div>
+
+  <figure class="figure">
+    <ol class="flow c3">
+      <li><b>Browser to chat UI</b><span>the message, plus the persona prompt, retrieved document chunks and tool schemas</span></li>
+      <li class="key"><b>Local model server</b><span>a 27B model answers through an OpenAI-compatible API</span></li>
+      <li><b>Tool call</b><span>the chat UI calls the bridge with a bearer token</span></li>
+      <li><b>Bridge to tool servers</b><span>forwarded over stdio to the matching MCP server</span></li>
+      <li><b>Result returns</b><span>and the loop repeats until the model answers</span></li>
+      <li class="key"><b>Supervisor</b><span>at login and every 60 seconds, starts whichever service is down</span></li>
+    </ol>
+    <figcaption>One chat turn with a tool call, simplified from the README diagram, plus the supervisor that keeps every service up. Every service listens only on 127.0.0.1.</figcaption>
+  </figure>
+  <figure class="figure">
+    <div class="chart-grid">
+    <div class="chart-card">
+      <h3>Model speed</h3>
+      <p class="sub">Tokens per second for the 27B model on the laptop, plain against multi-token prediction at draft depth 3.</p>
+      <div class="bars" role="img" aria-label="Bar chart. Plain decoding 13.7 tokens per second, multi-token prediction 32 to 37.5.">
+        <div class="row" title="Plain: 13.7"><span class="lab">Plain</span><span class="track"><i class="" style="--v:32.9%"></i></span><span class="val">13.7</span></div>
+        <div class="row" title="Multi-token prediction: 32 to 37.5"><span class="lab">Multi-token prediction</span><span class="track"><i class="cut" style="--v:76.8%"></i><i class="range" style="--v:90%;--from:76.8%"></i></span><span class="val">32 to 37.5</span></div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <h3>Idle against real use</h3>
+      <p class="sub">The speed audit's largest real-world slowdown was other heavy work on the same machine, not configuration.</p>
+      <div class="bars" role="img" aria-label="Bar chart. 37.5 tokens per second idle, a median of 23.4 in use.">
+        <div class="row" title="Idle: 37.5"><span class="lab">Idle</span><span class="track"><i class="" style="--v:90%"></i></span><span class="val">37.5</span></div>
+        <div class="row" title="In use: 23.4"><span class="lab">In use<small>median</small></span><span class="track"><i class="" style="--v:56.2%"></i></span><span class="val">23.4</span></div>
+      </div>
+    </div>
+    </div>
+  </figure>
+
+  <div class="prose">
+    <h2>The problem</h2>
+    <p>Cloud assistants send every prompt, file and tool call off the machine. This stack keeps all of it on one MacBook Pro with 64 GB of memory: the model, the chat history, the tools and the search engine run locally and listen only on 127.0.0.1.</p>
+    <p>The hard part is not installing the pieces but making them work together on one memory-limited machine: tools the model can actually call, services that survive crashes and logouts, and a model server fast enough for daily use.</p>
+
+    <h2>What I directed</h2>
+    <p>I set the goals, the constraints (local only, loopback only, survives reboots) and the acceptance checks, and verified results on the machine. The agents wrote most of the scripts and glue code and did the log forensics under that direction.</p>
+    <ul>
+      <li><b>Loopback only, verified by reading sockets.</b> Every service binds to 127.0.0.1 and the tool bridge requires a key. One service was once found listening on all interfaces after a hardening pass believed it fixed, so bindings are checked by listing open sockets, not by reading scripts.</li>
+      <li><b>A supervisor, because shells die.</b> Services first started from a shell died when that shell exited. A system supervisor now runs an idempotent launcher at login and every 60 seconds: it checks each port, starts only what is down, and enforces start order.</li>
+      <li><b>Narrow what the tools can touch.</b> The filesystem server sees four folders instead of the home directory, the email server's destructive functions are filtered out, and the shell and browser tools are off by default and enabled per chat.</li>
+      <li><b>Read the logs to find the stall.</b> The model server's logs showed that long agent chats in the web UI (about 190k tokens) re-read about 188k tokens before every tool step, 21 to 25 minutes each. The terminal coding agent identifies its session the way the server requires to keep the cache live, so long agent work moved there.</li>
+      <li><b>Make a silent failure loud.</b> The model server's default guard silently dropped a streamed tool call over 2,048 tokens, which made an agent "write" files that never appeared. The launcher raises the guard to the full context window.</li>
+    </ul>
+
+    <h2>How the results were verified</h2>
+    <ul>
+      <li>Speed was measured on the machine: 13.7 tokens per second plain against 32 to 37.5 at draft depth 3. The raw benchmark results are in the repository.</li>
+      <li>The speed audit compared idle with real use: a median of 23.4 tokens per second in use against 37.5 idle.</li>
+      <li>Memory was measured too: the model peaks around 42 GB in benchmarks and one large turn reached 62.6 GB.</li>
+      <li>Network bindings are checked by listing open sockets, which is how the one exposed service was found.</li>
+    </ul>
+
+    <h2>The outcome</h2>
+    <p>Built in August 2026 and in regular use through September 2026. The repository records how it was done, the scripts that run it, and what went wrong along the way.</p>
+    <p>It is a reference architecture and runbook, not a one-click installer. Related tool servers are published separately and have their own case study: <a href="mcp-servers.html">Giving a local model tools it can use</a>.</p>
+
+    <h2>Honest limits</h2>
+    <ul>
+      <li>It is a snapshot of one setup, not a maintained product, and has not been tested on any other machine.</li>
+      <li>The scheduler is serial: the web UI, the coding agent and any script queue behind each other.</li>
+      <li>Memory pressure is chronic at 64 GB with the full tool roster, and the server's on-disk session store is uncapped by default and grew past 100 GB.</li>
+      <li>Long agent chats in the web UI still stall near 190k tokens; the server-side fixes were not applied.</li>
+      <li>The shell tool has no allow or deny list, only timeout and output caps; it is opt-in per chat.</li>
+      <li>The eval harness was only smoke-tested on one item, and two optional parts were staged but never activated.</li>
+      <li>Personas, prompts and knowledge bases are not included.</li>
+    </ul>
+
+    <div class="repo-card">
+      <p><b>ryanwisth/local-ai-stack</b>The code, with its real status and limits.</p>
+      <a class="btn primary" href="https://github.com/ryanwisth/local-ai-stack">View the repository &rarr;</a>
+    </div>
+    <nav class="pager" aria-label="More case studies">
+      <a class="prev" href="mcp-servers.html"><small>&larr; Previous</small>Giving a local model tools it can use</a>
+      <a class="next" href="paper-grader.html"><small>Next &rarr;</small>AI feedback written in ink on an e-ink tablet</a>
+    </nav>
+  </div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Every figure on this page comes from the project's own README.</span>
+    <span>&copy; Ryan Wisth</span>
+  </div>
+</footer>
+<script src="site.js"></script>
+</body>
+</html>

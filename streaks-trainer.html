@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A practice app where one miss resets the streak | Ryan Wisth</title>
+<meta name="description" content="Case study: a small local web app for streak-based mastery practice on any multiple-choice subject, where a single miss resets the streak and a written note is required before the next question.">
+<meta property="og:title" content="A practice app where one miss resets the streak | Ryan Wisth">
+<meta property="og:description" content="Case study: a small local web app for streak-based mastery practice on any multiple-choice subject, where a single miss resets the streak and a written note is required before the next question.">
+<meta property="og:image" content="https://ryanwisth.github.io/img/streaks-practice.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#f7f7f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1015" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%234338ca'/%3E%3Cstop offset='1' stop-color='%230e7490'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Ctext x='16' y='21' font-family='Arial' font-weight='700' font-size='13' fill='white' text-anchor='middle'%3ERW%3C/text%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="case">
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="mark">RW</span>Ryan Wisth</a>
+    <nav class="topnav">
+      <a href="index.html#work">Case studies</a>
+      <a class="hide-sm" href="index.html#how">How I work</a>
+      <a href="https://github.com/ryanwisth">GitHub</a>
+      <button class="theme-toggle" type="button" hidden aria-label="Switch between light and dark"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="prose case-head">
+    <a class="back" href="index.html#work">&larr; All case studies</a>
+    <p class="kicker">A method the product enforces</p>
+    <h1 style="view-transition-name: t-streaks-trainer">A practice app where one miss resets the streak</h1>
+    <p class="lede">A small local web app for streak-based mastery practice on any multiple-choice subject: one topic at a time, easy to hard, where a single miss resets the streak.</p>
+
+  <div class="facts">
+      <div class="fact"><b>10 &middot; 10 &middot; 5</b><span>default streak targets for the easy, medium and hard rungs</span></div>
+      <div class="fact"><b>1 miss</b><span>or one right answer marked as a guess, sends the count back to zero</span></div>
+      <div class="fact"><b>66</b><span>original demo questions, every key checked by code</span></div>
+    </div>
+  </div>
+
+  <figure class="figure">
+    <div class="shot"><div class="bar"><i></i><i></i><i></i><em>127.0.0.1, practice view</em></div><img src="img/streaks-practice.jpg" alt="The practice view after a right answer: the ladder, the streak counter with its dots, the question, and the line Right. Streak 4/5." width="1600" height="1216" loading="lazy"></div>
+    <figcaption>The practice view on the repository's demo bank, on a ladder with custom targets.</figcaption>
+  </figure>
+  <figure class="figure">
+    <ol class="flow c3">
+      <li><b>Create a ladder</b><span>a section or one topic, with streak targets</span></li>
+      <li><b>A fresh question</b><span>at the current rung, never one served before</span></li>
+      <li><b>Right, not guessed</b><span>streak plus one</span></li>
+      <li class="key"><b>Wrong, or guessed</b><span>the streak resets to zero</span></li>
+      <li class="key"><b>Break note</b><span>what broke it and what to do differently, before the next question</span></li>
+      <li><b>Rung cleared</b><span>easy, then medium, then hard, then optional speed stages</span></li>
+    </ol>
+    <figcaption>Simplified from the README diagram. After a break note the ladder serves the next fresh question.</figcaption>
+  </figure>
+  <figure class="figure">
+    <div class="shot"><div class="bar"><i></i><i></i><i></i><em>127.0.0.1, after a miss</em></div><img src="img/streaks-break-note.jpg" alt="The screen after a miss: The streak broke, a prompt asking what broke it and what to do differently, a kind-of-break menu, a text box and a Save and continue button." width="1600" height="872" loading="lazy"></div>
+    <figcaption>After a miss on the demo bank. The server will not serve the next question until the break has a written note.</figcaption>
+  </figure>
+
+  <div class="prose">
+    <h2>The problem</h2>
+    <p>Percent-correct hides weak spots: 80% on a topic can mean you know it, or that you guess well. A streak is a stricter test. You only move from easy to medium to hard questions after getting a set number in a row, and any miss, or any right answer you guessed, sends the count back to zero.</p>
+    <p>The useful part is what happens at each break: you write down what went wrong and what you will do differently before the next question. This app enforces that loop so it cannot be skipped, and keeps the record so the patterns show.</p>
+
+    <h2>What I directed</h2>
+    <p>I set the goals, the rules of the method to enforce, and the acceptance checks, and verified the results by using the app. The agents wrote most of the code.</p>
+    <ul>
+      <li><b>The server owns the rules.</b> The browser never receives the answer key before answering. Streaks, clears and the break-note gate are computed on the server, so the screen cannot drift from the method.</li>
+      <li><b>A guess is not mastery.</b> A right answer marked "I guessed" resets the counter like a miss.</li>
+      <li><b>No repeats.</b> A question is served at most once, ever, so a streak cannot come from memory.</li>
+      <li><b>History is never rewritten.</b> Every answer is a row, and the current streak is derived by counting back from the latest answer. Voiding a bad question marks the attempt instead of deleting it, and the streak is recounted.</li>
+      <li><b>Any subject.</b> Sections and topics come from one data file; nothing about a subject is built into the code. Questions import from CSV or JSON, validated, with a dry run.</li>
+    </ul>
+
+    <h2>How the results were verified</h2>
+    <ul>
+      <li>The core loop (ladders, break notes, clears, speed stages, tracker, importer) was exercised end to end against the demo bank through the app's JSON API.</li>
+      <li>The demo questions are generated from templates, and the generator checks every key by code.</li>
+      <li>I verified the results by using the app.</li>
+    </ul>
+
+    <h2>The outcome</h2>
+    <p>Originally built for my own practice. The public copy is a generalized version with the subject-specific parts and the original question bank removed.</p>
+    <p>It is one server file and one page, standard library only: there is nothing to install and nothing leaves the machine. After the hard rung, optional speed stages clear on a rolling average time per question: 4:00, then 3:00, 2:30 and 2:00.</p>
+
+    <h2>Honest limits</h2>
+    <ul>
+      <li>There are no automated tests.</li>
+      <li>Single user, no accounts.</li>
+      <li>The demo bank is small: too few questions for a 10 &middot; 10 &middot; 5 ladder, so a demo needs custom targets. The sample questions are simple by design.</li>
+      <li>The streak method itself is not mine. It is credited in the repository, and the project is not affiliated with its author.</li>
+    </ul>
+
+    <div class="repo-card">
+      <p><b>ryanwisth/streaks-trainer</b>The code, with its real status and limits.</p>
+      <a class="btn primary" href="https://github.com/ryanwisth/streaks-trainer">View the repository &rarr;</a>
+    </div>
+    <nav class="pager" aria-label="More case studies">
+      <a class="prev" href="pinball-study.html"><small>&larr; Previous</small>A study built so it could fail</a>
+      <a class="next" href="safari-dark-mode.html"><small>Next &rarr;</small>A Safari dark mode with fitted themes</a>
+    </nav>
+  </div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Every figure on this page comes from the project's own README.</span>
+    <span>&copy; Ryan Wisth</span>
+  </div>
+</footer>
+<script src="site.js"></script>
+</body>
+</html>

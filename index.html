@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ryan Wisth: AI project case studies</title>
-<meta name="description" content="Nine short case studies of AI tools built by directing coding agents: the problem, what was directed, how results were verified, and the outcome.">
+<meta name="description" content="Fifteen short case studies of AI tools built by directing coding agents: the problem, what was directed, how results were verified, and the outcome.">
 <meta property="og:title" content="Ryan Wisth: AI project case studies">
 <meta property="og:description" content="Working AI tools built by directing coding agents, with the checks that proved them.">
 <meta property="og:image" content="https://ryanwisth.github.io/img/card.jpg">
@@ -39,7 +39,7 @@
           <li class="on">Open to AI product roles</li>
           <li class="on">Technical project management</li>
           <li>14 public projects</li>
-          <li>9 case studies</li>
+          <li>15 case studies</li>
         </ul>
         <div class="ctas">
           <a class="btn primary" href="#work">Read the case studies &darr;</a>
@@ -89,21 +89,12 @@
             <span class="more">Read case study &rarr;</span>
           </div>
         </a>
-        <a class="card h-amber" href="paper-grader.html">
-          <div class="stat"><b>24 pages</b><span>graded in one batch on the device</span></div>
+        <a class="card h-green" href="evidence-pipeline.html">
+          <div class="stat"><b>12 of 16</b><span>claims kept by the free code gate in the offline demo; the other 4 dropped before the skeptic pass</span></div>
           <div class="body">
-            <span class="tag">AI inside a physical device</span>
-            <h3 style="view-transition-name: t-paper-grader">AI feedback written in ink on an e-ink tablet</h3>
-            <p>A Grade button has a model review handwritten work and write feedback onto the page, never over the student's ink.</p>
-            <span class="more">Read case study &rarr;</span>
-          </div>
-        </a>
-        <a class="card h-rose" href="pinball-study.html">
-          <div class="stat"><b>9 of 9</b><span>designer rules hashed as hypotheses before any result; none confirmed</span></div>
-          <div class="body">
-            <span class="tag">Research honest enough to fail</span>
-            <h3 style="view-transition-name: t-pinball-study">A study built so it could fail</h3>
-            <p>Hypotheses written and hashed before any result; none held, and the write-up says so.</p>
+            <span class="tag">Research that has to cite its records</span>
+            <h3 style="view-transition-name: t-evidence-pipeline">A family tree grown only from records</h3>
+            <p>Agents propose, code gates, a skeptic agent tries to refute, and accepted facts go into an append-only ledger with their quote.</p>
             <span class="more">Read case study &rarr;</span>
           </div>
         </a>
@@ -116,6 +107,15 @@
             <span class="more">Read case study &rarr;</span>
           </div>
         </a>
+        <a class="card h-amber" href="token-guard.html">
+          <div class="stat"><b>39%</b><span>of one week's cache reads happened above the soft context line, mostly in unattended turns</span></div>
+          <div class="body">
+            <span class="tag">Rules in code, not in the prompt</span>
+            <h3 style="view-transition-name: t-token-guard">Spending rules an AI agent cannot forget</h3>
+            <p>Four hooks deny the wasteful tool call, and the denial message says what to do instead.</p>
+            <span class="more">Read case study &rarr;</span>
+          </div>
+        </a>
         <a class="card h-sky" href="token-scan.html">
           <div class="stat"><b>482 of 662</b><span>spawned agents were still running as the heavy default type</span></div>
           <div class="body">
@@ -125,12 +125,66 @@
             <span class="more">Read case study &rarr;</span>
           </div>
         </a>
+        <a class="card h-rose" href="agent-runner.html">
+          <div class="stat"><b>$20</b><span>default budget per pass; the billing path is checked before any work starts</span></div>
+          <div class="body">
+            <span class="tag">Guardrails for unattended AI work</span>
+            <h3 style="view-transition-name: t-agent-runner">Long agent jobs with the bill checked first</h3>
+            <p>A runner for written briefs that checks which account pays, caps each pass and stops on the first failure.</p>
+            <span class="more">Read case study &rarr;</span>
+          </div>
+        </a>
+        <a class="card h-indigo" href="mcp-servers.html">
+          <div class="stat"><b>90 tools</b><span>and about 100k tokens of schema in one hosted server built for cloud models; each server here lists 15 or fewer</span></div>
+          <div class="body">
+            <span class="tag">Tools shaped for the model that reads them</span>
+            <h3 style="view-transition-name: t-mcp-servers">Giving a local model tools it can use</h3>
+            <p>Six small tool servers with short tool lists, capped replies and arithmetic done in code.</p>
+            <span class="more">Read case study &rarr;</span>
+          </div>
+        </a>
+        <a class="card h-teal" href="local-ai-stack.html">
+          <div class="stat"><b>13.7 &rarr; 37.5</b><span>tokens per second on one laptop, plain decoding against the top of the range with multi-token prediction</span></div>
+          <div class="body">
+            <span class="tag">Many parts made to work on one machine</span>
+            <h3 style="view-transition-name: t-local-ai-stack">A private AI assistant on one laptop</h3>
+            <p>A local 27B model, a chat UI, about two dozen tools, voice and search, all on loopback and kept up by a supervisor.</p>
+            <span class="more">Read case study &rarr;</span>
+          </div>
+        </a>
+        <a class="card h-amber" href="paper-grader.html">
+          <div class="stat"><b>24 pages</b><span>graded in one batch on the device</span></div>
+          <div class="body">
+            <span class="tag">AI inside a physical device</span>
+            <h3 style="view-transition-name: t-paper-grader">AI feedback written in ink on an e-ink tablet</h3>
+            <p>A Grade button has a model review handwritten work and write feedback onto the page, never over the student's ink.</p>
+            <span class="more">Read case study &rarr;</span>
+          </div>
+        </a>
         <a class="card h-green" href="display-research.html">
           <div class="stat"><b>314</b><span>waveform files decoded, all passing their checksums</span></div>
           <div class="body">
             <span class="tag">Hardware research, safe first</span>
             <h3 style="view-transition-name: t-display-research">Decoding a colour e-ink display, safely</h3>
             <p>Static analysis, then read-only capture, then the first write: our own frames on the panel.</p>
+            <span class="more">Read case study &rarr;</span>
+          </div>
+        </a>
+        <a class="card h-rose" href="pinball-study.html">
+          <div class="stat"><b>9 of 9</b><span>designer rules hashed as hypotheses before any result; none confirmed</span></div>
+          <div class="body">
+            <span class="tag">Research honest enough to fail</span>
+            <h3 style="view-transition-name: t-pinball-study">A study built so it could fail</h3>
+            <p>Hypotheses written and hashed before any result; none held, and the write-up says so.</p>
+            <span class="more">Read case study &rarr;</span>
+          </div>
+        </a>
+        <a class="card" href="streaks-trainer.html">
+          <img class="thumb" src="img/streaks-practice.jpg" alt="The practice view of the streak trainer: a streak counter with dots above a multiple-choice question" loading="lazy" width="1600" height="1216">
+          <div class="body">
+            <span class="tag">A method the product enforces</span>
+            <h3 style="view-transition-name: t-streaks-trainer">A practice app where one miss resets the streak</h3>
+            <p>Easy to hard, one miss back to zero, and a written note required before the next question.</p>
             <span class="more">Read case study &rarr;</span>
           </div>
         </a>

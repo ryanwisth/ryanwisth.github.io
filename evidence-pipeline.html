@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A family tree grown only from records | Ryan Wisth</title>
+<meta name="description" content="Case study: a research pipeline where AI agents propose additions to a family tree, code checks what code can check, a second model tries to refute each claim, and accepted facts go into an append-only ledger.">
+<meta property="og:title" content="A family tree grown only from records | Ryan Wisth">
+<meta property="og:description" content="Case study: a research pipeline where AI agents propose additions to a family tree, code checks what code can check, a second model tries to refute each claim, and accepted facts go into an append-only ledger.">
+<meta property="og:image" content="https://ryanwisth.github.io/img/card.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#f7f7f5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1015" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%234338ca'/%3E%3Cstop offset='1' stop-color='%230e7490'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Ctext x='16' y='21' font-family='Arial' font-weight='700' font-size='13' fill='white' text-anchor='middle'%3ERW%3C/text%3E%3C/svg%3E">
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="case">
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="index.html"><span class="mark">RW</span>Ryan Wisth</a>
+    <nav class="topnav">
+      <a href="index.html#work">Case studies</a>
+      <a class="hide-sm" href="index.html#how">How I work</a>
+      <a href="https://github.com/ryanwisth">GitHub</a>
+      <button class="theme-toggle" type="button" hidden aria-label="Switch between light and dark"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="prose case-head">
+    <a class="back" href="index.html#work">&larr; All case studies</a>
+    <p class="kicker">Research that has to cite its records</p>
+    <h1 style="view-transition-name: t-evidence-pipeline">A family tree grown only from records</h1>
+    <p class="lede">A research pipeline where AI agents propose additions to a family tree, free Python checks what code can check, a second model tries to refute each claim, and accepted facts go into an append-only ledger with the quote they rest on.</p>
+
+  <div class="facts">
+      <div class="fact"><b>31</b><span>claims from a fast first pass rejected by the skeptic agents, on the private tree</span></div>
+      <div class="fact"><b>3 of 147</b><span>claims from a careful pass still rejected</span></div>
+      <div class="fact"><b>12 of 16</b><span>claims kept by the free code gate in the offline demo; 4 dropped</span></div>
+    </div>
+  </div>
+
+  <figure class="figure">
+    <ol class="flow c3">
+      <li><b>Messy GEDCOM export</b><span>a genealogy file; duplicate pairs scored on names, dates, places and relatives</span></li>
+      <li><b>Lossless merge</b><span>with hard blockers against wrong merges</span></li>
+      <li><b>Verify</b><span>proves every person and fact survived</span></li>
+      <li><b>Targets in Python</b><span>dead-end ancestors, compact dossiers, lanes by place</span></li>
+      <li><b>Finder agents</b><span>proposals only</span></li>
+      <li class="key"><b>Free gate</b><span>rule checks, and every quote checked against the saved page</span></li>
+      <li class="key"><b>Skeptic agents</b><span>refute, or reject when it cannot be confirmed</span></li>
+      <li><b>Append-only ledger</b><span>each item stamped with its round and entry id</span></li>
+      <li><b>New GEDCOM, lint and report</b><span>regenerated from base plus ledger, then checked</span></li>
+    </ol>
+    <figcaption>The whole pipeline, simplified from the README diagram. After step 9 the next round starts again at step 4.</figcaption>
+  </figure>
+  <figure class="figure">
+    <div class="chart-card">
+      <h3>The free gate in the offline demo</h3>
+      <p class="sub">Claims in the demo journal, sorted by code before any skeptic review. Dropped: a child already in the tree, its parent link, a living person, and a fact citing only an online tree.</p>
+      <div class="bars" role="img" aria-label="Bar chart. 16 claims in the demo journal: 12 kept by the gate, 4 dropped.">
+        <div class="row" title="In the journal: 16"><span class="lab">In the journal</span><span class="track"><i class="" style="--v:90%"></i></span><span class="val">16</span></div>
+        <div class="row" title="Kept by the gate: 12"><span class="lab">Kept by the gate</span><span class="track"><i class="" style="--v:67.5%"></i></span><span class="val">12</span></div>
+        <div class="row" title="Dropped: 4"><span class="lab">Dropped</span><span class="track"><i class="" style="--v:22.5%"></i></span><span class="val">4</span></div>
+      </div>
+    </div>
+  </figure>
+
+  <div class="prose">
+    <h2>The problem</h2>
+    <p>Online family trees copy each other. A "source" on a big genealogy site is often just another user's tree, so two trees agreeing is not evidence; it is often the same mistake copied twice.</p>
+    <p>This pipeline extends a tree the other way round. Every new person, parent link or date must cite a primary record (a register entry, a census line, a headstone), quote it, tie it to the tree person by at least two identifiers, and survive an adversarial check. It came out of cleaning and then researching a private tree with tens of thousands of records.</p>
+
+    <h2>What I directed</h2>
+    <p>I set the goals, the evidence rules and the acceptance checks, and verified the results. The agents wrote most of the code.</p>
+    <ul>
+      <li><b>Agents propose; code checks what code can check.</b> Agent turns are the cost. On the private tree, round 2's finders averaged 78 turns. By round 3, dossiers, the gate and short review sheets had moved work into Python, and the round ran at about 57k tokens per target.</li>
+      <li><b>A second model tries to refute.</b> The skeptic's stance is "when you cannot confirm, reject".</li>
+      <li><b>A free gate between the two agent waves.</b> It drops claims that cite no record, have fewer than two identifiers, repeat a ledger fact, duplicate an existing child, or add a living person.</li>
+      <li><b>Quote matching is a window, not a phrase.</b> Record pages lay values out as a label and a value, so a faithful quote is rarely one unbroken string. The gate folds case, accents and punctuation, ignores field labels, and looks for 80% of the distinctive words inside one window. A miss flags the claim for the skeptic rather than dropping it.</li>
+      <li><b>Nothing is deleted.</b> Disproved parent links are recorded and cut in later counts, corrections become notes, and the base file is never edited.</li>
+      <li><b>Offline by default.</b> The gate reads saved page text. Fetching is opt-in, with a fixed delay and a request cap.</li>
+    </ul>
+
+    <h2>How the results were verified</h2>
+    <ul>
+      <li>The public copy runs end to end offline on an invented 420-person family with one command. That demo is the test that the scrubbed copy still runs.</li>
+      <li>In that run the duplicate scan found the 3 injected duplicates, the merge took 423 individuals to 420, and the verifier checked the 3 merged individuals: 0 lost a fact.</li>
+      <li>The gate kept 12 of the journal's 16 claims and dropped 4.</li>
+      <li>The new GEDCOM is regenerated from the base file plus the ledger and checked: every base line survives and every pointer resolves.</li>
+      <li>The date lint's first hit in the demo is real: the invented baptism is dated before the sample tree's birth date for that person, which is the kind of lead the lint exists to raise.</li>
+    </ul>
+
+    <h2>The outcome</h2>
+    <p>The pipeline ran three research rounds on a private tree in September 2026, and the cleanup half ran on its full export. In round 1 the skeptics rejected 31 claims from a fast first pass and 3 of 147 from a careful one.</p>
+    <p>The public repository is a scrubbed copy: paths, names and tree-specific tables were replaced by command-line flags and a config file, and every person, place and record in its sample and demo data is invented.</p>
+
+    <h2>Honest limits</h2>
+    <ul>
+      <li>The round figures (78 turns, about 57k tokens per target, 31 and 3 of 147) come from the project's notes on the private tree. The demo does not reproduce them.</li>
+      <li>The agent scripts need Claude Code's workflow runtime and were not re-run after the scrub; they pass a syntax check only. In the demo a committed fixture stands in for the skeptic step.</li>
+      <li>The demo's duplicate cases are all clear ones, so the review and agent-judgment path of the cleanup is not exercised by the demo.</li>
+      <li>There is no record-pulling code in the repository; the saved page text has to be supplied.</li>
+    </ul>
+
+    <div class="repo-card">
+      <p><b>ryanwisth/genealogy-evidence-pipeline</b>The code, with its real status and limits.</p>
+      <a class="btn primary" href="https://github.com/ryanwisth/genealogy-evidence-pipeline">View the repository &rarr;</a>
+    </div>
+    <nav class="pager" aria-label="More case studies">
+      <a class="prev" href="practice-engine.html"><small>&larr; Previous</small>A practice app built around the mistake</a>
+      <a class="next" href="claim-ledger.html"><small>Next &rarr;</small>Turning a slipping process into enforced rules</a>
+    </nav>
+  </div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>Every figure on this page comes from the project's own README.</span>
+    <span>&copy; Ryan Wisth</span>
+  </div>
+</footer>
+<script src="site.js"></script>
+</body>
+</html>
