@@ -599,6 +599,10 @@ video { max-width: 100%; height: auto; }
 .reel-item .cap { font-size: 14px; color: var(--muted); line-height: 1.45; }
 .reel-item .cap b { display: block; color: var(--text); font-size: 15.5px; letter-spacing: -.005em; margin-bottom: 2px; }
 .reel-item:hover .cap b { color: var(--accent); }
+.film-section { padding-top: 12px; }
+.film { max-width: 960px; margin: 0 auto; }
+.film .shot { display: block; }
+.film video { background: #f7f7f5; }
 .reel-section { padding-top: 12px; }
 @media (max-width: 960px) { .reel { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 480px) { .reel { grid-template-columns: 1fr; } }
