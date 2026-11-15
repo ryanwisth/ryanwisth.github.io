@@ -1377,4 +1377,8 @@ footer.site { margin-top: 84px; border-top: 3px dashed var(--y-pink); color: var
 /* the sheet tag keeps clear of the top bar now that the home hero starts higher */
 .lead-hero .sheet-tag { top: 0; }
 @media (max-width: 620px) { .lead-hero .sheet-tag { top: -30px; } }
+/* Claude Phone: a portrait phone capture, as the case header and as a home lead card that shows the top of the phone */
+.sum-vis .shot.phone { width: 100%; max-width: 250px; margin-inline: auto; }
+.card .thumb-wrap.phone { aspect-ratio: 3 / 2; overflow: hidden; justify-content: center; }
+.card .thumb-wrap.phone .thumb { flex: none; align-self: flex-start; width: min(58%, 280px); height: auto; aspect-ratio: auto; object-fit: initial; border-radius: 10px 10px 0 0; }
 /* === end recruiter-read structure === */

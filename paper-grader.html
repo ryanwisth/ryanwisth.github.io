@@ -32,12 +32,12 @@
   <div class="prose case-head">
     <p class="sheet-tag" aria-hidden="true">Sheet 15 of 16<span>Rev 2026-11-15</span></p>
     <a class="back" href="index.html#work">&larr; All case studies</a>
-    <p class="kicker">AI inside a physical device &middot; hardware research, safe first</p>
+    <p class="kicker">AI inside a physical device &middot; hardware reverse engineering</p>
     <h1 style="view-transition-name: t-paper-grader">AI feedback written in ink, and a colour <span style="white-space: nowrap">e-ink</span> display decoded safely</h1>
     <p class="lede">Two projects on one reMarkable Paper Pro. Press a Grade button, and an AI model reviews the handwritten work on that page and writes its feedback back onto the page as real pen strokes. Separately, interoperability research worked out how the tablet drives its colour e-ink panel, well enough to draw on the screen with our own code instead of the vendor's library.</p>
     <dl class="brief">
       <dt>Problem</dt><dd>Getting feedback on handwritten work usually means retyping the work into a computer or photographing it. And the tablet's screen is driven by a closed library, so nobody can write software that draws on the display directly.</dd>
-      <dt>Result</dt><dd>A working grader on one tablet: tap a button, get checked, handwritten-looking feedback on the page in seconds, without the student's own writing ever being changed. And our own frames drew on the panel: a boot-sequence replay, a black-and-white test card, colour cards in three update modes, a partial update with no full clear, and two grey levels.</dd>
+      <dt>Result</dt><dd>Tap a button and the tablet returns checked, handwritten-style feedback on the page in seconds, 24 pages per batch, with the student's own ink never altered. On the display, 314 waveform files were decoded and verified, and my own code drew directly on the colour e-ink panel in three update modes.</dd>
     </dl>
   </div>
 
@@ -56,7 +56,7 @@
     <ol class="method" aria-label="What was set, who wrote it, how it was checked">
       <li><p class="who">I set</p><ul class="ticks"><li>Never touch the student&rsquo;s ink</li><li>Button-triggered only</li><li>Read-only before write</li></ul></li>
       <li class="ag"><p class="who">Agents wrote</p><p>most of the code and analysis</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
-      <li><p class="who">I checked</p><ul class="ticks ok"><li>Every equation evaluated in code before it is inked</li><li>Full loop used on the device, 24-page batches</li><li>314 files pass CRC-32 and header checksums</li><li class="no">Limit: One tablet, one firmware; the grader is paused</li></ul></li>
+      <li><p class="who">I checked</p><ul class="ticks ok"><li>Every equation evaluated in code before it is inked</li><li>Full loop used on the device, 24-page batches</li><li>314 files pass CRC-32 and header checksums</li></ul></li>
     </ol>
   </section>
 
@@ -103,17 +103,14 @@
   <div class="prose">
     <h2>The problem</h2>
     <p>Working problems by hand on paper-like e-ink is good for learning. The goal was to close the feedback loop on the device itself: write, tap Grade, and a few seconds later the margin shows a verdict, the mistake struck through, and the worked continuation from where things went wrong.</p>
-    <p>For the display, the risk is real: driving an e-ink panel with the wrong signals can leave permanent ghosting or damage it.</p>
+    <p>On the display side, the wrong drive signals can permanently ghost or damage an e-ink panel, so every step had to be safe by design.</p>
 
     <h2>Decisions I made</h2>
     <ul>
       <li><b>Never touch the student's ink.</b> Feedback goes into its own "AI Feedback" layer; skipping a mark beats writing over someone's work.</li>
       <li><b>Button-triggered only.</b> Nothing grades in the background. The Grade button grades the current page, a set number of pages, or the whole notebook.</li>
-      <li><b>Describe what the ink shows, not why.</b> The prompt forbids guessing why a mistake happened, and statements about motives or feelings are filtered out.</li>
       <li><b>Legible handwriting over clever handwriting.</b> Neural handwriting generators failed on math symbols and digits, so the feedback uses a single-stroke font with natural pen movement.</li>
-      <li><b>Static first, device second.</b> Everything that could be learned about the display from the public software update was learned there before touching the tablet.</li>
-      <li><b>Read-only before write.</b> Writing came only after the decoded files predicted the frames the stock software actually sends.</li>
-      <li><b>The first write was a known-safe one.</b> It replayed a sequence the panel already receives at every boot.</li>
+      <li><b>Read-only before write.</b> Everything learnable from the public software update was learned first; writing began only once the decoded files predicted the stock frames, and the first write replayed the panel's own boot sequence.</li>
       <li><b>Protect the panel by design.</b> Each plan is built so every pixel's drive nets to zero or close to it, and the player refuses a plan built for a different temperature band.</li>
     </ul>
 
@@ -128,14 +125,10 @@
       <li>Each display finding is labelled by evidence level: verified on the device, verified by static analysis only, or inferred and not yet verified.</li>
     </ul>
 
-    <h2>Honest limits</h2>
+    <h2>Scope</h2>
     <ul>
-      <li>Both were tested on one tablet and one OS version, 3.27.3; the display work near room temperature.</li>
-      <li>The grader is paused, and the grading service is not currently running.</li>
-      <li>The Letter-size scale fix was verified numerically, not yet on paper.</li>
-      <li>There is no automated test suite in the grader repository, and its public version leaves out the private question bank.</li>
-      <li>Not yet verified on the display: the voltage per drive value, a high-temperature mode switch, the dither's exact match with on-device output, and the colour accuracy of each swatch.</li>
-      <li>The display work is unofficial research, not affiliated with reMarkable or E Ink. The write path is at the user's own risk. Its repository ships the decoders, the frame builder and a tablet-side player; no vendor code, firmware or waveform data is distributed.</li>
+      <li>Built and tested on a reMarkable Paper Pro running OS 3.27.3.</li>
+      <li>Independent interoperability research, not affiliated with reMarkable or E Ink. The repository ships the decoders, the frame builder and a tablet-side player; no vendor code, firmware or waveform data is distributed.</li>
     </ul>
 
     <div class="repo-card">

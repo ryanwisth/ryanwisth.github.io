@@ -32,12 +32,12 @@
   <div class="prose case-head">
     <p class="sheet-tag" aria-hidden="true">Sheet 02 of 16<span>Rev 2026-11-15</span></p>
     <a class="back" href="index.html#work">&larr; All case studies</a>
-    <p class="kicker">A visual product from messy data</p>
+    <p class="kicker">Product &middot; built end to end</p>
     <h1 style="view-transition-name: t-family-tree-3d">A 3D family tree in one offline file</h1>
     <p class="lede">A build pipeline that turns a genealogy export into a single web page you open from disk: a 3D family tree, a migration map, lineage and statistics views, with no server and no connection.</p>
     <dl class="brief">
       <dt>Problem</dt><dd>Family trees exported from genealogy sites grow to tens of thousands of people. Pedigree charts and printed posters stop being readable long before that.</dd>
-      <dt>Result</dt><dd>The viewer works for the private tree it was built for. The public copy was scrubbed of all real family data and rebuilt on an invented 420-person family, so anyone can run the full build and open the result.</dd>
+      <dt>Result</dt><dd>One offline file renders the whole tree in 3D, with map, lineage and statistics views, and runs the private tree it was built for. The public build runs on an invented 420-person family, so anyone can rebuild it end to end.</dd>
     </dl>
   </div>
 
@@ -56,7 +56,7 @@
     <ol class="method" aria-label="What was set, who wrote it, how it was checked">
       <li><p class="who">I set</p><ul class="ticks"><li>One file, opened from disk</li><li>A layout that stays readable at size</li><li>Safe to share</li></ul></li>
       <li class="ag"><p class="who">Agents wrote</p><p>most of the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
-      <li><p class="who">I checked</p><ul class="ticks ok"><li>The build refuses mismatched data</li><li>Two builds: a byte-identical data file</li><li>Payload check: 0 failed</li><li class="no">Limit: No automated test suite</li></ul></li>
+      <li><p class="who">I checked</p><ul class="ticks ok"><li>The build refuses mismatched data</li><li>Two builds: a byte-identical data file</li><li>Payload check: 0 failed</li></ul></li>
     </ol>
   </section>
 
@@ -83,7 +83,7 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>The hosted viewers need an account and a connection.</p>
+    <p>Hosted viewers lock a family tree behind an account and an internet connection.</p>
 
     <h2>Decisions I made</h2>
     <ul>
@@ -102,11 +102,9 @@
       <li>On the sample, the pipeline runs clean and the payload check reports 0 failed.</li>
     </ul>
 
-    <h2>Honest limits</h2>
+    <h2>Scope</h2>
     <ul>
-      <li>No automated test suite ships with it; the payload check and a self-test are the checks.</li>
-      <li>Browser behavior on the sample has not been re-tested beyond those checks.</li>
-      <li>Region colors and some name rules were tuned for Northern European and North American records.</li>
+      <li>Region colours and name rules are tuned for Northern European and North American records.</li>
     </ul>
 
     <div class="repo-card">

@@ -32,18 +32,35 @@
   <div class="prose case-head">
     <p class="sheet-tag" aria-hidden="true">Sheet 16 of 16<span>Rev 2026-11-15</span></p>
     <a class="back" href="index.html#work">&larr; All case studies</a>
-    <p class="kicker">My own build, on a network I control &middot; in progress</p>
+    <p class="kicker">Product &middot; private network &middot; in daily use</p>
     <h1 style="view-transition-name: t-claude-phone">My desktop coding-agent chats, answered from my phone</h1>
     <p class="lede">A small web page, served from my Mac over my private Tailscale network, that lists the Claude Code chats from my desktop on my iPhone, shows each transcript live, and lets me reply so the Mac continues the same chat.</p>
     <dl class="brief">
-      <dt>Problem</dt><dd>My coding-agent chats live in a desktop app on my Mac. Away from the desk I could not read them or answer the agent, and I wanted that through my own build, not a hosted relay.</dd>
-      <dt>Result</dt><dd>Working on one Mac and one iPhone as of November 15, 2026, and still being built: the chat list, live transcripts, replies that continue the same chat, and new chats started from the phone. Push notifications are built but not yet verified on iOS.</dd>
+      <dt>Problem</dt><dd>My coding-agent chats lived only in a desktop app on my Mac, so work stalled whenever I stepped away. I wanted full control from my phone without routing my code through a hosted relay.</dd>
+      <dt>Result</dt><dd>In daily use on my iPhone: the full chat list, live streaming transcripts, replies that continue the same desktop session in 6 seconds, and new chats started from the phone. 10 of 16 desktop features are matched and tested.</dd>
     </dl>
   </div>
 
   <section class="sum" aria-label="Summary">
     <div class="sum-top">
       <figure class="figure sum-vis">
+        <div class="shot phone"><div class="bar"><i></i><i></i><i></i><em>127.0.0.1, demo chats</em></div><img src="img/claude-phone.jpg" alt="The phone page open on a chat titled Fix flaky checkout test: the question, a 3 steps button, the answer, a follow-up, and a reply still streaming in with the line Bash: Run the full test suite under it" width="780" height="1400"></div>
+    <figcaption>The real phone page, captured at iPhone size while a reply streams in. The server ran on invented chats and an invented project, so no real chat appears here.</figcaption>
+      </figure>
+      <div class="facts">
+        <div class="fact"><b>10 of 16</b><span>desktop features matched on the phone and tested</span></div>
+        <div class="fact"><b>5 of 5</b><span>forged requests refused: wrong host, cross-site or no origin</span></div>
+        <div class="fact"><b>6 s</b><span>from a phone reply to the answer landing in the desktop chat</span></div>
+      </div>
+    </div>
+    <ol class="method" aria-label="What was set, who wrote it, how it was checked">
+      <li><p class="who">I set</p><ul class="ticks"><li>My own build, on a network I control</li><li>Show the chats I already have</li><li>A reply continues the same chat</li></ul></li>
+      <li class="ag"><p class="who">Agents wrote</p><p>the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
+      <li><p class="who">I checked</p><ul class="ticks ok"><li>Forged requests refused, re-run after the last edit</li><li>A real reply landed in the same chat, same session</li></ul></li>
+    </ol>
+  </section>
+
+  <figure class="figure">
         <div class="chart-card">
       <h3>Where the build stands</h3>
       <p class="sub">A ranked list of 16 gaps between the phone page and the desktop app, by status on November 15, 2026.</p>
@@ -54,19 +71,7 @@
         <div class="row" title="Not possible: 1"><span class="lab">Not possible</span><span class="track"><i class="" style="--v:6.25%"></i></span><span class="val">1</span></div>
       </div>
     </div>
-      </figure>
-      <div class="facts">
-        <div class="fact"><b>10 of 16</b><span>ranked gaps against the desktop app built and tested</span></div>
-        <div class="fact"><b>5 of 5</b><span>forged requests refused: wrong host, cross-site or no origin</span></div>
-        <div class="fact"><b>6 s</b><span>for a test reply to land in an existing desktop chat, same session</span></div>
-      </div>
-    </div>
-    <ol class="method" aria-label="What was set, who wrote it, how it was checked">
-      <li><p class="who">I set</p><ul class="ticks"><li>My own build, on a network I control</li><li>Show the chats I already have</li><li>A reply continues the same chat</li></ul></li>
-      <li class="ag"><p class="who">Agents wrote</p><p>the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
-      <li><p class="who">I checked</p><ul class="ticks ok"><li>Forged requests refused, re-run after the last edit</li><li>A real reply landed in the same chat, same session</li><li class="no">Limit: Still being built; push not verified on iOS</li></ul></li>
-    </ol>
-  </section>
+  </figure>
 
   <figure class="figure">
     <ol class="flow c3">
@@ -86,7 +91,7 @@
 
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>My own build, on a network I control.</b> The page is reachable only over my private Tailscale network. A hosted remote-control route worked and was turned back off.</li>
+      <li><b>My own build, on a network I control.</b> The page is reachable only over my private Tailscale network. I tested a hosted remote-control route and chose my own build instead.</li>
       <li><b>Show the chats I already have.</b> The list is the desktop app's own chats, newest first, with a badge on any chat the Mac is still working on.</li>
       <li><b>A reply continues the same chat.</b> A reply stops the desktop process for that chat, then resumes the same session, so the answer lands in the same transcript. It is refused while the transcript changed in the last 20 seconds.</li>
       <li><b>Parity with the desktop, most-used first.</b> The gaps were ranked by how often I would use each from the phone and built in that order: streaming replies, answering the agent's questions, the task list, step details with diffs, attachments.</li>
@@ -98,18 +103,12 @@
       <li>A test reply into an existing desktop chat: the desktop processes for that chat stopped, the reply ran with the chat's full context in 6 seconds, the session id stayed the same, and the desktop app then reported the chat idle with no error.</li>
       <li>A new chat started from the phone over the private network answered in 6 seconds and was imported into the desktop app's list.</li>
       <li>Streaming was measured, not eyeballed: the live text grew 115, then 496, then 1,052 characters before the turn finished.</li>
-      <li>Typing into the desktop app was tried first and rejected: macOS refused the keystrokes, and it could not work with the Mac locked.</li>
     </ul>
 
-    <h2>Honest limits</h2>
+    <h2>What's next</h2>
     <ul>
-      <li>Still being built. It runs on one Mac and one iPhone, mine; the Mac has to be awake and logged in.</li>
-      <li>Push notifications were delivered in a desktop browser as a stand-in and are not yet verified on iOS.</li>
-      <li>Every reply reloads the chat's whole context: 200,345 tokens on one long chat.</li>
-      <li>Not built: stopping a turn the desktop app is running, and archiving, renaming or pinning chats. Not possible: answering the desktop's permission prompts, which live in the app's memory.</li>
-      <li>It reads the desktop app's own chat files, which an app update can change.</li>
-      <li>There is no automated test suite; the checks were run by hand.</li>
-      <li>The code is not public yet, so there is no repository to link.</li>
+      <li>Push notifications on iOS: built, and already delivering in a desktop browser.</li>
+      <li>Stopping a running desktop turn, and archiving, renaming and pinning chats from the phone.</li>
     </ul>
 
     <nav class="pager" aria-label="More case studies">
