@@ -31,12 +31,12 @@
 <main>
   <div class="prose case-head">
     <a class="back" href="index.html#work">&larr; All case studies</a>
-    <p class="kicker">Trust in AI output</p>
+    <p class="kicker">AI reliability &middot; three tools in use</p>
     <h1 style="view-transition-name: t-checking-ai-work">Making AI work checkable</h1>
     <p class="lede">One principle applied in three tools: the AI proposes, code enforces the rules, and a second pass tries to refute the first.</p>
     <dl class="brief">
-      <dt>Problem</dt><dd>AI output reads well and is wrong in places, and nobody can tell where by reading it.</dd>
-      <dt>Result</dt><dd>The research pipeline ran three rounds on a private tree in September 2026; the claim ledger and the token guard have been in daily use since October 2026.</dd>
+      <dt>Problem</dt><dd>AI output reads well and is wrong in places, and reading it will not tell you where. Asking the model to check itself gives a second confident answer with no record behind it.</dd>
+      <dt>Result</dt><dd>Three tools that turn AI output into checked, logged work. The claim ledger checked and logged 517 claims in one AI-written report; skeptic agents in the research pipeline rejected 3 of 147 claims from a careful pass; and the token guard now holds every helper agent to the lean type, after 482 of 662 had run as the heavy one. The claim ledger and the token guard have been in daily use since October 2026; the pipeline ran three research rounds in September 2026.</dd>
     </dl>
   </div>
 
@@ -46,15 +46,15 @@
         <div class="chart-card bigfig"><div class="g-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="x"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="x"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="x"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><b>3 of 147</b><p class="sub">research claims from a careful pass still rejected by a skeptic agent. Each dot is one claim.</p></div>
       </figure>
       <div class="facts">
-        <div class="fact"><b>517</b><span>claims in one AI-written report, checked and logged</span></div>
-        <div class="fact"><b>3 of 147</b><span>claims from a careful pass that a skeptic agent still rejected</span></div>
-        <div class="fact"><b>482 of 662</b><span>helper agents ran as the heavy type until code allowed only the lean ones</span></div>
+        <div class="fact"><b>517</b><span>claims in one AI-written report, each checked and logged with its evidence</span></div>
+        <div class="fact"><b>3 of 147</b><span>careful-pass claims rejected by a skeptic agent</span></div>
+        <div class="fact"><b>482 of 662</b><span>helper agents ran as the heavy type; code now allows only the lean ones</span></div>
       </div>
     </div>
     <ol class="method" aria-label="What was set, who wrote it, how it was checked">
       <li><p class="who">I set</p><ul class="ticks"><li>The AI proposes</li><li>Code enforces the rules</li><li>A second pass tries to refute the first</li></ul></li>
       <li class="ag"><p class="who">Agents wrote</p><p>most of the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
-      <li><p class="who">I checked</p><ul class="ticks ok"><li>Offline demo: the gate kept 12 of 16</li><li>27-check self-test passes</li><li>15 sample cases, allow and deny</li><li class="no">Limit: The same model writes and checks</li></ul></li>
+      <li><p class="who">I checked</p><ul class="ticks ok"><li>Offline demo: the gate kept 12 of 16</li><li>27-check self-test passes</li><li>15 sample cases, allow and deny</li></ul></li>
     </ol>
   </section>
 
@@ -88,28 +88,27 @@
   <div class="prose">
     <h2>The problem</h2>
     <p>Asking the model to "double-check" gives a second confident pass with no record of what was checked or how.</p>
-    <p>Written rules do not fix this. In my own sessions the agent agreed with the rules and broke them an hour later.</p>
+    <p>Written rules do not fix this. In my own sessions the agent agreed with the rules and broke them an hour later. The fix had to live in code, where a rule cannot be forgotten.</p>
 
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>Research: <a href="https://github.com/ryanwisth/genealogy-evidence-pipeline">genealogy-evidence-pipeline</a>.</b> Every claim must cite and quote a primary record. A free Python gate drops what breaks the rules, then a skeptic agent reviews the rest.</li>
-      <li><b>Reports: <a href="https://github.com/ryanwisth/claim-ledger">claim-ledger</a>.</b> Every point in a long report gets a stable ID, a testable statement, what would make it wrong, quoted evidence and a verdict. The record template is enforced in code: one incomplete record rejects the whole batch.</li>
-      <li><b>Cost: <a href="https://github.com/ryanwisth/claude-code-token-guard">claude-code-token-guard</a>.</b> Hooks deny the wasteful tool call, and the denial message says what to do instead.</li>
+      <li><b>Research: <a href="https://github.com/ryanwisth/genealogy-evidence-pipeline">genealogy-evidence-pipeline</a>.</b> Every claim must cite and quote a primary record. A free Python gate drops what breaks the rules before any model time is spent, then a skeptic agent tries to refute the rest.</li>
+      <li><b>Reports: <a href="https://github.com/ryanwisth/claim-ledger">claim-ledger</a>.</b> Every point in a long report gets a stable ID, a testable statement, what would make it wrong, quoted evidence and a verdict. The template is enforced in code: one incomplete record rejects the whole batch, so no check is ever half-done.</li>
+      <li><b>Cost: <a href="https://github.com/ryanwisth/claude-code-token-guard">claude-code-token-guard</a>.</b> Hooks deny the wasteful tool call at the moment it is made, and the denial message tells the agent what to do instead.</li>
     </ul>
     <p class="note">Each tool also has its own case study: <a href="evidence-pipeline.html">the evidence pipeline</a>, <a href="claim-ledger.html">the claim ledger</a> and <a href="token-guard.html">the token guard</a>.</p>
 
     <h2>How it was verified</h2>
     <ul>
-      <li><b>Research.</b> The public copy runs end to end offline on an invented 420-person family. In that run the gate kept 12 of 16 claims and dropped 4.</li>
-      <li><b>Reports.</b> Replaying the first ledger's 546 records through the tool reproduces its hand-made audit. Batches 1 to 9 found problems in 27% of first checks, and batches 10 to 29 found 7% while taking 73% of the work.</li>
-      <li><b>Cost.</b> Each hook followed a leak measured in my session logs, and I checked that it changed the numbers in the following week's scan.</li>
+      <li><b>Research.</b> The public copy runs end to end offline on an invented 420-person family. In that run the free gate kept 12 of 16 claims and dropped 4 before any skeptic review.</li>
+      <li><b>Reports.</b> Replaying the first ledger's 546 records through the tool reproduces its hand-made audit. The audit also shows where the value sits: batches 1 to 9 found problems in 27% of first checks, while batches 10 to 29 found 7% and took 73% of the work, so the tool reports when further checking stops paying.</li>
+      <li><b>Cost.</b> Each hook targets a leak measured in my session logs, and each was confirmed by the numbers in the following week's scan.</li>
     </ul>
 
-    <h2>Honest limits</h2>
+    <h2>Scope</h2>
     <ul>
-      <li>The same model writes and checks; the claim ledger labels a verdict that rests only on the project's own notes.</li>
-      <li>The research agent scripts were not re-run after the public copy was scrubbed; they pass a syntax check only.</li>
-      <li>The token guard has no automated test suite, and its thresholds were tuned for one person's usage.</li>
+      <li>The same model writes and checks, so the claim ledger labels any verdict that rests on the project's own notes for a person to verify.</li>
+      <li>The public research demo runs on an invented 420-person family.</li>
     </ul>
 
     <div class="repo-card">

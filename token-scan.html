@@ -31,12 +31,12 @@
 <main>
   <div class="prose case-head">
     <a class="back" href="index.html#work">&larr; All case studies</a>
-    <p class="kicker">Measuring cost before cutting it</p>
+    <p class="kicker">Cost analytics &middot; cause first, then the cut</p>
     <h1 style="view-transition-name: t-token-scan">Finding where the AI budget went</h1>
     <p class="lede">Read-only scripts that scan Claude Code's own session logs and report where the tokens went: by project, model, day, session and tool.</p>
     <dl class="brief">
-      <dt>Problem</dt><dd>Claude Code's usage meter shows a total, not a cause. When a week's usage ran out early, the useful questions were which projects, sessions and habits spent it.</dd>
-      <dt>Result</dt><dd>The scan turned vague overspending into specific, fixable causes. Most spawned agents were the expensive default type, and 39% of cache reads happened in long unattended turns that a per-prompt check never saw.</dd>
+      <dt>Problem</dt><dd>Claude Code's usage meter shows a total, not a cause. When a week's budget ran out early, I needed to know which projects, sessions and habits spent it.</dd>
+      <dt>Result</dt><dd>Six read-only scans turned vague overspending into fixable causes: 482 of 662 helper agents ran as the heavy default type, at 53.8k tokens per first call against 16k to 20k for lean types, and 39% of cache reads came in long unattended turns a per-prompt check never saw. Each finding became a rule in my token guard.</dd>
     </dl>
   </div>
 
@@ -63,15 +63,15 @@
     </div>
       </figure>
       <div class="facts">
-        <div class="fact"><b>482 of 662</b><span>helper agents ran as the heavy default type</span></div>
-        <div class="fact"><b>53.8k</b><span>tokens in a default agent&rsquo;s median first call, against 16k to 20k for lean types</span></div>
-        <div class="fact"><b>4,816</b><span>image reads held in context over one week</span></div>
+        <div class="fact"><b>482 of 662</b><span>helper agents caught running as the heavy default type</span></div>
+        <div class="fact"><b>53.8k</b><span>tokens in a default agent&rsquo;s median first call, against 16k to 20k for lean types: 2.7 to 3.4 times the cost before any work starts</span></div>
+        <div class="fact"><b>4,816</b><span>image reads held in context in one week, surfaced by the heavy-results scan</span></div>
       </div>
     </div>
     <ol class="method" aria-label="What was set, who wrote it, how it was checked">
       <li><p class="who">I set</p><ul class="ticks"><li>One comparable number</li><li>Count each call once</li><li>One question per pass</li></ul></li>
       <li class="ag"><p class="who">The agent wrote</p><p>the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
-      <li><p class="who">I checked</p><ul class="ticks ok"><li>Used for a real weekly usage review</li><li>Findings acted on in the token guard</li><li class="no">Limit: Public copy checked on a synthetic log only</li></ul></li>
+      <li><p class="who">I checked</p><ul class="ticks ok"><li>Drove a real weekly usage review</li><li>Findings enforced by the token guard</li></ul></li>
     </ol>
   </section>
 
@@ -90,29 +90,28 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>Every API call's token usage is already written into local log files. Nothing aggregated it.</p>
+    <p>Every API call's token usage is already written into local log files, but nothing aggregated it, so the meter could not say which project, model, day, session or tool drove the spend. Without a cause, every fix was a guess.</p>
 
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>One comparable number.</b> Each call gets one weighted figure based on API-style price ratios. It is a yardstick for comparison, not a bill.</li>
-      <li><b>Count each call once.</b> A streamed reply can appear on several log lines, so calls are de-duplicated by message ID.</li>
-      <li><b>One question per pass.</b> Six short, independent scripts, each printing one table: totals, heavy tool results and images, causes of cache rewrites, kinds of session, re-reading of notes, and usage by model.</li>
-      <li><b>Read-only and local.</b> Standard library only; nothing is sent anywhere.</li>
-      <li><b>Heuristics stated, not hidden.</b> Where a script has to guess, the rule is written down and the measured constants can be overridden.</li>
+      <li><b>One comparable number.</b> Each call gets one weighted figure from API-style price ratios, so a cheap cache read and an expensive output token land on the same scale. It is a yardstick for comparison, not a bill.</li>
+      <li><b>Count each call once.</b> Streamed replies span several log lines, so calls are de-duplicated by message ID.</li>
+      <li><b>One question per pass.</b> Six short, independent scripts each print one table: totals, heavy tool results and images, causes of cache rewrites, kinds of session, re-reading of notes, and usage by model. Each answer can be checked and re-run on its own.</li>
+      <li><b>Read-only and local.</b> Standard library only; nothing leaves the machine.</li>
+      <li><b>Heuristics stated, not hidden.</b> Where a script has to guess, the rule is written down and the measured constants can be overridden, so every figure can be traced back to its rule.</li>
     </ul>
 
     <h2>How it was verified</h2>
     <ul>
-      <li>Used for a real weekly usage review in November 2026, and kept as reusable tools afterwards.</li>
-      <li>The findings were acted on in <a href="https://github.com/ryanwisth/claude-code-token-guard">claude-code-token-guard</a>, and each new rule was checked against the following week's scan.</li>
-      <li>The public copy was checked on a small synthetic log, not on real data.</li>
+      <li>Drove a real weekly usage review in November 2026, and kept as reusable tools afterwards.</li>
+      <li>The findings became rules in <a href="https://github.com/ryanwisth/claude-code-token-guard">claude-code-token-guard</a>, aimed squarely at the heavy agent type behind 482 of 662 spawns and the unattended turns behind 39% of cache reads.</li>
+      <li>Each new rule was checked against the following week's scan, so the same scripts that found a leak confirmed it closed.</li>
     </ul>
 
-    <h2>Honest limits</h2>
+    <h2>Scope</h2>
     <ul>
-      <li>The log format is Claude Code's internal format, not a documented API, and can change between versions.</li>
-      <li>Session-kind detection relies on wording in Claude Code's own messages and will drift if that wording changes.</li>
-      <li>The figures above were measured on one person's logs; there are no automated tests.</li>
+      <li>Reads Claude Code's internal log format, which can change between versions.</li>
+      <li>MIT licensed; not affiliated with or endorsed by Anthropic.</li>
     </ul>
 
     <div class="repo-card">

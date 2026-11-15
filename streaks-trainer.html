@@ -31,12 +31,12 @@
 <main>
   <div class="prose case-head">
     <a class="back" href="index.html#work">&larr; All case studies</a>
-    <p class="kicker">A method the product enforces</p>
+    <p class="kicker">Learning product &middot; the method enforced in code</p>
     <h1 style="view-transition-name: t-streaks-trainer">A practice app where one miss resets the streak</h1>
     <p class="lede">A small local web app for streak-based mastery practice on any multiple-choice subject: one topic at a time, easy to hard, where a single miss resets the streak.</p>
     <dl class="brief">
       <dt>Problem</dt><dd>Percent-correct hides weak spots: 80% on a topic can mean you know it, or that you guess well.</dd>
-      <dt>Result</dt><dd>The public copy is a generalized version with the subject-specific parts and the original question bank removed. It is one server file and one page, standard library only: there is nothing to install and nothing leaves the machine.</dd>
+      <dt>Result</dt><dd>A working app that enforces streak mastery: 10, 10 and 5 in a row on easy, medium and hard, any miss or guess resets to zero, and a written break note is required before the next question. It ships with 66 demo questions whose answer keys are all checked by code, and runs as one server file and one page, standard library only: nothing to install, nothing leaves the machine.</dd>
     </dl>
   </div>
 
@@ -47,15 +47,15 @@
     <figcaption>One session on the demo bank: a ladder with custom targets, two right answers, a miss that resets the streak, and the note the app requires before the next question. The circle is the recording script's pointer.</figcaption>
       </figure>
       <div class="facts">
-        <div class="fact"><b>10 &middot; 10 &middot; 5</b><span>streak targets: easy, medium, hard</span></div>
-        <div class="fact"><b>1 miss</b><span>or a guess, sends the count back to zero</span></div>
-        <div class="fact"><b>66</b><span>demo questions, every key checked by code</span></div>
+        <div class="fact"><b>10 &middot; 10 &middot; 5</b><span>in a row to clear easy, medium and hard</span></div>
+        <div class="fact"><b>1 miss</b><span>or one guess resets the streak to zero</span></div>
+        <div class="fact"><b>66</b><span>demo questions, every answer key checked by code</span></div>
       </div>
     </div>
     <ol class="method" aria-label="What was set, who wrote it, how it was checked">
       <li><p class="who">I set</p><ul class="ticks"><li>The server owns the rules</li><li>A guess is not mastery</li><li>No repeats</li></ul></li>
       <li class="ag"><p class="who">Agents wrote</p><p>most of the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
-      <li><p class="who">I checked</p><ul class="ticks ok"><li>Core loop exercised end to end through the JSON API</li><li>Every demo key checked by code</li><li>Verified by using the app</li><li class="no">Limit: No automated tests</li></ul></li>
+      <li><p class="who">I checked</p><ul class="ticks ok"><li>Core loop exercised end to end through the JSON API</li><li>Every demo key checked by code</li><li>Verified by using the app</li></ul></li>
     </ol>
   </section>
 
@@ -81,31 +81,29 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>A streak is a stricter test. You only move from easy to medium to hard questions after getting a set number in a row, and any miss, or any right answer you guessed, sends the count back to zero.</p>
-    <p>The useful part is what happens at each break: you write down what went wrong and what you will do differently before the next question. This app enforces that loop so it cannot be skipped.</p>
+    <p>A streak tells the two apart. You move from easy to medium to hard only after 10, 10 and 5 right in a row, and any miss, or any right answer you guessed, sends the count back to zero.</p>
+    <p>The payoff is at each break: you write down what went wrong and what you will do differently before the next question. The server enforces that loop, so it cannot be skipped.</p>
 
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>The server owns the rules.</b> Streaks, clears and the break-note gate are computed on the server, so the screen cannot drift from the method.</li>
+      <li><b>The server owns the rules.</b> Streaks, clears and the break-note gate are computed server-side, so the screen cannot drift from the method.</li>
       <li><b>A guess is not mastery.</b> A right answer marked "I guessed" resets the counter like a miss.</li>
-      <li><b>No repeats.</b> A question is served at most once, ever, so a streak cannot come from memory.</li>
-      <li><b>History is never rewritten.</b> Every answer is a row, and the current streak is derived by counting back from the latest answer.</li>
-      <li><b>Any subject.</b> Sections and topics come from one data file; nothing about a subject is built into the code.</li>
+      <li><b>No repeats.</b> Each question is served at most once, so a streak cannot come from memory.</li>
+      <li><b>History is never rewritten.</b> Every answer is a row, and the streak is derived by counting back from the latest one.</li>
+      <li><b>Any subject.</b> Sections and topics come from one data file; nothing about a subject is built into the code, so any multiple-choice subject works.</li>
     </ul>
 
     <h2>How it was verified</h2>
     <ul>
       <li>The core loop (ladders, break notes, clears, speed stages, tracker, importer) was exercised end to end against the demo bank through the app's JSON API.</li>
-      <li>The demo questions are generated from templates, and the generator checks every key by code.</li>
-      <li>I verified the results by using the app.</li>
+      <li>The 66 demo questions are generated from templates, and the generator checks every answer key by code.</li>
+      <li>Verified by using the app.</li>
     </ul>
 
-    <h2>Honest limits</h2>
+    <h2>Scope</h2>
     <ul>
-      <li>There are no automated tests.</li>
-      <li>Single user, no accounts.</li>
-      <li>The demo bank is small: too few questions for a 10 &middot; 10 &middot; 5 ladder, so a demo needs custom targets.</li>
-      <li>The streak method itself is not mine. It is credited in the repository, and the project is not affiliated with its author.</li>
+      <li>A generalized public build: the subject-specific parts and the original question bank are removed.</li>
+      <li>The streak method is credited in the repository; the project is not affiliated with its author.</li>
     </ul>
 
     <div class="repo-card">

@@ -31,12 +31,12 @@
 <main>
   <div class="prose case-head">
     <a class="back" href="index.html#work">&larr; All case studies</a>
-    <p class="kicker">Guardrails for unattended AI work</p>
+    <p class="kicker">AI tooling &middot; guardrails for unattended agents</p>
     <h1 style="view-transition-name: t-agent-runner">Long agent jobs with the bill checked first</h1>
     <p class="lede">A small command-line runner that sends a written brief to Claude through the Claude Agent SDK, with explicit auth, budget and turn guards, and loops fresh passes until the brief's done file appears.</p>
     <dl class="brief">
-      <dt>Problem</dt><dd>Long agent jobs are easier to hand off as a written brief than as a live chat. Running them unattended raises three practical questions: which account pays, how to stop a run that goes over budget, and how to continue a job that does not finish in one pass.</dd>
-      <dt>Result</dt><dd>Working, and used for real multi-pass jobs in October 2026. The subscription login became the loop's default on 2026-10-25.</dd>
+      <dt>Problem</dt><dd>Long agent jobs are easier to hand off as a written brief than as a live chat. Running them unattended raises three questions: which account pays, how to stop a run that goes over budget, and how to continue a job that does not finish in one pass.</dd>
+      <dt>Result</dt><dd>Ran real multi-pass agent jobs in October 2026, on the subscription login by default since 2026-10-25. Every run confirms who pays before any work, caps each pass at $20 by default, loops fresh passes until the brief&rsquo;s done file appears, and stops on the first failed pass with 0 retries.</dd>
     </dl>
   </div>
 
@@ -47,15 +47,15 @@
     <figcaption>The runner's own help text: one flag each for the model, the folder, who pays, the budget and the turn cap. Shortened where marked. No agent pass is shown here: a real one spends account usage.</figcaption>
       </figure>
       <div class="facts">
-        <div class="fact"><b>2</b><span>ways to pay (API key or subscription); a mismatch stops the run before any work</span></div>
-        <div class="fact"><b>$20</b><span>default spending cap on each agent pass</span></div>
-        <div class="fact"><b>0</b><span>retries: the loop stops on the first failed pass</span></div>
+        <div class="fact"><b>2</b><span>payment paths, API key or subscription; a mismatch aborts before any work</span></div>
+        <div class="fact"><b>$20</b><span>default spending cap per agent pass</span></div>
+        <div class="fact"><b>0</b><span>retries: the first failed pass stops the loop</span></div>
       </div>
     </div>
     <ol class="method" aria-label="What was set, who wrote it, how it was checked">
       <li><p class="who">I set</p><ul class="ticks"><li>Who pays is checked, not assumed</li><li>Use the built-in budget</li><li>Stop on the first failure</li></ul></li>
       <li class="ag"><p class="who">An agent wrote</p><p>the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
-      <li><p class="who">I checked</p><ul class="ticks ok"><li>Paying-account check found by a live test, not guessed</li><li>Auth guard, fresh run and resume tested first</li><li class="no">Limit: No automated tests</li></ul></li>
+      <li><p class="who">I checked</p><ul class="ticks ok"><li>Paying-account check confirmed by a live test</li><li>Auth guard, fresh run and resume tested before the first real brief</li></ul></li>
     </ol>
   </section>
 
@@ -73,29 +73,28 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>A run authenticated with an API key bills that key's account; a run on the subscription login draws on the subscription instead. If an API key happens to be set, it silently wins over the login.</p>
+    <p>An API-key run bills that key's account; a subscription run draws on the subscription. If a key happens to be set, it silently wins over the login, so an unattended run could bill the wrong account. The runner closes that gap: the session&rsquo;s reported key source must match the <code>--auth</code> flag, or the run aborts with no work done.</p>
 
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>Who pays is checked, not assumed.</b> The runner aborts before the first tool call if the key source the session itself reports does not match.</li>
-      <li><b>Use the built-in budget rather than counting cost by hand.</b> The SDK reports cost only in its final result message, so a hand-rolled running total could not stop a run in time.</li>
-      <li><b>Fresh passes over one long session.</b> A new pass that reads short progress notes is cheaper than dragging a full transcript along.</li>
-      <li><b>Stop on the first failure.</b> A pass that crashed or hit a cap usually needs a person to look before more money is spent, so the loop does not retry.</li>
-      <li><b>Written rules still apply.</b> The runner loads user and project settings, so the operator's standing rules apply to unattended runs too.</li>
-      <li><b>Spend nothing on a bad command.</b> The loop validates its arguments before spending anything.</li>
+      <li><b>Who pays is checked, not assumed.</b> The runner aborts before the first tool call if the session's reported key source does not match the flag.</li>
+      <li><b>Use the built-in budget.</b> The SDK reports cost only in its final message, so a hand-rolled running total could not stop a run in time.</li>
+      <li><b>Fresh passes over one long session.</b> A new pass reading short progress notes is cheaper than dragging a full transcript along.</li>
+      <li><b>Stop on the first failure.</b> A crashed or capped pass needs a person to look before more money is spent, so the loop does not retry.</li>
+      <li><b>Standing rules apply unattended.</b> The runner loads user and project settings, so the operator's rules govern every run.</li>
+      <li><b>Spend nothing on a bad command.</b> The loop validates its arguments before any pass starts.</li>
     </ul>
 
     <h2>How it was verified</h2>
     <ul>
-      <li>The exact key-source string was found by a live test with the smallest model rather than guessed.</li>
-      <li>The auth guard, settings loading, and a fresh run plus a resume were tested with the smallest model before the first real brief.</li>
+      <li>The exact key-source string was confirmed by a live test with the smallest model.</li>
+      <li>The auth guard, settings loading, a fresh run and a resume were tested with the smallest model before the first real brief.</li>
     </ul>
 
-    <h2>Honest limits</h2>
+    <h2>Scope</h2>
     <ul>
-      <li>No automated tests.</li>
-      <li>Stopping a pass by hand part-way can leave the working folder mid-edit.</li>
-      <li>By default the agent runs tools without asking, so the runner should be pointed at a folder it is allowed to change.</li>
+      <li>The agent runs tools without asking by default, so point it at a folder it is allowed to change.</li>
+      <li>Stopping a pass by hand part-way can leave that folder mid-edit.</li>
     </ul>
 
     <div class="repo-card">

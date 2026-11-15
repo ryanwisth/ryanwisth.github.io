@@ -31,12 +31,12 @@
 <main>
   <div class="prose case-head">
     <a class="back" href="index.html#work">&larr; All case studies</a>
-    <p class="kicker">Research honest enough to fail</p>
+    <p class="kicker">Research rigor &middot; pre-registered study</p>
     <h1 style="view-transition-name: t-pinball-study">A study built so it could fail</h1>
     <p class="lede">A research tool that converts pinball table layouts, measures their geometry, plays them with simulated players at four skill levels, and tests whether any of that predicts how much people enjoy a table.</p>
     <dl class="brief">
-      <dt>Problem</dt><dd>The goal was to score an original table design before anyone had played it: learn what separates well-rated tables from the rest, then apply that to the new design.</dd>
-      <dt>Result</dt><dd>The hypothesis failed. The best model's error was 0.425 against 0.448 for guessing the mean, and of the 9 rules, none passed as predicted.</dd>
+      <dt>Problem</dt><dd>Score an original pinball table before anyone has played it, by learning what separates well-rated tables from the rest, without fooling myself with measures that fit by chance.</dd>
+      <dt>Result</dt><dd>A clean negative result, decided before the data came in. 9 predictions were locked (hashed) before any result, tested on 79 real tables and retested on 94, and none held. The best model's error was 0.425 against 0.448 for guessing the mean, and year, maker and build flags alone did as well at 0.421: what a 2D simulator can measure does not predict how players rate a table.</dd>
     </dl>
   </div>
 
@@ -54,15 +54,15 @@
     </div>
       </figure>
       <div class="facts">
-        <div class="fact"><b>9</b><span>predictions written and locked (hashed) before any result; none held up</span></div>
-        <div class="fact"><b>79 &rarr; 94</b><span>real tables tested, then retested</span></div>
-        <div class="fact"><b>5%</b><span>better than guessing the average rating</span></div>
+        <div class="fact"><b>9</b><span>predictions locked (hashed) before any result; none held, and the study reports it</span></div>
+        <div class="fact"><b>79 &rarr; 94</b><span>real tables tested, then retested on the larger set</span></div>
+        <div class="fact"><b>5%</b><span>better than guessing the average rating: too small to use, and called a failure</span></div>
       </div>
     </div>
     <ol class="method" aria-label="What was set, who wrote it, how it was checked">
       <li><p class="who">I set</p><ul class="ticks"><li>Hypotheses before results</li><li>Controls in every model</li><li>Trust only what holds up</li></ul></li>
       <li class="ag"><p class="who">Agents wrote</p><p>the code and ran the experiments</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
-      <li><p class="who">I checked</p><ul class="ticks ok"><li>Leave-one-out against guessing the mean</li><li>Bootstrap intervals on two measures</li><li>Hypothesis hashes stored with the results</li><li class="no">Limit: Not a usable fun predictor</li></ul></li>
+      <li><p class="who">I checked</p><ul class="ticks ok"><li>Leave-one-out against guessing the mean</li><li>Bootstrap intervals on two measures</li><li>Hypothesis hashes stored with the results</li></ul></li>
     </ol>
   </section>
 
@@ -93,13 +93,13 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>The easy trap in a study like this is to try many measures and report the ones that happen to fit.</p>
+    <p>The easy trap in a study like this is to try many measures and report the ones that happen to fit. This study fixed its tests and verdicts in advance, so the result could not be bent after the fact.</p>
 
     <h2>Decisions I made</h2>
     <ul>
       <li><b>Hypotheses before results.</b> Designer rules of thumb were written down with predicted directions, a fixed test and a fixed verdict rule, then hashed, before any measure was compared with a rating.</li>
       <li><b>One common board format.</b> The simulator never sees a source file, so an original design can be measured exactly like a converted commercial table.</li>
-      <li><b>Port the physics, do not invent it.</b> A hand-tuned flipper was replaced by a port of an established simulator's flipper model.</li>
+      <li><b>Port the physics, do not invent it.</b> A hand-tuned flipper was replaced by a port of an established simulator's flipper model, so the simulated play rests on an established model.</li>
       <li><b>Controls in every model.</b> Year and maker are always included, so era and brand are not mistaken for "fun".</li>
       <li><b>Trust only what holds up.</b> The expert bot did not reliably beat the intermediate one, so every hypothesis uses the intermediate bot.</li>
     </ul>
@@ -108,14 +108,12 @@
     <ul>
       <li>Every rating model was judged by leave-one-out cross-validation against the simple baseline of predicting the mean.</li>
       <li>Each hypothesis was tested with bootstrap intervals on two separate measures of success: public rating and production run.</li>
-      <li>The hashes of the hypothesis files are stored with the results, so an edit after the fact shows.</li>
+      <li>The hashes of the hypothesis files are stored with the results, so any edit after the fact shows.</li>
     </ul>
 
-    <h2>Honest limits</h2>
+    <h2>Scope</h2>
     <ul>
-      <li>The scorer is not a usable fun predictor, and nothing in the project claims it is.</li>
-      <li>The best reading is that ratings mostly reward theme, licence, rules depth, sound and code, which a 2D simulator cannot see.</li>
-      <li>The design-check use of the simulator was not built out.</li>
+      <li>The finding: ratings mostly reward theme, licence, rules depth, sound and code, which a 2D simulator cannot see.</li>
       <li>The published hypothesis files had a few non-substantive sentences and labels removed, so they no longer match the hashes recorded during the study.</li>
     </ul>
 

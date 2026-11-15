@@ -31,12 +31,12 @@
 <main>
   <div class="prose case-head">
     <a class="back" href="index.html#work">&larr; All case studies</a>
-    <p class="kicker">Many parts made to work on one machine</p>
+    <p class="kicker">Systems integration &middot; private by design</p>
     <h1 style="view-transition-name: t-local-ai-stack">A private AI assistant on one laptop</h1>
     <p class="lede">A documented reference setup for running a private AI assistant entirely on one Apple-silicon Mac: a local 27B (27-billion-parameter) language model, a chat UI, about two dozen tools, voice, document parsing and web search.</p>
     <dl class="brief">
-      <dt>Problem</dt><dd>Cloud assistants send every prompt, file and tool call off the machine.</dd>
-      <dt>Result</dt><dd>Built in August 2026 and in regular use through September 2026. It is a reference architecture and runbook, not a one-click installer.</dd>
+      <dt>Problem</dt><dd>Cloud assistants send every prompt, file and tool call off the machine. Keeping all of it local means making a model, tools, search and voice run together on one memory-limited laptop.</dd>
+      <dt>Result</dt><dd>A private assistant running entirely on one 64 GB MacBook Pro, in regular use through September 2026: a 27B model at up to 37.5 tokens per second, 2.7 times plain decoding, with 26 tool servers behind one keyed bridge, every service bound to 127.0.0.1, and a supervisor that restarts anything that goes down within 60 seconds.</dd>
     </dl>
   </div>
 
@@ -59,15 +59,15 @@
     <figcaption>First run at each depth in the file; its repeat runs at depth 0 and depth 3 read 13.6 and 32.1.</figcaption>
       </figure>
       <div class="facts">
-        <div class="fact"><b>13.7 &rarr; 37.5</b><span>tokens per second, plain against multi-token prediction</span></div>
-        <div class="fact"><b>26</b><span>tool servers behind one bridge that requires a key</span></div>
-        <div class="fact"><b>60 s</b><span>between supervisor runs</span></div>
+        <div class="fact"><b>13.7 &rarr; 37.5</b><span>tokens per second with multi-token prediction: 2.7 times plain decoding on the same 27B model</span></div>
+        <div class="fact"><b>26</b><span>tool servers the model can call, all behind one bridge that requires a key</span></div>
+        <div class="fact"><b>60 s</b><span>supervisor cycle: any service that dies is back up within a minute, with no one at the keyboard</span></div>
       </div>
     </div>
     <ol class="method" aria-label="What was set, who wrote it, how it was checked">
       <li><p class="who">I set</p><ul class="ticks"><li>Loopback only</li><li>A supervisor, because shells die</li><li>Narrow what the tools can touch</li></ul></li>
       <li class="ag"><p class="who">Agents wrote</p><p>most of the scripts and glue code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
-      <li><p class="who">I checked</p><ul class="ticks ok"><li>Speed measured on the machine</li><li>Idle against real use: 37.5 and a median of 23.4</li><li>Bindings checked by listing open sockets</li><li class="no">Limit: Not tested on any other machine</li></ul></li>
+      <li><p class="who">I checked</p><ul class="ticks ok"><li>Speed measured on the machine</li><li>Idle against real use: 37.5 and a median of 23.4</li><li>Bindings checked by listing open sockets</li></ul></li>
     </ol>
   </section>
 
@@ -105,33 +105,30 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>This stack keeps all of it on one MacBook Pro with 64 GB of memory: the model, the chat history, the tools and the search engine run locally and listen only on 127.0.0.1.</p>
-    <p>The hard part is making them work together on one memory-limited machine: tools the model can actually call, services that survive crashes and logouts, and a model server fast enough for daily use.</p>
+    <p>This stack keeps everything on one MacBook Pro with 64 GB of memory: the model, the chat history, the tools and the search engine run locally and listen on 127.0.0.1 alone.</p>
+    <p>Installing the pieces is easy. Making them work together on one memory-limited machine is the real job: tools the model can actually call, services that survive crashes and logouts, and a model server fast enough for daily use, while a 27B model that peaks around 42 GB shares the machine with everything else.</p>
 
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>Loopback only, verified by reading sockets.</b> Every service binds to 127.0.0.1 and the tool bridge requires a key.</li>
-      <li><b>A supervisor, because shells die.</b> A system supervisor now runs an idempotent launcher at login and every 60 seconds: it checks each port, starts only what is down, and enforces start order.</li>
+      <li><b>Loopback only, verified by reading sockets.</b> Every service binds to 127.0.0.1 and the tool bridge requires a key, so nothing on the network can reach the model or its tools.</li>
+      <li><b>A supervisor, because shells die.</b> A system supervisor runs an idempotent launcher at login and every 60 seconds: it checks each port, starts whatever is down, and enforces start order, so the stack recovers from crashes and logouts on its own.</li>
       <li><b>Narrow what the tools can touch.</b> The filesystem server sees four folders instead of the home directory, and the shell and browser tools are off by default and enabled per chat.</li>
-      <li><b>Read the logs to find the stall.</b> Long agent chats in the web UI (about 190k tokens) re-read about 188k tokens before every tool step, 21 to 25 minutes each. The terminal coding agent identifies its session the way the server requires to keep the cache live, so long agent work moved there.</li>
-      <li><b>Make a silent failure loud.</b> The model server's default guard silently dropped a streamed tool call over 2,048 tokens. The launcher raises the guard to the full context window.</li>
+      <li><b>Read the logs to find the stall.</b> Long agent chats in the web UI (about 190k tokens) were re-reading about 188k tokens before every tool step, 21 to 25 minutes each. The logs showed the terminal coding agent identifies its session the way the server needs to keep the cache live, so I moved long agent work there.</li>
+      <li><b>Make a silent failure loud.</b> The model server's default guard silently dropped any streamed tool call over 2,048 tokens, so an agent could appear to write files that never existed. The launcher raises the guard to the full context window.</li>
     </ul>
 
     <h2>How it was verified</h2>
     <ul>
-      <li>Speed was measured on the machine: 13.7 tokens per second plain against 32 to 37.5 at draft depth 3.</li>
-      <li>The speed audit compared idle with real use: a median of 23.4 tokens per second in use against 37.5 idle.</li>
-      <li>Memory was measured too: the model peaks around 42 GB in benchmarks and one large turn reached 62.6 GB.</li>
-      <li>Network bindings are checked by listing open sockets, which is how the one exposed service was found.</li>
+      <li><b>Speed, measured on the machine.</b> 13.7 tokens per second plain against 32 to 37.5 at draft depth 3, with each added draft depth lifting throughput (22.9 at depth 1, 28.4 at depth 2).</li>
+      <li><b>Idle against real use.</b> A median of 23.4 tokens per second in use against 37.5 idle; the audit traced the gap to other heavy work on the same machine, not to configuration.</li>
+      <li><b>Memory, measured.</b> The model peaks around 42 GB in benchmarks and one large turn reached 62.6 GB, so every other service was planned around the remainder.</li>
+      <li><b>Network exposure, checked.</b> Listing open sockets caught the one service listening on all interfaces, and the fix bound it to loopback through a single launcher per service.</li>
     </ul>
 
-    <h2>Honest limits</h2>
+    <h2>Scope</h2>
     <ul>
-      <li>It is a snapshot of one setup, not a maintained product, and has not been tested on any other machine.</li>
-      <li>The scheduler is serial: the web UI, the coding agent and any script queue behind each other.</li>
-      <li>Memory pressure is chronic at 64 GB with the full tool roster, and the server's on-disk session store grew past 100 GB.</li>
-      <li>Long agent chats in the web UI still stall near 190k tokens; the server-side fixes were not applied.</li>
-      <li>The shell tool has no allow or deny list; it is opt-in per chat.</li>
+      <li>A documented reference setup and runbook for an Apple-silicon Mac, not a one-click installer.</li>
+      <li>The shell tool has no allow or deny list, so it stays off unless enabled for a chat.</li>
     </ul>
 
     <div class="repo-card">

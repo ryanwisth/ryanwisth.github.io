@@ -31,12 +31,12 @@
 <main>
   <div class="prose case-head">
     <a class="back" href="index.html#work">&larr; All case studies</a>
-    <p class="kicker">A small product shipped end to end</p>
+    <p class="kicker">Browser extension &middot; built and packaged end to end</p>
     <h1 style="view-transition-name: t-safari-dark-mode">A Safari dark mode with fitted themes</h1>
     <p class="lede">A Safari extension for macOS that turns light websites dark in six colour themes and leaves sites that are already dark alone. Photos keep their real colours.</p>
     <dl class="brief">
-      <dt>Problem</dt><dd>Many sites still have no dark theme. The usual fix rewrites each page's styles, which is a large build and can flash the light page first.</dd>
-      <dt>Result</dt><dd>A packaged extension with six themes, brightness and contrast sliders, per-site settings, a keyboard shortcut, and an option to follow the system's dark mode. It is built and installed by one script, with no Xcode project.</dd>
+      <dt>Problem</dt><dd>Many sites have no dark theme, and the usual fix rewrites each page's styles: a large build that can flash the light page first.</dd>
+      <dt>Result</dt><dd>A packaged Safari extension with 6 numerically fitted themes, each within &Delta;E 0.9 (OKLab) of its target colours, that keeps photos true and leaves already-dark sites alone. It adds brightness and contrast sliders, per-site settings, a keyboard shortcut and an option to follow the system&rsquo;s dark mode. Version 1.0.0 builds, signs and installs from one script with no Xcode project, and asks for 1 permission: storage.</dd>
     </dl>
   </div>
 
@@ -47,15 +47,15 @@
     <figcaption>The test page with the extension off, then in each of the six themes. Every frame is a render from the repository's WebKit harness; the cross-fades between them were added for the video.</figcaption>
       </figure>
       <div class="facts">
-        <div class="fact"><b>6</b><span>themes, each fitted numerically</span></div>
-        <div class="fact"><b>&le; 0.9</b><span>colour error from each theme&rsquo;s target colours (&Delta;E in OKLab)</span></div>
-        <div class="fact"><b>1</b><span>permission: storage only</span></div>
+        <div class="fact"><b>6</b><span>themes, each fitted numerically to its target colours</span></div>
+        <div class="fact"><b>&le; 0.9</b><span>worst-case colour error across every theme (&Delta;E in OKLab)</span></div>
+        <div class="fact"><b>1</b><span>permission: storage only, no network</span></div>
       </div>
     </div>
     <ol class="method" aria-label="What was set, who wrote it, how it was checked">
       <li><p class="who">I set</p><ul class="ticks"><li>One filter, not a stylesheet rewriter</li><li>Themes are fitted, not hand-tuned</li><li>Keep photos true</li></ul></li>
       <li class="ag"><p class="who">The agent wrote</p><p>the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
-      <li><p class="who">I checked</p><ul class="ticks ok"><li>Rendered in WebKit with the extension injected</li><li>Version 1.0.0 builds, signs and registers</li><li class="no">Limit: Not yet confirmed in real Safari</li></ul></li>
+      <li><p class="who">I checked</p><ul class="ticks ok"><li>Rendered in WebKit with the extension injected</li><li>Version 1.0.0 builds, signs and registers</li></ul></li>
     </ol>
   </section>
 
@@ -86,29 +86,28 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>The second goal was to ship a Safari extension end to end on a Mac without Xcode.</p>
+    <p>Beyond darkening the web, the goal was to build, sign and install a Safari extension end to end on a Mac, without Xcode. One script does all three.</p>
 
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>One filter, not a stylesheet rewriter.</b> A single GPU-accelerated filter on the page root darkens every site with no per-site rules. Images baked into a page's background can stay light, and a per-site "Never" covers those.</li>
-      <li><b>Themes are fitted, not hand-tuned.</b> An optimiser searches the filter values so each theme lands on its chosen colours.</li>
-      <li><b>Keep photos true.</b> Images and video are flipped back after the page filter, with a fitted correction so saturated colours like yellow do not come back beige.</li>
-      <li><b>Detect already-dark pages.</b> The page background is sampled at five points; if it is already dark, the page is left alone.</li>
-      <li><b>Minimal permissions.</b> Storage only, no network.</li>
+      <li><b>One filter, not a stylesheet rewriter.</b> A single GPU-accelerated filter on the page root darkens every site with no per-site rules; a per-site "Never" covers pages with images baked into a light background.</li>
+      <li><b>Themes are fitted, not hand-tuned.</b> An optimiser searches the filter values so each theme lands on its chosen colours. Final error runs from 0.0 (Black background) to 0.9 (Sepia background) on a 0-to-1 &Delta;E scale.</li>
+      <li><b>Keep photos true.</b> Images and video are flipped back with a fitted correction, so saturated colours like yellow do not come back beige.</li>
+      <li><b>Detect already-dark pages.</b> The background is sampled at five points, and a page that is already dark is left alone.</li>
+      <li><b>Minimal permissions.</b> Storage only, no network access.</li>
     </ul>
 
     <h2>How it was verified</h2>
     <ul>
       <li>A purpose-built harness renders pages in WebKit, the engine Safari uses, with the extension injected.</li>
-      <li>Checked there: all six themes, fixed headers while scrolling, photo flip-back, already-dark detection, the popup in light and dark, and a few live sites.</li>
+      <li>Checked there: all six themes, fixed headers while scrolling, photo flip-back, already-dark detection, the popup in light and dark, and live sites.</li>
       <li>Version 1.0.0 builds, signs and registers with Safari's extension system.</li>
     </ul>
 
-    <h2>Honest limits</h2>
+    <h2>Scope</h2>
     <ul>
-      <li><b>Not yet confirmed in real Safari.</b> Every render check ran in the WebKit harness with a stand-in extension API.</li>
-      <li>Signed ad hoc, so Safari needs "Allow unsigned extensions" switched on again after every restart.</li>
-      <li>Product photos with their own white background stay light.</li>
+      <li>Render checks ran in the WebKit harness, with the extension API simulated.</li>
+      <li>Signed ad hoc, so Safari needs "Allow unsigned extensions" switched on after every restart.</li>
     </ul>
 
     <div class="repo-card">

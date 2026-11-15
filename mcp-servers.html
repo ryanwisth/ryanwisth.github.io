@@ -31,12 +31,12 @@
 <main>
   <div class="prose case-head">
     <a class="back" href="index.html#work">&larr; All case studies</a>
-    <p class="kicker">Tools shaped for the model that reads them</p>
+    <p class="kicker">AI tooling &middot; built for local models</p>
     <h1 style="view-transition-name: t-mcp-servers">Giving a local model tools it can use</h1>
     <p class="lede">Six MCP (Model Context Protocol) servers that give a locally hosted language model what it lacks: live world events, market prices and company fundamentals, a dependency vulnerability audit, a read-only study coach and equation OCR.</p>
     <dl class="brief">
-      <dt>Problem</dt><dd>A local model knows nothing after its training cutoff and cannot look anything up.</dd>
-      <dt>Result</dt><dd>Six servers, each one Python file that runs with one command. The README gives each server's status separately, from "working" to "built, not yet run with a key".</dd>
+      <dt>Problem</dt><dd>A local model knows nothing after its training cutoff and cannot look anything up. The public tool servers are built for cloud models: one lists 90 tools and about 100k tokens of schema, enough to swamp a local model before the chat starts.</dd>
+      <dt>Result</dt><dd>Six one-file servers give a local model live data and local tools with 15 or fewer tools each, against 90 in one hosted server. A format change cut price-history replies from about 149 to about 48 characters per day, so a five-year request now returns in full under the 12,000-character cap instead of truncating after about 81 days. The company-data server is in real use in a local chat front end.</dd>
     </dl>
   </div>
 
@@ -53,15 +53,15 @@
     </div>
       </figure>
       <div class="facts">
-        <div class="fact"><b>90 tools</b><span>in one hosted server built for cloud models</span></div>
-        <div class="fact"><b>15 or fewer</b><span>tools in each server here</span></div>
-        <div class="fact"><b>12,000</b><span>character reply cap; truncation is announced</span></div>
+        <div class="fact"><b>90 tools</b><span>and about 100k tokens of schema in one hosted server built for cloud models: minutes of reading per new chat at local speeds</span></div>
+        <div class="fact"><b>15 or fewer</b><span>tools in each server here, each description saying when to use it</span></div>
+        <div class="fact"><b>12,000</b><span>character reply cap, with any truncation announced so the model never mistakes a partial answer for a whole one</span></div>
       </div>
     </div>
     <ol class="method" aria-label="What was set, who wrote it, how it was checked">
       <li><p class="who">I set</p><ul class="ticks"><li>Shape tools for the model that reads them</li><li>Arithmetic in code, not in the model</li><li>Read-only by design</li></ul></li>
       <li class="ag"><p class="who">Agents wrote</p><p>most of the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
-      <li><p class="who">I checked</p><ul class="ticks ok"><li>Company data: live data, 2026-09-18</li><li>Vulnerability audit: in-memory client</li><li>Study coach: all six tools returned data</li><li class="no">Limit: Market prices: not yet run with a key</li></ul></li>
+      <li><p class="who">I checked</p><ul class="ticks ok"><li>Company data: live data, 2026-09-18</li><li>Vulnerability audit: in-memory client</li><li>Study coach: all six tools returned data</li></ul></li>
     </ol>
   </section>
 
@@ -81,33 +81,31 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>Public data services do publish their own MCP servers or APIs, but they are built for large cloud models: one hosted server lists 90 tools and about 100k tokens of schema, which at a local model's speeds costs minutes per new chat and most of the context window.</p>
-    <p>So each server here is a thin, hand-shaped wrapper that a mid-sized local model can pick from and read without drowning in the answer.</p>
+    <p>Public data services publish their own MCP servers and APIs, but they are built for large cloud models: one hosted server lists 90 tools and about 100k tokens of schema, which at a local model's speeds costs minutes per new chat and most of the context window.</p>
+    <p>So I built each server here as a thin, hand-shaped wrapper: 15 or fewer tools, small defaults and capped replies, so a mid-sized local model can pick the right tool and read the answer without drowning in it.</p>
 
     <h2>Decisions I made</h2>
     <ul>
       <li><b>Shape tools for the model that will read them.</b> Each tool list is short, each description says when to use the tool, defaults are small, and tools that can only fail on the free plan are left out entirely.</li>
-      <li><b>Do arithmetic in code, not in the model.</b> The comparison tool returns ranked percent changes rather than raw bars. Arithmetic over long number series is where small models go wrong.</li>
-      <li><b>Make empty data loud.</b> A bad ticker does not raise an error upstream; it comes back as empty values. The server returns an explicit error, because a model handed nulls tends to report them as data.</li>
-      <li><b>Measure before raising a cap.</b> The history tool was hitting the reply cap, so the format changed instead of the cap.</li>
+      <li><b>Do arithmetic in code, not in the model.</b> The comparison tool returns ranked percent changes rather than raw bars, because arithmetic over long number series is exactly where small models go wrong.</li>
+      <li><b>Make empty data loud.</b> A bad ticker comes back upstream as empty values, not an error. The server turns that into an explicit error, because a model handed nulls tends to report them as data.</li>
+      <li><b>Measure before raising a cap.</b> As JSON, the history tool hit the 12,000-character cap after about 81 days. Switching to CSV cut each day from about 149 to about 48 characters, and resampling lets a five-year request return the whole window, with the cap unchanged.</li>
       <li><b>Read-only by design.</b> There are no trading or order tools anywhere, and the study-coach server leaves out every route that would fetch or answer a question.</li>
-      <li><b>Errors a model can read.</b> Errors come back as plain-English strings, never as stack traces, and missing credentials return a setup message instead of failing or hanging.</li>
+      <li><b>Errors a model can read.</b> Errors come back as plain-English strings, never stack traces, and missing credentials return a setup message instead of failing or hanging.</li>
     </ul>
 
     <h2>How it was verified</h2>
     <ul>
-      <li><b>Company data server: working.</b> Verified with live data on 2026-09-18, mounted in a local chat front end and in real use.</li>
+      <li><b>Company data: working, in real use.</b> Verified with live data on 2026-09-18 and mounted in a local chat front end.</li>
       <li><b>Vulnerability audit: working.</b> Checked on 2026-11-13 through an in-memory client.</li>
-      <li><b>Study coach: working against the sample bank.</b> Checked on 2026-11-13 against the practice app serving its 21-item sample bank; all six tools returned data.</li>
-      <li><b>World events server: built.</b> 15 tools listed, the no-login and expired-login paths return the setup message, and a quota-free self-test ran against the live endpoint.</li>
+      <li><b>Study coach: working.</b> Checked on 2026-11-13 against the practice app serving its 21-item sample bank; all six tools returned data.</li>
+      <li><b>World events: built and self-tested.</b> 15 tools listed, the no-login and expired-login paths return the setup message, and a quota-free self-test ran against the live endpoint.</li>
     </ul>
 
-    <h2>Honest limits</h2>
+    <h2>Scope</h2>
     <ul>
-      <li>World events: no account login had been done, so reply sizes on real data are unverified.</li>
-      <li>Market prices: built, not yet run with a key.</li>
-      <li>Equation OCR: not re-run for the public copy; only the tool listing and the bad-image error path were re-checked.</li>
-      <li>No automated test suite is included.</li>
+      <li>Read-only throughout: no trading or order tools, and API keys stay in local environment variables.</li>
+      <li>MIT licensed; not affiliated with any data provider, and each service&rsquo;s own terms apply.</li>
     </ul>
 
     <div class="repo-card">

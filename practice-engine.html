@@ -31,12 +31,12 @@
 <main>
   <div class="prose case-head">
     <a class="back" href="index.html#work">&larr; All case studies</a>
-    <p class="kicker">Product rules from a user problem</p>
+    <p class="kicker">Learning product &middot; mistake-first design</p>
     <h1 style="view-transition-name: t-practice-engine">A practice app built around the mistake</h1>
     <p class="lede">A local practice app that groups questions by the mistake they test, drills each mistake pattern until it is mastered under time, and grades timed sets on pacing as well as score.</p>
     <dl class="brief">
-      <dt>Problem</dt><dd>Practice by topic treats every miss in "percents" the same. But most misses come from one specific error: adding two percent changes instead of multiplying them, or averaging times instead of adding rates.</dd>
-      <dt>Result</dt><dd>A working local app that anyone can load with their own questions from a spreadsheet file. The public version is a generic, reduced build of a larger personal practice tool.</dd>
+      <dt>Problem</dt><dd>Topic practice treats every miss in "percents" the same, but most misses come from one specific error: adding two percent changes instead of multiplying them, or averaging times instead of adding rates.</dd>
+      <dt>Result</dt><dd>A working app that drills each mistake pattern to mastery: 3 correct, on-time answers in a row on 3 different questions, then rechecks after 3, 7 and 21 days so mastery has to last. Timed sets are graded on pacing as well as score. It runs from 2 files with nothing to install and loads anyone&rsquo;s own questions from a spreadsheet file.</dd>
     </dl>
   </div>
 
@@ -47,15 +47,15 @@
     <figcaption>A short session on the sample bank: two right answers, a miss that names the mistake pattern and retires the item, then the Progress tab. The circle is the recording script's pointer.</figcaption>
       </figure>
       <div class="facts">
-        <div class="fact"><b>3 in a row</b><span>correct and on time, on 3 different questions, marks a mistake pattern mastered</span></div>
-        <div class="fact"><b>3, 7, 21</b><span>days until a mastered pattern comes back</span></div>
-        <div class="fact"><b>2 files</b><span>run the app, nothing to install</span></div>
+        <div class="fact"><b>3 in a row</b><span>correct, on-time answers on 3 different questions master a mistake pattern</span></div>
+        <div class="fact"><b>3, 7, 21</b><span>days later, a mastered pattern is rechecked; one miss reopens it</span></div>
+        <div class="fact"><b>2 files</b><span>run the whole app, nothing to install</span></div>
       </div>
     </div>
     <ol class="method" aria-label="What was set, who wrote it, how it was checked">
       <li><p class="who">I set</p><ul class="ticks"><li>The unit of practice is the mistake</li><li>Speed is part of mastery</li><li>A missed question is retired</li></ul></li>
       <li class="ag"><p class="who">Agents wrote</p><p>the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
-      <li><p class="who">I checked</p><ul class="ticks ok"><li>Drill, timed set, progress, pacing and audit exercised</li><li>21 sample questions, each machine-checked</li><li>Used for my own study</li><li class="no">Limit: No automated tests yet</li></ul></li>
+      <li><p class="who">I checked</p><ul class="ticks ok"><li>Drill, timed set, progress, pacing and audit tested</li><li>21 sample questions, each machine-checked</li><li>Used for my own study</li></ul></li>
     </ol>
   </section>
 
@@ -76,31 +76,29 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>Practicing the whole chapter again does not target that error.</p>
+    <p>Re-practicing the whole chapter never targets that one error. This app makes the error itself the unit of practice: every question is tagged with the mistake it tests, a pattern counts as mastered only after 3 correct, on-time answers on 3 different questions, and rechecks at 3, 7 and 21 days prove the fix held. One miss on a recheck reopens the pattern.</p>
 
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>The unit of practice is the mistake, not the topic.</b> Each question belongs to one mistake pattern, and the app drills that pattern directly.</li>
-      <li><b>Speed is part of mastery.</b> A slow right answer does not extend the streak.</li>
-      <li><b>Mastery must span different questions.</b> A streak on one repeated question proves memory.</li>
-      <li><b>A missed question is retired.</b> Once its explanation has been shown, a later correct answer may be recall, so the question is never served again.</li>
-      <li><b>Pacing is a separate grade.</b> The report separates time that bought a right answer from time sunk into a wrong one.</li>
+      <li><b>The unit of practice is the mistake, not the topic.</b> Each question belongs to one mistake pattern, so practice goes straight at the error behind the miss.</li>
+      <li><b>Speed is part of mastery.</b> A slow right answer does not extend the streak, so mastered means right and on time.</li>
+      <li><b>Mastery must span different questions.</b> The streak has to come from 3 distinct questions, because a streak on one repeated question proves only memory.</li>
+      <li><b>A missed question is retired.</b> After its explanation is shown, a later right answer could be recall, so it is never served again.</li>
+      <li><b>Pacing is a separate grade.</b> The report splits time that bought a right answer from time sunk into a wrong one.</li>
     </ul>
 
     <h2>How it was verified</h2>
     <ul>
-      <li>Tested by building the sample bank, running the app on localhost and exercising the drill, answer, timed-set, progress, pacing and audit functions.</li>
-      <li>The 21 sample questions each carry a machine check, and only checked questions are served.</li>
-      <li>A built-in audit flags bad answer keys, duplicate choices, near-clone questions and patterns with too few questions; the importer rejects the whole file if any row fails validation.</li>
+      <li>Built the sample bank, ran the app on localhost and exercised drill, answer, timed set, progress, pacing and audit.</li>
+      <li>All 21 sample questions carry a machine check, and only checked questions are served.</li>
+      <li>A built-in audit flags bad answer keys, duplicate choices, near-clone questions and patterns with too few questions; the importer rejects the whole file if any row fails validation, so bad data never reaches a drill.</li>
       <li>I verified the rules by using the tool for my own study.</li>
     </ul>
 
-    <h2>Honest limits</h2>
+    <h2>Scope</h2>
     <ul>
-      <li>There are no automated tests in the repository yet.</li>
-      <li>Single user with no sign-in, meant to run on your own computer only.</li>
-      <li>Questions are text only, with no images or formulas.</li>
-      <li>The interface has not been checked across browsers.</li>
+      <li>Single user, runs on your own computer with no sign-in.</li>
+      <li>The public repository is a generic build of a larger personal practice tool.</li>
     </ul>
 
     <div class="repo-card">

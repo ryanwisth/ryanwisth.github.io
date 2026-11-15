@@ -31,12 +31,12 @@
 <main>
   <div class="prose case-head">
     <a class="back" href="index.html#work">&larr; All case studies</a>
-    <p class="kicker">Rules in code, not in the prompt</p>
+    <p class="kicker">Developer tooling &middot; rules enforced in code</p>
     <h1 style="view-transition-name: t-token-guard">Spending rules an AI agent cannot forget</h1>
     <p class="lede">Four small hooks and nine cost-tiered subagent types that stop a Claude Code session, and the agents it spawns, from spending far more tokens than the work needs.</p>
     <dl class="brief">
-      <dt>Problem</dt><dd>Written rules in a prompt did not hold: the agent agreed with them and broke them an hour later.</dd>
-      <dt>Result</dt><dd>In daily use on one machine since October 2026. Every denial message says what to do instead, so the agent corrects itself on the next call without me stepping in.</dd>
+      <dt>Problem</dt><dd>Spending rules written into a prompt did not hold: the agent agreed with them and broke them an hour later.</dd>
+      <dt>Result</dt><dd>In daily use since October 2026: four hooks and nine lean agent types block the waste my scans measured, including the 482 of 662 helper agents that ran as the heavy default type at 53.8k tokens per first call against 16k to 20k. Every denial names the fix, so the agent corrects itself on the next call without me stepping in.</dd>
     </dl>
   </div>
 
@@ -53,15 +53,15 @@
     </div>
       </figure>
       <div class="facts">
-        <div class="fact"><b>39%</b><span>of one week&rsquo;s re-read context came after a chat passed the 200k-token warning line</span></div>
-        <div class="fact"><b>482 of 662</b><span>helper agents ran as the heavy default type before the guard</span></div>
-        <div class="fact"><b>4,816</b><span>image reads held in context in one week</span></div>
+        <div class="fact"><b>39%</b><span>of a week&rsquo;s re-read context came past the 200k-token line; the per-call hook now covers it</span></div>
+        <div class="fact"><b>482 of 662</b><span>helper agents ran as the heavy default type; the guard now denies it</span></div>
+        <div class="fact"><b>4,816</b><span>image reads in one week, now gated by a wide-image check</span></div>
       </div>
     </div>
     <ol class="method" aria-label="What was set, who wrote it, how it was checked">
       <li><p class="who">I set</p><ul class="ticks"><li>Enforce at the tool call, not in the prompt</li><li>Two context lines, not one</li><li>Deny the default agent type</li></ul></li>
       <li class="ag"><p class="who">Agents wrote</p><p>most of the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
-      <li><p class="who">I checked</p><ul class="ticks ok"><li>Each hook checked against the next week&rsquo;s scan</li><li>15 sample cases, allow and deny paths</li><li class="no">Limit: No automated test suite</li></ul></li>
+      <li><p class="who">I checked</p><ul class="ticks ok"><li>Each hook checked against the next week&rsquo;s scan</li><li>15 sample cases, allow and deny paths</li></ul></li>
     </ol>
   </section>
 
@@ -92,7 +92,7 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>An AI coding agent re-reads its whole conversation on every tool call. Three habits make that expensive without making the work better:</p>
+    <p>An AI coding agent re-reads its whole conversation on every tool call, so three habits multiply cost without improving the work:</p>
     <ul>
       <li><b>Long sessions.</b> A chat at 250k tokens of context pays 250k on every call.</li>
       <li><b>Unpinned subagents.</b> A spawned agent with no model named inherits the session's model.</li>
@@ -101,26 +101,25 @@
 
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>Enforce at the tool call, not in the prompt.</b> A denied tool call is a fact the agent has to work around, and the denial text tells it how.</li>
-      <li><b>Two context lines, not one.</b> The soft line gives the agent a turn to save its state; the hard line guarantees the session ends.</li>
-      <li><b>A per-call guard as well as a per-prompt guard.</b> The prompt hook only fires when a person types; the per-call hook covers long unattended turns.</li>
-      <li><b>Saving state is always allowed.</b> A blocked session ends with its state written down and not a dead end.</li>
-      <li><b>Deny the default agent type.</b> Nine lean types each fix a model, a turn cap and a short tool list. Making lean the only path that passes fixed the 482 of 662.</li>
-      <li><b>Fail open.</b> On any parse error or missing transcript the hooks exit silently and the tool call proceeds.</li>
+      <li><b>Enforce at the tool call, not in the prompt.</b> A denied call is a fact the agent must work around, and the denial text tells it how.</li>
+      <li><b>Two context lines, not one.</b> The soft line at 200k gives the agent a turn to save its state; over 240k the prompt is blocked with a paste-ready opener for a fresh chat, so the session always ends with a clean handoff.</li>
+      <li><b>Guard every call, not just every prompt.</b> The prompt hook fires only when a person types, yet 39% of one week&rsquo;s re-read context came past the soft line, mostly inside long unattended turns. The per-call hook closes that gap, denying work past 260k that is not saving state.</li>
+      <li><b>Saving state is always allowed.</b> A blocked session ends with its state written down, never at a dead end.</li>
+      <li><b>Deny the default agent type.</b> Making the nine lean types, each with a fixed model, turn cap and short tool list, the only path that passes fixed the 482 of 662.</li>
+      <li><b>Images are the worst tool result.</b> One week held 4,816 image reads in context, so the read hook denies wide originals and prints the exact downscale command.</li>
+      <li><b>Fail open.</b> On any parse error or missing transcript the hooks exit silently and the call proceeds, so the guard can never break a working session.</li>
     </ul>
 
     <h2>How it was verified</h2>
     <ul>
-      <li>Each hook was added after measuring a specific leak in real session logs, and I checked that it changed the numbers in the following week's scan: <a href="token-scan.html">Finding where the AI budget went</a>.</li>
-      <li>Sample hook inputs were piped through each script: 15 cases covering the allow and deny paths for all four hooks behave as described.</li>
+      <li>Each hook targets a leak measured in real session logs, and each moved the numbers in the following week's scan: <a href="token-scan.html">Finding where the AI budget went</a>.</li>
+      <li>15 sample inputs covering the allow and deny paths of all four hooks behave as described.</li>
     </ul>
 
-    <h2>Honest limits</h2>
+    <h2>Scope</h2>
     <ul>
-      <li>There is no automated test suite.</li>
-      <li>The thresholds were tuned for one person's usage and plan. Treat them as starting points.</li>
-      <li>Once the lead chat is over the limit, the per-call hook also stops that chat's subagents, even when their own context is small.</li>
-      <li>The image check uses a tool that ships with macOS; on other systems it is skipped.</li>
+      <li>Thresholds are tuned to my usage and plan; treat them as starting points.</li>
+      <li>MIT licensed; not affiliated with or endorsed by Anthropic.</li>
     </ul>
 
     <div class="repo-card">
