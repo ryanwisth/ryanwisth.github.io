@@ -28,6 +28,67 @@
     });
   });
 
+  // ---------- seams ----------
+  // Felt pieces are sewn on with a blanket stitch (a thread on the edge, ticks across it), text panels with a running
+  // stitch. Drawn as SVG in px from the box size, the dash fitted so the stitches meet evenly round the corners.
+  // Set up before the motion check so a reduced-motion visitor gets them too; CSS dashes stand in without scripts.
+  var NS = 'http://www.w3.org/2000/svg';
+  function mk(tag, cls, parent) { var e = d.createElementNS(NS, tag); if (cls) e.setAttribute('class', cls); if (parent) parent.appendChild(e); return e; }
+  function sew(el, w, h) {
+    var s = el._sew;
+    if (!s || !w || !h || (s.w === w && s.h === h)) return;
+    s.w = w; s.h = h;
+    var R = parseFloat(getComputedStyle(el).borderTopLeftRadius) || 0;
+    s.parts.forEach(function (p) { // [rect, inset, dash, period, drop]
+      var i = p[1], e = p[0], iw = Math.max(0, w - 2 * i), ih = Math.max(0, h - 2 * i), rr = Math.max(0, Math.min(R - i, iw / 2, ih / 2));
+      e.setAttribute('x', i); e.setAttribute('y', i + (p[4] || 0)); e.setAttribute('width', iw); e.setAttribute('height', ih);
+      e.setAttribute('rx', rr.toFixed(2)); e.setAttribute('ry', rr.toFixed(2));
+      if (p[2]) {
+        var P = 2 * (iw + ih) - 8 * rr + 2 * Math.PI * rr, n = Math.max(4, Math.round(P / p[3]));
+        e.setAttribute('stroke-dasharray', p[2] + ' ' + (P / n - p[2]).toFixed(3));
+      }
+    });
+  }
+  if (window.ResizeObserver) {
+    var sro = new ResizeObserver(function (es) {
+      es.forEach(function (en) {
+        var bb = en.borderBoxSize && en.borderBoxSize[0], t = en.target;
+        sew(t, bb ? bb.inlineSize : t.offsetWidth, bb ? bb.blockSize : t.offsetHeight);
+      });
+    });
+    [['.card, .principle, .band, .band3 > div, .flow li', 1], ['.method > li, .fact, .chart-card, .repo-card, .tblock, .readme, .group-h', 0]].forEach(function (g) {
+      d.querySelectorAll(g[0]).forEach(function (el) {
+        if (el._sew) return;
+        var sv = mk('svg', 'seam ' + (g[1] ? 'blanket' : 'running'));
+        sv.setAttribute('aria-hidden', 'true'); sv.setAttribute('focusable', 'false');
+        el._sew = { parts: g[1] ? [[mk('rect', 'sm-edge', sv), 1.2], [mk('rect', 'sm-tick', sv), 4.45, 2.2, 9.5]]
+          : [[mk('rect', 'sm-sh', sv), 8, 5.6, 13, 1.2], [mk('rect', 'sm-run', sv), 8, 5.6, 13]] };
+        if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+        el.appendChild(sv); sro.observe(el);
+      });
+    });
+  } else r.classList.remove('js'); // no seams to draw: let the dashed fallback show
+
+  // plied yarn: twist marks on a polyline that follows the strand, one every 6 px (marker-mid draws one per vertex)
+  var plyN = 0;
+  function plied(svg, before) {
+    var id = 'ply' + (++plyN), defs = mk('defs'), m = mk('marker', '', defs), pl = mk('polyline', 'y-ply');
+    m.setAttribute('id', id); m.setAttribute('markerUnits', 'userSpaceOnUse'); m.setAttribute('orient', 'auto');
+    m.setAttribute('markerWidth', '1'); m.setAttribute('markerHeight', '1'); m.setAttribute('overflow', 'visible');
+    mk('path', 'ply-mark', m).setAttribute('d', 'M-1.6 2.5L1.6 -2.5');
+    pl.setAttribute('marker-mid', 'url(#' + id + ')');
+    svg.insertBefore(defs, svg.firstChild); svg.insertBefore(pl, before || null);
+    return pl;
+  }
+  function samples(path, len) {
+    var out = [], L = Math.min(len, path.getTotalLength()), s, p;
+    for (s = 0; s <= L; s += 6) { p = path.getPointAtLength(s); out.push(p.x.toFixed(1) + ',' + p.y.toFixed(1)); }
+    return out;
+  }
+  d.querySelectorAll('.linechart .ln1').forEach(function (ln) {
+    try { plied(ln.ownerSVGElement, ln.nextSibling).setAttribute('points', samples(ln, 1e9).join(' ')); } catch (e) {}
+  });
+
   // motion, only when the visitor has not asked for less of it
   if (matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) return;
   r.classList.add('motion');
@@ -122,8 +183,14 @@
   function guide(host, dim, build, onlit) {
     var ov = d.createElement('div');
     ov.className = 'guide'; ov.setAttribute('aria-hidden', 'true');
-    ov.innerHTML = '<svg focusable="false"><path class="g-track"/><path class="g-trail"/><path class="g-m" visibility="hidden"/></svg><i class="g-ball"></i>';
+    ov.innerHTML = '<svg focusable="false"><path class="g-track"/><path class="y-sh"/><path class="y-edge"/><path class="g-trail"/><path class="g-m" visibility="hidden"/></svg><i class="g-ball"></i>';
     var track = ov.querySelector('.g-track'), trail = ov.querySelector('.g-trail'), meter = ov.querySelector('.g-m'), ball = ov.lastChild;
+    var gsh = ov.querySelector('.y-sh'), ged = ov.querySelector('.y-edge'), gply = plied(ov.firstChild, meter);
+    function yarnTo(dsh) { // the strand's shadow, edge and twist follow its shape and drawn length
+      var dd = trail.getAttribute('d'); gsh.setAttribute('d', dd); ged.setAttribute('d', dd);
+      trail.style.strokeDasharray = gsh.style.strokeDasharray = ged.style.strokeDasharray = dsh;
+      gply.setAttribute('points', samples(trail, dsh === 'none' ? 1e9 : parseFloat(dsh)).join(' '));
+    }
     var pts, cum, slack, snapT, mid, travel = null, state = 0, cur = 0, timer; // state: 0 waiting, 1 running, 2 done
     function R(el) {
       var h = host.getBoundingClientRect(), r = el.getBoundingClientRect();
@@ -157,7 +224,7 @@
       state = 2; clearTimeout(timer); travel = null;
       layout();
       pts.forEach(function (p) { each(p.hit, function (el) { el.classList.add('lit'); }); });
-      trail.style.strokeDasharray = 'none'; trail.classList.add('on'); ball.style.transform = pos(pts.length - 1);
+      yarnTo('none'); [trail, gsh, ged].forEach(function (p) { p.classList.add('on'); }); ball.style.transform = pos(pts.length - 1);
       ball.classList.remove('hit'); ball.classList.add('show', 'rest');
     }
     function frame(now) {
@@ -172,13 +239,13 @@
         if (!travel.t0) travel.t0 = now;
         k = Math.min(1, (now - travel.t0) / travel.dur); e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
         a = lenTo(travel.a); b = lenTo(travel.n); len = a + (b - a) * e;
-        trail.style.strokeDasharray = len.toFixed(1) + ' 99999';
+        yarnTo(len.toFixed(1) + ' 99999');
         p = trail.getPointAtLength(len); ball.style.transform = 'translate(' + p.x.toFixed(1) + 'px,' + p.y.toFixed(1) + 'px)';
         if (k >= 1) {
           for (i = travel.a + 1; i <= travel.n; i++) snapT[i] = now;
           cur = travel.n; travel = null; ball.style.transform = pos(cur); leg();
         }
-      } else trail.style.strokeDasharray = lenTo(cur).toFixed(1) + ' 99999';
+      } else yarnTo(lenTo(cur).toFixed(1) + ' 99999');
       requestAnimationFrame(frame);
     }
     function leg() { // the button is sitting on stop `cur`
@@ -201,8 +268,8 @@
     dim.forEach(function (el) { el.classList.add('g-stop'); });
     host.appendChild(ov);
     ['scroll', 'wheel', 'touchstart', 'pointerdown', 'keydown'].forEach(function (ev) { addEventListener(ev, finish, { passive: true }); });
-    addEventListener('resize', function () { if (state < 2) finish(); else { layout(); ball.style.transform = pos(pts.length - 1); } });
-    addEventListener('load', function () { if (state) { layout(); if (state === 2) ball.style.transform = pos(pts.length - 1); } });
+    addEventListener('resize', function () { if (state < 2) finish(); else { layout(); yarnTo('none'); ball.style.transform = pos(pts.length - 1); } });
+    addEventListener('load', function () { if (state) { layout(); if (state === 2) { yarnTo('none'); ball.style.transform = pos(pts.length - 1); } } });
     setTimeout(function () { // after the entry animations have settled
       if (state) return;
       try { layout(); } catch (e) { state = 2; host.classList.remove('g-run'); ov.remove(); return; }
@@ -266,8 +333,9 @@
   // reading line (45% down the window), read from scroll position once a frame, so a jump cannot leave it stale.
   var th = d.querySelector('.thread'), grs = d.querySelectorAll('.groups .group');
   if (th && grs.length) {
-    th.innerHTML = '<svg focusable="false"><path class="th-holes"/><path class="th-line"/></svg><i class="th-head"></i>';
+    th.innerHTML = '<svg focusable="false"><path class="th-holes"/><path class="y-sh"/><path class="y-edge"/><path class="th-line"/></svg><i class="th-head"></i>';
     var holes = th.querySelector('.th-holes'), yarn = th.querySelector('.th-line'), head = th.lastChild, stops = [], tlen = 0, tick = 0;
+    var tsh = th.querySelector('.y-sh'), ted = th.querySelector('.y-edge'), tply = plied(th.firstChild), tpts = [];
     var lay = function () {
       stops = []; th.classList.remove('live');
       if (th.offsetParent === null) return; // hidden on narrow screens
@@ -282,14 +350,16 @@
         stops.push(by); px = x;
       });
       s += 'L' + px + ' ' + (pb + 30);
-      holes.setAttribute('d', s); yarn.setAttribute('d', s); tlen = yarn.getTotalLength(); th.classList.add('live');
+      holes.setAttribute('d', s); yarn.setAttribute('d', s); tsh.setAttribute('d', s); ted.setAttribute('d', s);
+      tlen = yarn.getTotalLength(); tpts = samples(yarn, tlen); th.classList.add('live');
     };
     var run = function () {
       tick = 0;
       if (!stops.length) return;
       var y = innerHeight * .45 - th.getBoundingClientRect().top, lo = 0, hi = tlen, m, k, p;
       for (k = 0; k < 18; k++) { m = (lo + hi) / 2; if (yarn.getPointAtLength(m).y < y) lo = m; else hi = m; }
-      yarn.style.strokeDasharray = lo.toFixed(1) + ' 99999';
+      tsh.style.strokeDasharray = ted.style.strokeDasharray = yarn.style.strokeDasharray = lo.toFixed(1) + ' 99999';
+      tply.setAttribute('points', tpts.slice(0, Math.floor(lo / 6) + 1).join(' '));
       p = yarn.getPointAtLength(lo); head.style.transform = 'translate(' + p.x.toFixed(1) + 'px,' + p.y.toFixed(1) + 'px)';
       head.style.opacity = lo < 2 ? 0 : 1;
       [].forEach.call(grs, function (g, i) { g.classList.toggle('on', stops[i] <= y); });
