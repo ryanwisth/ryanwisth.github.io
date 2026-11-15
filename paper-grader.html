@@ -35,8 +35,8 @@
     <h1 style="view-transition-name: t-paper-grader">AI feedback written in ink, and a colour <span style="white-space: nowrap">e-ink</span> display decoded safely</h1>
     <p class="lede">Two projects on one reMarkable Paper Pro. Press a Grade button, and an AI model reviews the handwritten work on that page and writes its feedback back onto the page as real pen strokes. Separately, interoperability research worked out how the tablet drives its colour e-ink panel, well enough to draw on the screen with our own code instead of the vendor's library.</p>
     <dl class="brief">
-      <dt>Problem</dt><dd>Getting feedback on handwritten work usually means retyping the work into a computer or photographing it. And the tablet's screen is driven by a closed library, so nobody can write software that draws on the display directly.</dd>
-      <dt>Result</dt><dd>Tap a button and the tablet returns checked, handwritten-style feedback on the page in seconds, 24 pages per batch, with the student's own ink never altered. On the display, 314 waveform files were decoded and verified, and my own code drew directly on the colour e-ink panel in three update modes.</dd>
+      <dt>Problem</dt><dd>Feedback on handwritten work usually means retyping it into a computer or photographing it. And the tablet's screen is driven by a closed library, so no outside software can draw on the display directly.</dd>
+      <dt>Result</dt><dd>Built and used on the device in August 2026: tap Grade and within seconds the page carries a verdict, the mistake struck through and the worked continuation, in handwritten-style ink, including 24-page batches, with every equation checked in code and 0 changes to the student's own ink. On the display, all 314 waveform files were decoded and pass their checksums, and my own code drew directly on the colour e-ink panel in three colour update modes, from 11 frames (about 0.13 s) for fast black-and-white to 86 (about 1 s) for full colour.</dd>
     </dl>
   </div>
 
@@ -47,9 +47,9 @@
     <figcaption>Two invented feedback lines run through the grader's handwriting module (<code>ems.py</code>, with its pen-width pass), in the tablet's blue and red. These are the strokes the tablet is sent, drawn here as a picture; this is not a capture from the device.</figcaption>
       </figure>
       <div class="facts">
-        <div class="fact"><b>0</b><span>erase or delete commands in the tablet bridge</span></div>
-        <div class="fact"><b>24 pages</b><span>graded in one batch on the device</span></div>
-        <div class="fact"><b>314</b><span>waveform files decoded, all passing checksums</span></div>
+        <div class="fact"><b>0</b><span>erase or delete commands in the tablet bridge: the AI can add, never remove</span></div>
+        <div class="fact"><b>24 pages</b><span>graded in one batch on the device, from one button press</span></div>
+        <div class="fact"><b>314</b><span>waveform files decoded, all passing checksums before any write</span></div>
       </div>
     </div>
     <ol class="method" aria-label="What was set, who wrote it, how it was checked">
@@ -101,27 +101,30 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>Working problems by hand on paper-like e-ink is good for learning. The goal was to close the feedback loop on the device itself: write, tap Grade, and a few seconds later the margin shows a verdict, the mistake struck through, and the worked continuation from where things went wrong.</p>
-    <p>On the display side, the wrong drive signals can permanently ghost or damage an e-ink panel, so every step had to be safe by design.</p>
+    <p>Working problems by hand on paper-like e-ink is good for learning, but the feedback loop breaks the moment the work has to leave the page. The goal was to close that loop on the device itself: write, tap Grade, and a few seconds later the margin shows a verdict, the mistake struck through, and the worked continuation from where things went wrong.</p>
+    <p>On the display side, only the vendor's closed library could draw, and the wrong drive signals can permanently ghost or damage an e-ink panel, so every step had to be safe by design.</p>
 
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>Never touch the student's ink.</b> Feedback goes into its own "AI Feedback" layer; skipping a mark beats writing over someone's work.</li>
-      <li><b>Button-triggered only.</b> Nothing grades in the background. The Grade button grades the current page, a set number of pages, or the whole notebook.</li>
-      <li><b>Legible handwriting over clever handwriting.</b> Neural handwriting generators failed on math symbols and digits, so the feedback uses a single-stroke font with natural pen movement.</li>
-      <li><b>Read-only before write.</b> Everything learnable from the public software update was learned first; writing began only once the decoded files predicted the stock frames, and the first write replayed the panel's own boot sequence.</li>
-      <li><b>Protect the panel by design.</b> Each plan is built so every pixel's drive nets to zero or close to it, and the player refuses a plan built for a different temperature band.</li>
+      <li><b>Never touch the student's ink.</b> Feedback goes into its own "AI Feedback" layer the student can delete, and the bridge has 0 erase or delete commands, so the worst case is a skipped mark, never damaged work.</li>
+      <li><b>Button-triggered only.</b> Nothing grades in the background. The Grade button grades the current page, a set number of pages, or the whole notebook, so the student decides when feedback appears.</li>
+      <li><b>Tiered review.</b> A fast model handles clean, correct pages and anything doubtful escalates to the full model, so the expensive model is spent only where a page needs it.</li>
+      <li><b>Describe what the ink shows, not why.</b> The prompt forbids guessing why a mistake happened, and statements about motives or feelings are filtered out, so feedback stays on the work.</li>
+      <li><b>Legible handwriting over clever handwriting.</b> Neural handwriting generators failed on math symbols and digits, so the feedback uses a single-stroke font with natural pen movement that keeps every digit and symbol readable.</li>
+      <li><b>Read-only before write.</b> Everything learnable from the public software update was learned first; writing began only once the decoded files predicted the stock frames, and the first write replayed the sequence the panel already receives at every boot, to limit the risk of the first active write.</li>
+      <li><b>Protect the panel by design.</b> Each plan is built so every pixel's drive nets to zero or close to it, and the player refuses a plan built for a different temperature band, so a mismatched plan never reaches the hardware.</li>
     </ul>
 
     <h2>How it was verified</h2>
     <ul>
-      <li>Every equation the reviewer wants to write is evaluated in code before it is inked. False ones are dropped.</li>
-      <li>A fingerprint of the student's strokes stops an unchanged page from being graded twice.</li>
-      <li>The full loop (button press, capture, review, ink in the feedback layer) was built and used on the device in August 2026, including 24-page batches.</li>
-      <li>A scale bug that drew ink 18% too large on Letter-size worksheets was traced to the coordinate math and fixed.</li>
-      <li>All 314 waveform files decode and pass their CRC-32 and header checksums.</li>
-      <li>A checker compared frames captured from the stock software against the decoded waveforms.</li>
-      <li>Each display finding is labelled by evidence level: verified on the device, verified by static analysis only, or inferred and not yet verified.</li>
+      <li><b>No false math in ink.</b> Every equation the reviewer wants to write is evaluated in code before it is inked, and false ones are dropped, so a model mistake never reaches the page.</li>
+      <li><b>No double grading.</b> A fingerprint of the student's strokes stops an unchanged page from being graded twice, so pressing Grade again never stacks duplicate feedback.</li>
+      <li><b>Used for real.</b> The full loop (button press, capture, review, ink in the feedback layer) was built and used on the device in August 2026, including 24-page batches.</li>
+      <li><b>Bugs traced to the cause.</b> A scale bug that drew ink 18% too large on Letter-size worksheets was traced to the coordinate math and fixed.</li>
+      <li><b>The decode is intact.</b> All 314 waveform files decode and pass their CRC-32 and header checksums, so every file the writer relies on is intact.</li>
+      <li><b>Predictions matched the hardware before any write.</b> A checker compared frames captured from the stock software against the decoded waveforms, confirming the decode describes what the panel really receives.</li>
+      <li><b>Our own frames drew on the panel:</b> a boot-sequence replay, a black-and-white test card, colour cards in three update modes, a partial update with no full clear, and two grey levels.</li>
+      <li><b>Every finding carries its evidence level:</b> verified on the device, verified by static analysis only, or inferred, so each claim says exactly how far it has been proven.</li>
     </ul>
 
     <h2>Scope</h2>
