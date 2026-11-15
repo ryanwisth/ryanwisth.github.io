@@ -358,6 +358,19 @@
     });
   }
 
+  // home, three-lead first screen: headline, then the three lead cases; the ball rests on the third
+  var lh = d.querySelector('.lead-hero > .wrap');
+  if (lh && top0 && lh.querySelectorAll('.leads > .lead').length === 3 && lh.querySelector('h1')) {
+    var lc = lh.querySelectorAll('.leads > .lead'), l1 = lh.querySelector('h1');
+    guide(lh, [].slice.call(lc), function (R, g) {
+      var a = R(lc[0]), b = R(lc[1]), c = R(lc[2]), H = R(l1), x = a.l - g;
+      if (b.t > a.b - 2) // cards stacked (phones): straight down the left edge
+        return [{ x: x, y: H.cy, hit: l1, dwell: 300 }, { x: x, y: a.t + 40, hit: lc[0] }, { x: x, y: b.t + 40, hit: lc[1] }, { x: x, y: c.t + 40, hit: lc[2] }];
+      var y1 = a.t - 10; // along the gap above the cards
+      return [{ x: x, y: H.cy, hit: l1, dwell: 300 }, { x: x, y: y1 }, { x: a.l + 24, y: y1, hit: lc[0] }, { x: b.l + 24, y: y1, hit: lc[1] }, { x: c.l + 24, y: y1, hit: lc[2] }];
+    });
+  }
+
   // case pages: the visual, three figures, I set, Agents wrote, I checked; the ball rests at the stated limit
   var sum = d.querySelector('.sum');
   if (sum && top0) {

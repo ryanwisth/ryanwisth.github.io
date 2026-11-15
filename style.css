@@ -1483,4 +1483,7 @@ footer.site::before {
   .brief dd { margin-bottom: 8px; }
 }
 .how2 .method > li::after { display: none; }
+/* the sheet tag keeps clear of the top bar now that the home hero starts higher */
+.lead-hero .sheet-tag { top: 0; }
+@media (max-width: 620px) { .lead-hero .sheet-tag { top: -30px; } }
 /* === end recruiter-read structure === */
