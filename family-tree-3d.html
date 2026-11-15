@@ -35,8 +35,8 @@
     <h1 style="view-transition-name: t-family-tree-3d">A 3D family tree in one offline file</h1>
     <p class="lede">A build pipeline that turns a genealogy export into a single web page you open from disk: a 3D family tree, a migration map, lineage and statistics views, with no server and no connection.</p>
     <dl class="brief">
-      <dt>Problem</dt><dd>Family trees exported from genealogy sites grow to tens of thousands of people. Pedigree charts and printed posters stop being readable long before that.</dd>
-      <dt>Result</dt><dd>One offline file renders the whole tree in 3D, with map, lineage and statistics views, and runs the private tree it was built for. The public build runs on an invented 420-person family, so anyone can rebuild it end to end.</dd>
+      <dt>Problem</dt><dd>Family trees exported from genealogy sites grow to tens of thousands of people. Pedigree charts and printed posters stop being readable long before that, and hosted viewers lock the tree behind an account and a connection.</dd>
+      <dt>Result</dt><dd>One self-contained page of about 1 MB, opened from disk with no server, no network and 0 third-party libraries, renders the whole tree in 3D alongside a migration map, lineage and statistics views. It runs the private tree it was built for; the public build regenerates end to end from an invented 420-person family, with the payload check at 0 failed and two builds byte-identical.</dd>
     </dl>
   </div>
 
@@ -47,9 +47,9 @@
     <figcaption>The public demo itself: 420 invented people, up is time, colour is where they were born. Click to load the real page here (about 1 MB), or <a href="demo/family-tree-3d.html">open it full screen</a>.</figcaption>
       </figure>
       <div class="facts">
-        <div class="fact"><b>1 file</b><span>holds the whole product: no server, no network</span></div>
-        <div class="fact"><b>0</b><span>third-party libraries behind the 3D view</span></div>
-        <div class="fact"><b>420</b><span>invented people in the demo; no real family data</span></div>
+        <div class="fact"><b>1 file</b><span>holds the whole product: nothing to host, nothing to install, works offline</span></div>
+        <div class="fact"><b>0</b><span>third-party libraries behind the 3D view: raw WebGL, no dependency to break</span></div>
+        <div class="fact"><b>420</b><span>invented people in the public demo, so it can be shared with no real family data</span></div>
       </div>
     </div>
     <ol class="method" aria-label="What was set, who wrote it, how it was checked">
@@ -82,23 +82,24 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>Hosted viewers lock a family tree behind an account and an internet connection.</p>
+    <p>A real family tree needs a view that stays readable as it grows, and hosted viewers lock it behind an account and an internet connection. The goal was a viewer I own outright: one file that opens anywhere offline and can be shared without exposing living relatives.</p>
 
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>One file, opened from disk.</b> A page opened from disk cannot load its own side files, so every piece of data is built into the page itself.</li>
-      <li><b>A layout that stays readable at size.</b> Height is birth year, distance from the center is steps from a chosen root person's line, and angle is the family branch.</li>
-      <li><b>The same data drives every view.</b> The 3D tree, a map of births, marriages, deaths and moves, an ancestry view, and charts with captions computed from the data they describe.</li>
-      <li><b>Safe to share.</b> A share-safe mode shows living people as "Living person" with no dates or places.</li>
-      <li><b>Usable by more people.</b> Name search, keyboard navigation, screen-reader text, a print view, a phone layout, and a flat 2D page for computers that cannot draw 3D.</li>
+      <li><b>One file, opened from disk.</b> A page opened from disk cannot load its own side files, so every piece of data is built into the page itself, and the result opens offline with nothing to host or keep running.</li>
+      <li><b>Raw WebGL, no library.</b> The 3D view is drawn with 0 third-party libraries, so there is no dependency to update, break or load from the network.</li>
+      <li><b>A layout that stays readable at size.</b> Height is birth year, distance from the center is steps from a chosen root person's line, and angle is the family branch, so a person's generation, closeness to the root and branch read from position alone.</li>
+      <li><b>The same data drives every view.</b> The 3D tree, a map of births, marriages, deaths and moves, an ancestry view, and charts whose captions are computed from the data they describe, so no caption can drift from its chart.</li>
+      <li><b>Safe to share.</b> A share-safe mode shows living people as "Living person" with no dates or places, image export included, so the tree can be shown publicly without exposing living relatives.</li>
+      <li><b>Usable by more people.</b> Name search, keyboard navigation, screen-reader text, a print view, a phone layout, and a flat 2D page for computers that cannot draw 3D, so no visitor is left with a blank screen.</li>
     </ul>
 
     <h2>How it was verified</h2>
     <ul>
-      <li><b>The build refuses bad combinations.</b> Each large data block carries a stamp of the person order it was built for.</li>
-      <li><b>Builds are repeatable.</b> Two builds of the sample produce a byte-identical data file.</li>
-      <li><b>Rules that come from real bugs.</b> Each placeholder must appear exactly once, and the page's 59 script pieces are checked for duplicate names before assembly.</li>
-      <li>On the sample, the pipeline runs clean and the payload check reports 0 failed.</li>
+      <li><b>The build refuses bad combinations.</b> Each large data block carries a stamp of the person order it was built for, and the build refuses to combine blocks that disagree, so a stale block can never attach facts to the wrong person.</li>
+      <li><b>Builds are repeatable.</b> Two builds of the sample produce a byte-identical data file, so any change in the output traces back to a change in the input.</li>
+      <li><b>Rules that come from real bugs.</b> Each placeholder must appear exactly once, and the page's 59 script pieces are checked for duplicate names before assembly, so those bugs cannot return silently.</li>
+      <li><b>Clean end to end.</b> On the sample, the full pipeline runs clean, the payload check reports 0 failed before anything is combined, and the page's inlined code passes a syntax check.</li>
     </ul>
 
     <h2>Scope</h2>
