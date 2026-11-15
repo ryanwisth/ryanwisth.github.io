@@ -56,7 +56,7 @@
         sew(t, bb ? bb.inlineSize : t.offsetWidth, bb ? bb.blockSize : t.offsetHeight);
       });
     });
-    [['.card, .principle, .band, .band3 > div, .flow li', 1], ['.method > li, .fact, .chart-card, .repo-card, .tblock, .readme, .group-h', 0]].forEach(function (g) {
+    [['.card, .principle, .band, .band3 > div, .flow li', 1], ['.method > li, .fact, .chart-card, .repo-card, .tblock, .readme', 0]].forEach(function (g) {
       d.querySelectorAll(g[0]).forEach(function (el) {
         if (el._sew) return;
         var sv = mk('svg', 'seam ' + (g[1] ? 'blanket' : 'running'));
@@ -68,6 +68,69 @@
       });
     });
   } else r.classList.remove('js'); // no seams to draw: let the dashed fallback show
+
+  // ---------- selection: a loop of yellow yarn ----------
+  // Hover or keyboard focus on a pressable patch draws a loop of yarn round it, 5 to 9 px outside the box. The SVG is
+  // built on first use and redrawn in px when the box changes size; CSS shows it and draws it in. Set up before the
+  // motion check, so a reduced-motion visitor gets the loop too (already drawn). Without scripts the outline stays.
+  if (window.ResizeObserver) {
+    var loopDraw = function (el, w, h) {
+      var L = el._loop;
+      if (!L || !w || !h || (L.w === w && L.h === h)) return;
+      L.w = w; L.h = h;
+      var cs = getComputedStyle(el), bl = parseFloat(cs.borderLeftWidth) || 0, bt = parseFloat(cs.borderTopWidth) || 0;
+      var R = Math.min(Math.max(parseFloat(cs.borderTopLeftRadius) || 0, 8), w / 2, h / 2);
+      var sw = w - 2 * R, sh = h - 2 * R, q = Math.PI * R / 2, P = 2 * (sw + sh) + 4 * q, C = Math.cos, S = Math.sin;
+      var segs = [ // the box's own rounded outline, walked clockwise from the top left: [length, point and outward normal at t]
+        [sw, function (t) { return [R + t, 0, 0, -1]; }],
+        [q, function (t) { var a = -Math.PI / 2 + t / R; return [w - R + R * C(a), R + R * S(a), C(a), S(a)]; }],
+        [sh, function (t) { return [w, R + t, 1, 0]; }],
+        [q, function (t) { var a = t / R; return [w - R + R * C(a), h - R + R * S(a), C(a), S(a)]; }],
+        [sw, function (t) { return [w - R - t, h, 0, 1]; }],
+        [q, function (t) { var a = Math.PI / 2 + t / R; return [R + R * C(a), h - R + R * S(a), C(a), S(a)]; }],
+        [sh, function (t) { return [0, h - R - t, -1, 0]; }],
+        [q, function (t) { var a = Math.PI + t / R; return [R + R * C(a), R + R * S(a), C(a), S(a)]; }]
+      ];
+      var at = function (s) {
+        s = ((s % P) + P) % P;
+        for (var i = 0; i < 7 && s > segs[i][0]; i++) s -= segs[i][0];
+        return segs[i][1](Math.min(s, segs[i][0]));
+      };
+      // a lap and a little more, so the yarn crosses itself; the gap swells between 5 and 9 px (3.5 waves a lap,
+      // so the overlap sits at a different distance and the two ends cross instead of lying on each other)
+      var s0 = 2 * sw + sh + 3 * q + sh * .35, run = P * 1.08, n = Math.max(24, Math.ceil(run / 5)), dd = '';
+      for (var k = 0; k <= n; k++) {
+        var s = s0 + run * k / n, p = at(s), o = 7 + 2 * S(2 * Math.PI * 3.5 * (s - s0) / P);
+        dd += (k ? 'L' : 'M') + (p[0] + p[2] * o).toFixed(1) + ' ' + (p[1] + p[3] * o).toFixed(1);
+      }
+      var sv = L.svg;
+      sv.style.left = -bl + 'px'; sv.style.top = -bt + 'px'; sv.style.width = w + 'px'; sv.style.height = h + 'px';
+      L.paths.forEach(function (e) { e.setAttribute('d', dd); });
+      var len = L.paths[1].getTotalLength();
+      L.paths.forEach(function (e) { e.setAttribute('stroke-dasharray', len.toFixed(1) + ' ' + (len + 20).toFixed(1)); });
+      sv.style.setProperty('--len', len.toFixed(1) + 'px');
+    };
+    var lro = new ResizeObserver(function (es) {
+      es.forEach(function (en) {
+        var bb = en.borderBoxSize && en.borderBoxSize[0], t = en.target;
+        loopDraw(t, bb ? bb.inlineSize : t.offsetWidth, bb ? bb.blockSize : t.offsetHeight);
+      });
+    });
+    var loopOn = function () {
+      var el = this;
+      if (el._loop) return;
+      var sv = mk('svg', 'loop');
+      sv.setAttribute('aria-hidden', 'true'); sv.setAttribute('focusable', 'false');
+      el._loop = { svg: sv, paths: [mk('path', 'lp-under', sv), mk('path', 'lp-yarn', sv), mk('path', 'lp-hi', sv)] };
+      el._loop.paths[0].setAttribute('transform', 'translate(0 1)');
+      el._loop.paths[2].setAttribute('transform', 'translate(-.5 -1)');
+      if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+      el.appendChild(sv); el.classList.add('lp-on'); lro.observe(el);
+    };
+    d.querySelectorAll('.topnav a, .groupnav a, .pager a, .btn, .card').forEach(function (el) {
+      el.addEventListener('pointerenter', loopOn); el.addEventListener('focusin', loopOn);
+    });
+  }
 
   // plied yarn: twist marks on a polyline that follows the strand, one every 6 px (marker-mid draws one per vertex)
   var plyN = 0;
