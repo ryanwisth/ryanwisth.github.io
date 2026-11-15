@@ -35,6 +35,10 @@
     <p class="kicker">A small product shipped end to end</p>
     <h1 style="view-transition-name: t-safari-dark-mode">A Safari dark mode with fitted themes</h1>
     <p class="lede">A Safari extension for macOS that turns light websites dark in six colour themes and leaves sites that are already dark alone. Photos keep their real colours.</p>
+    <dl class="brief">
+      <dt>Problem</dt><dd>Many sites still have no dark theme. The usual fix rewrites each page's styles, which is a large build and can flash the light page first.</dd>
+      <dt>Result</dt><dd>A packaged extension with six themes, brightness and contrast sliders, per-site settings, a keyboard shortcut, and an option to follow the system's dark mode. It is built and installed by one script, with no Xcode project.</dd>
+    </dl>
   </div>
 
   <section class="sum" aria-label="Summary">
@@ -83,34 +87,29 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>Many sites still have no dark theme. The usual fix rewrites each page's styles, which is a large build and can flash the light page first.</p>
     <p>The second goal was to ship a Safari extension end to end on a Mac without Xcode.</p>
 
-    <h2>What I directed</h2>
-    <p>I set the goal, the feature list and the acceptance checks, and reviewed the results. The agent wrote the code, the theme-fitting script and the test harness.</p>
+    <h2>Decisions I made</h2>
     <ul>
-      <li><b>One filter, not a stylesheet rewriter.</b> A single GPU-accelerated filter on the page root darkens every site with no per-site rules. The trade-off is stated: images baked into a page's background can stay light, and a per-site "Never" covers those.</li>
-      <li><b>Themes are fitted, not hand-tuned.</b> An optimiser searches the filter values so each theme lands on its chosen colours, scored in a perceptual colour space.</li>
+      <li><b>One filter, not a stylesheet rewriter.</b> A single GPU-accelerated filter on the page root darkens every site with no per-site rules. Images baked into a page's background can stay light, and a per-site "Never" covers those.</li>
+      <li><b>Themes are fitted, not hand-tuned.</b> An optimiser searches the filter values so each theme lands on its chosen colours.</li>
       <li><b>Keep photos true.</b> Images and video are flipped back after the page filter, with a fitted correction so saturated colours like yellow do not come back beige.</li>
-      <li><b>Detect already-dark pages.</b> The page background is sampled at five points; if it is already dark, the page is left alone, and the result is cached per site.</li>
+      <li><b>Detect already-dark pages.</b> The page background is sampled at five points; if it is already dark, the page is left alone.</li>
       <li><b>Minimal permissions.</b> Storage only, no network.</li>
     </ul>
 
-    <h2>How the results were verified</h2>
+    <h2>How it was verified</h2>
     <ul>
       <li>A purpose-built harness renders pages in WebKit, the engine Safari uses, with the extension injected.</li>
       <li>Checked there: all six themes, fixed headers while scrolling, photo flip-back, already-dark detection, the popup in light and dark, and a few live sites.</li>
       <li>Version 1.0.0 builds, signs and registers with Safari's extension system.</li>
     </ul>
 
-    <h2>The outcome</h2>
-    <p>A packaged extension with six themes, brightness and contrast sliders, per-site settings, a keyboard shortcut, and an option to follow the system's dark mode. It is built and installed by one script, with no Xcode project.</p>
-
     <h2>Honest limits</h2>
     <ul>
       <li><b>Not yet confirmed in real Safari.</b> Every render check ran in the WebKit harness with a stand-in extension API.</li>
       <li>Signed ad hoc, so Safari needs "Allow unsigned extensions" switched on again after every restart.</li>
-      <li>Product photos with their own white background stay light. On one large wiki site, small grey boxes appear over some icons; the cause is unknown.</li>
+      <li>Product photos with their own white background stay light.</li>
     </ul>
 
     <div class="repo-card">

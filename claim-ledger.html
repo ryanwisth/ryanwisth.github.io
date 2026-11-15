@@ -34,7 +34,11 @@
     <a class="back" href="index.html#work">&larr; All case studies</a>
     <p class="kicker">A process failure turned into rules</p>
     <h1 style="view-transition-name: t-claim-ledger">Turning a slipping process into enforced rules</h1>
-    <p class="lede">A tool for fact-checking a long AI-written report one claim at a time, riskiest first, with an add-only log of every verdict. It was built by running the method by hand first, measuring where it slipped, and then making those slips impossible.</p>
+    <p class="lede">A tool for fact-checking a long AI-written report one claim at a time, riskiest first, with an add-only log of every verdict.</p>
+    <dl class="brief">
+      <dt>Problem</dt><dd>A long research report written by an AI model reads well and is wrong in places, and nobody can tell where by reading it.</dd>
+      <dt>Result</dt><dd>A Claude Code skill and command-line tool in daily use since October 2026. Corrections rewrite the report in place through a script that re-derives every new number, and the history stays in an append-only log.</dd>
+    </dl>
   </div>
 
   <section class="sum" aria-label="Summary">
@@ -80,32 +84,28 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>A long research report written by an AI model reads well and is wrong in places, and nobody can tell where by reading it. Asking the model to "double-check" gives a second confident pass with no record of what was checked or how.</p>
+    <p>Asking the model to "double-check" gives a second confident pass with no record of what was checked or how.</p>
     <p>The first attempt at a fix, rules written into the conversation, worked early and then decayed.</p>
 
-    <h2>What I directed</h2>
-    <p>I ran the first ledger with the agent, audited where its discipline slipped, set the rules the tool must enforce, and checked the tool against the first ledger's real records. The agents wrote most of the code.</p>
+    <h2>Decisions I made</h2>
     <ul>
       <li><b>Put the template in code, not in the conversation.</b> By the late batches, "best case" had fallen to 0 of 28 corrections and "what would make it wrong" to 57% of records. Now one incomplete record rejects the whole batch and nothing is written.</li>
-      <li><b>Riskiest first.</b> Re-checks go first, then points whose text changed, then open claims ranked by importance times weakness. That order found the first report's biggest error in the first batches.</li>
-      <li><b>Make self-confirmation visible.</b> The same model writes and checks, which is the method's weak point. Every verdict is tagged by evidence type, and a verdict resting only on the project's own notes is labelled that way and listed for a person to verify.</li>
-      <li><b>Stopping is a cost decision for a person.</b> Batches 10 to 29 were 73% of the work and found problems in 7% of first checks. The tool reports the rate and an estimate of what is left; whether to stop, sample or continue is left to a person.</li>
+      <li><b>Riskiest first.</b> Re-checks go first, then points whose text changed, then open claims ranked by importance times weakness.</li>
+      <li><b>Make self-confirmation visible.</b> A verdict resting only on the project's own notes is labelled that way and listed for a person to verify.</li>
+      <li><b>Stopping is a cost decision for a person.</b> Batches 10 to 29 were 73% of the work and found problems in 7% of first checks. The tool reports the rate and an estimate of what is left.</li>
     </ul>
 
-    <h2>How the results were verified</h2>
+    <h2>How it was verified</h2>
     <ul>
       <li>Replaying the first ledger's 546 records through the new audit reproduces the hand-made audit, including the drift it found.</li>
       <li>A self-test runs 27 end-to-end checks on a throwaway report and passes on the published copy.</li>
-      <li>The stop rule counts first checks only, after the audit showed 42 of 66 early problems came from re-checks and inflated the early rate.</li>
+      <li>The stop rule counts first checks only, after the audit showed 42 of 66 early problems came from re-checks.</li>
     </ul>
-
-    <h2>The outcome</h2>
-    <p>A Claude Code skill and command-line tool in daily use since October 2026. Every point in a report gets a stable ID, corrections rewrite the report in place through a script that re-derives every new number, and the history stays in an append-only log.</p>
 
     <h2>Honest limits</h2>
     <ul>
       <li>Used on one full report so far, and Markdown reports only.</li>
-      <li>The tool enforces the form of a check, not its quality. A model can still write a weak test; the audit shows the trend, and a person should re-check a sample.</li>
+      <li>The tool enforces the form of a check, not its quality.</li>
     </ul>
 
     <div class="repo-card">

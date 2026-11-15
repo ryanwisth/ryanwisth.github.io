@@ -34,7 +34,11 @@
     <a class="back" href="index.html#work">&larr; All case studies</a>
     <p class="kicker">Product rules from a user problem</p>
     <h1 style="view-transition-name: t-practice-engine">A practice app built around the mistake</h1>
-    <p class="lede">A local practice app for any multiple-choice subject. It groups questions by the mistake they test, drills each mistake pattern until it is mastered under time, and grades timed sets on pacing as well as score.</p>
+    <p class="lede">A local practice app that groups questions by the mistake they test, drills each mistake pattern until it is mastered under time, and grades timed sets on pacing as well as score.</p>
+    <dl class="brief">
+      <dt>Problem</dt><dd>Practice by topic treats every miss in "percents" the same. But most misses come from one specific error: adding two percent changes instead of multiplying them, or averaging times instead of adding rates.</dd>
+      <dt>Result</dt><dd>A working local app that anyone can load with their own questions from a spreadsheet file. The public version is a generic, reduced build of a larger personal practice tool.</dd>
+    </dl>
   </div>
 
   <section class="sum" aria-label="Summary">
@@ -73,30 +77,24 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>Practice by topic treats every miss in "percents" the same. But most misses come from one specific error: adding two percent changes instead of multiplying them, or averaging times instead of adding rates.</p>
     <p>Practicing the whole chapter again does not target that error.</p>
 
-    <h2>What I directed</h2>
-    <p>I set the goals, the learning rules and the acceptance checks. The agents wrote the code.</p>
+    <h2>Decisions I made</h2>
     <ul>
       <li><b>The unit of practice is the mistake, not the topic.</b> Each question belongs to one mistake pattern, and the app drills that pattern directly.</li>
-      <li><b>Speed is part of mastery.</b> Knowing how to do something slowly is not the same as doing it under a clock, so a slow right answer does not extend the streak.</li>
+      <li><b>Speed is part of mastery.</b> A slow right answer does not extend the streak.</li>
       <li><b>Mastery must span different questions.</b> A streak on one repeated question proves memory.</li>
       <li><b>A missed question is retired.</b> Once its explanation has been shown, a later correct answer may be recall, so the question is never served again.</li>
-      <li><b>Pacing is a separate grade.</b> A timed set can score well and still be paced badly. The report separates time that bought a right answer from time sunk into a wrong one.</li>
+      <li><b>Pacing is a separate grade.</b> The report separates time that bought a right answer from time sunk into a wrong one.</li>
     </ul>
 
-    <h2>How the results were verified</h2>
+    <h2>How it was verified</h2>
     <ul>
       <li>Tested by building the sample bank, running the app on localhost and exercising the drill, answer, timed-set, progress, pacing and audit functions.</li>
       <li>The 21 sample questions each carry a machine check, and only checked questions are served.</li>
-      <li>A built-in audit flags bad answer keys, duplicate choices, near-clone questions and patterns with too few questions.</li>
+      <li>A built-in audit flags bad answer keys, duplicate choices, near-clone questions and patterns with too few questions; the importer rejects the whole file if any row fails validation.</li>
       <li>I verified the rules by using the tool for my own study.</li>
     </ul>
-
-    <h2>The outcome</h2>
-    <p>A working local app that anyone can load with their own questions from a spreadsheet file. The importer rejects the whole file if any row fails validation.</p>
-    <p>The public version is a generic, reduced build of a larger personal practice tool. A companion server in <a href="https://github.com/ryanwisth/local-llm-mcp-servers">local-llm-mcp-servers</a> lets a local AI model read how practice is going, read-only.</p>
 
     <h2>Honest limits</h2>
     <ul>

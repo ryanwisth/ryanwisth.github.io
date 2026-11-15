@@ -34,7 +34,11 @@
     <a class="back" href="index.html#work">&larr; All case studies</a>
     <p class="kicker">Hardware research, safe first</p>
     <h1 style="view-transition-name: t-display-research">Decoding a colour e-ink display, safely</h1>
-    <p class="lede">Interoperability research that worked out how the reMarkable Paper Pro drives its colour e-ink panel, from the waveform files on disk to the bits in each frame, well enough to draw on the screen with our own code instead of the vendor's library.</p>
+    <p class="lede">Interoperability research that worked out how the reMarkable Paper Pro drives its colour e-ink panel, well enough to draw on the screen with our own code instead of the vendor's library.</p>
+    <dl class="brief">
+      <dt>Problem</dt><dd>The tablet's screen is driven by a closed library. Without knowing what that library sends to the panel, nobody can write software that draws on the display directly.</dd>
+      <dt>Result</dt><dd>Our own frames drew on the panel: a boot-sequence replay, a black-and-white test card, colour cards in three update modes, a partial update with no full clear, and two grey levels. The repository ships the decoders, the frame builder and a tablet-side player; no vendor code, firmware or waveform data is distributed.</dd>
+    </dl>
   </div>
 
   <section class="sum" aria-label="Summary">
@@ -83,29 +87,23 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>The tablet's screen is driven by a closed library. Without knowing what that library sends to the panel, nobody can write software that draws on the display directly, test how its update modes behave, or reason about colour.</p>
     <p>The risk is real: driving an e-ink panel with the wrong signals can leave permanent ghosting or damage it.</p>
 
-    <h2>What I directed</h2>
-    <p>I set the goals, the safety rules and the acceptance checks, ran the device steps, and judged the results on the panel. The agents wrote most of the code and the analysis.</p>
+    <h2>Decisions I made</h2>
     <ul>
-      <li><b>Static first, device second.</b> Everything that could be learned from the public software update was learned there before touching the tablet. The device was used to confirm, not to explore.</li>
-      <li><b>Read-only before write.</b> The capture tool never takes control of the display. Writing came only after the decoded files predicted the frames the stock software actually sends.</li>
+      <li><b>Static first, device second.</b> Everything that could be learned from the public software update was learned there before touching the tablet.</li>
+      <li><b>Read-only before write.</b> Writing came only after the decoded files predicted the frames the stock software actually sends.</li>
       <li><b>The first write was a known-safe one.</b> It replayed a sequence the panel already receives at every boot.</li>
       <li><b>No vendor code during a draw.</b> Frames are built off the device; the tablet only plays frames whose hashes check out.</li>
       <li><b>Protect the panel by design.</b> Each plan is built so every pixel's drive nets to zero or close to it, and the player refuses a plan built for a different temperature band.</li>
     </ul>
 
-    <h2>How the results were verified</h2>
+    <h2>How it was verified</h2>
     <ul>
       <li>All 314 waveform files decode and pass their CRC-32 and header checksums.</li>
-      <li>A checker compared frames captured from the stock software against the decoded waveforms, with synthetic self-tests for the checker itself.</li>
+      <li>A checker compared frames captured from the stock software against the decoded waveforms.</li>
       <li>Each finding is labelled by evidence level: verified on the device, verified by static analysis only, or inferred and not yet verified.</li>
     </ul>
-
-    <h2>The outcome</h2>
-    <p>Our own frames drew on the panel: a boot-sequence replay, a black-and-white test card, colour cards in three update modes, a partial update with no full clear, and two grey levels.</p>
-    <p>The repository ships the decoders, the frame builder, a tablet-side player with a watchdog, and a written specification of the waveform format. No vendor code, firmware or waveform data is distributed.</p>
 
     <h2>Honest limits</h2>
     <ul>

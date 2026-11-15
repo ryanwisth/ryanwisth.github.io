@@ -35,6 +35,10 @@
     <p class="kicker">Trust in AI output</p>
     <h1 style="view-transition-name: t-checking-ai-work">Making AI work checkable</h1>
     <p class="lede">One principle applied in three tools: the AI proposes, code enforces the rules, and a second pass tries to refute the first.</p>
+    <dl class="brief">
+      <dt>Problem</dt><dd>AI output reads well and is wrong in places, and nobody can tell where by reading it.</dd>
+      <dt>Result</dt><dd>The research pipeline ran three rounds on a private tree in September 2026; the claim ledger and the token guard have been in daily use since October 2026.</dd>
+    </dl>
   </div>
 
   <section class="sum" aria-label="Summary">
@@ -84,35 +88,27 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>AI output reads well and is wrong in places, and nobody can tell where by reading it. Asking the model to "double-check" gives a second confident pass with no record of what was checked or how.</p>
+    <p>Asking the model to "double-check" gives a second confident pass with no record of what was checked or how.</p>
     <p>Written rules do not fix this. In my own sessions the agent agreed with the rules and broke them an hour later.</p>
 
-    <h2>What I directed</h2>
-    <p>In each tool I set the goals, the rules and the acceptance checks. The agents wrote most of the code.</p>
+    <h2>Decisions I made</h2>
     <ul>
-      <li><b>Research: <a href="https://github.com/ryanwisth/genealogy-evidence-pipeline">genealogy-evidence-pipeline</a>.</b> Finder agents only propose additions to a family tree. Every claim must cite and quote a primary record. A free Python gate drops what breaks the rules, then a skeptic agent reviews the rest with the stance "when you cannot confirm, reject". Accepted facts go into an append-only ledger.</li>
-      <li><b>Reports: <a href="https://github.com/ryanwisth/claim-ledger">claim-ledger</a>.</b> Every point in a long report gets a stable ID, a testable statement, what would make it wrong, quoted evidence and a verdict. The riskiest points go first. The record template is enforced in code: one incomplete record rejects the whole batch.</li>
-      <li><b>Cost: <a href="https://github.com/ryanwisth/claude-code-token-guard">claude-code-token-guard</a>.</b> Hooks deny the wasteful tool call, such as a subagent spawned with no model named, and the denial message says what to do instead. The agent corrects itself on the next call.</li>
+      <li><b>Research: <a href="https://github.com/ryanwisth/genealogy-evidence-pipeline">genealogy-evidence-pipeline</a>.</b> Every claim must cite and quote a primary record. A free Python gate drops what breaks the rules, then a skeptic agent reviews the rest.</li>
+      <li><b>Reports: <a href="https://github.com/ryanwisth/claim-ledger">claim-ledger</a>.</b> Every point in a long report gets a stable ID, a testable statement, what would make it wrong, quoted evidence and a verdict. The record template is enforced in code: one incomplete record rejects the whole batch.</li>
+      <li><b>Cost: <a href="https://github.com/ryanwisth/claude-code-token-guard">claude-code-token-guard</a>.</b> Hooks deny the wasteful tool call, and the denial message says what to do instead.</li>
     </ul>
     <p class="note">Each tool also has its own case study: <a href="evidence-pipeline.html">the evidence pipeline</a>, <a href="claim-ledger.html">the claim ledger</a> and <a href="token-guard.html">the token guard</a>.</p>
 
-    <h2>How the results were verified</h2>
+    <h2>How it was verified</h2>
     <ul>
-      <li><b>Research.</b> The public copy runs end to end offline on an invented 420-person family. In that run the gate kept 12 of 16 claims and dropped 4, including a living person and a fact citing only an online tree.</li>
-      <li><b>Reports.</b> Replaying the first ledger's 546 records through the tool reproduces its hand-made audit. A 27-check self-test passes on the published copy.</li>
-      <li><b>Cost.</b> Each hook followed a leak measured in my session logs, and I checked that it changed the numbers in the following week's scan. 15 sample cases cover the allow and deny paths.</li>
-    </ul>
-
-    <h2>The outcome</h2>
-    <ul>
-      <li>The research pipeline ran three rounds on a private tree in September 2026. On that tree the skeptics rejected 31 claims from a fast first pass and 3 of 147 from a careful one.</li>
-      <li>The first report check gave a practical answer to "how much checking is enough": batches 1 to 9 found problems in 27% of first checks, and batches 10 to 29 found 7% while taking 73% of the work.</li>
-      <li>The claim ledger and the token guard have been in daily use since October 2026.</li>
+      <li><b>Research.</b> The public copy runs end to end offline on an invented 420-person family. In that run the gate kept 12 of 16 claims and dropped 4.</li>
+      <li><b>Reports.</b> Replaying the first ledger's 546 records through the tool reproduces its hand-made audit. Batches 1 to 9 found problems in 27% of first checks, and batches 10 to 29 found 7% while taking 73% of the work.</li>
+      <li><b>Cost.</b> Each hook followed a leak measured in my session logs, and I checked that it changed the numbers in the following week's scan.</li>
     </ul>
 
     <h2>Honest limits</h2>
     <ul>
-      <li>The same model writes and checks. The claim ledger labels a verdict that rests only on the project's own notes, and lists those points for a person to verify.</li>
+      <li>The same model writes and checks; the claim ledger labels a verdict that rests only on the project's own notes.</li>
       <li>The research agent scripts were not re-run after the public copy was scrubbed; they pass a syntax check only.</li>
       <li>The token guard has no automated test suite, and its thresholds were tuned for one person's usage.</li>
     </ul>

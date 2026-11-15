@@ -35,6 +35,10 @@
     <p class="kicker">A method the product enforces</p>
     <h1 style="view-transition-name: t-streaks-trainer">A practice app where one miss resets the streak</h1>
     <p class="lede">A small local web app for streak-based mastery practice on any multiple-choice subject: one topic at a time, easy to hard, where a single miss resets the streak.</p>
+    <dl class="brief">
+      <dt>Problem</dt><dd>Percent-correct hides weak spots: 80% on a topic can mean you know it, or that you guess well.</dd>
+      <dt>Result</dt><dd>The public copy is a generalized version with the subject-specific parts and the original question bank removed. It is one server file and one page, standard library only: there is nothing to install and nothing leaves the machine.</dd>
+    </dl>
   </div>
 
   <section class="sum" aria-label="Summary">
@@ -78,35 +82,30 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>Percent-correct hides weak spots: 80% on a topic can mean you know it, or that you guess well. A streak is a stricter test. You only move from easy to medium to hard questions after getting a set number in a row, and any miss, or any right answer you guessed, sends the count back to zero.</p>
-    <p>The useful part is what happens at each break: you write down what went wrong and what you will do differently before the next question. This app enforces that loop so it cannot be skipped, and keeps the record so the patterns show.</p>
+    <p>A streak is a stricter test. You only move from easy to medium to hard questions after getting a set number in a row, and any miss, or any right answer you guessed, sends the count back to zero.</p>
+    <p>The useful part is what happens at each break: you write down what went wrong and what you will do differently before the next question. This app enforces that loop so it cannot be skipped.</p>
 
-    <h2>What I directed</h2>
-    <p>I set the goals, the rules of the method to enforce, and the acceptance checks, and verified the results by using the app. The agents wrote most of the code.</p>
+    <h2>Decisions I made</h2>
     <ul>
-      <li><b>The server owns the rules.</b> The browser never receives the answer key before answering. Streaks, clears and the break-note gate are computed on the server, so the screen cannot drift from the method.</li>
+      <li><b>The server owns the rules.</b> Streaks, clears and the break-note gate are computed on the server, so the screen cannot drift from the method.</li>
       <li><b>A guess is not mastery.</b> A right answer marked "I guessed" resets the counter like a miss.</li>
       <li><b>No repeats.</b> A question is served at most once, ever, so a streak cannot come from memory.</li>
-      <li><b>History is never rewritten.</b> Every answer is a row, and the current streak is derived by counting back from the latest answer. Voiding a bad question marks the attempt instead of deleting it, and the streak is recounted.</li>
-      <li><b>Any subject.</b> Sections and topics come from one data file; nothing about a subject is built into the code. Questions import from CSV or JSON, validated, with a dry run.</li>
+      <li><b>History is never rewritten.</b> Every answer is a row, and the current streak is derived by counting back from the latest answer.</li>
+      <li><b>Any subject.</b> Sections and topics come from one data file; nothing about a subject is built into the code.</li>
     </ul>
 
-    <h2>How the results were verified</h2>
+    <h2>How it was verified</h2>
     <ul>
       <li>The core loop (ladders, break notes, clears, speed stages, tracker, importer) was exercised end to end against the demo bank through the app's JSON API.</li>
       <li>The demo questions are generated from templates, and the generator checks every key by code.</li>
       <li>I verified the results by using the app.</li>
     </ul>
 
-    <h2>The outcome</h2>
-    <p>Originally built for my own practice. The public copy is a generalized version with the subject-specific parts and the original question bank removed.</p>
-    <p>It is one server file and one page, standard library only: there is nothing to install and nothing leaves the machine. After the hard rung, optional speed stages clear on a rolling average time per question: 4:00, then 3:00, 2:30 and 2:00.</p>
-
     <h2>Honest limits</h2>
     <ul>
       <li>There are no automated tests.</li>
       <li>Single user, no accounts.</li>
-      <li>The demo bank is small: too few questions for a 10 &middot; 10 &middot; 5 ladder, so a demo needs custom targets. The sample questions are simple by design.</li>
+      <li>The demo bank is small: too few questions for a 10 &middot; 10 &middot; 5 ladder, so a demo needs custom targets.</li>
       <li>The streak method itself is not mine. It is credited in the repository, and the project is not affiliated with its author.</li>
     </ul>
 

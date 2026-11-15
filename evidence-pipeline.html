@@ -34,7 +34,11 @@
     <a class="back" href="index.html#work">&larr; All case studies</a>
     <p class="kicker">Research that has to cite its records</p>
     <h1 style="view-transition-name: t-evidence-pipeline">A family tree grown only from records</h1>
-    <p class="lede">A research pipeline where AI agents propose additions to a family tree, free Python checks what code can check, a second model tries to refute each claim, and accepted facts go into an append-only ledger with the quote they rest on.</p>
+    <p class="lede">A research pipeline where AI agents propose additions to a family tree, free Python checks what code can check, a second model tries to refute each claim, and accepted facts go into an append-only ledger.</p>
+    <dl class="brief">
+      <dt>Problem</dt><dd>Online family trees copy each other, so two trees agreeing is not evidence; it is often the same mistake copied twice.</dd>
+      <dt>Result</dt><dd>The pipeline ran three research rounds on a private tree in September 2026. In round 1 the skeptics rejected 31 claims from a fast first pass and 3 of 147 from a careful one.</dd>
+    </dl>
   </div>
 
   <section class="sum" aria-label="Summary">
@@ -84,38 +88,31 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>Online family trees copy each other. A "source" on a big genealogy site is often just another user's tree, so two trees agreeing is not evidence; it is often the same mistake copied twice.</p>
-    <p>This pipeline extends a tree the other way round. Every new person, parent link or date must cite a primary record (a register entry, a census line, a headstone), quote it, tie it to the tree person by at least two identifiers, and survive an adversarial check. It came out of cleaning and then researching a private tree with tens of thousands of records.</p>
+    <p>A "source" on a big genealogy site is often just another user's tree.</p>
+    <p>In this pipeline every new person, parent link or date must cite a primary record (a register entry, a census line, a headstone), quote it, tie it to the tree person by at least two identifiers, and survive an adversarial check.</p>
 
-    <h2>What I directed</h2>
-    <p>I set the goals, the evidence rules and the acceptance checks, and verified the results. The agents wrote most of the code.</p>
+    <h2>Decisions I made</h2>
     <ul>
-      <li><b>Agents propose; code checks what code can check.</b> Agent turns are the cost. On the private tree, round 2's finders averaged 78 turns. By round 3, dossiers, the gate and short review sheets had moved work into Python, and the round ran at about 57k tokens per target.</li>
+      <li><b>Agents propose; code checks what code can check.</b> On the private tree, round 2's finders averaged 78 turns. By round 3, dossiers, the gate and short review sheets had moved work into Python, and the round ran at about 57k tokens per target.</li>
       <li><b>A second model tries to refute.</b> The skeptic's stance is "when you cannot confirm, reject".</li>
       <li><b>A free gate between the two agent waves.</b> It drops claims that cite no record, have fewer than two identifiers, repeat a ledger fact, duplicate an existing child, or add a living person.</li>
-      <li><b>Quote matching is a window, not a phrase.</b> Record pages lay values out as a label and a value, so a faithful quote is rarely one unbroken string. The gate folds case, accents and punctuation, ignores field labels, and looks for 80% of the distinctive words inside one window. A miss flags the claim for the skeptic rather than dropping it.</li>
-      <li><b>Nothing is deleted.</b> Disproved parent links are recorded and cut in later counts, corrections become notes, and the base file is never edited.</li>
-      <li><b>Offline by default.</b> The gate reads saved page text. Fetching is opt-in, with a fixed delay and a request cap.</li>
+      <li><b>Quote matching is a window, not a phrase.</b> The gate folds case, accents and punctuation, ignores field labels, and looks for 80% of the distinctive words inside one window. A miss flags the claim for the skeptic rather than dropping it.</li>
+      <li><b>Nothing is deleted.</b> Disproved parent links are recorded and cut in later counts, and the base file is never edited.</li>
+      <li><b>Offline by default.</b> Fetching is opt-in, with a fixed delay and a request cap.</li>
     </ul>
 
-    <h2>How the results were verified</h2>
+    <h2>How it was verified</h2>
     <ul>
-      <li>The public copy runs end to end offline on an invented 420-person family with one command. That demo is the test that the scrubbed copy still runs.</li>
+      <li>The public copy runs end to end offline on an invented 420-person family with one command; every person, place and record in its sample and demo data is invented.</li>
       <li>In that run the duplicate scan found the 3 injected duplicates, the merge took 423 individuals to 420, and the verifier checked the 3 merged individuals: 0 lost a fact.</li>
       <li>The gate kept 12 of the journal's 16 claims and dropped 4.</li>
       <li>The new GEDCOM is regenerated from the base file plus the ledger and checked: every base line survives and every pointer resolves.</li>
-      <li>The date lint's first hit in the demo is real: the invented baptism is dated before the sample tree's birth date for that person, which is the kind of lead the lint exists to raise.</li>
     </ul>
-
-    <h2>The outcome</h2>
-    <p>The pipeline ran three research rounds on a private tree in September 2026, and the cleanup half ran on its full export. In round 1 the skeptics rejected 31 claims from a fast first pass and 3 of 147 from a careful one.</p>
-    <p>The public repository is a scrubbed copy: paths, names and tree-specific tables were replaced by command-line flags and a config file, and every person, place and record in its sample and demo data is invented.</p>
 
     <h2>Honest limits</h2>
     <ul>
-      <li>The round figures (78 turns, about 57k tokens per target, 31 and 3 of 147) come from the project's notes on the private tree. The demo does not reproduce them.</li>
-      <li>The agent scripts need Claude Code's workflow runtime and were not re-run after the scrub; they pass a syntax check only. In the demo a committed fixture stands in for the skeptic step.</li>
-      <li>The demo's duplicate cases are all clear ones, so the review and agent-judgment path of the cleanup is not exercised by the demo.</li>
+      <li>The round figures come from the project's notes on the private tree; the demo does not reproduce them.</li>
+      <li>The agent scripts were not re-run after the scrub; they pass a syntax check only.</li>
       <li>There is no record-pulling code in the repository; the saved page text has to be supplied.</li>
     </ul>
 

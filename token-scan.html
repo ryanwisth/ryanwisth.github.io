@@ -34,7 +34,11 @@
     <a class="back" href="index.html#work">&larr; All case studies</a>
     <p class="kicker">Measuring cost before cutting it</p>
     <h1 style="view-transition-name: t-token-scan">Finding where the AI budget went</h1>
-    <p class="lede">Read-only scripts that scan Claude Code's own session logs and report where the tokens went: by project, model, day, session and tool. They turned "the weekly allowance ran out early" into specific causes that could be fixed.</p>
+    <p class="lede">Read-only scripts that scan Claude Code's own session logs and report where the tokens went: by project, model, day, session and tool.</p>
+    <dl class="brief">
+      <dt>Problem</dt><dd>Claude Code's usage meter shows a total, not a cause. When a week's usage ran out early, the useful questions were which projects, sessions and habits spent it.</dd>
+      <dt>Result</dt><dd>The scan turned vague overspending into specific, fixable causes. Most spawned agents were the expensive default type, and 39% of cache reads happened in long unattended turns that a per-prompt check never saw.</dd>
+    </dl>
   </div>
 
   <section class="sum" aria-label="Summary">
@@ -87,29 +91,23 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>Claude Code's usage meter shows a total, not a cause. When a week's usage ran out early, the useful questions were which projects, sessions and habits spent it.</p>
     <p>Every API call's token usage is already written into local log files. Nothing aggregated it.</p>
 
-    <h2>What I directed</h2>
-    <p>I set the questions each pass had to answer and the weighting, checked the output, and used the results to change how I run agents. The agent wrote the code.</p>
+    <h2>Decisions I made</h2>
     <ul>
-      <li><b>One comparable number.</b> Raw token counts mix very different costs, so each call gets one weighted figure based on API-style price ratios. It is a yardstick for comparison, not a bill.</li>
+      <li><b>One comparable number.</b> Each call gets one weighted figure based on API-style price ratios. It is a yardstick for comparison, not a bill.</li>
       <li><b>Count each call once.</b> A streamed reply can appear on several log lines, so calls are de-duplicated by message ID.</li>
       <li><b>One question per pass.</b> Six short, independent scripts, each printing one table: totals, heavy tool results and images, causes of cache rewrites, kinds of session, re-reading of notes, and usage by model.</li>
       <li><b>Read-only and local.</b> Standard library only; nothing is sent anywhere.</li>
-      <li><b>Heuristics stated, not hidden.</b> Where a script has to guess, such as what kind of session a log belongs to, the rule is written down and the measured constants can be overridden.</li>
+      <li><b>Heuristics stated, not hidden.</b> Where a script has to guess, the rule is written down and the measured constants can be overridden.</li>
     </ul>
 
-    <h2>How the results were verified</h2>
+    <h2>How it was verified</h2>
     <ul>
       <li>Used for a real weekly usage review in November 2026, and kept as reusable tools afterwards.</li>
       <li>The findings were acted on in <a href="https://github.com/ryanwisth/claude-code-token-guard">claude-code-token-guard</a>, and each new rule was checked against the following week's scan.</li>
       <li>The public copy was checked on a small synthetic log, not on real data.</li>
     </ul>
-
-    <h2>The outcome</h2>
-    <p>The scan turned vague overspending into specific, fixable causes. Most spawned agents were the expensive default type. Images stayed in context long after they were needed. And 39% of cache reads happened in long unattended turns that a per-prompt check never saw.</p>
-    <p>Each of those became a rule enforced in code by the token guard, rather than a reminder in a prompt.</p>
 
     <h2>Honest limits</h2>
     <ul>

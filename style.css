@@ -1301,4 +1301,5 @@ footer.site { margin-top: 84px; border-top: 3px dashed var(--y-pink); color: var
   .brief { grid-template-columns: 1fr; gap: 0; }
   .brief dd { margin-bottom: 8px; }
 }
+.how2 .method > li::after { display: none; }
 /* === end recruiter-read structure === */

@@ -34,7 +34,11 @@
     <a class="back" href="index.html#work">&larr; All case studies</a>
     <p class="kicker">Tools shaped for the model that reads them</p>
     <h1 style="view-transition-name: t-mcp-servers">Giving a local model tools it can use</h1>
-    <p class="lede">Six small MCP (Model Context Protocol) servers that give a locally hosted language model what it lacks: live world events, market prices and company fundamentals, a dependency vulnerability audit, a read-only study coach and equation OCR (reading equations from images).</p>
+    <p class="lede">Six MCP (Model Context Protocol) servers that give a locally hosted language model what it lacks: live world events, market prices and company fundamentals, a dependency vulnerability audit, a read-only study coach and equation OCR.</p>
+    <dl class="brief">
+      <dt>Problem</dt><dd>A local model knows nothing after its training cutoff and cannot look anything up.</dd>
+      <dt>Result</dt><dd>Six servers, each one Python file that runs with one command. The README gives each server's status separately, from "working" to "built, not yet run with a key".</dd>
+    </dl>
   </div>
 
   <section class="sum" aria-label="Summary">
@@ -78,39 +82,33 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>A local model knows nothing after its training cutoff and cannot look anything up. Public data services do publish their own MCP servers or APIs, but they are built for large cloud models: one hosted server lists 90 tools and about 100k tokens of schema, which at a local model's speeds costs minutes per new chat and most of the context window.</p>
-    <p>Others need an interactive login that a simple bridge cannot refresh. So each server here is a thin, hand-shaped wrapper that a mid-sized local model can pick from and read without drowning in the answer.</p>
+    <p>Public data services do publish their own MCP servers or APIs, but they are built for large cloud models: one hosted server lists 90 tools and about 100k tokens of schema, which at a local model's speeds costs minutes per new chat and most of the context window.</p>
+    <p>So each server here is a thin, hand-shaped wrapper that a mid-sized local model can pick from and read without drowning in the answer.</p>
 
-    <h2>What I directed</h2>
-    <p>I set the goals and constraints (a local model's token budget, read-only, no trading tools), wrote the acceptance checks, and verified the results against the live services and my local model stack. The agents wrote most of the code to that specification.</p>
+    <h2>Decisions I made</h2>
     <ul>
-      <li><b>Shape tools for the model that will read them.</b> The audience is a local model in the tens of billions of parameters, not a frontier cloud model. Each tool list is short, each description says when to use the tool, defaults are small, and tools that can only fail on the free plan are left out entirely, because a dead tool is noise the model has to read past.</li>
-      <li><b>Do arithmetic in code, not in the model.</b> The comparison tool returns ranked percent changes rather than raw bars. Arithmetic over long number series is where small models go wrong, and a wrong number reads as a real one.</li>
-      <li><b>Make empty data loud.</b> A bad ticker does not raise an error upstream; it comes back as empty values. The server checks for that and returns an explicit error, because a model handed nulls tends to report them as data.</li>
+      <li><b>Shape tools for the model that will read them.</b> Each tool list is short, each description says when to use the tool, defaults are small, and tools that can only fail on the free plan are left out entirely.</li>
+      <li><b>Do arithmetic in code, not in the model.</b> The comparison tool returns ranked percent changes rather than raw bars. Arithmetic over long number series is where small models go wrong.</li>
+      <li><b>Make empty data loud.</b> A bad ticker does not raise an error upstream; it comes back as empty values. The server returns an explicit error, because a model handed nulls tends to report them as data.</li>
       <li><b>Measure before raising a cap.</b> The history tool was hitting the reply cap, so the format changed instead of the cap.</li>
       <li><b>Read-only by design.</b> There are no trading or order tools anywhere, and the study-coach server leaves out every route that would fetch or answer a question.</li>
-      <li><b>Errors a model can read.</b> Errors come back as plain-English strings the model can relay, never as stack traces, and missing credentials return a setup message instead of failing or hanging.</li>
+      <li><b>Errors a model can read.</b> Errors come back as plain-English strings, never as stack traces, and missing credentials return a setup message instead of failing or hanging.</li>
     </ul>
 
-    <h2>How the results were verified</h2>
+    <h2>How it was verified</h2>
     <ul>
       <li><b>Company data server: working.</b> Verified with live data on 2026-09-18, mounted in a local chat front end and in real use.</li>
-      <li><b>Vulnerability audit: working.</b> Checked on 2026-11-13 through an in-memory client, covering findings, a missing path and a missing scanner.</li>
+      <li><b>Vulnerability audit: working.</b> Checked on 2026-11-13 through an in-memory client.</li>
       <li><b>Study coach: working against the sample bank.</b> Checked on 2026-11-13 against the practice app serving its 21-item sample bank; all six tools returned data.</li>
       <li><b>World events server: built.</b> 15 tools listed, the no-login and expired-login paths return the setup message, and a quota-free self-test ran against the live endpoint.</li>
     </ul>
 
-    <h2>The outcome</h2>
-    <p>Six servers, each one Python file that runs with one command. The study coach reads from another project here, the <a href="practice-engine.html">practice app built around the mistake</a>.</p>
-    <p>The README gives each server's status separately, from "working" to "built, not yet run with a key".</p>
-
     <h2>Honest limits</h2>
     <ul>
       <li>World events: no account login had been done, so reply sizes on real data are unverified.</li>
-      <li>Market prices: built, not yet run with a key. The free-plan behavior was probed with keyless requests only.</li>
-      <li>Equation OCR: used in the original stack and not re-run for the public copy; only the tool listing and the bad-image error path were re-checked.</li>
-      <li>No automated test suite is included, and the study coach's replies on a long practice history are unmeasured.</li>
-      <li>The third-party limits in the README carry the date they were checked. Plans change.</li>
+      <li>Market prices: built, not yet run with a key.</li>
+      <li>Equation OCR: not re-run for the public copy; only the tool listing and the bad-image error path were re-checked.</li>
+      <li>No automated test suite is included.</li>
     </ul>
 
     <div class="repo-card">

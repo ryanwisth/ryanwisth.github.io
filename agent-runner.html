@@ -35,6 +35,10 @@
     <p class="kicker">Guardrails for unattended AI work</p>
     <h1 style="view-transition-name: t-agent-runner">Long agent jobs with the bill checked first</h1>
     <p class="lede">A small command-line runner that sends a written brief to Claude through the Claude Agent SDK, with explicit auth, budget and turn guards, and loops fresh passes until the brief's done file appears.</p>
+    <dl class="brief">
+      <dt>Problem</dt><dd>Long agent jobs are easier to hand off as a written brief than as a live chat. Running them unattended raises three practical questions: which account pays, how to stop a run that goes over budget, and how to continue a job that does not finish in one pass.</dd>
+      <dt>Result</dt><dd>Working, and used for real multi-pass jobs in October 2026. The subscription login became the loop's default on 2026-10-25.</dd>
+    </dl>
   </div>
 
   <section class="sum" aria-label="Summary">
@@ -70,36 +74,29 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>Long agent jobs (build a guide, refactor a folder, work through a checklist) are easier to hand off as a written brief than as a live chat. Running them unattended raises three practical questions: which account pays, how to stop a run that goes over budget, and how to continue a job that does not finish in one pass.</p>
-    <p>The first is easy to get wrong. A run authenticated with an API key bills that key's account; a run on the subscription login draws on the subscription instead. If an API key happens to be set, it silently wins over the login.</p>
+    <p>A run authenticated with an API key bills that key's account; a run on the subscription login draws on the subscription instead. If an API key happens to be set, it silently wins over the login.</p>
 
-    <h2>What I directed</h2>
-    <p>I specified the options, the guards and their acceptance tests, and verified the results before using it on real work. An AI coding agent wrote the code from my written brief.</p>
+    <h2>Decisions I made</h2>
     <ul>
-      <li><b>Who pays is checked, not assumed.</b> The billing path is a flag, and the runner aborts before the first tool call if the key source the session itself reports does not match.</li>
+      <li><b>Who pays is checked, not assumed.</b> The runner aborts before the first tool call if the key source the session itself reports does not match.</li>
       <li><b>Use the built-in budget rather than counting cost by hand.</b> The SDK reports cost only in its final result message, so a hand-rolled running total could not stop a run in time.</li>
-      <li><b>Fresh passes over one long session.</b> Context grows with every tool result; a new pass that reads short progress notes is cheaper than dragging a full transcript along.</li>
+      <li><b>Fresh passes over one long session.</b> A new pass that reads short progress notes is cheaper than dragging a full transcript along.</li>
       <li><b>Stop on the first failure.</b> A pass that crashed or hit a cap usually needs a person to look before more money is spent, so the loop does not retry.</li>
       <li><b>Written rules still apply.</b> The runner loads user and project settings, so the operator's standing rules apply to unattended runs too.</li>
       <li><b>Spend nothing on a bad command.</b> The loop validates its arguments before spending anything.</li>
     </ul>
 
-    <h2>How the results were verified</h2>
+    <h2>How it was verified</h2>
     <ul>
       <li>The exact key-source string was found by a live test with the smallest model rather than guessed.</li>
       <li>The auth guard, settings loading, and a fresh run plus a resume were tested with the smallest model before the first real brief.</li>
     </ul>
 
-    <h2>The outcome</h2>
-    <p>Working, and used for real multi-pass jobs in October 2026. The subscription login became the loop's default on 2026-10-25.</p>
-    <p>Each pass leaves a readable log and a raw one. A crash still prints the session id, so a follow-up can pick up in the same session.</p>
-
     <h2>Honest limits</h2>
     <ul>
       <li>No automated tests.</li>
       <li>Stopping a pass by hand part-way can leave the working folder mid-edit.</li>
-      <li>The loop script needs zsh.</li>
-      <li>By default the agent runs tools without asking, so the runner should be pointed at a folder it is allowed to change, or given a stricter mode.</li>
+      <li>By default the agent runs tools without asking, so the runner should be pointed at a folder it is allowed to change.</li>
     </ul>
 
     <div class="repo-card">

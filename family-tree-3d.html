@@ -35,6 +35,10 @@
     <p class="kicker">A visual product from messy data</p>
     <h1 style="view-transition-name: t-family-tree-3d">A 3D family tree in one offline file</h1>
     <p class="lede">A build pipeline that turns a genealogy export into a single web page you open from disk: a 3D family tree, a migration map, lineage and statistics views, with no server and no connection.</p>
+    <dl class="brief">
+      <dt>Problem</dt><dd>Family trees exported from genealogy sites grow to tens of thousands of people. Pedigree charts and printed posters stop being readable long before that.</dd>
+      <dt>Result</dt><dd>The viewer works for the private tree it was built for. The public copy was scrubbed of all real family data and rebuilt on an invented 420-person family, so anyone can run the full build and open the result.</dd>
+    </dl>
   </div>
 
   <section class="sum" aria-label="Summary">
@@ -79,35 +83,29 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>Family trees exported from genealogy sites grow to tens of thousands of people. Pedigree charts and printed posters stop being readable long before that, and the hosted viewers need an account and a connection.</p>
+    <p>The hosted viewers need an account and a connection.</p>
 
-    <h2>What I directed</h2>
-    <p>I set the goals, wrote the specifications and acceptance checks, and verified the results against my own family data. The agents wrote most of the code.</p>
+    <h2>Decisions I made</h2>
     <ul>
       <li><b>One file, opened from disk.</b> A page opened from disk cannot load its own side files, so every piece of data is built into the page itself.</li>
       <li><b>A layout that stays readable at size.</b> Height is birth year, distance from the center is steps from a chosen root person's line, and angle is the family branch.</li>
       <li><b>The same data drives every view.</b> The 3D tree, a map of births, marriages, deaths and moves, an ancestry view, and charts with captions computed from the data they describe.</li>
-      <li><b>Safe to share.</b> A share-safe mode shows living people as "Living person" with no dates or places, including in exported images.</li>
+      <li><b>Safe to share.</b> A share-safe mode shows living people as "Living person" with no dates or places.</li>
       <li><b>Usable by more people.</b> Name search, keyboard navigation, screen-reader text, a print view, a phone layout, and a flat 2D page for computers that cannot draw 3D.</li>
     </ul>
 
-    <h2>How the results were verified</h2>
+    <h2>How it was verified</h2>
     <ul>
-      <li><b>The build refuses bad combinations.</b> Each large data block carries a stamp of the person order it was built for, and the build will not combine mismatched ones.</li>
+      <li><b>The build refuses bad combinations.</b> Each large data block carries a stamp of the person order it was built for.</li>
       <li><b>Builds are repeatable.</b> Two builds of the sample produce a byte-identical data file.</li>
       <li><b>Rules that come from real bugs.</b> Each placeholder must appear exactly once, and the page's 59 script pieces are checked for duplicate names before assembly.</li>
       <li>On the sample, the pipeline runs clean and the payload check reports 0 failed.</li>
     </ul>
 
-    <h2>The outcome</h2>
-    <p>The viewer works for the private tree it was built for. The public copy was scrubbed of all real family data and rebuilt on an invented 420-person family, so anyone can run the full build and open the result.</p>
-    <p>Its view builder is reused by a second project, <a href="https://github.com/ryanwisth/genealogy-evidence-pipeline">genealogy-evidence-pipeline</a>, so the two agree on one data format.</p>
-
     <h2>Honest limits</h2>
     <ul>
       <li>No automated test suite ships with it; the payload check and a self-test are the checks.</li>
       <li>Browser behavior on the sample has not been re-tested beyond those checks.</li>
-      <li>Guided tours, a research to-do list and record search from the private version were left out of the public copy.</li>
       <li>Region colors and some name rules were tuned for Northern European and North American records.</li>
     </ul>
 
