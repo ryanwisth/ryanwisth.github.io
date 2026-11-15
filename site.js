@@ -375,10 +375,10 @@
   var sum = d.querySelector('.sum');
   if (sum && top0) {
     var sv = sum.querySelector('.sum-vis'), sf = sum.querySelectorAll('.fact'), sl = sum.querySelectorAll('.method > li'), lim = sum.querySelector('.ticks .no');
-    if (sv && sf.length === 3 && sl.length === 3 && lim) {
+    if (sv && sf.length === 3 && sl.length === 3) { // the limit line is optional: without it the ball rests on "I checked"
       guided = true;
       guide(sum, [sv].concat([].slice.call(sf), [].slice.call(sl)), function (R, g) {
-        var V = R(sv), F = [R(sf[0]), R(sf[1]), R(sf[2])], M = [R(sl[0]), R(sl[1]), R(sl[2])], L = R(lim), x = V.l - g, p = [];
+        var V = R(sv), F = [R(sf[0]), R(sf[1]), R(sf[2])], M = [R(sl[0]), R(sl[1]), R(sl[2])], L = lim && R(lim), x = V.l - g, p = [];
         if (F[0].l > V.r - 1) { // figures beside the visual: down the gap between them, then back along the gap above the strip
           var cx = (V.r + F[0].l) / 2, yt = Math.min(V.t, F[0].t) - 10, hy = (Math.max(V.b, F[2].b) + M[0].t) / 2;
           p.push({ x: V.l + 24, y: yt, hit: sv }, { x: cx, y: yt });
@@ -391,10 +391,11 @@
         }
         if (M[1].t > M[0].b - 2) { // strip stacked
           M.forEach(function (m, i) { p.push({ x: x, y: m.t + 20, hit: sl[i] }); });
-          p.push({ x: x, y: L.cy, hit: lim });
+          if (L) p.push({ x: x, y: L.cy, hit: lim });
         } else { // under the strip, then up its right side to the limit line
           var yb = M[0].b + 10, xr = M[2].r + g;
-          p.push({ x: x, y: M[0].cy, hit: sl[0] }, { x: x, y: yb }, { x: M[1].l + 24, y: yb, hit: sl[1] }, { x: M[2].l + 24, y: yb, hit: sl[2], dwell: 460 }, { x: xr, y: yb }, { x: xr, y: L.cy, hit: lim });
+          p.push({ x: x, y: M[0].cy, hit: sl[0] }, { x: x, y: yb }, { x: M[1].l + 24, y: yb, hit: sl[1] }, { x: M[2].l + 24, y: yb, hit: sl[2], dwell: 460 });
+          if (L) p.push({ x: xr, y: yb }, { x: xr, y: L.cy, hit: lim });
         }
         return p;
       }, function (el) { if (el.classList.contains('fact')) countUp(el.querySelector('b')); });
