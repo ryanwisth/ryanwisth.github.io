@@ -1496,3 +1496,36 @@ footer.site::before {
 .tblock { grid-template-columns: 1fr 3fr; }
 .tblock div:nth-child(2) { grid-column: auto; grid-row: auto; border-left: 2px dotted var(--line); border-bottom: 0; }
 /* === end recruiter-read structure === */
+
+/* === the thread, every page (Nov 15 2026) ===
+   site.js lays one strand of yarn down the left margin of <main>, beside the content, and draws it as far as the
+   reading line as the page scrolls. It sits under everything in <main> (so it passes under zips and patches) and
+   over the page's cloth. It replaces the home-only thread above; those rules still give it its yarn. */
+main { position: relative; z-index: 0; }
+.thread { display: block; z-index: -1; }
+@media (prefers-reduced-motion: no-preference) {
+  /* a heading's lettered patch is sewn down as the strand reaches it */
+  .motion .th-live .prose > h2::before { transition: transform .5s var(--spring), opacity .25s ease; }
+  .motion .th-live .prose > h2:not(.th-on)::before { opacity: .5; transform: scale(.8) rotate(-22deg); }
+}
+@media print { .thread { display: none; } }
+/* === end thread === */
+
+/* === case pages: one left edge (Nov 15 2026) ===
+   The title block had no side padding, so from 621 to 1016 px wide its text ran to the screen edge, and on wider
+   screens it sat 24 px left of the summary, which sat 24 px left of the figures. Title, summary and figures now
+   share one edge; the reading column stays narrower and centred. */
+@media (min-width: 621px) {
+  .case-head { padding-left: 24px; padding-right: 24px; }
+  main > .figure { max-width: 968px; }
+}
+/* === end one left edge === */
+
+/* === repo card: text and button stay on one row (Nov 15 2026) ===
+   With a longer line of text the button dropped under it, so two cards on one page (paper-grader) had two layouts. */
+@media (min-width: 621px) {
+  .repo-card:has(> .btn) { flex-wrap: nowrap; }
+  .repo-card:has(> .btn) p { flex: 1; min-width: 0; }
+  .repo-card > .btn { flex: none; }
+}
+/* === end repo card === */

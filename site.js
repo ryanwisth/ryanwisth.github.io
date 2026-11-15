@@ -405,44 +405,78 @@
     cio.observe(b);
   });
 
-  // home: one thread winds down the case studies, past a button on each group label. It is drawn as far as the
-  // reading line (45% down the window), read from scroll position once a frame, so a jump cannot leave it stale.
-  var th = d.querySelector('.thread'), grs = d.querySelectorAll('.groups .group');
-  if (th && grs.length) {
+  // every page: one thread runs down the left margin beside the content, from under the headline to the last block.
+  // It keeps the same distance from the content as the guide's strand, so it winds in where the column narrows,
+  // passes under the zips, and tacks a stitch into each section heading. It is drawn as far as the reading line
+  // (45% down the window; nothing at the very top, all of it at the very bottom), read from scroll position once a
+  // frame so a jump cannot leave it stale. Decoration only: built here, after the reduced-motion return.
+  var mainEl = d.querySelector('main'), th1 = mainEl && mainEl.querySelector('h1');
+  if (th1) {
+    var th = d.createElement('span');
+    th.className = 'thread'; th.setAttribute('aria-hidden', 'true');
     th.innerHTML = '<svg focusable="false"><path class="th-holes"/><path class="y-sh"/><path class="y-edge"/><path class="th-line"/></svg><i class="th-head"></i>';
-    var holes = th.querySelector('.th-holes'), yarn = th.querySelector('.th-line'), head = th.lastChild, stops = [], tlen = 0, tick = 0;
+    mainEl.appendChild(th);
+    var holes = th.querySelector('.th-holes'), yarn = th.querySelector('.th-line'), head = th.lastChild, stops = [], tlen = 0, tick = 0, mtop = 0, drawn = -1;
     var tsh = th.querySelector('.y-sh'), ted = th.querySelector('.y-edge'), tply = plied(th.firstChild), tpts = [];
+    var box = function (el) { // place in <main>, from layout offsets, so a reveal in mid-flight cannot shift it
+      var x = 0, y = 0, e = el;
+      while (e && e !== mainEl) { x += e.offsetLeft; y += e.offsetTop; e = e.offsetParent; }
+      return { l: x, t: y, b: y + el.offsetHeight };
+    };
     var lay = function () {
-      stops = []; th.classList.remove('live');
-      if (th.offsetParent === null) return; // hidden on narrow screens
-      var H = th.getBoundingClientRect(), s = '', px = 0, pb = 0;
-      [].forEach.call(grs, function (g, i) {
-        var q = g.getBoundingClientRect(), h = g.querySelector('.group-h').getBoundingClientRect();
-        var right = (h.left + h.right) / 2 > H.left + H.width / 2, x = right ? H.width + 14 : -14;
-        var bx = (right ? h.right - 35 : h.left + 35) - H.left, by = h.top + 35 - H.top, t = q.top - H.top;
-        s += i ? 'C' + px + ' ' + (pb + 50) + ' ' + x + ' ' + (t - 50) + ' ' + x + ' ' + (t + 10) : 'M' + x + ' ' + (t - 24);
-        s += 'L' + x + ' ' + (by - 22) + 'Q' + x + ' ' + by + ' ' + bx + ' ' + by + 'Q' + x + ' ' + by + ' ' + x + ' ' + (by + 22);
-        pb = q.bottom - H.top - 10; s += 'L' + x + ' ' + pb;
-        stops.push(by); px = x;
+      var g = innerWidth <= 620 ? 9 : 12, leads = mainEl.querySelector('.lead-hero .leads'), S = [], q, s, i, k, px, py, end;
+      var y0 = leads ? box(leads).t - 10 : box(th1).b + 10; // home: where the guide's strand turns along the cards
+      stops = []; drawn = -1; mtop = mainEl.getBoundingClientRect().top + (window.scrollY || 0);
+      [].forEach.call(mainEl.children, function (c) { // the blocks the strand runs beside, top to bottom
+        var inner = c.matches('.prose, .figure, .sum') ? c : c.matches('section:not(.sum)') ? c.querySelector('.wrap') : null;
+        [].forEach.call(inner ? inner.children : [c], function (el) {
+          if (el === th || !el.offsetHeight || getComputedStyle(el).position === 'absolute') return;
+          q = box(el); q.x = Math.max(7, q.l - (g > 9 && c.matches('.prose:not(.case-head)') ? 18 : g)); // running text gets more air
+          if (q.b <= y0 + 20) return;
+          k = S[S.length - 1];
+          if (k && Math.abs(k.x - q.x) < 4) k.b = Math.max(k.b, q.b); else S.push(q);
+        });
       });
-      s += 'L' + px + ' ' + (pb + 30);
+      th.classList.remove('live'); mainEl.classList.remove('th-live');
+      if (!S.length) return;
+      S[0].t = y0;
+      [].forEach.call(mainEl.querySelectorAll('.prose > h2, .section-head h2'), function (h) {
+        q = box(h); stops.push({ el: h, y: (q.t + q.b) / 2, x: q.l + 9 });
+      });
+      s = 'M' + S[0].x + ' ' + y0; px = S[0].x; py = y0;
+      S.forEach(function (sg, n) {
+        if (n) { // change lanes across the gap between two blocks, in an S-bend at least 44 px tall
+          k = Math.max(0, (44 - (sg.t - py)) / 2); q = Math.max(sg.t + k, py + 2); i = (q - py) / 2;
+          s += 'C' + px + ' ' + (py + i) + ' ' + sg.x + ' ' + (q - i) + ' ' + sg.x + ' ' + q; px = sg.x; py = q;
+        }
+        end = sg.b - (S[n + 1] ? Math.max(0, (44 - (S[n + 1].t - sg.b)) / 2) : 6);
+        stops.forEach(function (st) { // a tack stitch: in under the heading's patch and back out
+          if (st.y - 16 < py || st.y + 16 > end) return;
+          s += 'L' + px + ' ' + (st.y - 16) + 'Q' + px + ' ' + st.y + ' ' + st.x + ' ' + st.y + 'Q' + px + ' ' + st.y + ' ' + px + ' ' + (st.y + 16); py = st.y + 16;
+        });
+        if (end > py) { s += 'L' + px + ' ' + end; py = end; }
+      });
       holes.setAttribute('d', s); yarn.setAttribute('d', s); tsh.setAttribute('d', s); ted.setAttribute('d', s);
-      tlen = yarn.getTotalLength(); tpts = samples(yarn, tlen); th.classList.add('live');
+      tlen = yarn.getTotalLength(); tpts = samples(yarn, tlen); th.classList.add('live'); mainEl.classList.add('th-live');
     };
     var run = function () {
       tick = 0;
-      if (!stops.length) return;
-      var y = innerHeight * .45 - th.getBoundingClientRect().top, lo = 0, hi = tlen, m, k, p;
+      if (!tlen || !th.classList.contains('live')) return;
+      var sy = window.scrollY || 0, vh = innerHeight, max = Math.max(1, r.scrollHeight - vh);
+      var y = sy + vh * (.45 * Math.min(1, sy / 240) + .55 * Math.max(0, 1 - (max - sy) / (vh * .5))) - mtop, lo = 0, hi = tlen, m, k, p;
       for (k = 0; k < 18; k++) { m = (lo + hi) / 2; if (yarn.getPointAtLength(m).y < y) lo = m; else hi = m; }
+      stops.forEach(function (st) { st.el.classList.toggle('th-on', st.y <= y); });
+      if (Math.abs(lo - drawn) < .5) return;
+      drawn = lo;
       tsh.style.strokeDasharray = ted.style.strokeDasharray = yarn.style.strokeDasharray = lo.toFixed(1) + ' 99999';
       tply.setAttribute('points', tpts.slice(0, Math.floor(lo / 6) + 1).join(' '));
       p = yarn.getPointAtLength(lo); head.style.transform = 'translate(' + p.x.toFixed(1) + 'px,' + p.y.toFixed(1) + 'px)';
       head.style.opacity = lo < 2 ? 0 : 1;
-      [].forEach.call(grs, function (g, i) { g.classList.toggle('on', stops[i] <= y); });
     };
+    var relay = function () { if (!tick) tick = requestAnimationFrame(function () { lay(); run(); }); };
     addEventListener('scroll', function () { if (!tick) tick = requestAnimationFrame(run); }, { passive: true });
-    addEventListener('resize', function () { lay(); run(); });
-    addEventListener('load', function () { lay(); run(); });
+    addEventListener('resize', relay); addEventListener('load', relay);
+    if ('ResizeObserver' in window) new ResizeObserver(relay).observe(mainEl); // late images and fonts move the blocks
     lay(); run();
   }
 
