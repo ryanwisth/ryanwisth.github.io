@@ -1521,6 +1521,8 @@ main { position: relative; z-index: 0; }
   .case-head { padding-left: 24px; padding-right: 24px; }
   main > .figure { max-width: 968px; }
 }
+/* a case page's film: its frame is a block, so the pause button sits in the film's corner (as an inline span it hung outside the left edge, in the thread's lane) */
+.case-film .shot { display: block; }
 /* === end one left edge === */
 
 /* === repo card: text and button stay on one row (Nov 15 2026) ===
