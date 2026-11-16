@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>A study built so it could fail | Ryan Wisth</title>
-<meta name="description" content="Case study: testing whether pinball table design predicts player ratings, with hypotheses written and hashed before any result. The hypotheses failed, and the write-up says so.">
-<meta property="og:title" content="A study built so it could fail | Ryan Wisth">
-<meta property="og:description" content="Case study: testing whether pinball table design predicts player ratings, with hypotheses written and hashed before any result. The hypotheses failed, and the write-up says so.">
+<title>A study set up so it could prove me wrong | Ryan Wisth</title>
+<meta name="description" content="Testing whether the design of a pinball table predicts how much players like it. The predictions were written down and locked before any results came in. They failed, and the write-up says so.">
+<meta property="og:title" content="A study set up so it could prove me wrong | Ryan Wisth">
+<meta property="og:description" content="Testing whether the design of a pinball table predicts how much players like it. The predictions were written down and locked before any results came in. They failed, and the write-up says so.">
 <meta property="og:image" content="https://ryanwisth.github.io/img/card.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#f58fb0" media="(prefers-color-scheme: light)">
@@ -20,7 +20,7 @@
   <div class="wrap">
     <a class="brand" href="index.html"><span class="mark">RW</span>Ryan Wisth</a>
     <nav class="topnav">
-      <a href="index.html#work">Case studies</a>
+      <a href="index.html#work">Projects</a>
       <a class="hide-sm" href="index.html#how">How I work</a>
       <a href="https://github.com/ryanwisth">GitHub</a>
       <button class="theme-toggle" type="button" hidden aria-label="Switch between light and dark"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
@@ -30,13 +30,13 @@
 
 <main>
   <div class="prose case-head">
-    <a class="back" href="index.html#work">&larr; All case studies</a>
-    <p class="kicker">Research rigor &middot; pre-registered study</p>
-    <h1 style="view-transition-name: t-pinball-study">A study built so it could fail</h1>
-    <p class="lede">A research tool that converts pinball table layouts, measures their geometry, plays them with simulated players at four skill levels, and tests whether any of that predicts how much people enjoy a table.</p>
+    <a class="back" href="index.html#work">&larr; All projects</a>
+    <p class="kicker">Honest research &middot; predictions written down first</p>
+    <h1 style="view-transition-name: t-pinball-study">A study set up so it could prove me wrong</h1>
+    <p class="lede">A research tool that converts pinball table designs into one format, measures their shape, plays them with simulated players at four skill levels, and tests whether any of that predicts how much people enjoy a table.</p>
     <dl class="brief">
-      <dt>Problem</dt><dd>Score an original pinball table before anyone has played it, by learning what separates well-rated tables from the rest, without fooling myself with measures that fit by chance.</dd>
-      <dt>Result</dt><dd>A clean negative result, decided before the data came in. 9 predictions were locked (hashed) before any result, tested on 79 real tables and retested on 94, and none held. The best model's error was 0.425 against 0.448 for guessing the mean, and year, maker and build flags alone did as well at 0.421: what a 2D simulator can measure does not predict how players rate a table.</dd>
+      <dt>Problem</dt><dd>The goal was to score a new pinball table before anyone has played it, by learning what sets well-rated tables apart, without fooling myself with measures that fit by chance.</dd>
+      <dt>Result</dt><dd>A clear &ldquo;no&rdquo;, with the test settled before the data came in. 9 predictions were locked with a digital fingerprint (a hash) before any result, tested on 79 real tables and retested on 94, and none held. The best model&rsquo;s typical error was 0.425, against 0.448 for simply guessing the average rating. Year, maker and a few build details alone did as well, at 0.421. What a 2D simulator can measure does not predict how players rate a table.</dd>
     </dl>
   </div>
 
@@ -45,42 +45,42 @@
       <figure class="figure sum-vis">
         <div class="chart-card">
       <h3>Prediction error, lower is better</h3>
-      <p class="sub">Leave-one-out RMSE (root-mean-square error) on player ratings. The model barely beats guessing the mean, and year, maker and build flags alone do as well.</p>
-      <div class="bars" role="img" aria-label="Bar chart. Guess the mean 0.448, best ensemble 0.425, year maker and build flags alone 0.421.">
-        <div class="row" title="Guess the mean rating: 0.448"><span class="lab">Guess the mean rating</span><span class="track"><i class="base" style="--v:89.6%"></i></span><span class="val">0.448</span></div>
-        <div class="row" title="Best ensemble: 0.425"><span class="lab">Best ensemble</span><span class="track"><i class="" style="--v:85.0%"></i></span><span class="val">0.425</span></div>
-        <div class="row" title="Year, maker and build flags alone: 0.421"><span class="lab">Year, maker and build flags alone</span><span class="track"><i class="" style="--v:84.2%"></i></span><span class="val">0.421</span></div>
+      <p class="sub">Typical error on player ratings, with each table predicted by a model that never saw it (leave-one-out RMSE). The model barely beats guessing the average, and year, maker and build details alone do as well.</p>
+      <div class="bars" role="img" aria-label="Bar chart. Guess the average 0.448, best combined model 0.425, year maker and build details alone 0.421.">
+        <div class="row" title="Guess the average rating: 0.448"><span class="lab">Guess the average rating</span><span class="track"><i class="base" style="--v:89.6%"></i></span><span class="val">0.448</span></div>
+        <div class="row" title="Best combined model: 0.425"><span class="lab">Best combined model</span><span class="track"><i class="" style="--v:85.0%"></i></span><span class="val">0.425</span></div>
+        <div class="row" title="Year, maker and build details alone: 0.421"><span class="lab">Year, maker and build details alone</span><span class="track"><i class="" style="--v:84.2%"></i></span><span class="val">0.421</span></div>
       </div>
     </div>
       </figure>
       <div class="facts">
-        <div class="fact"><b>9</b><span>predictions locked (hashed) before any result; none held, and the study reports it</span></div>
+        <div class="fact"><b>9</b><span>predictions locked before any result; none held, and the study says so</span></div>
         <div class="fact"><b>79 &rarr; 94</b><span>real tables tested, then retested on the larger set</span></div>
         <div class="fact"><b>5%</b><span>better than guessing the average rating: too small to use, and called a failure</span></div>
       </div>
     </div>
-    <ol class="method" aria-label="What was set, who wrote it, how it was checked">
-      <li><p class="who">I set</p><ul class="ticks"><li>Hypotheses before results</li><li>Controls in every model</li><li>Trust only what holds up</li></ul></li>
-      <li class="ag"><p class="who">Agents wrote</p><p>the code and ran the experiments</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
-      <li><p class="who">I checked</p><ul class="ticks ok"><li>Leave-one-out against guessing the mean</li><li>Bootstrap intervals on two measures</li><li>Hypothesis hashes stored with the results</li></ul></li>
+    <ol class="method" aria-label="My rules, what AI wrote, how I tested it">
+      <li><p class="who">My rules</p><ul class="ticks"><li>Predictions before results</li><li>Year and maker always counted</li><li>Trust only what holds up</li></ul></li>
+      <li class="ag"><p class="who">AI wrote</p><p>the code and ran the experiments</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
+      <li><p class="who">I tested</p><ul class="ticks ok"><li>Each table predicted unseen, against guessing the average</li><li>Error ranges on two measures</li><li>Prediction fingerprints stored with the results</li></ul></li>
     </ol>
   </section>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-pinball-study.jpg" width="960" height="540" aria-label="Narrated film, 51 seconds: 9 predictions, hashed before any result. Each with a fixed test and a fixed verdict. Ryan built a pinball study, designed so it could fail. He set three rules: hypotheses before results, controls in every model, trust only what holds up. Agents wrote the code and ran the experiments. He judged every rating model against guessing the mean. Tested on 79 real tables, retested on 94. None of the 9 held, and the study reports it. The best model barely beat guessing the mean: 0.425 against 0.448. Ratings mostly reward theme, rules depth and sound, which a 2D simulator cannot see. Ryan Wisth. A clean negative result, decided before the data."><source src="video/film-pinball-study.mp4" type="video/mp4"></video></span><figcaption>The case in 51 seconds, narrated. Tap ♪ for sound.</figcaption></figure>
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-pinball-study.jpg" width="960" height="540" aria-label="Narrated film, 40 seconds: 9 predictions, locked before any result. A pinball study, set up so it could be proven wrong. Each table is converted into one format, its shape is measured, and simulated players at four skill levels play it. Run on 79 real tables, then on 94. None of the 9 held, and the study says so. The best model barely beat guessing the average: 0.425 against 0.448. Ratings mostly reward theme, rules and sound, which a 2D simulator cannot see. A clear no, settled before the data came in."><source src="video/film-pinball-study.mp4" type="video/mp4"></video></span><figcaption>The project in 40 seconds, narrated. Tap ♪ for sound.</figcaption></figure>
 
   <figure class="figure">
     <ol class="flow c5">
-      <li class="key"><b>Hypotheses first</b><span>written and hashed before results</span></li>
-      <li><b>Convert tables</b><span>table files into one common board format</span></li>
-      <li><b>Measure</b><span>geometry, toys, simulated play, rules</span></li>
-      <li><b>Rating model</b><span>judged leave-one-out</span></li>
-      <li class="key"><b>Pre-registered tests</b><span>verdicts fixed in advance</span></li>
+      <li class="key"><b>Predictions first</b><span>written and locked before results</span></li>
+      <li><b>Convert tables</b><span>table files into one shared board format</span></li>
+      <li><b>Measure</b><span>shape, toys, simulated play, rules</span></li>
+      <li><b>Rating model</b><span>each table predicted without seeing it</span></li>
+      <li class="key"><b>Tests set in advance</b><span>verdicts fixed beforehand</span></li>
     </ol>
-    <figcaption>The study, simplified from the README diagram.</figcaption>
+    <figcaption>The study, simplified from the project&rsquo;s own diagram.</figcaption>
   </figure>
   <figure class="figure">
     <div class="split">
-      <div class="shot"><div class="bar"><i></i><i></i><i></i><em>sim/trace.py</em></div><video data-auto controls muted loop playsinline preload="none" poster="img/pinball-trace.jpg" width="362" height="800" aria-label="A top-down pinball board with the ball's path drawn as a growing yellow line over one simulated minute"><source src="video/pinball-trace.mp4" type="video/mp4"></video></div>
+      <div class="shot"><div class="bar"><i></i><i></i><i></i><em>ball-path tracer</em></div><video data-auto controls muted loop playsinline preload="none" poster="img/pinball-trace.jpg" width="362" height="800" aria-label="A top-down pinball board with the ball's path drawn as a growing yellow line over one simulated minute"><source src="video/pinball-trace.mp4" type="video/mp4"></video></div>
       <div class="side">
         <ul class="legend">
           <li><i style="background:#ffff66"></i>The ball's path, growing paler as the minute goes on</li>
@@ -90,49 +90,49 @@
         <div class="term soft"><div class="bar"><i></i><i></i><i></i><em>one simulated minute</em></div><pre tabindex="0" role="img" aria-label="Terminal output of the trace command"><span class="ln cmd">python3 sample/make_demo_board.py</span><span class="ln">wrote …/boards/demo | grid (1050, 476) | reach 0.714 | elements 23 | zones 5</span><span class="ln cmd">python3 -I sim/trace.py demo bot2 1 3600 trace.png</span><span class="ln hl">stuck 4 launch 6 drain 5 flips 17</span></pre></div>
       </div>
     </div>
-    <figcaption>The intermediate bot playing the repository's invented demo board for one simulated minute (3,600 steps at 60 Hz). Each video frame is the trace script's own picture, one per simulated second. No commercial table is shown.</figcaption>
+    <figcaption>The medium-skill simulated player on the project&rsquo;s made-up demo board for one simulated minute (3,600 steps, 60 per second). Each video frame is a picture drawn by the tracing script, one per simulated second. No commercial table is shown.</figcaption>
   </figure>
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>The easy trap in a study like this is to try many measures and report the ones that happen to fit. This study fixed its tests and verdicts in advance, so the result could not be bent after the fact.</p>
+    <p>The easy trap in a study like this is to try many measures and report the ones that happen to fit. This study fixed its tests and verdicts in advance, so the result could not be bent afterward.</p>
 
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>Hypotheses before results.</b> Designer rules of thumb were written down with predicted directions, a fixed test and a fixed verdict rule, then hashed, before any measure was compared with a rating.</li>
-      <li><b>One common board format.</b> The simulator never sees a source file, so an original design can be measured exactly like a converted commercial table.</li>
-      <li><b>Port the physics, do not invent it.</b> A hand-tuned flipper was replaced by a port of an established simulator's flipper model, so the simulated play rests on an established model.</li>
-      <li><b>Controls in every model.</b> Year and maker are always included, so era and brand are not mistaken for "fun".</li>
-      <li><b>Trust only what holds up.</b> The expert bot did not reliably beat the intermediate one, so every hypothesis uses the intermediate bot.</li>
+      <li><b>Predictions before results.</b> Designers&rsquo; rules of thumb were written down, each with the direction it predicted, a fixed test and a fixed rule for the verdict. Then they were locked with a digital fingerprint, before any measure was compared with a rating.</li>
+      <li><b>One shared board format.</b> The simulator never sees an original file, so a new design can be measured exactly like a converted commercial table.</li>
+      <li><b>Borrow the physics, do not invent it.</b> A flipper tuned by hand was replaced with the flipper from an established pinball simulator, so the simulated play rests on an established model.</li>
+      <li><b>Year and maker always counted.</b> Every model includes them, so a table&rsquo;s era and brand are not mistaken for &ldquo;fun&rdquo;.</li>
+      <li><b>Trust only what holds up.</b> The expert simulated player did not reliably beat the medium-skill one, so every prediction uses the medium-skill player.</li>
     </ul>
 
-    <h2>How it was verified</h2>
+    <h2>How it was tested</h2>
     <ul>
-      <li>Every rating model was judged by leave-one-out cross-validation against the simple baseline of predicting the mean.</li>
-      <li>Each hypothesis was tested with bootstrap intervals on two separate measures of success: public rating and production run.</li>
-      <li>The hashes of the hypothesis files are stored with the results, so any edit after the fact shows.</li>
+      <li>Every rating model was judged the same way: each table was predicted by a model that had not seen it, and the result was compared with simply guessing the average.</li>
+      <li>Each prediction was tested with error ranges (bootstrap intervals) on two separate measures of success: public rating and how many tables were made.</li>
+      <li>The fingerprints of the prediction files are stored with the results, so any later edit shows.</li>
     </ul>
 
-    <h2>Scope</h2>
+    <h2>Limits</h2>
     <ul>
-      <li>The finding: ratings mostly reward theme, licence, rules depth, sound and code, which a 2D simulator cannot see.</li>
-      <li>The published hypothesis files had a few non-substantive sentences and labels removed, so they no longer match the hashes recorded during the study.</li>
+      <li>The finding: ratings mostly reward theme, license, how deep the game&rsquo;s rules go, sound and software, which a 2D simulator cannot see.</li>
+      <li>The published prediction files had a few sentences and labels removed that did not change their meaning, so they no longer match the fingerprints recorded during the study.</li>
     </ul>
 
     <div class="repo-card">
       <p><b>ryanwisth/pinball-fun-scorer</b>The code, with its real status and limits.</p>
-      <a class="btn primary" href="https://github.com/ryanwisth/pinball-fun-scorer">View the repository &rarr;</a>
+      <a class="btn primary" href="https://github.com/ryanwisth/pinball-fun-scorer">See the code on GitHub &rarr;</a>
     </div>
-    <nav class="pager" aria-label="More case studies">
-      <a class="prev" href="claude-phone.html"><small>&larr; Previous</small>My desktop coding-agent chats, answered from my phone</a>
-      <a class="next" href="streaks-trainer.html"><small>Next &rarr;</small>A practice app where one miss resets the streak</a>
+    <nav class="pager" aria-label="More projects">
+      <a class="prev" href="claude-phone.html"><small>&larr; Previous</small>My computer&rsquo;s AI chats, on my phone</a>
+      <a class="next" href="streaks-trainer.html"><small>Next &rarr;</small>A study app where one wrong answer resets your streak</a>
     </nav>
   </div>
 </main>
 
 <footer class="site">
   <div class="wrap">
-    <span>Every figure on this page comes from the project's own README.</span>
+    <span>Every number on this page comes from the project&rsquo;s own notes.</span>
     <span>&copy; Ryan Wisth &middot; <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
   </div>
 </footer>

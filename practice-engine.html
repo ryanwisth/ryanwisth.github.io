@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>A practice app built around the mistake | Ryan Wisth</title>
-<meta name="description" content="Case study: a local practice app that drills each mistake pattern until it is mastered under time, with product rules set from a user problem.">
-<meta property="og:title" content="A practice app built around the mistake | Ryan Wisth">
-<meta property="og:description" content="Case study: a local practice app that drills each mistake pattern until it is mastered under time, with product rules set from a user problem.">
+<title>A study app built around mistakes | Ryan Wisth</title>
+<meta name="description" content="A study app that practices each kind of mistake until it is fixed, on time, and then checks again days later.">
+<meta property="og:title" content="A study app built around mistakes | Ryan Wisth">
+<meta property="og:description" content="A study app that practices each kind of mistake until it is fixed, on time, and then checks again days later.">
 <meta property="og:image" content="https://ryanwisth.github.io/img/practice-engine.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#f58fb0" media="(prefers-color-scheme: light)">
@@ -20,7 +20,7 @@
   <div class="wrap">
     <a class="brand" href="index.html"><span class="mark">RW</span>Ryan Wisth</a>
     <nav class="topnav">
-      <a href="index.html#work">Case studies</a>
+      <a href="index.html#work">Projects</a>
       <a class="hide-sm" href="index.html#how">How I work</a>
       <a href="https://github.com/ryanwisth">GitHub</a>
       <button class="theme-toggle" type="button" hidden aria-label="Switch between light and dark"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
@@ -30,93 +30,93 @@
 
 <main>
   <div class="prose case-head">
-    <a class="back" href="index.html#work">&larr; All case studies</a>
-    <p class="kicker">Learning product &middot; mistake-first design</p>
-    <h1 style="view-transition-name: t-practice-engine">A practice app built around the mistake</h1>
-    <p class="lede">A local practice app that groups questions by the mistake they test, drills each mistake pattern until it is mastered under time, and grades timed sets on pacing as well as score.</p>
+    <a class="back" href="index.html#work">&larr; All projects</a>
+    <p class="kicker">Things I use &middot; built around mistakes</p>
+    <h1 style="view-transition-name: t-practice-engine">A study app built around mistakes</h1>
+    <p class="lede">A study app that groups questions by the mistake they test, and practices each mistake until it is fixed, on time. Timed sets are graded on pacing as well as score.</p>
     <dl class="brief">
-      <dt>Problem</dt><dd>Topic practice treats every miss in "percents" the same, but most misses come from one specific error: adding two percent changes instead of multiplying them, or averaging times instead of adding rates.</dd>
-      <dt>Result</dt><dd>A working app that drills each mistake pattern to mastery: 3 correct, on-time answers in a row on 3 different questions, then rechecks after 3, 7 and 21 days so mastery has to last. Timed sets are graded on pacing as well as score. It runs from 2 files with nothing to install and loads anyone&rsquo;s own questions from a spreadsheet file.</dd>
+      <dt>Problem</dt><dd>Practicing by topic treats every wrong answer on &ldquo;percents&rdquo; the same. But most come from one specific error: adding two percent changes instead of multiplying them, or averaging times instead of adding rates.</dd>
+      <dt>Result</dt><dd>A working app that practices each mistake until it is mastered: 3 correct, on-time answers in a row on 3 different questions. It checks again after 3, 7 and 21 days, so mastery has to last. Timed sets are graded on pacing as well as score. It runs from 2 files with nothing to install, and loads anyone&rsquo;s own questions from a spreadsheet file.</dd>
     </dl>
   </div>
 
   <section class="sum" aria-label="Summary">
     <div class="sum-top">
       <figure class="figure sum-vis">
-        <div class="shot"><div class="bar"><i></i><i></i><i></i><em>127.0.0.1, drill view, recorded</em></div><video data-auto controls muted loop playsinline preload="none" poster="img/practice-engine-video.jpg" width="960" height="640" aria-label="A practice session: two right answers, one wrong answer that retires the item, then the progress page"><source src="video/practice-engine.mp4" type="video/mp4"></video></div>
-    <figcaption>A short session on the sample bank: two right answers, a miss that names the mistake pattern and retires the item, then the Progress tab. The circle is the recording script's pointer.</figcaption>
+        <div class="shot"><div class="bar"><i></i><i></i><i></i><em>this computer only, practice screen, recorded</em></div><video data-auto controls muted loop playsinline preload="none" poster="img/practice-engine-video.jpg" width="960" height="640" aria-label="A practice session: two right answers, one wrong answer that retires the question, then the progress page"><source src="video/practice-engine.mp4" type="video/mp4"></video></div>
+    <figcaption>A short session with the sample questions: two right answers, a wrong one that names the mistake and retires the question, then the Progress tab. The circle is the recording&rsquo;s pointer.</figcaption>
       </figure>
       <div class="facts">
-        <div class="fact"><b>3 in a row</b><span>correct, on-time answers on 3 different questions master a mistake pattern</span></div>
-        <div class="fact"><b>3, 7, 21</b><span>days later, a mastered pattern is rechecked; one miss reopens it</span></div>
+        <div class="fact"><b>3 in a row</b><span>correct, on-time answers on 3 different questions master a kind of mistake</span></div>
+        <div class="fact"><b>3, 7, 21</b><span>days later, a mastered mistake is checked again; one wrong answer reopens it</span></div>
         <div class="fact"><b>2 files</b><span>run the whole app, nothing to install</span></div>
       </div>
     </div>
-    <ol class="method" aria-label="What was set, who wrote it, how it was checked">
-      <li><p class="who">I set</p><ul class="ticks"><li>The unit of practice is the mistake</li><li>Speed is part of mastery</li><li>A missed question is retired</li></ul></li>
-      <li class="ag"><p class="who">Agents wrote</p><p>the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
-      <li><p class="who">I checked</p><ul class="ticks ok"><li>Drill, timed set, progress, pacing and audit tested</li><li>21 sample questions, each machine-checked</li><li>Used for my own study</li></ul></li>
+    <ol class="method" aria-label="My rules, who wrote it, how it was tested">
+      <li><p class="who">My rules</p><ul class="ticks"><li>Practice the mistake, not the topic</li><li>Speed is part of mastery</li><li>A missed question is retired</li></ul></li>
+      <li class="ag"><p class="who">AI wrote</p><p>the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
+      <li><p class="who">I tested</p><ul class="ticks ok"><li>Every screen tested, from practice to progress</li><li>21 sample questions, each checked by a program</li><li>Used for my own study</li></ul></li>
     </ol>
   </section>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-practice-engine.jpg" width="960" height="540" aria-label="Narrated film, 46 seconds: 3 correct, on-time answers in a row, on 3 different questions, master a mistake pattern. Ryan built a practice app around the mistake, not the topic. He set the rules. The unit of practice is the mistake. Speed is part of mastery. And a missed question is retired. Mastered patterns are rechecked after 3, 7 and 21 days. One miss reopens them. Timed sets are graded on pacing, as well as score. Agents wrote the code. He verifies it: drill, timed set, progress, pacing and audit, all tested. 2 files run the whole app, with nothing to install. Ryan Wisth. Practice aimed at the error, and mastery that has to last."><source src="video/film-practice-engine.mp4" type="video/mp4"></video></span><figcaption>The case in 46 seconds, narrated. Tap ♪ for sound.</figcaption></figure>
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-practice-engine.jpg" width="960" height="540" aria-label="Narrated film, 38 seconds: 3 correct, on-time answers in a row, on 3 different questions, master a mistake. A study app built around mistakes, not topics. Questions are grouped by the mistake they test. A slow right answer does not count. And a missed question never comes up again. Mastered mistakes are checked again after 3, 7 and 21 days. One wrong answer reopens them. Timed sets are graded on pacing, as well as score. 2 files run the whole app, with nothing to install. Practice aimed at the error, and mastery that has to last."><source src="video/film-practice-engine.mp4" type="video/mp4"></video></span><figcaption>The project in 38 seconds, narrated. Tap ♪ for sound.</figcaption></figure>
 
   <figure class="figure">
-    <div class="shot"><div class="bar"><i></i><i></i><i></i><em>127.0.0.1:8780, drill view</em></div><img src="img/practice-engine.jpg" alt="The drill screen after a correct answer: the mistake pattern, the time against target, the streak and the explanation" width="1600" height="1231" loading="lazy"></div>
-    <figcaption>The drill view on the repository's sample bank: the mistake pattern, the time against target and the streak, shown after each answer.</figcaption>
+    <div class="shot"><div class="bar"><i></i><i></i><i></i><em>this computer only, practice screen</em></div><img src="img/practice-engine.jpg" alt="The practice screen after a correct answer: the kind of mistake, the time against the target, the streak and the explanation" width="1600" height="1231" loading="lazy"></div>
+    <figcaption>The practice screen. After each answer it shows the mistake, the time against the target and the streak.</figcaption>
   </figure>
   <figure class="figure">
     <ol class="flow c5">
-      <li><b>Your questions</b><span>CSV or JSON, validated on import</span></li>
-      <li><b>Verified items</b><span>grouped by the mistake they test</span></li>
-      <li><b>Drill or timed set</b><span>answer and seconds recorded</span></li>
-      <li class="key"><b>Mastered</b><span>a streak of correct, on-time answers on distinct items</span></li>
-      <li><b>Decay check</b><span>after 3, 7 and 21 days; a miss reopens it</span></li>
+      <li><b>Your questions</b><span>a spreadsheet or data file, checked as it loads</span></li>
+      <li><b>Checked questions</b><span>grouped by the mistake they test</span></li>
+      <li><b>Practice or timed set</b><span>answer and seconds recorded</span></li>
+      <li class="key"><b>Mastered</b><span>a streak of correct, on-time answers on different questions</span></li>
+      <li><b>Check again later</b><span>after 3, 7 and 21 days; a wrong answer reopens it</span></li>
     </ol>
-    <figcaption>Simplified from the README diagram. A wrong answer also retires that item from serving.</figcaption>
+    <figcaption>How it works, simplified. A wrong answer also retires that question for good.</figcaption>
   </figure>
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>Re-practicing the whole chapter never targets that one error. This app makes the error itself the unit of practice: every question is tagged with the mistake it tests, a pattern counts as mastered only after 3 correct, on-time answers on 3 different questions, and rechecks at 3, 7 and 21 days prove the fix held. One miss on a recheck reopens the pattern.</p>
+    <p>Practicing the whole chapter again never targets that one error. Here, every question is labeled with the mistake it tests. A mistake counts as mastered only after 3 correct, on-time answers on 3 different questions. Checks at 3, 7 and 21 days prove the fix held, and one wrong answer reopens it.</p>
 
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>The unit of practice is the mistake, not the topic.</b> Each question belongs to one mistake pattern, so practice goes straight at the error behind the miss.</li>
-      <li><b>Speed is part of mastery.</b> A slow right answer does not extend the streak, so mastered means right and on time.</li>
-      <li><b>Mastery must span different questions.</b> The streak has to come from 3 distinct questions, because a streak on one repeated question proves only memory.</li>
-      <li><b>A missed question is retired.</b> After its explanation is shown, a later right answer could be recall, so it is never served again.</li>
-      <li><b>Pacing is a separate grade.</b> The report splits time that bought a right answer from time sunk into a wrong one.</li>
+      <li><b>Practice the mistake, not the topic.</b> Each question belongs to one mistake, so practice goes straight at the error.</li>
+      <li><b>Speed is part of mastery.</b> A slow right answer does not add to the streak. Mastered means right and on time.</li>
+      <li><b>Mastery needs different questions.</b> The streak has to come from 3 different questions. Getting one question right over and over only proves memory.</li>
+      <li><b>A missed question is retired.</b> Once its explanation is shown, a later right answer could just be memory, so it never comes up again.</li>
+      <li><b>Pacing gets its own grade.</b> The report separates time spent on right answers from time lost on wrong ones.</li>
     </ul>
 
-    <h2>How it was verified</h2>
+    <h2>How it was tested</h2>
     <ul>
-      <li>Built the sample bank, ran the app on localhost and exercised drill, answer, timed set, progress, pacing and audit.</li>
-      <li>All 21 sample questions carry a machine check, and only checked questions are served.</li>
-      <li>A built-in audit flags bad answer keys, duplicate choices, near-clone questions and patterns with too few questions; the importer rejects the whole file if any row fails validation, so bad data never reaches a drill.</li>
-      <li>I verified the rules by using the tool for my own study.</li>
+      <li>I built the sample questions, ran the app, and tried every part: practice, timed sets, progress, pacing and the quality check.</li>
+      <li>All 21 sample questions are checked by a program, and only checked questions are shown.</li>
+      <li>A built-in quality check flags wrong answer keys, repeated choices, near-copies of questions, and mistakes with too few questions. If any row of a question file fails, the whole file is refused.</li>
+      <li>I tested the rules by using the app for my own study.</li>
     </ul>
 
     <h2>Scope</h2>
     <ul>
-      <li>Single user, runs on your own computer with no sign-in.</li>
-      <li>The public repository is a generic build of a larger personal practice tool.</li>
+      <li>One user, on your own computer, with no sign-in.</li>
+      <li>The public code is a general version of a larger study tool I built for myself.</li>
     </ul>
 
     <div class="repo-card">
-      <p><b>ryanwisth/adaptive-drill-engine</b>The code, with its real status and limits.</p>
-      <a class="btn primary" href="https://github.com/ryanwisth/adaptive-drill-engine">View the repository &rarr;</a>
+      <p><b>ryanwisth/adaptive-drill-engine</b>The code, with honest notes on what it can and cannot do.</p>
+      <a class="btn primary" href="https://github.com/ryanwisth/adaptive-drill-engine">See the code on GitHub &rarr;</a>
     </div>
-    <nav class="pager" aria-label="More case studies">
-      <a class="prev" href="family-tree-3d.html"><small>&larr; Previous</small>A 3D family tree in one offline file</a>
-      <a class="next" href="evidence-pipeline.html"><small>Next &rarr;</small>A family tree grown only from records</a>
+    <nav class="pager" aria-label="More projects">
+      <a class="prev" href="family-tree-3d.html"><small>&larr; Previous</small>A 3D family tree that opens from one file</a>
+      <a class="next" href="evidence-pipeline.html"><small>Next &rarr;</small>A family tree built only from real records</a>
     </nav>
   </div>
 </main>
 
 <footer class="site">
   <div class="wrap">
-    <span>Every figure on this page comes from the project's own README.</span>
+    <span>Every number on this page comes from the project&rsquo;s own notes.</span>
     <span>&copy; Ryan Wisth &middot; <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
   </div>
 </footer>

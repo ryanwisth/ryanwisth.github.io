@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Spending rules an AI agent cannot forget | Ryan Wisth</title>
-<meta name="description" content="Case study: four hooks and nine cost-tiered subagent types that stop a Claude Code session, and the agents it spawns, from spending far more tokens than the work needs.">
-<meta property="og:title" content="Spending rules an AI agent cannot forget | Ryan Wisth">
-<meta property="og:description" content="Case study: four hooks and nine cost-tiered subagent types that stop a Claude Code session, and the agents it spawns, from spending far more tokens than the work needs.">
+<title>Spending rules an AI can&rsquo;t skip | Ryan Wisth</title>
+<meta name="description" content="Four automatic checks and nine cheaper kinds of AI helper that stop my AI assistant from using far more than the work needs.">
+<meta property="og:title" content="Spending rules an AI can&rsquo;t skip | Ryan Wisth">
+<meta property="og:description" content="Four automatic checks and nine cheaper kinds of AI helper that stop my AI assistant from using far more than the work needs.">
 <meta property="og:image" content="https://ryanwisth.github.io/img/card.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#f58fb0" media="(prefers-color-scheme: light)">
@@ -20,7 +20,7 @@
   <div class="wrap">
     <a class="brand" href="index.html"><span class="mark">RW</span>Ryan Wisth</a>
     <nav class="topnav">
-      <a href="index.html#work">Case studies</a>
+      <a href="index.html#work">Projects</a>
       <a class="hide-sm" href="index.html#how">How I work</a>
       <a href="https://github.com/ryanwisth">GitHub</a>
       <button class="theme-toggle" type="button" hidden aria-label="Switch between light and dark"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
@@ -30,13 +30,13 @@
 
 <main>
   <div class="prose case-head">
-    <a class="back" href="index.html#work">&larr; All case studies</a>
-    <p class="kicker">Developer tooling &middot; rules enforced in code</p>
-    <h1 style="view-transition-name: t-token-guard">Spending rules an AI agent cannot forget</h1>
-    <p class="lede">Four small hooks and nine cost-tiered subagent types that stop a Claude Code session, and the agents it spawns, from spending far more tokens than the work needs.</p>
+    <a class="back" href="index.html#work">&larr; All projects</a>
+    <p class="kicker">AI costs &middot; rules the AI can&rsquo;t ignore</p>
+    <h1 style="view-transition-name: t-token-guard">Spending rules an AI can&rsquo;t skip</h1>
+    <p class="lede">Claude Code is an AI assistant that writes code for me, and it can hand parts of a job to AI helpers. Four small automatic checks, and nine cheaper kinds of helper, stop it from using far more than the work needs.</p>
     <dl class="brief">
-      <dt>Problem</dt><dd>Spending rules written into a prompt did not hold: the agent agreed with them and broke them an hour later.</dd>
-      <dt>Result</dt><dd>In daily use since October 2026: four hooks and nine lean agent types block the waste my scans measured, including the 482 of 662 helper agents that ran as the heavy default type at 53.8k tokens per first call against 16k to 20k. Every denial names the fix, so the agent corrects itself on the next call without me stepping in.</dd>
+      <dt>Problem</dt><dd>AI use is measured in tokens, small chunks of text the AI reads or writes. Spending rules written into my instructions did not hold: the AI agreed with them and broke them an hour later.</dd>
+      <dt>Result</dt><dd>In daily use since October 2026. Four checks and nine lighter helper types block the waste my scans measured. That includes the 482 of 662 helpers that ran as the heavy default type: 53.8k tokens in the first step, against 16k to 20k. Every block says how to fix it, so the AI corrects itself on its next try without me stepping in.</dd>
     </dl>
   </div>
 
@@ -44,100 +44,100 @@
     <div class="sum-top">
       <figure class="figure sum-vis">
         <div class="chart-card">
-      <h3>Size of a helper agent&rsquo;s first call</h3>
-      <p class="sub">Median tokens in a spawned agent's first call, from my session logs: the heavy default type against the lean types.</p>
-      <div class="bars" role="img" aria-label="Bar chart. Default agent type 53.8k tokens, lean types 16k to 20k.">
-        <div class="row" title="Default agent type: 53.8k"><span class="lab">Default agent type</span><span class="track"><i class="" style="--v:89.7%"></i></span><span class="val">53.8k</span></div>
-        <div class="row" title="Lean types: 16k to 20k"><span class="lab">Lean types</span><span class="track"><i class="cut" style="--v:26.7%"></i><i class="range" style="--v:33.3%;--from:26.7%"></i></span><span class="val">16k to 20k</span></div>
+      <h3>Size of an AI helper&rsquo;s first step</h3>
+      <p class="sub">Typical tokens in a helper&rsquo;s first step, from my logs: the heavy default type against the lighter types.</p>
+      <div class="bars" role="img" aria-label="Bar chart. Default helper type 53.8k tokens, lighter types 16k to 20k.">
+        <div class="row" title="Default type: 53.8k"><span class="lab">Default type</span><span class="track"><i class="" style="--v:89.7%"></i></span><span class="val">53.8k</span></div>
+        <div class="row" title="Lighter types: 16k to 20k"><span class="lab">Lighter types</span><span class="track"><i class="cut" style="--v:26.7%"></i><i class="range" style="--v:33.3%;--from:26.7%"></i></span><span class="val">16k to 20k</span></div>
       </div>
     </div>
       </figure>
       <div class="facts">
-        <div class="fact"><b>39%</b><span>of a week&rsquo;s re-read context came past the 200k-token line; the per-call hook now covers it</span></div>
-        <div class="fact"><b>482 of 662</b><span>helper agents ran as the heavy default type; the guard now denies it</span></div>
-        <div class="fact"><b>4,816</b><span>image reads in one week, now gated by a wide-image check</span></div>
+        <div class="fact"><b>39%</b><span>of a week&rsquo;s re-reading happened after a chat passed 200k tokens; a check on every step now covers it</span></div>
+        <div class="fact"><b>482 of 662</b><span>AI helpers ran as the heavy default type; the guard now blocks it</span></div>
+        <div class="fact"><b>4,816</b><span>images read in one week; large ones are now blocked</span></div>
       </div>
     </div>
     <ol class="method" aria-label="What was set, who wrote it, how it was checked">
-      <li><p class="who">I set</p><ul class="ticks"><li>Enforce at the tool call, not in the prompt</li><li>Two context lines, not one</li><li>Deny the default agent type</li></ul></li>
-      <li class="ag"><p class="who">Agents wrote</p><p>most of the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
-      <li><p class="who">I checked</p><ul class="ticks ok"><li>Each hook checked against the next week&rsquo;s scan</li><li>15 sample cases, allow and deny paths</li></ul></li>
+      <li><p class="who">My rules</p><ul class="ticks"><li>Check every step, not just my instructions</li><li>Two size limits, not one</li><li>Block the heavy default helper</li></ul></li>
+      <li class="ag"><p class="who">AI wrote</p><p>most of the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
+      <li><p class="who">I tested</p><ul class="ticks ok"><li>Each check measured in the next week&rsquo;s scan</li><li>15 sample cases, allowed and blocked</li></ul></li>
     </ol>
   </section>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-token-guard.jpg" width="960" height="540" aria-label="Narrated film, 49 seconds: Helper agents start at 16k to 20k tokens, not 53.8k. Prompt rules failed, so Ryan built spending rules an AI agent cannot forget. He set three rules: enforce at the tool call, two context lines, deny the default type. 482 of 662 helpers ran the heavy default type. The guard now denies it. 39% of a week's re-read context came past the soft line. A per-call hook now covers it. Every denial names the fix, so the agent corrects itself. Agents wrote most of the code. He verifies each hook against the next week's scan. Ryan Wisth. 4 hooks and 9 lean agent types, in daily use."><source src="video/film-token-guard.mp4" type="video/mp4"></video></span><figcaption>The case in 49 seconds, narrated. Tap ♪ for sound.</figcaption></figure>
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-token-guard.jpg" width="960" height="540" aria-label="Narrated film, 40 seconds: AI helpers now start at 16k to 20k pieces of text, not 53.8k. Written instructions failed, so spending rules were built that an AI can't skip. Each message is checked, then every step, and each block says the fix. 482 of 662 helpers used the big setting. It is now blocked. 39% of a week's re-reading came in very long chats. Now every step is checked. Every block says how to fix it, so the AI corrects itself. Four checks and nine lighter helper types, in daily use."><source src="video/film-token-guard.mp4" type="video/mp4"></video></span><figcaption>The project in 40 seconds, narrated. Tap ♪ for sound.</figcaption></figure>
 
   <figure class="figure">
     <ol class="flow c4">
-      <li><b>Prompt check</b><span>one hook runs, warns or blocks by the size of the session's context</span></li>
-      <li><b>Tool call</b><span>every call passes three more hooks before it runs</span></li>
-      <li class="key"><b>Deny the wasteful call</b><span>no model named, the heavy agent type, a large file with no slice, a wide image, or past 260k and not saving state</span></li>
-      <li class="key"><b>The denial says the fix</b><span>so the agent corrects itself on the next call</span></li>
+      <li><b>Message check</b><span>one check lets it run, warns, or blocks, by how long the chat has grown</span></li>
+      <li><b>Each step</b><span>every step passes three more checks before it runs</span></li>
+      <li class="key"><b>Block the wasteful step</b><span>no AI model named, the heavy helper type, a whole large file, a wide image, or a chat past 260k not saving its progress</span></li>
+      <li class="key"><b>The block says the fix</b><span>so the AI corrects itself on its next try</span></li>
     </ol>
-    <figcaption>Simplified from the README diagram. A call that breaks no rule runs as normal.</figcaption>
+    <figcaption>Simplified from the diagram in the project&rsquo;s notes. A step that breaks no rule runs as normal.</figcaption>
   </figure>
   <figure class="figure">
     <div class="chart-card">
-      <h3>The per-prompt check</h3>
-      <p class="sub">What happens to a new prompt, by the size of the session's context. From the README diagram.</p>
+      <h3>The check on each message</h3>
+      <p class="sub">What happens to a new message, by how many tokens the chat already holds. From the project&rsquo;s notes.</p>
       <div class="band3">
-        <div class="ok"><b>Under 200k</b>The turn runs.</div>
-        <div class="warn"><b>200k to 240k</b>The turn runs, told to save state and wrap up.</div>
-        <div class="stop"><b>Over 240k</b>The prompt is blocked, with a paste-ready opener for a fresh chat.</div>
+        <div class="ok"><b>Under 200k</b>It runs.</div>
+        <div class="warn"><b>200k to 240k</b>It runs, and the AI is told to save its progress and wrap up.</div>
+        <div class="stop"><b>Over 240k</b>It is blocked, with a ready-to-paste start for a fresh chat.</div>
       </div>
     </div>
   </figure>
   <figure class="figure">
     <div class="term soft"><div class="bar"><i></i><i></i><i></i><em>hooks/agent_guard.py</em></div><pre tabindex="0" role="img" aria-label="Terminal output: hooks/agent_guard.py"><span class="ln cmd">printf '%s' '{"tool_name":"Agent","tool_input":{"prompt":"x"}}' | python3 hooks/agent_guard.py</span><span class="ln">{"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": <b class="bad">"deny"</b>, "permissionDecisionReason": <span class="hl">"Agent call has no `model`. Rule: pin model on every spawn (sonnet for mechanical, haiku for sweeps, opus for judgment); omitting it inherits the session model. Better: use a lean-* subagent_type, which carries its model, a turn cap and no MCP tool schemas: lean-sweep (haiku, 10 turns), lean-reader / lean-reader-long (sonnet, 15/40), …"}}</span></span><span class="ln"></span><span class="ln cmd">printf '%s' '{"tool_name":"Agent","tool_input":{"subagent_type":"lean-sweep","prompt":"x"}}' | python3 hooks/agent_guard.py</span><span class="ln dim">(no output: the call is allowed)</span></pre></div>
-    <figcaption>The README's try-by-hand example, run as written: a spawn with no model is denied and the message says what to do instead (shortened where marked). A lean agent type passes silently.</figcaption>
+    <figcaption>The example from the project&rsquo;s notes, run as written: a helper with no AI model named is blocked, and the message says what to do instead (shortened where marked). A lighter helper passes quietly.</figcaption>
   </figure>
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>An AI coding agent re-reads its whole conversation on every tool call, so three habits multiply cost without improving the work:</p>
+    <p>The AI re-reads the whole chat on every step. So three habits multiply the cost without improving the work:</p>
     <ul>
-      <li><b>Long sessions.</b> A chat at 250k tokens of context pays 250k on every call.</li>
-      <li><b>Unpinned subagents.</b> A spawned agent with no model named inherits the session's model.</li>
-      <li><b>Heavy tool results.</b> One whole-file read of a large log, or one full-size screenshot, stays in context for every later call.</li>
+      <li><b>Long chats.</b> A chat that holds 250k tokens pays for 250k on every step.</li>
+      <li><b>Helpers with no model named.</b> A helper started without naming an AI model gets the main chat&rsquo;s model.</li>
+      <li><b>Heavy results.</b> One read of a whole large file, or one full-size screenshot, stays in the chat and is paid for on every later step.</li>
     </ul>
 
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>Enforce at the tool call, not in the prompt.</b> A denied call is a fact the agent must work around, and the denial text tells it how.</li>
-      <li><b>Two context lines, not one.</b> The soft line at 200k gives the agent a turn to save its state; over 240k the prompt is blocked with a paste-ready opener for a fresh chat, so the session always ends with a clean handoff.</li>
-      <li><b>Guard every call, not just every prompt.</b> The prompt hook fires only when a person types, yet 39% of one week&rsquo;s re-read context came past the soft line, mostly inside long unattended turns. The per-call hook closes that gap, denying work past 260k that is not saving state.</li>
-      <li><b>Saving state is always allowed.</b> A blocked session ends with its state written down, never at a dead end.</li>
-      <li><b>Deny the default agent type.</b> Making the nine lean types, each with a fixed model, turn cap and short tool list, the only path that passes fixed the 482 of 662.</li>
-      <li><b>Images are the worst tool result.</b> One week held 4,816 image reads in context, so the read hook denies wide originals and prints the exact downscale command.</li>
-      <li><b>Fail open.</b> On any parse error or missing transcript the hooks exit silently and the call proceeds, so the guard can never break a working session.</li>
+      <li><b>Check every step, not just my instructions.</b> A blocked step is a fact the AI must work around, and the block message tells it how.</li>
+      <li><b>Two size limits, not one.</b> The soft limit at 200k gives the AI one turn to save its progress. Over 240k, new messages are blocked with a ready-to-paste start for a fresh chat, so a chat always ends with a clean handoff.</li>
+      <li><b>Guard every step, not just every message.</b> The message check runs only when a person types. Yet 39% of one week&rsquo;s re-reading came past the soft limit, mostly during long stretches with nobody typing. The check on every step closes that gap: past 260k, any work that is not saving progress is blocked.</li>
+      <li><b>Saving progress is always allowed.</b> A blocked chat ends with its progress written down, never at a dead end.</li>
+      <li><b>Block the heavy default helper.</b> Nine lighter helper types, each with a set AI model, a step limit and few tools, became the only way through. That fixed the 482 of 662.</li>
+      <li><b>Images cost the most.</b> One week held 4,816 images in the chat, so large originals are now blocked, and the message gives the exact command to shrink them.</li>
+      <li><b>When unsure, step aside.</b> If a check hits an error or can&rsquo;t find the chat log, it quietly lets the step run, so the guard can never break a working chat.</li>
     </ul>
 
-    <h2>How it was verified</h2>
+    <h2>How it was tested</h2>
     <ul>
-      <li>Each hook targets a leak measured in real session logs, and each moved the numbers in the following week's scan: <a href="token-scan.html">Finding where the AI budget went</a>.</li>
-      <li>15 sample inputs covering the allow and deny paths of all four hooks behave as described.</li>
+      <li>Each check targets a leak measured in my real logs, and each moved the numbers in the next week&rsquo;s scan: <a href="token-scan.html">Finding where my AI spending went</a>.</li>
+      <li>15 sample cases, covering what each of the four checks allows and blocks, behave as described.</li>
     </ul>
 
-    <h2>Scope</h2>
+    <h2>Limits</h2>
     <ul>
-      <li>Thresholds are tuned to my usage and plan; treat them as starting points.</li>
-      <li>MIT licensed; not affiliated with or endorsed by Anthropic.</li>
+      <li>The limits are set for my own usage and plan; treat them as starting points.</li>
+      <li>Free to reuse (MIT license); not made or endorsed by Anthropic, the maker of Claude.</li>
     </ul>
 
     <div class="repo-card">
       <p><b>ryanwisth/claude-code-token-guard</b>The code, with its real status and limits.</p>
-      <a class="btn primary" href="https://github.com/ryanwisth/claude-code-token-guard">View the repository &rarr;</a>
+      <a class="btn primary" href="https://github.com/ryanwisth/claude-code-token-guard">See the code on GitHub &rarr;</a>
     </div>
-    <nav class="pager" aria-label="More case studies">
-      <a class="prev" href="claim-ledger.html"><small>&larr; Previous</small>Turning a slipping process into enforced rules</a>
-      <a class="next" href="token-scan.html"><small>Next &rarr;</small>Finding where the AI budget went</a>
+    <nav class="pager" aria-label="More projects">
+      <a class="prev" href="claim-ledger.html"><small>&larr; Previous</small>A fact-checking routine that stopped slipping</a>
+      <a class="next" href="token-scan.html"><small>Next &rarr;</small>Finding where my AI spending went</a>
     </nav>
   </div>
 </main>
 
 <footer class="site">
   <div class="wrap">
-    <span>Every figure on this page comes from the project's own README.</span>
+    <span>Every figure on this page comes from the project&rsquo;s own notes (its README).</span>
     <span>&copy; Ryan Wisth &middot; <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
   </div>
 </footer>

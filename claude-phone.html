@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>My desktop coding-agent chats, answered from my phone | Ryan Wisth</title>
-<meta name="description" content="Case study, in progress: a web page served from my Mac over a private Tailscale network that shows my desktop Claude Code chats on my iPhone and lets a reply continue the same chat.">
-<meta property="og:title" content="My desktop coding-agent chats, answered from my phone | Ryan Wisth">
-<meta property="og:description" content="Case study, in progress: a web page served from my Mac over a private Tailscale network that shows my desktop Claude Code chats on my iPhone and lets a reply continue the same chat.">
+<title>My computer&rsquo;s AI chats, on my phone | Ryan Wisth</title>
+<meta name="description" content="A private web page that puts the AI chats from my computer on my iPhone, and lets a reply from the phone continue the same chat.">
+<meta property="og:title" content="My computer&rsquo;s AI chats, on my phone | Ryan Wisth">
+<meta property="og:description" content="A private web page that puts the AI chats from my computer on my iPhone, and lets a reply from the phone continue the same chat.">
 <meta property="og:image" content="https://ryanwisth.github.io/img/card.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#f58fb0" media="(prefers-color-scheme: light)">
@@ -20,7 +20,7 @@
   <div class="wrap">
     <a class="brand" href="index.html"><span class="mark">RW</span>Ryan Wisth</a>
     <nav class="topnav">
-      <a href="index.html#work">Case studies</a>
+      <a href="index.html#work">Projects</a>
       <a class="hide-sm" href="index.html#how">How I work</a>
       <a href="https://github.com/ryanwisth">GitHub</a>
       <button class="theme-toggle" type="button" hidden aria-label="Switch between light and dark"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
@@ -30,41 +30,41 @@
 
 <main>
   <div class="prose case-head">
-    <a class="back" href="index.html#work">&larr; All case studies</a>
-    <p class="kicker">Product &middot; private network &middot; in daily use</p>
-    <h1 style="view-transition-name: t-claude-phone">My desktop coding-agent chats, answered from my phone</h1>
-    <p class="lede">A small web page, served from my Mac over my private Tailscale network, that lists the Claude Code chats from my desktop on my iPhone, shows each transcript live, and lets me reply so the Mac continues the same chat.</p>
+    <a class="back" href="index.html#work">&larr; All projects</a>
+    <p class="kicker">Things I use every day &middot; private network</p>
+    <h1 style="view-transition-name: t-claude-phone">My computer&rsquo;s AI chats, on my phone</h1>
+    <p class="lede">I work with Claude Code, an AI assistant that writes code, on my Mac. This small web page shows those chats on my iPhone as they happen and lets me reply, so the Mac carries on the same chat. It runs over Tailscale, a private network only my own devices can join.</p>
     <dl class="brief">
-      <dt>Problem</dt><dd>My coding-agent chats lived only in a desktop app on my Mac, so agent work stalled whenever I stepped away. I wanted full control from my phone without routing my code through a hosted relay.</dd>
-      <dt>Result</dt><dd>In daily use on my iPhone: every desktop chat, transcripts that stream live, replies that resume the same desktop session with its full context in 6 seconds, new chats started from the phone, and push notifications. 12 of 16 ranked desktop features are matched and tested, all 5 forged-request tests are refused with a 403, and the page is never on the public internet.</dd>
+      <dt>Problem</dt><dd>My AI chats lived only in an app on my Mac, so the AI&rsquo;s work stopped whenever I stepped away. I wanted full control from my phone, without sending my code through someone else&rsquo;s server.</dd>
+      <dt>Result</dt><dd>In daily use on my iPhone: every chat from the computer, shown live. A reply picks up the same chat, with everything said so far, in 6 seconds. I can start new chats and get alerts. 12 of the 16 computer features I ranked now work on the phone and are tested. All 5 tests with fake requests were turned away, and the page is never on the public internet.</dd>
     </dl>
   </div>
 
   <section class="sum" aria-label="Summary">
     <div class="sum-top">
       <figure class="figure sum-vis">
-        <div class="shot phone"><div class="bar"><i></i><i></i><i></i><em>127.0.0.1, demo chats</em></div><img src="img/claude-phone.jpg" alt="The phone page open on a chat titled Fix flaky checkout test: the question, a 3 steps button, the answer, a follow-up, and a reply still streaming in with the line Bash: Run the full test suite under it" width="780" height="1400"></div>
-    <figcaption>The real phone page, captured at iPhone size while a reply streams in. The server ran on invented chats and an invented project, so no real chat appears here.</figcaption>
+        <div class="shot phone"><div class="bar"><i></i><i></i><i></i><em>this computer only, sample chats</em></div><img src="img/claude-phone.jpg" alt="The phone page open on a chat titled Fix flaky checkout test: the question, a 3 steps button, the answer, a follow-up, and a reply still being written with the line Bash: Run the full test suite under it" width="780" height="1400"></div>
+    <figcaption>The real phone page, at iPhone size, while a reply is being written. It ran on made-up chats and a made-up project, so no real chat appears here.</figcaption>
       </figure>
       <div class="facts">
-        <div class="fact"><b>12 of 16</b><span>desktop features matched on the phone and tested, most-used first</span></div>
-        <div class="fact"><b>5 of 5</b><span>forged requests refused, so no other site can drive my Mac through the page</span></div>
-        <div class="fact"><b>6 s</b><span>from a phone reply to the answer landing in the same desktop chat, same session</span></div>
+        <div class="fact"><b>12 of 16</b><span>computer features working on the phone and tested, most-used first</span></div>
+        <div class="fact"><b>5 of 5</b><span>fake requests turned away, so no other website can control my Mac through the page</span></div>
+        <div class="fact"><b>6 s</b><span>from a phone reply to the answer appearing in the same chat on the computer</span></div>
       </div>
     </div>
-    <ol class="method" aria-label="What was set, who wrote it, how it was checked">
-      <li><p class="who">I set</p><ul class="ticks"><li>My own build, on a network I control</li><li>Show the chats I already have</li><li>A reply continues the same chat</li></ul></li>
-      <li class="ag"><p class="who">Agents wrote</p><p>the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
-      <li><p class="who">I checked</p><ul class="ticks ok"><li>Forged requests refused, re-run after the last edit</li><li>A real reply landed in the same chat, same session</li></ul></li>
+    <ol class="method" aria-label="My rules, who wrote it, how it was tested">
+      <li><p class="who">My rules</p><ul class="ticks"><li>Built by me, on my own network</li><li>Show the chats I already have</li><li>A reply continues the same chat</li></ul></li>
+      <li class="ag"><p class="who">AI wrote</p><p>the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
+      <li><p class="who">I tested</p><ul class="ticks ok"><li>Fake requests turned away, tested again after the last change</li><li>A real reply landed in the same chat</li></ul></li>
     </ol>
   </section>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-claude-phone.jpg" width="960" height="540" aria-label="Narrated film, 48 seconds: 12 of 16 desktop features, matched on the phone and tested, most-used first. Ryan built a private page: his desktop coding-agent chats, answered from his iPhone. He set the rules: his own build, on a network he controls. Show the chats he already has. A reply continues the same chat. A phone reply lands in the same desktop chat, with full context, in 6 seconds. All 5 forged-request tests are refused, re-run after every edit. Agents wrote the code. He verifies it: a real reply landed in the same chat, same session. In daily use on his iPhone, and never on the public internet. Ryan Wisth. No chat or code passes through a relay he does not run."><source src="video/film-claude-phone.mp4" type="video/mp4"></video></span><figcaption>The case in 48 seconds, narrated. Tap ♪ for sound.</figcaption></figure>
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-claude-phone.jpg" width="960" height="540" aria-label="Narrated film, 38 seconds: 12 of 16 computer features now work on the phone, most-used first. A private page puts the AI chats from a computer on an iPhone. Every chat shows up live. New chats can start from the phone, and alerts arrive there too. A reply from the phone picks up the same chat, with everything said so far, in 6 seconds. All 5 fake requests are turned away, so no other website can control the Mac. It is in daily use, and never on the public internet. It runs on a private network that only its owner's devices can join."><source src="video/film-claude-phone.mp4" type="video/mp4"></video></span><figcaption>The project in 38 seconds, narrated. Tap ♪ for sound.</figcaption></figure>
 
   <figure class="figure">
         <div class="chart-card">
-      <h3>Where the build stands</h3>
-      <p class="sub">A ranked list of 16 gaps between the phone page and the desktop app, by status on November 15, 2026.</p>
+      <h3>Where it stands</h3>
+      <p class="sub">16 things the computer app could do that the phone page could not, ranked, by status on November 15, 2026.</p>
       <div class="bars" role="img" aria-label="Bar chart. Of 16 gaps: 12 built and tested, 1 built but not yet proven on the iPhone, 2 not built, 1 not possible.">
         <div class="row" title="Built and tested: 12"><span class="lab">Built and tested</span><span class="track"><i class="" style="--v:75%"></i></span><span class="val">12</span></div>
         <div class="row" title="Built, not yet checked on the iPhone: 1"><span class="lab">Built, not yet checked on the iPhone</span><span class="track"><i class="" style="--v:6.25%"></i></span><span class="val">1</span></div>
@@ -76,53 +76,53 @@
 
   <figure class="figure">
     <ol class="flow c3">
-      <li><b>iPhone</b><span>a web page added to the Home Screen</span></li>
+      <li><b>iPhone</b><span>a web page saved to the Home Screen</span></li>
       <li><b>Private network</b><span>Tailscale; the page is not on the public internet</span></li>
-      <li><b>A small server on the Mac</b><span>Python standard library; reads the desktop app's chat list and transcripts</span></li>
-      <li class="key"><b>One writer per chat</b><span>a reply first stops the desktop process holding that chat</span></li>
-      <li class="key"><b>Resume, not fork</b><span>the command-line agent resumes the same session with the chat's own model and settings</span></li>
-      <li><b>Same transcript</b><span>the answer streams to the phone and lands in the desktop chat</span></li>
+      <li><b>A small program on the Mac</b><span>reads the app&rsquo;s list of chats and what each one says</span></li>
+      <li class="key"><b>One chat, one writer</b><span>a reply first closes that chat on the computer</span></li>
+      <li class="key"><b>Continue, not copy</b><span>the AI picks up the same chat with its own settings</span></li>
+      <li><b>Same chat</b><span>the answer appears on the phone and in the chat on the computer</span></li>
     </ol>
-    <figcaption>From a reply typed on the phone to the same chat on the Mac. Drawn from the project's build notes and code.</figcaption>
+    <figcaption>From a reply typed on the phone to the same chat on the Mac. Drawn from the project&rsquo;s notes and code.</figcaption>
   </figure>
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>Each open desktop chat is held in memory by a live process, and a second writer on the same chat would fork the conversation. Reading from the phone was the easy half; replying into the same chat, without forking it and without a hosted relay, was the hard one.</p>
+    <p>Each open chat is held by a running program on the computer. A second writer would split the conversation in two. Reading from the phone was the easy half. Replying into the same chat, without splitting it and without someone else&rsquo;s server, was the hard half.</p>
 
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>My own build, on a network I control.</b> The page is reachable only over my private Tailscale network, never the public internet. I tested a hosted remote-control route and chose my own build, so no chat or code passes through a relay I do not run.</li>
-      <li><b>Show the chats I already have.</b> The list is the desktop app's own chats, newest first, with a badge on any chat the Mac is still working on, so there is nothing to sync and nothing to set up per chat.</li>
-      <li><b>A reply continues the same chat.</b> A reply stops the desktop process holding that chat, then resumes the same session with the chat's own model and settings, so the answer lands in the same transcript instead of a fork. Replies are refused while the transcript changed in the last 20 seconds, so a phone reply never collides with work in progress.</li>
-      <li><b>A real interface, not simulated typing.</b> Typing into the desktop app was tried first and rejected: macOS refused the keystrokes, and it could never work with the Mac locked. Resuming the session works while the Mac is locked.</li>
-      <li><b>Parity with the desktop, most-used first.</b> The 16 gaps were ranked by how often I would use each from the phone and built in that order (streaming replies, answering the agent's questions, the task list, step details with diffs, attachments), so the features I reach for most shipped first.</li>
+      <li><b>Built by me, on my own network.</b> The page can be reached only over my private Tailscale network, never the public internet. I tried an existing remote-control service and chose my own build instead, so no chat or code passes through a server I do not run.</li>
+      <li><b>Show the chats I already have.</b> The list is the app&rsquo;s own chats, newest first, with a badge on any the Mac is still working on. Nothing to copy over or set up.</li>
+      <li><b>A reply continues the same chat.</b> A reply first closes that chat on the computer, then picks it up again with its own settings. The answer lands in the same chat instead of a split copy. If the chat changed in the last 20 seconds, the reply waits, so it never collides with work in progress.</li>
+      <li><b>A proper connection, not fake typing.</b> Typing into the app automatically was tried first and dropped: the Mac blocked the keystrokes, and it could never work with the Mac locked. Picking up the chat directly works even while the Mac is locked.</li>
+      <li><b>Match the computer, most-used first.</b> The 16 missing features were ranked by how often I would use each from the phone, and built in that order: live replies, answering the AI&rsquo;s questions, the task list, step details showing what changed, and attachments. The features I use most came first.</li>
     </ul>
 
-    <h2>How it was verified</h2>
+    <h2>How it was tested</h2>
     <ul>
-      <li><b>Closed to other sites.</b> Five forged requests are refused with a 403: a wrong host, a cross-site post, a post with no origin, an upload with no origin, and a cross-site new-chat request. The set is re-run after every edit, so no change has reopened the page.</li>
-      <li><b>One conversation, two screens.</b> A test reply into an existing desktop chat stopped the desktop processes for that chat, ran with the chat's full context in 6 seconds, kept the same session id, and left the desktop app reporting the chat idle with no error.</li>
-      <li><b>Work started on the phone continues at the desk.</b> A new chat started from the phone over the private network answered in 6 seconds and was imported into the desktop app's list.</li>
-      <li><b>Streaming measured, not eyeballed.</b> The live text grew 115, then 496, then 1,052 characters before the turn finished, so the phone shows the answer as it is written.</li>
-      <li><b>Push notifications reach the iPhone.</b> Proven first in a desktop browser as a stand-in, then confirmed on the phone itself.</li>
+      <li><b>Closed to other websites.</b> Five kinds of fake request are turned away, such as a message from another website or an upload that does not say where it came from. The tests run again after every change, so no change has opened the page back up.</li>
+      <li><b>One conversation, two screens.</b> A test reply into an existing chat closed it on the computer, answered with everything said so far in 6 seconds, and stayed the same chat. The computer app then showed the chat as idle, with no error.</li>
+      <li><b>Work started on the phone continues at the desk.</b> A new chat started from the phone answered in 6 seconds and showed up in the app&rsquo;s list on the computer.</li>
+      <li><b>Live text measured, not guessed.</b> The answer grew to 115, then 496, then 1,052 characters before it finished. The phone shows the answer as it is written.</li>
+      <li><b>Alerts reach the iPhone.</b> Proven first in a browser on the computer, then confirmed on the phone itself.</li>
     </ul>
 
     <h2>What's next</h2>
     <ul>
-      <li>Next on the ranked list: stopping a running desktop turn, and archiving, renaming and pinning chats from the phone.</li>
+      <li>Next on the list: stopping the AI mid-answer, and archiving, renaming and pinning chats from the phone.</li>
     </ul>
 
-    <nav class="pager" aria-label="More case studies">
-      <a class="prev" href="paper-grader.html"><small>&larr; Previous</small>AI feedback written in ink, and a colour e-ink display decoded safely</a>
-      <a class="next" href="pinball-study.html"><small>Next &rarr;</small>A study built so it could fail</a>
+    <nav class="pager" aria-label="More projects">
+      <a class="prev" href="paper-grader.html"><small>&larr; Previous</small>AI feedback, handwritten onto a paper tablet</a>
+      <a class="next" href="pinball-study.html"><small>Next &rarr;</small>A study set up so it could prove me wrong</a>
     </nav>
   </div>
 </main>
 
 <footer class="site">
   <div class="wrap">
-    <span>Every figure on this page comes from the project's own build notes and code.</span>
+    <span>Every number on this page comes from the project&rsquo;s own notes and code.</span>
     <span>&copy; Ryan Wisth &middot; <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
   </div>
 </footer>

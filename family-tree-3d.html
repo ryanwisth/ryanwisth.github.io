@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>A 3D family tree in one offline file | Ryan Wisth</title>
-<meta name="description" content="Case study: turning a genealogy export into one self-contained, offline web page with a 3D family tree, a migration map and statistics.">
-<meta property="og:title" content="A 3D family tree in one offline file | Ryan Wisth">
-<meta property="og:description" content="Case study: turning a genealogy export into one self-contained, offline web page with a 3D family tree, a migration map and statistics.">
+<title>A 3D family tree that opens from one file | Ryan Wisth</title>
+<meta name="description" content="A family tree you can explore in 3D, with a map of where each family moved, all in one file that works without the internet.">
+<meta property="og:title" content="A 3D family tree that opens from one file | Ryan Wisth">
+<meta property="og:description" content="A family tree you can explore in 3D, with a map of where each family moved, all in one file that works without the internet.">
 <meta property="og:image" content="https://ryanwisth.github.io/img/family-tree-3d.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#f58fb0" media="(prefers-color-scheme: light)">
@@ -20,7 +20,7 @@
   <div class="wrap">
     <a class="brand" href="index.html"><span class="mark">RW</span>Ryan Wisth</a>
     <nav class="topnav">
-      <a href="index.html#work">Case studies</a>
+      <a href="index.html#work">Projects</a>
       <a class="hide-sm" href="index.html#how">How I work</a>
       <a href="https://github.com/ryanwisth">GitHub</a>
       <button class="theme-toggle" type="button" hidden aria-label="Switch between light and dark"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
@@ -30,99 +30,99 @@
 
 <main>
   <div class="prose case-head">
-    <a class="back" href="index.html#work">&larr; All case studies</a>
-    <p class="kicker">Product &middot; built end to end</p>
-    <h1 style="view-transition-name: t-family-tree-3d">A 3D family tree in one offline file</h1>
-    <p class="lede">A build pipeline that turns a genealogy export into a single web page you open from disk: a 3D family tree, a migration map, lineage and statistics views, with no server and no connection.</p>
+    <a class="back" href="index.html#work">&larr; All projects</a>
+    <p class="kicker">Things I use &middot; built start to finish</p>
+    <h1 style="view-transition-name: t-family-tree-3d">A 3D family tree that opens from one file</h1>
+    <p class="lede">A family tree saved from a genealogy site becomes one web page: a 3D tree, a map of where people moved, an ancestry view and charts. It opens with no internet.</p>
     <dl class="brief">
-      <dt>Problem</dt><dd>Family trees exported from genealogy sites grow to tens of thousands of people. Pedigree charts and printed posters stop being readable long before that, and hosted viewers lock the tree behind an account and a connection.</dd>
-      <dt>Result</dt><dd>One self-contained page of about 1 MB, opened from disk with no server, no network and 0 third-party libraries, renders the whole tree in 3D alongside a migration map, lineage and statistics views. It runs the private tree it was built for; the public build regenerates end to end from an invented 420-person family, with the payload check at 0 failed and two builds byte-identical.</dd>
+      <dt>Problem</dt><dd>A family tree saved from a genealogy site can grow to tens of thousands of people. Normal charts and printed posters become hard to read long before that. Online viewers need an account and an internet connection.</dd>
+      <dt>Result</dt><dd>One page of about 1 MB shows the whole tree in 3D, plus the map and charts. It needs no internet, no website and 0 add-on code from others. It runs my own private tree. A public copy is built from a made-up family of 420 people: its data check found 0 problems, and two builds came out exactly the same.</dd>
     </dl>
   </div>
 
   <section class="sum" aria-label="Summary">
     <div class="sum-top">
       <figure class="figure sum-vis">
-        <div class="shot demo"><div class="bar"><i></i><i></i><i></i><em>family-tree-3d.html</em></div><a class="demo-poster" href="demo/family-tree-3d.html"><img src="img/family-tree-3d.jpg" alt="The 3D family tree viewer: a vertical trunk of ancestors with branches coloured by birthplace, a search panel and a timeline" width="1600" height="1000"><span class="play"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 2.5v11l9.5-5.5z"/></svg>Explore the live demo</span></a></div>
-    <figcaption>The public demo itself: 420 invented people, up is time, colour is where they were born. Click to load the real page here (about 1 MB), or <a href="demo/family-tree-3d.html">open it full screen</a>.</figcaption>
+        <div class="shot demo"><div class="bar"><i></i><i></i><i></i><em>family-tree-3d.html</em></div><a class="demo-poster" href="demo/family-tree-3d.html"><img src="img/family-tree-3d.jpg" alt="The 3D family tree: a tall trunk of ancestors with branches colored by birthplace, a search panel and a timeline" width="1600" height="1000"><span class="play"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 2.5v11l9.5-5.5z"/></svg>Explore the live demo</span></a></div>
+    <figcaption>The public demo: 420 made-up people. Higher means born later; color shows where each was born. Click to load the real page here (about 1 MB), or <a href="demo/family-tree-3d.html">open it full screen</a>.</figcaption>
       </figure>
       <div class="facts">
-        <div class="fact"><b>1 file</b><span>holds the whole product: nothing to host, nothing to install, works offline</span></div>
-        <div class="fact"><b>0</b><span>third-party libraries behind the 3D view: raw WebGL, no dependency to break</span></div>
-        <div class="fact"><b>420</b><span>invented people in the public demo, so it can be shared with no real family data</span></div>
+        <div class="fact"><b>1 file</b><span>holds everything: nothing to set up or install, and it works offline</span></div>
+        <div class="fact"><b>0</b><span>add-on code from others behind the 3D view, so nothing outside can break it</span></div>
+        <div class="fact"><b>420</b><span>made-up people in the public demo, so it can be shared without real family data</span></div>
       </div>
     </div>
-    <ol class="method" aria-label="What was set, who wrote it, how it was checked">
-      <li><p class="who">I set</p><ul class="ticks"><li>One file, opened from disk</li><li>A layout that stays readable at size</li><li>Safe to share</li></ul></li>
-      <li class="ag"><p class="who">Agents wrote</p><p>most of the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
-      <li><p class="who">I checked</p><ul class="ticks ok"><li>The build refuses mismatched data</li><li>Two builds: a byte-identical data file</li><li>Payload check: 0 failed</li></ul></li>
+    <ol class="method" aria-label="My rules, who wrote it, how it was tested">
+      <li><p class="who">My rules</p><ul class="ticks"><li>One file, no internet needed</li><li>Still easy to read with hundreds of people</li><li>Safe to share</li></ul></li>
+      <li class="ag"><p class="who">AI wrote</p><p>most of the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
+      <li><p class="who">I tested</p><ul class="ticks ok"><li>Mismatched data is refused</li><li>Two builds came out exactly the same</li><li>Data check: 0 problems</li></ul></li>
     </ol>
   </section>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-family-tree-3d.jpg" width="960" height="540" aria-label="Narrated film, 49 seconds: 1 file holds the whole product, and it works offline. A 3D family tree and migration map, built by Ryan from one genealogy export. He set the rules: one file, opened from disk. A layout that stays readable at size. And safe to share. Agents wrote most of the code. He verifies it before it counts as done. The build refuses mismatched data, two builds are byte identical, and the payload check shows zero failed. 0 third-party libraries: the 3D view is raw WebGL, no dependency to break. The public demo holds 420 invented people, with no real family data. Ryan Wisth. One page of about 1 MB, with no server and no network."><source src="video/film-family-tree-3d.mp4" type="video/mp4"></video></span><figcaption>The case in 49 seconds, narrated. Tap ♪ for sound.</figcaption></figure>
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-family-tree-3d.jpg" width="960" height="540" aria-label="Narrated film, 37 seconds: 1 file holds everything, and it works offline. A 3D family tree, with a map of where each family moved. It opens with no internet. Living people can be hidden, so it is safe to share. Height is birth year. Distance from the center shows closeness. Direction shows the family branch. 0 add-on code from others, so nothing outside can break it. The public demo holds 420 made-up people, with no real family data. One page of about 1 MB, with no internet needed."><source src="video/film-family-tree-3d.mp4" type="video/mp4"></video></span><figcaption>The project in 37 seconds, narrated. Tap ♪ for sound.</figcaption></figure>
 
   <figure class="figure">
     <ol class="flow c3">
-      <li><b>GEDCOM file</b><span>the genealogy export</span></li>
+      <li><b>Family tree file</b><span>saved from a genealogy site</span></li>
       <li><b>Tree view</b><span>layout, names, details</span></li>
-      <li><b>Places and map</b><span>GeoNames lookup</span></li>
-      <li><b>Lineage and stories</b><span>root person and viewer</span></li>
-      <li class="key"><b>Payload check</b><span>check_payloads.py, before anything is combined</span></li>
-      <li><b>One HTML page</b><span>payloads folded into the templates</span></li>
+      <li><b>Places and map</b><span>looked up in a place-name list</span></li>
+      <li><b>Ancestry and stories</b><span>a starting person and a viewer</span></li>
+      <li class="key"><b>Data check</b><span>runs before anything is combined</span></li>
+      <li><b>One web page</b><span>all the data built in</span></li>
     </ol>
-    <figcaption>The build, simplified from the README diagram.</figcaption>
+    <figcaption>How the page is made, simplified.</figcaption>
   </figure>
   <figure class="figure">
-    <div class="shot"><div class="bar"><i></i><i></i><i></i><em>family-tree-constellation.html</em></div><img src="img/family-tree-constellation.jpg" alt="The flat constellation view of the same invented family, with a person panel and a birthplace legend" width="1600" height="1000" loading="lazy"></div>
-    <figcaption>The flat version of the same family, for machines without WebGL. <a href="demo/family-tree-constellation.html">Open it</a>.</figcaption>
+    <div class="shot"><div class="bar"><i></i><i></i><i></i><em>family-tree-constellation.html</em></div><img src="img/family-tree-constellation.jpg" alt="The flat view of the same made-up family, with a person panel and a birthplace key" width="1600" height="1000" loading="lazy"></div>
+    <figcaption>A flat version of the same family, for computers that cannot draw 3D. <a href="demo/family-tree-constellation.html">Open it</a>.</figcaption>
   </figure>
 
   <figure class="figure">
-    <div class="shot"><div class="bar"><i></i><i></i><i></i><em>demo/family-tree-3d.html, recorded</em></div><video data-auto controls muted loop playsinline preload="none" poster="img/family-tree-video.jpg" width="960" height="600" aria-label="The 3D family tree turning under a mouse drag, then zooming in to the coloured branches"><source src="video/family-tree-3d.mp4" type="video/mp4"></video></div>
-    <figcaption>A drag and a zoom in the public demo (the invented 420-person family), recorded in a headless browser with software rendering at about nine frames a second.</figcaption>
+    <div class="shot"><div class="bar"><i></i><i></i><i></i><em>demo/family-tree-3d.html, recorded</em></div><video data-auto controls muted loop playsinline preload="none" poster="img/family-tree-video.jpg" width="960" height="600" aria-label="The 3D family tree turning as the mouse drags it, then zooming in to the colored branches"><source src="video/family-tree-3d.mp4" type="video/mp4"></video></div>
+    <figcaption>Turning and zooming the public demo (the made-up family of 420). It was recorded by an automated browser at about nine frames a second.</figcaption>
   </figure>
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>A real family tree needs a view that stays readable as it grows, and hosted viewers lock it behind an account and an internet connection. The goal was a viewer I own outright: one file that opens anywhere offline and can be shared without exposing living relatives.</p>
+    <p>A real family tree needs a view that stays easy to read as it grows. Online viewers need an account and an internet connection. I wanted a viewer I fully own: one file that opens anywhere, offline, and can be shared without exposing living relatives.</p>
 
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>One file, opened from disk.</b> A page opened from disk cannot load its own side files, so every piece of data is built into the page itself, and the result opens offline with nothing to host or keep running.</li>
-      <li><b>Raw WebGL, no library.</b> The 3D view is drawn with 0 third-party libraries, so there is no dependency to update, break or load from the network.</li>
-      <li><b>A layout that stays readable at size.</b> Height is birth year, distance from the center is steps from a chosen root person's line, and angle is the family branch, so a person's generation, closeness to the root and branch read from position alone.</li>
-      <li><b>The same data drives every view.</b> The 3D tree, a map of births, marriages, deaths and moves, an ancestry view, and charts whose captions are computed from the data they describe, so no caption can drift from its chart.</li>
-      <li><b>Safe to share.</b> A share-safe mode shows living people as "Living person" with no dates or places, image export included, so the tree can be shown publicly without exposing living relatives.</li>
-      <li><b>Usable by more people.</b> Name search, keyboard navigation, screen-reader text, a print view, a phone layout, and a flat 2D page for computers that cannot draw 3D, so no visitor is left with a blank screen.</li>
+      <li><b>One file, no internet needed.</b> A page opened straight from the computer cannot load other files, so all the data is built into the page. It opens offline, with nothing to set up or keep running.</li>
+      <li><b>No add-on code.</b> The 3D view uses the browser&rsquo;s own drawing tools (WebGL) and 0 add-on code from others. Nothing outside can break it or needs the internet.</li>
+      <li><b>Easy to read at any size.</b> Height is birth year. Distance from the center is how far someone is from one chosen person&rsquo;s line. Direction is the family branch. So position alone shows generation, closeness and branch.</li>
+      <li><b>Every view uses the same data.</b> The 3D tree, a map of births, marriages, deaths and moves, an ancestry view, and charts. Chart captions are written from the chart&rsquo;s own data, so they cannot disagree.</li>
+      <li><b>Safe to share.</b> A sharing mode shows living people as &ldquo;Living person&rdquo;, with no dates or places, even in saved images. The tree can be shown publicly without exposing living relatives.</li>
+      <li><b>Usable by more people.</b> Name search, keyboard controls, text for screen readers, a print view, a phone layout, and a flat page for computers that cannot draw 3D. No visitor gets a blank screen.</li>
     </ul>
 
-    <h2>How it was verified</h2>
+    <h2>How it was tested</h2>
     <ul>
-      <li><b>The build refuses bad combinations.</b> Each large data block carries a stamp of the person order it was built for, and the build refuses to combine blocks that disagree, so a stale block can never attach facts to the wrong person.</li>
-      <li><b>Builds are repeatable.</b> Two builds of the sample produce a byte-identical data file, so any change in the output traces back to a change in the input.</li>
-      <li><b>Rules that come from real bugs.</b> Each placeholder must appear exactly once, and the page's 59 script pieces are checked for duplicate names before assembly, so those bugs cannot return silently.</li>
-      <li><b>Clean end to end.</b> On the sample, the full pipeline runs clean, the payload check reports 0 failed before anything is combined, and the page's inlined code passes a syntax check.</li>
+      <li><b>Mismatched data is refused.</b> Each large chunk of data is stamped with the list of people it was made for. Chunks that disagree are not combined, so an old chunk can never attach facts to the wrong person.</li>
+      <li><b>Builds repeat exactly.</b> Two builds of the sample make exactly the same data file, so any change in the result traces back to a change in what went in.</li>
+      <li><b>Rules that come from real bugs.</b> Each fill-in spot must appear exactly once. The page&rsquo;s 59 code pieces are checked for repeated names before they are joined, so those bugs cannot quietly return.</li>
+      <li><b>Clean from start to finish.</b> On the sample, every step runs without errors, the data check finds 0 problems, and the page&rsquo;s code passes a basic error check.</li>
     </ul>
 
     <h2>Scope</h2>
     <ul>
-      <li>Region colours and name rules are tuned for Northern European and North American records.</li>
+      <li>Region colors and name rules are tuned for Northern European and North American records.</li>
     </ul>
 
     <div class="repo-card">
-      <p><b>ryanwisth/family-tree-3d</b>The code, with its real status and limits.</p>
-      <a class="btn primary" href="https://github.com/ryanwisth/family-tree-3d">View the repository &rarr;</a>
+      <p><b>ryanwisth/family-tree-3d</b>The code, with honest notes on what it can and cannot do.</p>
+      <a class="btn primary" href="https://github.com/ryanwisth/family-tree-3d">See the code on GitHub &rarr;</a>
     </div>
-    <nav class="pager" aria-label="More case studies">
-      <a class="prev" href="checking-ai-work.html"><small>&larr; Previous</small>Making AI work checkable</a>
-      <a class="next" href="practice-engine.html"><small>Next &rarr;</small>A practice app built around the mistake</a>
+    <nav class="pager" aria-label="More projects">
+      <a class="prev" href="checking-ai-work.html"><small>&larr; Previous</small>Making AI work easy to check</a>
+      <a class="next" href="practice-engine.html"><small>Next &rarr;</small>A study app built around mistakes</a>
     </nav>
   </div>
 </main>
 
 <footer class="site">
   <div class="wrap">
-    <span>Every figure on this page comes from the project's own README. All people in the public demo are invented. Place data from GeoNames (CC BY 4.0); not affiliated with FamilySearch or MyHeritage.</span>
+    <span>Every number on this page comes from the project&rsquo;s own notes. All people in the public demo are invented. Place data from GeoNames (CC BY 4.0); not affiliated with FamilySearch or MyHeritage.</span>
     <span>&copy; Ryan Wisth &middot; <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
   </div>
 </footer>

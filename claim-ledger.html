@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Turning a slipping process into enforced rules | Ryan Wisth</title>
-<meta name="description" content="Case study: a fact-checking method for long AI-written reports, run by hand on 517 claims, audited for where its discipline slipped, then rebuilt as a tool that enforces the rules.">
-<meta property="og:title" content="Turning a slipping process into enforced rules | Ryan Wisth">
-<meta property="og:description" content="Case study: a fact-checking method for long AI-written reports, run by hand on 517 claims, audited for where its discipline slipped, then rebuilt as a tool that enforces the rules.">
+<title>A fact-checking routine that stopped slipping | Ryan Wisth</title>
+<meta name="description" content="A fact-checking routine for long AI-written reports. It was done by hand on 517 statements, reviewed for where it slipped, then rebuilt as a tool that enforces the rules.">
+<meta property="og:title" content="A fact-checking routine that stopped slipping | Ryan Wisth">
+<meta property="og:description" content="A fact-checking routine for long AI-written reports. It was done by hand on 517 statements, reviewed for where it slipped, then rebuilt as a tool that enforces the rules.">
 <meta property="og:image" content="https://ryanwisth.github.io/img/card.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#f58fb0" media="(prefers-color-scheme: light)">
@@ -20,7 +20,7 @@
   <div class="wrap">
     <a class="brand" href="index.html"><span class="mark">RW</span>Ryan Wisth</a>
     <nav class="topnav">
-      <a href="index.html#work">Case studies</a>
+      <a href="index.html#work">Projects</a>
       <a class="hide-sm" href="index.html#how">How I work</a>
       <a href="https://github.com/ryanwisth">GitHub</a>
       <button class="theme-toggle" type="button" hidden aria-label="Switch between light and dark"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
@@ -30,13 +30,13 @@
 
 <main>
   <div class="prose case-head">
-    <a class="back" href="index.html#work">&larr; All case studies</a>
-    <p class="kicker">AI quality control &middot; in daily use</p>
-    <h1 style="view-transition-name: t-claim-ledger">Turning a slipping process into enforced rules</h1>
-    <p class="lede">A tool for fact-checking a long AI-written report one claim at a time, riskiest first, with an add-only log of every verdict.</p>
+    <a class="back" href="index.html#work">&larr; All projects</a>
+    <p class="kicker">Checking AI &middot; used daily</p>
+    <h1 style="view-transition-name: t-claim-ledger">A fact-checking routine that stopped slipping</h1>
+    <p class="lede">A tool for fact-checking a long AI-written report one statement at a time, riskiest first, with a permanent record of every verdict.</p>
     <dl class="brief">
-      <dt>Problem</dt><dd>A long research report written by an AI model reads well and is wrong in places, and nobody can tell where by reading it. Rules given to the model in chat held early and then slipped.</dd>
-      <dt>Result</dt><dd>A Claude Code skill and command-line tool, in daily use since October 2026, that checked 517 claims in one AI-written report, riskiest first. Code now enforces the check template that chat-only rules let slip to 0 of 28 late corrections. Corrections rewrite the report in place through a script that re-derives every new number, and every verdict stays in an append-only log.</dd>
+      <dt>Problem</dt><dd>A long research report written by AI sounds right and is wrong in places, and nobody can tell where by reading it. Rules given to the AI in the chat held at first, then slipped.</dd>
+      <dt>Result</dt><dd>A tool that works inside Claude Code, an AI assistant, used daily since October 2026. It checked 517 statements in one AI-written report, riskiest first. Code now enforces the checklist. When the rules lived only in the chat, it slipped until 0 of 28 late corrections were complete. Fixes go straight into the report through a script that recomputes every new number, and every verdict stays in a log that is only ever added to.</dd>
     </dl>
   </div>
 
@@ -45,7 +45,7 @@
       <figure class="figure sum-vis">
         <div class="chart-card">
       <h3>Problems found per first check</h3>
-      <p class="sub">The first ledger, 29 batches. The later batches were 73% of the work.</p>
+      <p class="sub">The first report, 29 batches. The later batches were 73% of the work.</p>
       <div class="bars" role="img" aria-label="Bar chart. Batches 1 to 9 found problems in 27% of first checks, batches 10 to 29 in 7%.">
         <div class="row" title="Batches 1 to 9: 27%"><span class="lab">Batches 1 to 9</span><span class="track"><i class="" style="--v:90%"></i></span><span class="val">27%</span></div>
         <div class="row" title="Batches 10 to 29: 7%"><span class="lab">Batches 10 to 29<small>73% of the work</small></span><span class="track"><i class="" style="--v:23.3%"></i></span><span class="val">7%</span></div>
@@ -53,76 +53,76 @@
     </div>
       </figure>
       <div class="facts">
-        <div class="fact"><b>517</b><span>claims checked and logged in 29 batches</span></div>
-        <div class="fact"><b>0 of 28</b><span>late corrections filled in the required &ldquo;best case&rdquo; under chat-only rules; code now rejects the gap</span></div>
-        <div class="fact"><b>27% &rarr; 7%</b><span>problem rate, first 9 batches against the last 20: the signal for when to stop</span></div>
+        <div class="fact"><b>517</b><span>statements checked and recorded in 29 batches</span></div>
+        <div class="fact"><b>0 of 28</b><span>late corrections filled in the required &ldquo;best case&rdquo; when the rules lived only in the chat; code now refuses any that skip it</span></div>
+        <div class="fact"><b>27% &rarr; 7%</b><span>problem rate, first 9 batches against the last 20: the sign for when to stop</span></div>
       </div>
     </div>
-    <ol class="method" aria-label="What was set, who wrote it, how it was checked">
-      <li><p class="who">I set</p><ul class="ticks"><li>Template in code, not in the conversation</li><li>Riskiest first</li><li>Make self-confirmation visible</li></ul></li>
-      <li class="ag"><p class="who">Agents wrote</p><p>most of the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
-      <li><p class="who">I checked</p><ul class="ticks ok"><li>546 records replayed: the hand-made audit reproduced</li><li>27 end-to-end checks pass</li></ul></li>
+    <ol class="method" aria-label="My rules, what AI wrote, how I tested it">
+      <li><p class="who">My rules</p><ul class="ticks"><li>Checklist in code, not in the chat</li><li>Riskiest first</li><li>Flag the AI checking its own notes</li></ul></li>
+      <li class="ag"><p class="who">AI wrote</p><p>most of the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
+      <li><p class="who">I tested</p><ul class="ticks ok"><li>546 entries rerun: matched the review done by hand</li><li>27 start-to-finish checks pass</li></ul></li>
     </ol>
   </section>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-claim-ledger.jpg" width="960" height="540" aria-label="Narrated film, 48 seconds: 517 claims in one AI-written report, checked riskiest first. Ryan built a tool that fact-checks AI-written reports, one claim at a time. Under chat-only rules, the template slipped: 0 of 28 late corrections filled in the best case. So he set the template in code, checked the riskiest claims first, and made self-confirmation visible. Now one incomplete record rejects the whole batch. Problems found per first check fell from 27% to 7%: the signal for when to stop. Agents wrote most of the code. Ryan verifies it: 546 records replayed reproduce the hand-made audit. Ryan Wisth. In daily use since October."><source src="video/film-claim-ledger.mp4" type="video/mp4"></video></span><figcaption>The case in 48 seconds, narrated. Tap ♪ for sound.</figcaption></figure>
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-claim-ledger.jpg" width="960" height="540" aria-label="Narrated film, 39 seconds: 517 statements in one AI-written report, checked riskiest first. A tool that fact-checks a long AI-written report, one statement at a time. Without it, 0 of 28 late corrections were complete. Every point in the report gets a hidden ID. The riskiest are checked first. A verdict resting on the project's own notes is flagged for a person. One incomplete entry rejects the whole batch. Problems found per first check fell from 27% to 7%: the sign for when to stop. Used daily since October."><source src="video/film-claim-ledger.mp4" type="video/mp4"></video></span><figcaption>The project in 39 seconds, narrated. Tap ♪ for sound.</figcaption></figure>
 
   <figure class="figure">
     <ol class="flow c3">
-      <li><b>Sync</b><span>every point in the report gets an invisible ID</span></li>
-      <li><b>Queue</b><span>re-checks, changed points, then importance times weakness</span></li>
-      <li><b>Batch of about 20</b><span>statement, wrong_if, best_case, evidence, verdict</span></li>
+      <li><b>Mark</b><span>every point in the report gets a hidden ID</span></li>
+      <li><b>Line up</b><span>re-checks, changed points, then importance times weakness</span></li>
+      <li><b>Batch of about 20</b><span>statement, what would make it wrong, best case, evidence, verdict</span></li>
       <li class="key"><b>Batch script</b><span>check, apply and record together</span></li>
-      <li><b>Add-only log</b><span>verdicts.jsonl</span></li>
-      <li class="key"><b>Audit</b><span>problem rate and template drift by batch</span></li>
+      <li><b>Permanent log</b><span>every verdict, only ever added to</span></li>
+      <li class="key"><b>Review</b><span>problem rate and checklist drift by batch</span></li>
     </ol>
-    <figcaption>One round of the ledger, simplified from the README diagram. The log feeds the next queue.</figcaption>
+    <figcaption>One round of the routine, simplified from the project&rsquo;s own diagram. The log feeds the next line-up.</figcaption>
   </figure>
   <figure class="figure">
     <div class="term soft"><div class="bar"><i></i><i></i><i></i><em>skill/selftest.py</em></div><pre tabindex="0" role="img" aria-label="Terminal output: skill/selftest.py"><span class="ln cmd">python3 -I skill/selftest.py</span><span class="ln ok">PASS: markers sit on the 9 points, not on the 1-word parent 'Staffing:'</span><span class="ln ok">PASS: the original report is backed up before marking</span><span class="ln ok">PASS: queue puts the important ESTIMATE (2-002, P9) first</span><span class="ln ok">PASS: record rejects empty wrong_if, empty best_case on CORRECTED, evidence without a quote</span><span class="ln ok">PASS: record rejects CORRECTED on a point whose text did not change</span><span class="ln ok">PASS: a rejected batch writes nothing to the log</span><span class="ln ok">PASS: record rejects a 15-word quote</span><span class="ln ok">PASS: the edit script rejects an added number that check() does not re-derive</span><span class="ln ok">PASS: a checked point edited outside the ledger comes back as CHANGED</span><span class="ln ok">PASS: the stop rule empties the queue once the rate falls below it</span><span class="ln dim">… 17 more PASS lines</span><span class="ln hl">ALL PASS (…/claim-ledger-test-v5nhmpb6)</span></pre></div>
-    <figcaption>The tool's self-test on a throwaway sample report: 10 of its 27 checks shown, each one a rule the tool refuses to bend.</figcaption>
+    <figcaption>The tool&rsquo;s self-test on a throwaway sample report: 10 of its 27 checks shown, each one a rule the tool refuses to bend.</figcaption>
   </figure>
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>Asking the model to "double-check" gives a second confident pass with no record of what was checked or how.</p>
-    <p>The first attempt at a fix, rules written into the conversation, worked early and then decayed. The audit measured exactly how far, and that measurement drove the rebuild.</p>
+    <p>Asking the AI to &ldquo;double-check&rdquo; gives a second confident answer, with no record of what was checked or how.</p>
+    <p>The first fix, rules written into the chat, worked at first and then wore off. A review measured exactly how far, and that measurement shaped the rebuild.</p>
 
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>Put the template in code, not in the conversation.</b> By the late batches, "best case" had fallen to 0 of 28 corrections and "what would make it wrong" to 57% of records. Now one incomplete record rejects the whole batch and nothing is written, so the template cannot drift.</li>
-      <li><b>Riskiest first.</b> Re-checks go first, then points whose text changed, then open claims ranked by importance times weakness, so the most damaging errors surface earliest.</li>
-      <li><b>Make self-confirmation visible.</b> A verdict resting on the project's own notes is labelled that way and listed for a person to verify.</li>
+      <li><b>Put the checklist in code, not in the chat.</b> By the late batches, &ldquo;best case&rdquo; was filled in on 0 of 28 corrections, and &ldquo;what would make it wrong&rdquo; on 57% of entries. Now one incomplete entry rejects the whole batch and nothing is written, so the checklist cannot drift.</li>
+      <li><b>Riskiest first.</b> Re-checks go first, then points whose wording changed, then open statements ranked by importance times weakness, so the most damaging errors show up earliest.</li>
+      <li><b>Flag the AI checking its own notes.</b> A verdict that rests on the project&rsquo;s own notes is marked that way and listed for a person to verify.</li>
       <li><b>Stopping is a cost decision for a person.</b> Batches 10 to 29 were 73% of the work and found problems in 7% of first checks. The tool reports the rate and an estimate of what is left, so the call to stop is made on numbers.</li>
     </ul>
 
-    <h2>How it was verified</h2>
+    <h2>How it was tested</h2>
     <ul>
-      <li>Replaying the first ledger's 546 records through the new audit reproduces the hand-made audit, including the drift it found.</li>
-      <li>A self-test runs 27 end-to-end checks on a throwaway report and passes on the published copy.</li>
-      <li>The stop rule counts first checks, after the audit showed 42 of 66 early problems came from re-checks.</li>
+      <li>Rerunning the first report&rsquo;s 546 entries through the new review gives the same result as the review done by hand, including the drift it found.</li>
+      <li>A self-test runs 27 start-to-finish checks on a throwaway report and passes on the public copy.</li>
+      <li>The stop rule counts only first checks, after the review showed 42 of 66 early problems came from re-checks.</li>
     </ul>
 
-    <h2>Scope</h2>
+    <h2>Limits</h2>
     <ul>
-      <li>Works on Markdown reports.</li>
-      <li>The tool enforces the form of every check; the judgement in each verdict stays with the reviewer.</li>
+      <li>Works on Markdown reports (plain-text files with simple formatting).</li>
+      <li>The tool enforces the form of every check; the judgment in each verdict stays with the person reviewing.</li>
     </ul>
 
     <div class="repo-card">
       <p><b>ryanwisth/claim-ledger</b>The code, with its real status and limits.</p>
-      <a class="btn primary" href="https://github.com/ryanwisth/claim-ledger">View the repository &rarr;</a>
+      <a class="btn primary" href="https://github.com/ryanwisth/claim-ledger">See the code on GitHub &rarr;</a>
     </div>
-    <nav class="pager" aria-label="More case studies">
-      <a class="prev" href="evidence-pipeline.html"><small>&larr; Previous</small>A family tree grown only from records</a>
-      <a class="next" href="token-guard.html"><small>Next &rarr;</small>Spending rules an AI agent cannot forget</a>
+    <nav class="pager" aria-label="More projects">
+      <a class="prev" href="evidence-pipeline.html"><small>&larr; Previous</small>A family tree built only from real records</a>
+      <a class="next" href="token-guard.html"><small>Next &rarr;</small>Spending rules an AI can&rsquo;t skip</a>
     </nav>
   </div>
 </main>
 
 <footer class="site">
   <div class="wrap">
-    <span>Every figure on this page comes from the project's own README.</span>
+    <span>Every number on this page comes from the project&rsquo;s own notes.</span>
     <span>&copy; Ryan Wisth &middot; <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
   </div>
 </footer>

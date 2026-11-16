@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>A Safari dark mode with fitted themes | Ryan Wisth</title>
-<meta name="description" content="Case study: a Safari extension for macOS that darkens light websites in six themes, with filter values fitted numerically, built and packaged end to end without Xcode.">
-<meta property="og:title" content="A Safari dark mode with fitted themes | Ryan Wisth">
-<meta property="og:description" content="Case study: a Safari extension for macOS that darkens light websites in six themes, with filter values fitted numerically, built and packaged end to end without Xcode.">
+<title>Dark mode for any website in Safari | Ryan Wisth</title>
+<meta name="description" content="A Safari add-on for the Mac that turns light websites dark in six color themes. A program tuned each theme to its target colors, and the add-on is built and installed without Xcode, Apple&rsquo;s app-building tool.">
+<meta property="og:title" content="Dark mode for any website in Safari | Ryan Wisth">
+<meta property="og:description" content="A Safari add-on for the Mac that turns light websites dark in six color themes. A program tuned each theme to its target colors, and the add-on is built and installed without Xcode, Apple&rsquo;s app-building tool.">
 <meta property="og:image" content="https://ryanwisth.github.io/img/safari-all-themes.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#f58fb0" media="(prefers-color-scheme: light)">
@@ -20,7 +20,7 @@
   <div class="wrap">
     <a class="brand" href="index.html"><span class="mark">RW</span>Ryan Wisth</a>
     <nav class="topnav">
-      <a href="index.html#work">Case studies</a>
+      <a href="index.html#work">Projects</a>
       <a class="hide-sm" href="index.html#how">How I work</a>
       <a href="https://github.com/ryanwisth">GitHub</a>
       <button class="theme-toggle" type="button" hidden aria-label="Switch between light and dark"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
@@ -30,46 +30,46 @@
 
 <main>
   <div class="prose case-head">
-    <a class="back" href="index.html#work">&larr; All case studies</a>
-    <p class="kicker">Browser extension &middot; built and packaged end to end</p>
-    <h1 style="view-transition-name: t-safari-dark-mode">A Safari dark mode with fitted themes</h1>
-    <p class="lede">A Safari extension for macOS that turns light websites dark in six colour themes and leaves sites that are already dark alone. Photos keep their real colours.</p>
+    <a class="back" href="index.html#work">&larr; All projects</a>
+    <p class="kicker">Browser add-on &middot; built and installed start to finish</p>
+    <h1 style="view-transition-name: t-safari-dark-mode">Dark mode for any website in Safari</h1>
+    <p class="lede">An add-on for Safari, the Mac&rsquo;s web browser. It turns light websites dark in six color themes and leaves sites that are already dark alone. Photos keep their real colors.</p>
     <dl class="brief">
-      <dt>Problem</dt><dd>Many sites have no dark theme, and the usual fix rewrites each page's styles: a large build that can flash the light page first.</dd>
-      <dt>Result</dt><dd>A packaged Safari extension with 6 numerically fitted themes, each within &Delta;E 0.9 (OKLab) of its target colours, that keeps photos true and leaves already-dark sites alone. It adds brightness and contrast sliders, per-site settings, a keyboard shortcut and an option to follow the system&rsquo;s dark mode. Version 1.0.0 builds, signs and installs from one script with no Xcode project, and asks for 1 permission: storage.</dd>
+      <dt>Problem</dt><dd>Many websites have no dark mode. The usual fix rewrites the look of every page. That is a big job, and the bright page can flash up first.</dd>
+      <dt>Result</dt><dd>A finished add-on with 6 themes, each within 0.9 of its target colors on a standard color-difference scale (&Delta;E in OKLab). It has brightness and contrast sliders, settings for each site, a keyboard shortcut and an option to follow the Mac&rsquo;s dark mode. Version 1.0.0 is built, signed and installed by one script, without Xcode. It asks for 1 permission: storage.</dd>
     </dl>
   </div>
 
   <section class="sum" aria-label="Summary">
     <div class="sum-top">
       <figure class="figure sum-vis">
-        <div class="shot"><div class="bar"><i></i><i></i><i></i><em>tools/testpage.html, off then six themes</em></div><video data-auto controls muted loop playsinline preload="none" poster="img/safari-themes-video.jpg" width="960" height="600" aria-label="The test page switching from its original light look through the Dark, Black, Dim, Sepia, Nord and Dracula themes"><source src="video/safari-themes.mp4" type="video/mp4"></video></div>
-    <figcaption>The test page with the extension off, then in each of the six themes. Every frame is a render from the repository's WebKit harness; the cross-fades between them were added for the video.</figcaption>
+        <div class="shot"><div class="bar"><i></i><i></i><i></i><em>test page, off then six themes</em></div><video data-auto controls muted loop playsinline preload="none" poster="img/safari-themes-video.jpg" width="960" height="600" aria-label="The test page switching from its original light look through the Dark, Black, Dim, Sepia, Nord and Dracula themes"><source src="video/safari-themes.mp4" type="video/mp4"></video></div>
+    <figcaption>The test page with the add-on off, then in each of the six themes. Every frame comes from the project&rsquo;s test setup; the fades were added for the video.</figcaption>
       </figure>
       <div class="facts">
-        <div class="fact"><b>6</b><span>themes, each fitted numerically to its target colours</span></div>
-        <div class="fact"><b>&le; 0.9</b><span>worst-case colour error across every theme (&Delta;E in OKLab)</span></div>
-        <div class="fact"><b>1</b><span>permission: storage only, no network</span></div>
+        <div class="fact"><b>6</b><span>themes, each tuned by a program to its target colors</span></div>
+        <div class="fact"><b>&le; 0.9</b><span>biggest color error in any theme (&Delta;E in OKLab, a measure of color difference)</span></div>
+        <div class="fact"><b>1</b><span>permission: storage only, no internet access</span></div>
       </div>
     </div>
-    <ol class="method" aria-label="What was set, who wrote it, how it was checked">
-      <li><p class="who">I set</p><ul class="ticks"><li>One filter, not a stylesheet rewriter</li><li>Themes are fitted, not hand-tuned</li><li>Keep photos true</li></ul></li>
-      <li class="ag"><p class="who">The agent wrote</p><p>the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
-      <li><p class="who">I checked</p><ul class="ticks ok"><li>Rendered in WebKit with the extension injected</li><li>Version 1.0.0 builds, signs and registers</li></ul></li>
+    <ol class="method" aria-label="My rules, what AI wrote, how I tested it">
+      <li><p class="who">My rules</p><ul class="ticks"><li>One filter, not a rewrite of every page</li><li>Themes tuned by a program, not by eye</li><li>Photos keep their real colors</li></ul></li>
+      <li class="ag"><p class="who">AI wrote</p><p>the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
+      <li><p class="who">I tested</p><ul class="ticks ok"><li>Shown in Safari&rsquo;s engine with the add-on running</li><li>Version 1.0.0 builds, signs and installs</li></ul></li>
     </ol>
   </section>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-safari-dark-mode.jpg" width="960" height="540" aria-label="Narrated film, 47 seconds: 6 dark themes for Safari, each fitted by numbers to its target colours. Ryan built a Safari extension that turns light sites dark, and keeps photos true. He set the rules. One filter, not a stylesheet rewriter. Themes fitted, not hand-tuned. And keep photos true. An agent wrote the code. Ryan verifies every theme in WebKit, the engine Safari uses. The worst colour error in any theme is 0.9 ΔE. It asks for 1 permission, storage, and has no network access. Version 1.0.0 builds, signs and installs from one script, with no Xcode project. Ryan Wisth. 6 fitted themes, 1 permission, built end to end."><source src="video/film-safari-dark-mode.mp4" type="video/mp4"></video></span><figcaption>The case in 47 seconds, narrated. Tap ♪ for sound.</figcaption></figure>
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-safari-dark-mode.jpg" width="960" height="540" aria-label="Narrated film, 39 seconds: 6 dark themes for Safari, each tuned by a program to its target colors. A Safari add-on turns light websites dark, and leaves dark ones alone. One filter darkens the whole page. A program tuned each theme. Photos are flipped back to their real colors. The biggest color error in any theme is 0.9, on a 0-to-1 scale. It asks for 1 permission, storage, and has no internet access. Version 1.0.0 is built, signed and installed by one script, without Xcode. 6 tuned themes, 1 permission, built start to finish."><source src="video/film-safari-dark-mode.mp4" type="video/mp4"></video></span><figcaption>The project in 39 seconds, narrated. Tap ♪ for sound.</figcaption></figure>
 
   <figure class="figure">
     <img class="narrow" src="img/safari-all-themes.jpg" alt="One test page rendered in each of the six themes: Dark, Black, Dim, Sepia, Nord and Dracula" width="1000" height="965" loading="lazy">
-    <figcaption>All six themes on the same test page, from the repository's render harness.</figcaption>
+    <figcaption>All six themes on the same test page, captured by the project&rsquo;s test setup.</figcaption>
   </figure>
   <figure class="figure">
     <div class="chart-grid">
       <div class="chart-card">
-        <h3>Final fit error by theme</h3>
-        <p class="sub">Distance from the target colour (&Delta;E in OKLab). Each bar runs on a scale of 0 to 1.</p>
+        <h3>How close each theme got</h3>
+        <p class="sub">Distance from the target color (&Delta;E in OKLab). Lower is closer. Each bar runs on a scale of 0 to 1.</p>
         <table class="minis">
           <tr><th>Theme</th><th>Background</th><th>Text</th></tr>
           <tr><td class="n">Dark</td><td><div class="cell"><span class="track"><i style="--v:40%"></i></span><span>0.4</span></div></td><td><div class="cell"><span class="track"><i style="--v:10%"></i></span><span>0.1</span></div></td></tr>
@@ -81,51 +81,51 @@
         </table>
       </div>
       <div>
-        <div class="shot"><div class="bar"><i></i><i></i><i></i><em>the popup, light and dark</em></div><img src="img/safari-popup.jpg" alt="The extension popup in light and dark appearance" width="800" height="608" loading="lazy"></div>
+        <div class="shot"><div class="bar"><i></i><i></i><i></i><em>settings, light and dark</em></div><img src="img/safari-popup.jpg" alt="The add-on&rsquo;s settings menu in light and dark" width="800" height="608" loading="lazy"></div>
       </div>
     </div>
   </figure>
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>Beyond darkening the web, the goal was to build, sign and install a Safari extension end to end on a Mac, without Xcode. One script does all three.</p>
+    <p>Beyond making websites dark, the goal was to build, sign and install a Safari add-on without Xcode, Apple&rsquo;s app-building tool. One script does all three.</p>
 
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>One filter, not a stylesheet rewriter.</b> A single GPU-accelerated filter on the page root darkens every site with no per-site rules; a per-site "Never" covers pages with images baked into a light background.</li>
-      <li><b>Themes are fitted, not hand-tuned.</b> An optimiser searches the filter values so each theme lands on its chosen colours. Final error runs from 0.0 (Black background) to 0.9 (Sepia background) on a 0-to-1 &Delta;E scale.</li>
-      <li><b>Keep photos true.</b> Images and video are flipped back with a fitted correction, so saturated colours like yellow do not come back beige.</li>
-      <li><b>Detect already-dark pages.</b> The background is sampled at five points, and a page that is already dark is left alone.</li>
-      <li><b>Minimal permissions.</b> Storage only, no network access.</li>
+      <li><b>One filter, not a rewrite of every page.</b> A single fast filter over the whole page darkens every site with no special rules. For pages with pictures set on a light background, a &ldquo;Never&rdquo; setting turns it off for that site.</li>
+      <li><b>Themes tuned by a program, not by eye.</b> A program searches for the filter settings that land each theme on its chosen colors. The final error runs from 0.0 (Black background) to 0.9 (Sepia background), on a 0-to-1 scale.</li>
+      <li><b>Photos keep their real colors.</b> Pictures and video are flipped back with a tuned correction, so strong colors like yellow do not come back beige.</li>
+      <li><b>Already-dark pages are spotted.</b> The background color is checked at five points, and a page that is already dark is left alone.</li>
+      <li><b>As few permissions as possible.</b> Storage only, no internet access.</li>
     </ul>
 
-    <h2>How it was verified</h2>
+    <h2>How it was tested</h2>
     <ul>
-      <li>A purpose-built harness renders pages in WebKit, the engine Safari uses, with the extension injected.</li>
-      <li>Checked there: all six themes, fixed headers while scrolling, photo flip-back, already-dark detection, the popup in light and dark, and live sites.</li>
-      <li>Version 1.0.0 builds, signs and registers with Safari's extension system.</li>
+      <li>A test setup built for this project shows pages in WebKit, the engine inside Safari, with the add-on running.</li>
+      <li>Tested there: all six themes, headers while scrolling, photos, already-dark pages, the settings menu in light and dark, and real websites.</li>
+      <li>Version 1.0.0 builds, signs and installs into Safari&rsquo;s add-on list.</li>
     </ul>
 
-    <h2>Scope</h2>
+    <h2>Limits</h2>
     <ul>
-      <li>Render checks ran in the WebKit harness, with the extension API simulated.</li>
-      <li>Signed ad hoc, so Safari needs "Allow unsigned extensions" switched on after every restart.</li>
+      <li>The display tests ran in the test setup, with Safari&rsquo;s add-on system imitated.</li>
+      <li>It is not signed with an Apple developer ID, so Safari&rsquo;s &ldquo;Allow unsigned extensions&rdquo; setting must be switched on after every restart.</li>
     </ul>
 
     <div class="repo-card">
       <p><b>ryanwisth/safari-dark-mode</b>The code, with its real status and limits.</p>
-      <a class="btn primary" href="https://github.com/ryanwisth/safari-dark-mode">View the repository &rarr;</a>
+      <a class="btn primary" href="https://github.com/ryanwisth/safari-dark-mode">See the code on GitHub &rarr;</a>
     </div>
-    <nav class="pager" aria-label="More case studies">
-      <a class="prev" href="streaks-trainer.html"><small>&larr; Previous</small>A practice app where one miss resets the streak</a>
-      <a class="next" href="checking-ai-work.html"><small>Next &rarr;</small>Making AI work checkable</a>
+    <nav class="pager" aria-label="More projects">
+      <a class="prev" href="streaks-trainer.html"><small>&larr; Previous</small>A study app where one wrong answer resets your streak</a>
+      <a class="next" href="checking-ai-work.html"><small>Next &rarr;</small>Making AI work easy to check</a>
     </nav>
   </div>
 </main>
 
 <footer class="site">
   <div class="wrap">
-    <span>Every figure on this page comes from the project's own README.</span>
+    <span>Every number on this page comes from the project&rsquo;s own notes.</span>
     <span>&copy; Ryan Wisth &middot; <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
   </div>
 </footer>

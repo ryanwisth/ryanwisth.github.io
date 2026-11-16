@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Giving a local model tools it can use | Ryan Wisth</title>
-<meta name="description" content="Case study: six small MCP servers that give a locally hosted language model live world events, market data, a dependency audit, a study coach and equation OCR, shaped for a mid-sized model.">
-<meta property="og:title" content="Giving a local model tools it can use | Ryan Wisth">
-<meta property="og:description" content="Case study: six small MCP servers that give a locally hosted language model live world events, market data, a dependency audit, a study coach and equation OCR, shaped for a mid-sized model.">
+<title>Giving the AI on my laptop tools to use | Ryan Wisth</title>
+<meta name="description" content="Six small toolkits that give the AI on my laptop live world news, market data, a software safety check, a study coach and a way to read equations from images.">
+<meta property="og:title" content="Giving the AI on my laptop tools to use | Ryan Wisth">
+<meta property="og:description" content="Six small toolkits that give the AI on my laptop live world news, market data, a software safety check, a study coach and a way to read equations from images.">
 <meta property="og:image" content="https://ryanwisth.github.io/img/card.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#f58fb0" media="(prefers-color-scheme: light)">
@@ -20,7 +20,7 @@
   <div class="wrap">
     <a class="brand" href="index.html"><span class="mark">RW</span>Ryan Wisth</a>
     <nav class="topnav">
-      <a href="index.html#work">Case studies</a>
+      <a href="index.html#work">Projects</a>
       <a class="hide-sm" href="index.html#how">How I work</a>
       <a href="https://github.com/ryanwisth">GitHub</a>
       <button class="theme-toggle" type="button" hidden aria-label="Switch between light and dark"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
@@ -30,13 +30,13 @@
 
 <main>
   <div class="prose case-head">
-    <a class="back" href="index.html#work">&larr; All case studies</a>
-    <p class="kicker">AI tooling &middot; built for local models</p>
-    <h1 style="view-transition-name: t-mcp-servers">Giving a local model tools it can use</h1>
-    <p class="lede">Six MCP (Model Context Protocol) servers that give a locally hosted language model what it lacks: live world events, market prices and company fundamentals, a dependency vulnerability audit, a read-only study coach and equation OCR.</p>
+    <a class="back" href="index.html#work">&larr; All projects</a>
+    <p class="kicker">AI tools &middot; built for AI on a laptop</p>
+    <h1 style="view-transition-name: t-mcp-servers">Giving the AI on my laptop tools to use</h1>
+    <p class="lede">Six toolkits (in a standard format AI apps understand, called MCP) that give the AI running on my laptop what it lacks: live world news, market prices and company figures, a check of software parts for known security holes, a look-only study coach, and a reader that turns pictures of equations into text.</p>
     <dl class="brief">
-      <dt>Problem</dt><dd>A local model knows nothing after its training cutoff and cannot look anything up. The public tool servers are built for cloud models: one lists 90 tools and about 100k tokens of schema, enough to swamp a local model before the chat starts.</dd>
-      <dt>Result</dt><dd>Six one-file servers give a local model live data and local tools with 15 or fewer tools each, against 90 in one hosted server. A format change cut price-history replies from about 149 to about 48 characters per day, so a five-year request now returns in full under the 12,000-character cap instead of truncating after about 81 days. The company-data server is in real use in a local chat front end.</dd>
+      <dt>Problem</dt><dd>An AI on a laptop knows nothing after the date it was trained, and cannot look anything up. Public toolkits are built for big online AIs: one lists 90 tools and about 100k tokens of instructions (a token is a small chunk of text), enough to swamp a laptop AI before the chat starts.</dd>
+      <dt>Result</dt><dd>Six one-file toolkits give the laptop AI live data and local tools, with 15 or fewer tools each, against 90 in one public toolkit. A format change cut price-history replies from about 149 to about 48 characters per day. So five years of prices now fit under the 12,000-character limit, instead of cutting off after about 81 days. The company-data toolkit is in real use in a chat app on my laptop.</dd>
     </dl>
   </div>
 
@@ -45,85 +45,85 @@
       <figure class="figure sum-vis">
         <div class="chart-card">
       <h3>Reply size for one day of price history</h3>
-      <p class="sub">Characters the price-history tool spends on each day of prices, before and after a format change. As JSON the reply hit the 12,000-character cap after about 81 days; as CSV, with resampling, a five-year request returns the whole window.</p>
-      <div class="bars" role="img" aria-label="Bar chart. JSON objects about 149 characters per day of prices, CSV about 48.">
-        <div class="row" title="JSON objects: about 149"><span class="lab">JSON objects</span><span class="track"><i class="" style="--v:90%"></i></span><span class="val">about 149</span></div>
-        <div class="row" title="CSV: about 48"><span class="lab">CSV</span><span class="track"><i class="" style="--v:29%"></i></span><span class="val">about 48</span></div>
+      <p class="sub">Characters the price-history tool uses for each day of prices, before and after a format change. In the wordy format (JSON) the reply hit the 12,000-character limit after about 81 days. In a compact table format (CSV), with fewer points over long spans, five years come back whole.</p>
+      <div class="bars" role="img" aria-label="Bar chart. Wordy format (JSON) about 149 characters per day of prices, table format (CSV) about 48.">
+        <div class="row" title="Wordy (JSON): about 149"><span class="lab">Wordy (JSON)</span><span class="track"><i class="" style="--v:90%"></i></span><span class="val">about 149</span></div>
+        <div class="row" title="Table (CSV): about 48"><span class="lab">Table (CSV)</span><span class="track"><i class="" style="--v:29%"></i></span><span class="val">about 48</span></div>
       </div>
     </div>
       </figure>
       <div class="facts">
-        <div class="fact"><b>90 tools</b><span>and about 100k tokens of schema in one hosted server built for cloud models: minutes of reading per new chat at local speeds</span></div>
-        <div class="fact"><b>15 or fewer</b><span>tools in each server here, each description saying when to use it</span></div>
-        <div class="fact"><b>12,000</b><span>character reply cap, with any truncation announced so the model never mistakes a partial answer for a whole one</span></div>
+        <div class="fact"><b>90 tools</b><span>and about 100k tokens of instructions in one public toolkit built for big online AIs: minutes of reading per new chat on a laptop</span></div>
+        <div class="fact"><b>15 or fewer</b><span>tools in each toolkit here, each one saying when to use it</span></div>
+        <div class="fact"><b>12,000</b><span>character reply limit, with any cut-off announced so the AI never mistakes part of an answer for the whole</span></div>
       </div>
     </div>
     <ol class="method" aria-label="What was set, who wrote it, how it was checked">
-      <li><p class="who">I set</p><ul class="ticks"><li>Shape tools for the model that reads them</li><li>Arithmetic in code, not in the model</li><li>Read-only by design</li></ul></li>
-      <li class="ag"><p class="who">Agents wrote</p><p>most of the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
-      <li><p class="who">I checked</p><ul class="ticks ok"><li>Company data: live data, 2026-09-18</li><li>Vulnerability audit: in-memory client</li><li>Study coach: all six tools returned data</li></ul></li>
+      <li><p class="who">My rules</p><ul class="ticks"><li>Shape tools for the AI that reads them</li><li>Math done by code, not by the AI</li><li>Look, never change</li></ul></li>
+      <li class="ag"><p class="who">AI wrote</p><p>most of the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
+      <li><p class="who">I tested</p><ul class="ticks ok"><li>Company data: live data, 2026-09-18</li><li>Security check: a test program</li><li>Study coach: all six tools returned data</li></ul></li>
     </ol>
   </section>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-mcp-servers.jpg" width="960" height="540" aria-label="Narrated film, 49 seconds: 15 tools or fewer per server, where one hosted server lists 90. Ryan built 6 MCP servers that give a local model tools it can use. He set three rules: shape tools for the model, arithmetic in code, read-only by design. Switching to CSV cut each day from about 149 to about 48 characters, so five years return in full. Replies are capped at 12,000 characters, and any truncation is announced. Agents wrote most of the code. He verified company data with live data, and the audit through an in-memory client. Empty data becomes an explicit error, and errors come back in plain English. Ryan Wisth. The company-data server is in real use."><source src="video/film-mcp-servers.mp4" type="video/mp4"></video></span><figcaption>The case in 49 seconds, narrated. Tap ♪ for sound.</figcaption></figure>
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-mcp-servers.jpg" width="960" height="540" aria-label="Narrated film, 39 seconds: 15 tools or fewer per toolkit, where one public toolkit lists 90. Six small toolkits give the AI on a laptop tools it can use. Short tool lists, math done by code, and tools that only look, never change. A compact format cut each day of prices from about 149 to about 48 characters, so five years come back whole. Replies are limited to 12,000 characters, and any cut-off is announced. Empty data becomes a clear error, and errors come back in plain English. The company-data toolkit is in real use."><source src="video/film-mcp-servers.mp4" type="video/mp4"></video></span><figcaption>The project in 39 seconds, narrated. Tap ♪ for sound.</figcaption></figure>
 
   <figure class="figure">
     <ol class="flow c4">
-      <li><b>Local model</b><span>in a chat app or an agent</span></li>
-      <li><b>MCP client</b><span>starts each server and talks to it over stdio</span></li>
-      <li class="key"><b>Six thin servers</b><span>short tool lists, capped replies, arithmetic done in code</span></li>
-      <li><b>Live services and local tools</b><span>three data services; a vulnerability scanner, a practice app and an OCR model</span></li>
+      <li><b>AI on the laptop</b><span>in a chat app or an AI assistant</span></li>
+      <li><b>The app</b><span>starts each toolkit and talks to it directly</span></li>
+      <li class="key"><b>Six small toolkits</b><span>short tool lists, limited replies, math done by code</span></li>
+      <li><b>Live services and local tools</b><span>three data services; a security checker, a practice app and an equation reader</span></li>
     </ol>
-    <figcaption>Simplified from the README diagram. The first three servers reach live data services; the last three wrap local tools.</figcaption>
+    <figcaption>Simplified from the diagram in the project&rsquo;s notes. The first three toolkits reach live data services; the last three use tools on the laptop.</figcaption>
   </figure>
   <figure class="figure">
     <div class="term"><div class="bar"><i></i><i></i><i></i><em>drill/server.py through an in-memory client</em></div><pre tabindex="0" role="img" aria-label="Terminal output: drill/server.py through an in-memory client"><span class="ln dim"># list the tools, then call one against the practice engine serving its 21-item sample bank</span><span class="ln hl">6 tools</span><span class="ln">  drill_sections     List the sections in the question bank with their live item counts. Ca…</span><span class="ln">  drill_archetypes   Mastery table: one row per archetype (mistake pattern) with status, st…</span><span class="ln">  drill_progress     Practice summary for a recent window: attempts, accuracy, on-time answ…</span><span class="ln">  drill_sets         Recent timed sets with their scores and ids (use an id with drill_pace…</span><span class="ln">  drill_pace         Pacing report for one finished timed set: checkpoints against plan, it…</span><span class="ln">  drill_audit        Question-bank health: unverified items, retired items and archetypes r…</span><span class="ln"></span><span class="ln hl">&gt; drill_sections()   [124 characters]</span><span class="ln">[</span><span class="ln"> {</span><span class="ln">  "section": "Logic",</span><span class="ln">  "archetypes": 2,</span><span class="ln">  "items": 6</span><span class="ln"> },</span><span class="ln"> {</span><span class="ln">  "section": "Math",</span><span class="ln">  "archetypes": 5,</span><span class="ln">  "items": 14</span><span class="ln"> }</span><span class="ln">]</span></pre></div>
-    <figcaption>The smallest of the six servers, listed and called through fastmcp's in-memory client: six tools, descriptions cut at 70 characters by the listing script, and a 124-character reply. One sample item had been retired by a practice run, so Math shows 14 live items.</figcaption>
+    <figcaption>The smallest of the six toolkits, listed and called by a test program: six tools, descriptions cut at 70 characters for display, and a 124-character reply. One sample question had been retired by a practice run, so Math shows 14 live questions.</figcaption>
   </figure>
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>Public data services publish their own MCP servers and APIs, but they are built for large cloud models: one hosted server lists 90 tools and about 100k tokens of schema, which at a local model's speeds costs minutes per new chat and most of the context window.</p>
-    <p>So I built each server here as a thin, hand-shaped wrapper: 15 or fewer tools, small defaults and capped replies, so a mid-sized local model can pick the right tool and read the answer without drowning in it.</p>
+    <p>Data services publish their own toolkits, but they are built for big online AIs. One lists 90 tools and about 100k tokens of instructions. On a laptop, that costs minutes per new chat and most of what the AI can hold in mind at once.</p>
+    <p>So I built each toolkit here small and by hand: 15 or fewer tools, small default requests and limited replies, so a mid-sized laptop AI can pick the right tool and read the answer without drowning in it.</p>
 
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>Shape tools for the model that will read them.</b> Each tool list is short, each description says when to use the tool, defaults are small, and tools that can only fail on the free plan are left out entirely.</li>
-      <li><b>Do arithmetic in code, not in the model.</b> The comparison tool returns ranked percent changes rather than raw bars, because arithmetic over long number series is exactly where small models go wrong.</li>
-      <li><b>Make empty data loud.</b> A bad ticker comes back upstream as empty values, not an error. The server turns that into an explicit error, because a model handed nulls tends to report them as data.</li>
-      <li><b>Measure before raising a cap.</b> As JSON, the history tool hit the 12,000-character cap after about 81 days. Switching to CSV cut each day from about 149 to about 48 characters, and resampling lets a five-year request return the whole window, with the cap unchanged.</li>
-      <li><b>Read-only by design.</b> There are no trading or order tools anywhere, and the study-coach server leaves out every route that would fetch or answer a question.</li>
-      <li><b>Errors a model can read.</b> Errors come back as plain-English strings, never stack traces, and missing credentials return a setup message instead of failing or hanging.</li>
+      <li><b>Shape tools for the AI that will read them.</b> Each tool list is short, each tool says when to use it, default requests are small, and tools that can only fail on the free plan are left out.</li>
+      <li><b>Do math in code, not in the AI.</b> The comparison tool returns ranked percent changes, not raw prices, because math over long lists of numbers is exactly where small AIs go wrong.</li>
+      <li><b>Make empty data loud.</b> A wrong stock symbol comes back from the data service as blanks, not an error. The toolkit turns that into a clear error, because an AI handed blanks tends to report them as data.</li>
+      <li><b>Measure before raising a limit.</b> In the wordy format, the history tool hit the 12,000-character limit after about 81 days. The compact table format cut each day from about 149 to about 48 characters, and using fewer points over long spans lets five years come back whole, with the limit unchanged.</li>
+      <li><b>Look, never change.</b> There are no tools to buy or sell anywhere, and the study coach leaves out everything that would fetch or answer a question.</li>
+      <li><b>Errors an AI can read.</b> Errors come back in plain English, never as technical dumps, and a missing login returns a setup message instead of failing or freezing.</li>
     </ul>
 
-    <h2>How it was verified</h2>
+    <h2>How it was tested</h2>
     <ul>
-      <li><b>Company data: working, in real use.</b> Verified with live data on 2026-09-18 and mounted in a local chat front end.</li>
-      <li><b>Vulnerability audit: working.</b> Checked on 2026-11-13 through an in-memory client.</li>
-      <li><b>Study coach: working.</b> Checked on 2026-11-13 against the practice app serving its 21-item sample bank; all six tools returned data.</li>
-      <li><b>World events: built and self-tested.</b> 15 tools listed, the no-login and expired-login paths return the setup message, and a quota-free self-test ran against the live endpoint.</li>
+      <li><b>Company data: working, in real use.</b> Tested with live data on 2026-09-18 and added to a chat app on my laptop.</li>
+      <li><b>Security check: working.</b> Tested on 2026-11-13 with a test program.</li>
+      <li><b>Study coach: working.</b> Tested on 2026-11-13 against the practice app with its 21 sample questions; all six tools returned data.</li>
+      <li><b>World news: built and self-tested.</b> 15 tools listed, a missing or expired login returns the setup message, and a free self-test ran against the live service.</li>
     </ul>
 
-    <h2>Scope</h2>
+    <h2>Limits</h2>
     <ul>
-      <li>Read-only throughout: no trading or order tools, and API keys stay in local environment variables.</li>
-      <li>MIT licensed; not affiliated with any data provider, and each service&rsquo;s own terms apply.</li>
+      <li>Look-only throughout: no tools to buy or sell, and service passwords (keys) stay on the laptop.</li>
+      <li>Free to reuse (MIT license); not tied to any data provider, and each service&rsquo;s own terms apply.</li>
     </ul>
 
     <div class="repo-card">
       <p><b>ryanwisth/local-llm-mcp-servers</b>The code, with its real status and limits.</p>
-      <a class="btn primary" href="https://github.com/ryanwisth/local-llm-mcp-servers">View the repository &rarr;</a>
+      <a class="btn primary" href="https://github.com/ryanwisth/local-llm-mcp-servers">See the code on GitHub &rarr;</a>
     </div>
-    <nav class="pager" aria-label="More case studies">
-      <a class="prev" href="agent-runner.html"><small>&larr; Previous</small>Long agent jobs with the bill checked first</a>
-      <a class="next" href="local-ai-stack.html"><small>Next &rarr;</small>A private AI assistant on one laptop</a>
+    <nav class="pager" aria-label="More projects">
+      <a class="prev" href="agent-runner.html"><small>&larr; Previous</small>Long AI jobs that check the bill first</a>
+      <a class="next" href="local-ai-stack.html"><small>Next &rarr;</small>A private AI assistant on my laptop</a>
     </nav>
   </div>
 </main>
 
 <footer class="site">
   <div class="wrap">
-    <span>Every figure on this page comes from the project's own README.</span>
+    <span>Every figure on this page comes from the project&rsquo;s own notes (its README).</span>
     <span>&copy; Ryan Wisth &middot; <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
   </div>
 </footer>

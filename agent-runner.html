@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Long agent jobs with the bill checked first | Ryan Wisth</title>
-<meta name="description" content="Case study: a small command-line runner that sends a written brief to Claude through the Claude Agent SDK, with auth, budget and turn guards, and loops fresh passes until the job&#x27;s done file appears.">
-<meta property="og:title" content="Long agent jobs with the bill checked first | Ryan Wisth">
-<meta property="og:description" content="Case study: a small command-line runner that sends a written brief to Claude through the Claude Agent SDK, with auth, budget and turn guards, and loops fresh passes until the job&#x27;s done file appears.">
+<title>Long AI jobs that check the bill first | Ryan Wisth</title>
+<meta name="description" content="A small tool that hands the AI Claude a long written job, checks which account pays first, caps the spending, and keeps going in fresh rounds until the job is done.">
+<meta property="og:title" content="Long AI jobs that check the bill first | Ryan Wisth">
+<meta property="og:description" content="A small tool that hands the AI Claude a long written job, checks which account pays first, caps the spending, and keeps going in fresh rounds until the job is done.">
 <meta property="og:image" content="https://ryanwisth.github.io/img/card.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#f58fb0" media="(prefers-color-scheme: light)">
@@ -20,7 +20,7 @@
   <div class="wrap">
     <a class="brand" href="index.html"><span class="mark">RW</span>Ryan Wisth</a>
     <nav class="topnav">
-      <a href="index.html#work">Case studies</a>
+      <a href="index.html#work">Projects</a>
       <a class="hide-sm" href="index.html#how">How I work</a>
       <a href="https://github.com/ryanwisth">GitHub</a>
       <button class="theme-toggle" type="button" hidden aria-label="Switch between light and dark"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
@@ -30,13 +30,13 @@
 
 <main>
   <div class="prose case-head">
-    <a class="back" href="index.html#work">&larr; All case studies</a>
-    <p class="kicker">AI tooling &middot; guardrails for unattended agents</p>
-    <h1 style="view-transition-name: t-agent-runner">Long agent jobs with the bill checked first</h1>
-    <p class="lede">A small command-line runner that sends a written brief to Claude through the Claude Agent SDK, with explicit auth, budget and turn guards, and loops fresh passes until the brief's done file appears.</p>
+    <a class="back" href="index.html#work">&larr; All projects</a>
+    <p class="kicker">AI tools &middot; safe limits when nobody is watching</p>
+    <h1 style="view-transition-name: t-agent-runner">Long AI jobs that check the bill first</h1>
+    <p class="lede">A small tool that hands Claude, an AI assistant, a long job written out as instructions. It checks which account pays, caps the spending and the number of steps, and runs the job in fresh rounds until a &ldquo;done&rdquo; file appears.</p>
     <dl class="brief">
-      <dt>Problem</dt><dd>Long agent jobs are easier to hand off as a written brief than as a live chat. Running them unattended raises three questions: which account pays, how to stop a run that goes over budget, and how to continue a job that does not finish in one pass.</dd>
-      <dt>Result</dt><dd>Ran real multi-pass agent jobs in October 2026, on the subscription login by default since 2026-10-25. Every run confirms who pays before any work, caps each pass at $20 by default, loops fresh passes until the brief&rsquo;s done file appears, and stops on the first failed pass with 0 retries.</dd>
+      <dt>Problem</dt><dd>Long AI jobs are easier to hand off as written instructions than as a live chat. Running them with nobody watching raises three questions: which account pays, how to stop a run that goes over budget, and how to continue a job that does not finish in one round.</dd>
+      <dt>Result</dt><dd>Ran real jobs of several rounds in October 2026, paid from my subscription by default since 2026-10-25. Every run confirms who pays before any work. Each round is capped at $20 by default. Rounds repeat until the &ldquo;done&rdquo; file appears, and the first failed round stops everything, with 0 retries.</dd>
     </dl>
   </div>
 
@@ -44,75 +44,75 @@
     <div class="sum-top">
       <figure class="figure sum-vis">
         <div class="term soft"><div class="bar"><i></i><i></i><i></i><em>run_brief.py --help</em></div><pre tabindex="0" role="img" aria-label="Terminal output: run_brief.py --help"><span class="ln cmd">python run_brief.py --help</span><span class="ln">usage: run_brief.py [-h] --model MODEL [--cwd CWD] [--budget-usd BUDGET_USD]</span><span class="ln">                    [--max-turns MAX_TURNS] [--resume SESSION_ID] [--say SAY]</span><span class="ln dim">                    …</span><span class="ln">                    [--auth {console,max}]</span><span class="ln">                    [--effort {low,medium,high,xhigh,max}]</span><span class="ln">                    [brief]</span><span class="ln"></span><span class="ln">Send a Markdown brief through the Claude Agent SDK, on a Console API key or a Claude subscription login.</span><span class="ln"></span><span class="ln">--auth console (default): needs ANTHROPIC_API_KEY in the environment (never printed or saved).</span><span class="ln hl">--auth max: drops any ANTHROPIC_API_KEY and runs on the CLI's claude.ai login (subscription</span><span class="ln hl">usage, no key, no Console balance); aborts before any work if the init reports an API key source.</span><span class="ln"></span><span class="ln">options:</span><span class="ln">  --model MODEL         model id or alias, no default</span><span class="ln">  --cwd CWD             folder the agent works in (default: current folder)</span><span class="ln">  --budget-usd BUDGET_USD</span><span class="ln">  --max-turns MAX_TURNS</span><span class="ln">                        SDK max_turns cap per pass (default: no cap)</span><span class="ln dim">  …</span></pre></div>
-    <figcaption>The runner's own help text: one flag each for the model, the folder, who pays, the budget and the turn cap. Shortened where marked. No agent pass is shown here: a real one spends account usage.</figcaption>
+    <figcaption>The tool&rsquo;s own help text: one setting each for the AI model, the folder, who pays, the budget and the step limit. Shortened where marked. No real round is shown, because a real one costs money.</figcaption>
       </figure>
       <div class="facts">
-        <div class="fact"><b>2</b><span>payment paths, API key or subscription; a mismatch aborts before any work</span></div>
-        <div class="fact"><b>$20</b><span>default spending cap per agent pass</span></div>
-        <div class="fact"><b>0</b><span>retries: the first failed pass stops the loop</span></div>
+        <div class="fact"><b>2</b><span>ways to pay, a pay-per-use key or a subscription; a mismatch stops the run before any work</span></div>
+        <div class="fact"><b>$20</b><span>default spending cap per round</span></div>
+        <div class="fact"><b>0</b><span>retries: the first failed round stops the run</span></div>
       </div>
     </div>
     <ol class="method" aria-label="What was set, who wrote it, how it was checked">
-      <li><p class="who">I set</p><ul class="ticks"><li>Who pays is checked, not assumed</li><li>Use the built-in budget</li><li>Stop on the first failure</li></ul></li>
-      <li class="ag"><p class="who">An agent wrote</p><p>the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
-      <li><p class="who">I checked</p><ul class="ticks ok"><li>Paying-account check confirmed by a live test</li><li>Auth guard, fresh run and resume tested before the first real brief</li></ul></li>
+      <li><p class="who">My rules</p><ul class="ticks"><li>Who pays is checked, not assumed</li><li>Use the built-in budget</li><li>Stop on the first failure</li></ul></li>
+      <li class="ag"><p class="who">AI wrote</p><p>the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
+      <li><p class="who">I tested</p><ul class="ticks ok"><li>The who-pays check, in a live test</li><li>The account check, a fresh run and a restart, before the first real job</li></ul></li>
     </ol>
   </section>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-agent-runner.jpg" width="960" height="540" aria-label="Narrated film, 48 seconds: Unattended agent jobs, capped at $20 a pass by default, with who pays checked first. Ryan built a runner for long agent jobs. It sends Claude a written brief, and loops fresh passes until the brief's done file appears. He set the rules. Who pays is checked, not assumed. Use the built-in budget. Stop on the first failure. 2 payment paths; a mismatch aborts the run with no work done. 0 retries: the first failed pass stops the loop. An agent wrote the code. Ryan verifies the auth guard, a fresh run and a resume, before any real brief. It has run real multi-pass jobs, on the subscription login. Ryan Wisth. Long agent jobs, with the bill checked first."><source src="video/film-agent-runner.mp4" type="video/mp4"></video></span><figcaption>The case in 48 seconds, narrated. Tap ♪ for sound.</figcaption></figure>
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-agent-runner.jpg" width="960" height="540" aria-label="Narrated film, 37 seconds: Long AI jobs, capped at $20 a round by default, with who pays checked first. A small tool hands the AI a long written job, and runs it in fresh rounds until a done file appears. Each round checks who pays, works under a budget, and repeats until the job is done. Two ways to pay. A mismatch stops the run with no work done. Zero retries: the first failed round stops the run. It has run real jobs of several rounds, paid from the subscription. Long AI jobs that check the bill first."><source src="video/film-agent-runner.mp4" type="video/mp4"></video></span><figcaption>The project in 37 seconds, narrated. Tap ♪ for sound.</figcaption></figure>
 
   <figure class="figure">
     <ol class="flow c3">
-      <li><b>Loop</b><span>is the done file there? If so, stop and print the result</span></li>
-      <li><b>One pass</b><span>a clean context that reads the project's own progress notes</span></li>
-      <li class="key"><b>Auth check</b><span>the session's reported key source must match the flag, or the run aborts with no work done</span></li>
-      <li><b>Agent works</b><span>in the chosen folder, under the budget and turn caps</span></li>
-      <li><b>Logs</b><span>one readable, one raw, with the key scrubbed from both</span></li>
-      <li class="key"><b>Clean end, or stop</b><span>a clean pass loops again; a cap or an error stops the loop</span></li>
+      <li><b>Repeat</b><span>is the &ldquo;done&rdquo; file there? If so, stop and show the result</span></li>
+      <li><b>One round</b><span>starts with a blank memory and reads the project&rsquo;s progress notes</span></li>
+      <li class="key"><b>Who pays?</b><span>the account the AI reports must match the one chosen, or the run stops with no work done</span></li>
+      <li><b>AI works</b><span>in the chosen folder, under the budget and step limits</span></li>
+      <li><b>Records</b><span>one easy to read, one complete, with the payment key wiped from both</span></li>
+      <li class="key"><b>Go again, or stop</b><span>a clean round goes again; hitting a limit or an error stops the run</span></li>
     </ol>
-    <figcaption>Simplified from the README diagram.</figcaption>
+    <figcaption>Simplified from the diagram in the project&rsquo;s notes.</figcaption>
   </figure>
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>An API-key run bills that key's account; a subscription run draws on the subscription. If a key happens to be set, it silently wins over the login, so an unattended run could bill the wrong account. The runner closes that gap: the session&rsquo;s reported key source must match the <code>--auth</code> flag, or the run aborts with no work done.</p>
+    <p>Claude can be paid for two ways: a pay-per-use key, billed to that key&rsquo;s account, or a subscription. If a key happens to be set up, it quietly wins over the subscription, so a run with nobody watching could bill the wrong account. The tool closes that gap: the account the AI reports must match the <code>--auth</code> setting, or the run stops with no work done.</p>
 
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>Who pays is checked, not assumed.</b> The runner aborts before the first tool call if the session's reported key source does not match the flag.</li>
-      <li><b>Use the built-in budget.</b> The SDK reports cost only in its final message, so a hand-rolled running total could not stop a run in time.</li>
-      <li><b>Fresh passes over one long session.</b> A new pass reading short progress notes is cheaper than dragging a full transcript along.</li>
-      <li><b>Stop on the first failure.</b> A crashed or capped pass needs a person to look before more money is spent, so the loop does not retry.</li>
-      <li><b>Standing rules apply unattended.</b> The runner loads user and project settings, so the operator's rules govern every run.</li>
-      <li><b>Spend nothing on a bad command.</b> The loop validates its arguments before any pass starts.</li>
+      <li><b>Who pays is checked, not assumed.</b> The tool stops before the AI does anything if the reported account does not match the setting.</li>
+      <li><b>Use the built-in budget.</b> Claude&rsquo;s toolkit reports the cost only at the very end, so my own running total could not stop a run in time.</li>
+      <li><b>Fresh rounds, not one long chat.</b> A new round that reads short progress notes costs less than carrying the whole conversation along.</li>
+      <li><b>Stop on the first failure.</b> A round that crashed or hit a limit needs a person to look before more money is spent, so nothing is retried.</li>
+      <li><b>My standing rules still apply.</b> The tool loads my usual settings, so the same rules govern every run, even unwatched.</li>
+      <li><b>Spend nothing on a typo.</b> The command is checked before any round starts.</li>
     </ul>
 
-    <h2>How it was verified</h2>
+    <h2>How it was tested</h2>
     <ul>
-      <li>The exact key-source string was confirmed by a live test with the smallest model.</li>
-      <li>The auth guard, settings loading, a fresh run and a resume were tested with the smallest model before the first real brief.</li>
+      <li>The exact account label was confirmed in a live test with the smallest AI model.</li>
+      <li>The who-pays check, the settings, a fresh run and a restart were tested with the smallest model before the first real job.</li>
     </ul>
 
-    <h2>Scope</h2>
+    <h2>Limits</h2>
     <ul>
-      <li>The agent runs tools without asking by default, so point it at a folder it is allowed to change.</li>
-      <li>Stopping a pass by hand part-way can leave that folder mid-edit.</li>
+      <li>By default the AI acts without asking first, so point it at a folder it is allowed to change.</li>
+      <li>Stopping a round by hand part-way can leave that folder half-edited.</li>
     </ul>
 
     <div class="repo-card">
       <p><b>ryanwisth/agent-sdk-runner</b>The code, with its real status and limits.</p>
-      <a class="btn primary" href="https://github.com/ryanwisth/agent-sdk-runner">View the repository &rarr;</a>
+      <a class="btn primary" href="https://github.com/ryanwisth/agent-sdk-runner">See the code on GitHub &rarr;</a>
     </div>
-    <nav class="pager" aria-label="More case studies">
-      <a class="prev" href="token-scan.html"><small>&larr; Previous</small>Finding where the AI budget went</a>
-      <a class="next" href="mcp-servers.html"><small>Next &rarr;</small>Giving a local model tools it can use</a>
+    <nav class="pager" aria-label="More projects">
+      <a class="prev" href="token-scan.html"><small>&larr; Previous</small>Finding where my AI spending went</a>
+      <a class="next" href="mcp-servers.html"><small>Next &rarr;</small>Giving the AI on my laptop tools to use</a>
     </nav>
   </div>
 </main>
 
 <footer class="site">
   <div class="wrap">
-    <span>Every figure on this page comes from the project's own README.</span>
+    <span>Every figure on this page comes from the project&rsquo;s own notes (its README).</span>
     <span>&copy; Ryan Wisth &middot; <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
   </div>
 </footer>

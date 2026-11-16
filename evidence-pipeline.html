@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>A family tree grown only from records | Ryan Wisth</title>
-<meta name="description" content="Case study: a research pipeline where AI agents propose additions to a family tree, code checks what code can check, a second model tries to refute each claim, and accepted facts go into an append-only ledger.">
-<meta property="og:title" content="A family tree grown only from records | Ryan Wisth">
-<meta property="og:description" content="Case study: a research pipeline where AI agents propose additions to a family tree, code checks what code can check, a second model tries to refute each claim, and accepted facts go into an append-only ledger.">
+<title>A family tree built only from real records | Ryan Wisth</title>
+<meta name="description" content="A research process where AI helpers suggest additions to a family tree, simple code checks what it can, a second AI tries to disprove each one, and accepted facts go into a record that is only ever added to.">
+<meta property="og:title" content="A family tree built only from real records | Ryan Wisth">
+<meta property="og:description" content="A research process where AI helpers suggest additions to a family tree, simple code checks what it can, a second AI tries to disprove each one, and accepted facts go into a record that is only ever added to.">
 <meta property="og:image" content="https://ryanwisth.github.io/img/card.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#f58fb0" media="(prefers-color-scheme: light)">
@@ -20,7 +20,7 @@
   <div class="wrap">
     <a class="brand" href="index.html"><span class="mark">RW</span>Ryan Wisth</a>
     <nav class="topnav">
-      <a href="index.html#work">Case studies</a>
+      <a href="index.html#work">Projects</a>
       <a class="hide-sm" href="index.html#how">How I work</a>
       <a href="https://github.com/ryanwisth">GitHub</a>
       <button class="theme-toggle" type="button" hidden aria-label="Switch between light and dark"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
@@ -30,13 +30,13 @@
 
 <main>
   <div class="prose case-head">
-    <a class="back" href="index.html#work">&larr; All case studies</a>
-    <p class="kicker">AI research &middot; every fact sourced</p>
-    <h1 style="view-transition-name: t-evidence-pipeline">A family tree grown only from records</h1>
-    <p class="lede">A research pipeline where AI agents propose additions to a family tree, free Python checks what code can check, a second model tries to refute each claim, and accepted facts go into an append-only ledger.</p>
+    <a class="back" href="index.html#work">&larr; All projects</a>
+    <p class="kicker">AI research &middot; every fact has a source</p>
+    <h1 style="view-transition-name: t-evidence-pipeline">A family tree built only from real records</h1>
+    <p class="lede">A research process for a family tree. AI helpers suggest additions. A small free program checks what code can check. A second AI tries to disprove each one. Accepted facts go into a permanent record that is only ever added to.</p>
     <dl class="brief">
-      <dt>Problem</dt><dd>Online family trees copy each other, so two trees agreeing is not evidence; it is often the same mistake copied twice.</dd>
-      <dt>Result</dt><dd>Three research rounds on a private tree in September 2026, where every accepted fact quotes a primary record. In round 1 skeptic agents rejected 31 claims from a fast first pass and 3 of 147 from a careful one, so weak claims were stopped before they reached the tree. By round 3, moving checks into Python brought the cost to about 57k tokens per target.</dd>
+      <dt>Problem</dt><dd>Online family trees copy each other. So two trees agreeing is not proof; often it is the same mistake copied twice.</dd>
+      <dt>Result</dt><dd>Three research rounds on a private family tree in September 2026. Every accepted fact quotes an original record. In round 1, &ldquo;skeptic&rdquo; AIs, told to hunt for mistakes, rejected 31 statements from a quick first pass and 3 of 147 from a careful one, so weak guesses never reached the tree. By round 3, moving checks into simple code brought AI use down to about 57k tokens (the units AI use is measured in) per research target.</dd>
     </dl>
   </div>
 
@@ -44,92 +44,92 @@
     <div class="sum-top">
       <figure class="figure sum-vis">
         <div class="chart-card">
-      <h3>The free gate in the offline demo</h3>
-      <p class="sub">Claims in the demo journal, sorted by code before any skeptic review. Dropped: a child already in the tree, its parent link, a living person, and a fact citing only an online tree.</p>
-      <div class="bars" role="img" aria-label="Bar chart. 16 claims in the demo journal: 12 kept by the gate, 4 dropped.">
-        <div class="row" title="In the journal: 16"><span class="lab">In the journal</span><span class="track"><i class="" style="--v:90%"></i></span><span class="val">16</span></div>
-        <div class="row" title="Kept by the gate: 12"><span class="lab">Kept by the gate</span><span class="track"><i class="" style="--v:67.5%"></i></span><span class="val">12</span></div>
+      <h3>The free filter in the offline demo</h3>
+      <p class="sub">Suggested statements in the demo, sorted by code before any skeptic review. Dropped: a child already in the tree, its parent link, a living person, and a fact citing only an online tree.</p>
+      <div class="bars" role="img" aria-label="Bar chart. 16 statements suggested in the demo: 12 kept by the filter, 4 dropped.">
+        <div class="row" title="Suggested: 16"><span class="lab">Suggested</span><span class="track"><i class="" style="--v:90%"></i></span><span class="val">16</span></div>
+        <div class="row" title="Kept by the filter: 12"><span class="lab">Kept by the filter</span><span class="track"><i class="" style="--v:67.5%"></i></span><span class="val">12</span></div>
         <div class="row" title="Dropped: 4"><span class="lab">Dropped</span><span class="track"><i class="" style="--v:22.5%"></i></span><span class="val">4</span></div>
       </div>
     </div>
       </figure>
       <div class="facts">
-        <div class="fact"><b>31</b><span>fast-pass claims rejected by the skeptic agents before reaching the tree</span></div>
-        <div class="fact"><b>3 of 147</b><span>careful-pass claims rejected by a second, adversarial review</span></div>
-        <div class="fact"><b>12 of 16</b><span>demo claims cleared the free code gate; 4 dropped at no model cost</span></div>
+        <div class="fact"><b>31</b><span>quick-pass statements rejected by skeptic AIs before reaching the tree</span></div>
+        <div class="fact"><b>3 of 147</b><span>careful-pass statements rejected by a second AI trying to disprove them</span></div>
+        <div class="fact"><b>12 of 16</b><span>demo statements passed the free code filter; 4 dropped without any AI cost</span></div>
       </div>
     </div>
-    <ol class="method" aria-label="What was set, who wrote it, how it was checked">
-      <li><p class="who">I set</p><ul class="ticks"><li>Agents propose; code checks</li><li>A second model tries to refute</li><li>Nothing is deleted</li></ul></li>
-      <li class="ag"><p class="who">Agents wrote</p><p>most of the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
-      <li><p class="who">I checked</p><ul class="ticks ok"><li>Runs end to end offline with one command</li><li>Merge 423 to 420: 0 lost a fact</li><li>Every base line survives</li></ul></li>
+    <ol class="method" aria-label="My rules, what AI wrote, how I tested it">
+      <li><p class="who">My rules</p><ul class="ticks"><li>AI suggests; code checks</li><li>A second AI tries to disprove</li><li>Nothing is deleted</li></ul></li>
+      <li class="ag"><p class="who">AI wrote</p><p>most of the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
+      <li><p class="who">I tested</p><ul class="ticks ok"><li>Runs start to finish offline with one command</li><li>Merged 423 people into 420: none lost a fact</li><li>Every original line survives</li></ul></li>
     </ol>
   </section>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-evidence-pipeline.jpg" width="960" height="540" aria-label="Narrated film, 49 seconds: 31 fast-pass claims, rejected by skeptic agents before reaching the tree. Online trees copy each other, so two agreeing is often one mistake, copied twice. Ryan built a pipeline that grows a family tree only from primary records. He set the rules: agents propose and code checks. A second model tries to refute. Nothing is deleted. A free code gate kept 12 of 16 demo claims, at no model cost. Moving checks into Python brought round 3 to about 57k tokens per target. Agents wrote most of the code. Ryan verifies it: after the demo merge, 0 of 3 merged people lost a fact. Ryan Wisth. Every fact sourced, nothing deleted."><source src="video/film-evidence-pipeline.mp4" type="video/mp4"></video></span><figcaption>The case in 49 seconds, narrated. Tap ♪ for sound.</figcaption></figure>
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-evidence-pipeline.jpg" width="960" height="540" aria-label="Narrated film, 42 seconds: 31 quick guesses, rejected by skeptic AIs before they reached the tree. Online family trees copy each other. Two agreeing is often one mistake, copied twice. This family tree is built only from real records. AI helpers suggest additions, and code checks what it can. A second AI tries to disprove the rest. Nothing is ever deleted. A free code filter kept 12 of 16 demo statements, without any AI cost. Moving checks into simple code brought round 3 down to about 57k pieces of text per search. Every fact has a source, and nothing is deleted."><source src="video/film-evidence-pipeline.mp4" type="video/mp4"></video></span><figcaption>The project in 42 seconds, narrated. Tap ♪ for sound.</figcaption></figure>
 
   <figure class="figure">
     <ol class="flow c3">
-      <li><b>Messy GEDCOM export</b><span>a genealogy file; duplicate pairs scored on names, dates, places and relatives</span></li>
-      <li><b>Lossless merge</b><span>with hard blockers against wrong merges</span></li>
-      <li><b>Verify</b><span>proves every person and fact survived</span></li>
-      <li><b>Targets in Python</b><span>dead-end ancestors, compact dossiers, lanes by place</span></li>
-      <li><b>Finder agents</b><span>proposals only</span></li>
-      <li class="key"><b>Free gate</b><span>rule checks, and every quote checked against the saved page</span></li>
-      <li class="key"><b>Skeptic agents</b><span>refute, or reject when it cannot be confirmed</span></li>
-      <li><b>Append-only ledger</b><span>each item stamped with its round and entry id</span></li>
-      <li><b>New GEDCOM, lint and report</b><span>regenerated from base plus ledger, then checked</span></li>
+      <li><b>Messy family-tree file</b><span>a GEDCOM, the standard format; likely duplicates scored on names, dates, places and relatives</span></li>
+      <li><b>Merge, losing nothing</b><span>with firm blocks against wrong merges</span></li>
+      <li><b>Check</b><span>proves every person and fact survived</span></li>
+      <li><b>Targets picked by code</b><span>ancestors whose line stops, short case files, groups by place</span></li>
+      <li><b>Finder AIs</b><span>suggestions only</span></li>
+      <li class="key"><b>Free filter</b><span>rule checks, and every quote checked against the saved page</span></li>
+      <li class="key"><b>Skeptic AIs</b><span>disprove, or reject when it cannot be confirmed</span></li>
+      <li><b>Permanent record</b><span>each item stamped with its round and entry number</span></li>
+      <li><b>New file, checks and report</b><span>rebuilt from the original plus the record, then checked</span></li>
     </ol>
-    <figcaption>The whole pipeline, simplified from the README diagram. After step 9 the next round starts again at step 4.</figcaption>
+    <figcaption>The whole process, simplified from the project&rsquo;s own diagram. After step 9, the next round starts again at step 4.</figcaption>
   </figure>
   <figure class="figure">
     <div class="term soft"><div class="bar"><i></i><i></i><i></i><em>run_demo.sh</em></div><pre tabindex="0" role="img" aria-label="Terminal output: run_demo.sh"><span class="ln cmd">./run_demo.sh</span><span class="ln dim">demo inputs in …/work/in: 3 duplicate records injected, 16 claims in the journal, 3 saved pages, 1 fixture verdict lane</span><span class="ln dim">…</span><span class="ln hl">== 4. cleanup: prove nothing was dropped</span><span class="ln">  checked 3 merged individuals — 0 lost a fact</span><span class="ln ok">PASSED — every individual accounted for, every fact preserved,</span><span class="ln ok">         no dangling pointers, valid UTF-8, longest line 71 chars.</span><span class="ln dim">…</span><span class="ln hl">== 6. research: gate the finder journal (offline, saved pages only)</span><span class="ln">| lane-a | 5 | 4 | 0 | 3 | 12 | 4 | not-fetched 1, quote-found 2, quote-missing 1 |</span><span class="ln">lanes 1  fetches left 0  (offline: saved pages only)</span><span class="ln"></span><span class="ln hl">== 7. research: fold the (fixture) skeptic verdicts into the ledger</span><span class="ln">lane-a: 4 people, 2 families, 2 facts, 1 notes, 2 sources</span><span class="ln">total new: 4 people, 2 families, 2 facts, 1 notes, 2 sources</span><span class="ln"></span><span class="ln hl">== 8. research: write the ledger into a new GEDCOM (append-only)</span><span class="ln">wrote …/work/research/tree-research.ged: +4 people, +2 families, +2 sources, 20 lines added to 3 existing records</span><span class="ln dim">…</span><span class="ln">ancestors 24  dead ends 13  targets 16 in 7 agents  overflow 4  excluded 0</span></pre></div>
-    <figcaption>The offline demo on the invented family, shortened where marked: 12 claims kept and 4 dropped by the gate, then the ledger written back append-only. The skeptic step uses the repository's saved fixture, not a live model.</figcaption>
+    <figcaption>The offline demo on the made-up family, shortened where marked. The filter keeps 12 statements and drops 4, then the permanent record is written back, adding only. The skeptic step uses a saved sample answer, not a live AI.</figcaption>
   </figure>
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>A "source" on a big genealogy site is often just another user's tree.</p>
-    <p>This pipeline sets a higher bar. Every new person, parent link or date must cite a primary record (a register entry, a census line, a headstone), quote it, tie it to the tree person by at least two identifiers, and survive an adversarial check.</p>
+    <p>A &ldquo;source&rdquo; on a big family-history website is often just another user&rsquo;s tree.</p>
+    <p>This process sets a higher bar. Every new person, parent link or date must name an original record (a register entry, a census line, a headstone), quote it, match the person in the tree on at least two details, and survive a check built to disprove it.</p>
 
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>Agents propose; code checks what code can check.</b> On the private tree, round 2's finders averaged 78 turns. For round 3 I moved dossiers, the gate and short review sheets into Python, and the round ran at about 57k tokens per target.</li>
-      <li><b>A second model tries to refute.</b> The skeptic's stance is "when you cannot confirm, reject", so a claim enters the tree only when it survives an attack.</li>
-      <li><b>A free gate between the two agent waves.</b> Before any skeptic time is spent, it drops claims that cite no record, have fewer than two identifiers, repeat a ledger fact, duplicate an existing child, or add a living person.</li>
-      <li><b>Quote matching is a window, not a phrase.</b> The gate folds case, accents and punctuation, ignores field labels, and looks for 80% of the distinctive words inside one window. A miss flags the claim for the skeptic rather than dropping it.</li>
-      <li><b>Nothing is deleted.</b> Disproved parent links are recorded and cut in later counts, and the base file is never edited, so every change can be traced to its round and entry.</li>
-      <li><b>Offline by default.</b> Fetching is opt-in, with a fixed delay and a request cap.</li>
+      <li><b>AI suggests; code checks what code can check.</b> On the private tree, round 2&rsquo;s finder AIs averaged 78 back-and-forth steps each. For round 3 I moved the case files, the filter and short review sheets into simple code, and the round ran at about 57k tokens per target.</li>
+      <li><b>A second AI tries to disprove.</b> The skeptic&rsquo;s rule is &ldquo;when you cannot confirm, reject&rdquo;, so a statement enters the tree only if it survives the attack.</li>
+      <li><b>A free filter between the two rounds of AI.</b> Before any skeptic time is spent, it drops statements that name no record, match on fewer than two details, repeat a recorded fact, duplicate a child already in the tree, or add a living person.</li>
+      <li><b>Quotes are matched loosely, not word for word.</b> The filter ignores capital letters, accents, punctuation and field labels, and looks for 80% of the telling words close together. A miss flags the statement for the skeptic instead of dropping it.</li>
+      <li><b>Nothing is deleted.</b> Disproved parent links are recorded and left out of later counts. The original file is never edited, so every change can be traced to its round and entry.</li>
+      <li><b>Offline by default.</b> Going online must be switched on, with a fixed pause between requests and a cap on how many.</li>
     </ul>
 
-    <h2>How it was verified</h2>
+    <h2>How it was tested</h2>
     <ul>
-      <li>One command runs the public copy end to end offline on an invented 420-person family.</li>
-      <li>The duplicate scan found all 3 injected duplicates, the merge took 423 individuals to 420, and the verifier proved 0 of the 3 merged individuals lost a fact.</li>
-      <li>The gate kept 12 of the journal's 16 claims and dropped 4: a duplicate child, its parent link, a living person and a fact citing only an online tree.</li>
-      <li>The new GEDCOM (genealogy file) is regenerated from the base file plus the ledger and checked: every base line survives and every pointer resolves.</li>
+      <li>One command runs the public copy start to finish offline, on a made-up family of 420 people.</li>
+      <li>The duplicate scan found all 3 planted duplicates. The merge took 423 people down to 420, and the checker proved none of the 3 merged people lost a fact.</li>
+      <li>The filter kept 12 of the 16 suggested statements and dropped 4: a duplicate child, its parent link, a living person and a fact citing only an online tree.</li>
+      <li>The new family-tree file is rebuilt from the original plus the permanent record, then checked: every original line survives and every link inside the file still works.</li>
     </ul>
 
-    <h2>Scope</h2>
+    <h2>Limits</h2>
     <ul>
-      <li>Every person, place and record in the public sample and demo data is invented; the round figures come from the private tree.</li>
-      <li>The repository works from saved record pages that the user supplies.</li>
+      <li>Every person, place and record in the public sample and demo is made up; the round numbers come from the private tree.</li>
+      <li>The public code works from saved record pages that the user provides.</li>
     </ul>
 
     <div class="repo-card">
       <p><b>ryanwisth/genealogy-evidence-pipeline</b>The code, with its real status and limits.</p>
-      <a class="btn primary" href="https://github.com/ryanwisth/genealogy-evidence-pipeline">View the repository &rarr;</a>
+      <a class="btn primary" href="https://github.com/ryanwisth/genealogy-evidence-pipeline">See the code on GitHub &rarr;</a>
     </div>
-    <nav class="pager" aria-label="More case studies">
-      <a class="prev" href="practice-engine.html"><small>&larr; Previous</small>A practice app built around the mistake</a>
-      <a class="next" href="claim-ledger.html"><small>Next &rarr;</small>Turning a slipping process into enforced rules</a>
+    <nav class="pager" aria-label="More projects">
+      <a class="prev" href="practice-engine.html"><small>&larr; Previous</small>A study app built around mistakes</a>
+      <a class="next" href="claim-ledger.html"><small>Next &rarr;</small>A fact-checking routine that stopped slipping</a>
     </nav>
   </div>
 </main>
 
 <footer class="site">
   <div class="wrap">
-    <span>Every figure on this page comes from the project's own README.</span>
+    <span>Every number on this page comes from the project&rsquo;s own notes.</span>
     <span>&copy; Ryan Wisth &middot; <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
   </div>
 </footer>
