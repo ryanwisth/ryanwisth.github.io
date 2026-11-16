@@ -1537,3 +1537,114 @@ main.th-go .guide { opacity: 0; }
   .repo-card > .btn { flex: none; }
 }
 /* === end repo card === */
+
+/* === desktop = the phone layout, wide (Nov 15 2026, Ryan's pick "D2") ===
+   From 621 px up every page is ONE stacked column, one thing at a time like the phone, using the full 1,032 px
+   content column for text and pictures: no cards side by side, no strips of steps. Type is larger so a full-width
+   line stays readable: text 26 px on a wide screen, about 85 characters a line. All sizes in this block are rem and
+   the root size ramps 13 px (621 px wide) to 16 px (1,080 px and up), so the scale follows the column. Nothing
+   outside this block uses rem. The phone rules (620 px and under) are untouched. */
+@media (min-width: 621px) {
+  html { font-size: clamp(13px, .654vw + 8.94px, 16px); }
+  body { font-size: 1.625rem; line-height: 1.5; }
+
+  /* one column, one left edge, home and case pages alike */
+  .prose, .case-head, .sum, .figure, main > .figure { max-width: 1080px; }
+  .hero-one, .film, .brief, .case-head .lede, .hero-sub { max-width: none; }
+  .shot:has(> img[width="800"]) { max-width: 816px; margin-inline: auto; } /* an 800 px screenshot is not stretched across the column */
+  .leads, .more, .how2, .sum-top, .method, .sum .method, .how2 .method, .flow, .flow.c4, .flow.c5, .band3, .duo,
+  .figure .pair, .split, .chart-grid, .cards, .cards.g3, .principles { grid-template-columns: minmax(0, 1fr); }
+  .facts, .sum .facts { grid-template-columns: minmax(0, 1fr); grid-auto-rows: auto; }
+  .brief { grid-template-columns: max-content minmax(0, 1fr); gap: 10px 20px; }
+  .split .side { width: 100%; }
+
+  /* headings */
+  .hero h1, .lead-hero h1 { font-size: clamp(44px, 5.4vw, 78px); max-width: none; }
+  .case-head h1 { font-size: clamp(36px, 4.2vw, 60px); }
+  .section-head h2 { font-size: clamp(32px, 3.4vw, 46px); }
+  .prose h2 { font-size: 2rem; margin-top: 72px; }
+  .case-head .lede, .hero-sub { font-size: 1.75rem; line-height: 1.45; }
+  .back { font-size: 1.1875rem; }
+  .kicker { font-size: 1.1875rem; }
+  .brief dt { font-size: .9375rem; line-height: 2.4; }
+  .brief dd { font-size: 1.5rem; line-height: 1.45; }
+
+  /* home: a lead card is one screen: its picture, then its words */
+  .leads { gap: 36px; }
+  .card.lead .thumb, .card.lead .thumb-wrap.ink .thumb { aspect-ratio: 16 / 9; }
+  .card.lead .thumb-wrap.phone { aspect-ratio: 16 / 9; }
+  .card.lead .thumb-wrap.phone .thumb { width: 50%; }
+  .card.lead .body { padding: 24px 30px 30px; gap: 10px; }
+  .card.lead h4 { font-size: 2.125rem; line-height: 1.15; }
+  .lead .lead-k { font-size: 1.0625rem; }
+  .lead .lead-what, .lead .lead-role { font-size: 1.5rem; line-height: 1.45; }
+  .lead .lead-go { font-size: 1.25rem; padding-top: 10px; }
+  .card.lead .badge { font-size: 1rem; padding: 7px 14px; }
+  /* home: the four groups, one under the other; the heading is a band, not a tile */
+  .more { gap: 40px; }
+  .group-h { min-height: 0; flex-direction: row; align-items: center; justify-content: flex-start; padding: 16px 62px 16px 22px; font-size: 2rem; }
+  .group-h::before { top: 50%; margin-top: -15px; }
+  .more ul { padding: 4px 22px 0; }
+  .more a { padding: 16px 0 17px; }
+  .more a b { font-size: 1.5rem; }
+  .more a span { font-size: 1.25rem; margin-top: 4px; }
+  .how2 { gap: 28px; }
+  .band h2 { font-size: 2.125rem; }
+  .band p { font-size: 1.375rem; }
+  .btn { font-size: 1.25rem; padding: 16px 28px; }
+  .demo-poster .play { font-size: 1.25rem; }
+
+  /* steps run down the page, so the sideways arrows go */
+  .method > li::after, .flow li::after, .flow.c4 li:nth-child(n)::after, .flow.c5 li:nth-child(n)::after { display: none; }
+  .method, .sum .method { gap: 14px; }
+  .method > li { padding: 20px 26px 22px; }
+  .method p { font-size: 1.375rem; }
+  .method .who, .method .ag .who { font-size: 1.25rem; }
+  .pills span { font-size: 1.1875rem; padding: 7px 15px; }
+  .ticks { gap: 9px; }
+  .ticks li { font-size: 1.3125rem; padding-left: 30px; }
+  .ticks li::before { left: 4px; }
+  .flow, .flow.c4, .flow.c5 { gap: 12px; }
+  .flow li { display: grid; grid-template-columns: 34px 1fr; column-gap: 14px; padding: 20px 24px 22px; }
+  .flow li::before { margin: 0; grid-row: span 2; width: 32px; height: 32px; font-size: 16px; }
+  .flow li b { font-size: 1.4375rem; }
+  .flow li span { font-size: 1.25rem; }
+
+  /* a case summary: the picture, then each number on its own row, then the three steps */
+  .sum .fact, .fact { display: flex; flex-direction: row; flex-wrap: wrap; align-items: baseline; justify-content: flex-start; gap: 4px 24px; padding: 20px 28px; }
+  .fact b { flex: 0 0 auto; min-width: 5.2ch; font-size: 2.75rem; }
+  .fact span { margin-top: 0; flex: 1 1 260px; font-size: 1.3125rem; }
+  .bigfig b { font-size: 4.25rem; }
+  .chart-card { padding: 32px 34px; }
+  .chart-card h3 { font-size: 1.6875rem; }
+  .chart-card .sub { font-size: 1.1875rem; }
+  .bars .row { font-size: 1.25rem; gap: 16px; }
+  .bars .val { font-size: 1.25rem; }
+  .bars .lab small { font-size: 1.0625rem; }
+  .minis th { font-size: 1.0625rem; }
+  .minis td { font-size: 1.25rem; padding: 9px 12px 9px 0; }
+  .minis .cell span { font-size: 1.125rem; }
+  .band3 > div, .band3 > div:first-child, .band3 > div:last-child { font-size: 1.1875rem; padding: 20px 24px; }
+  .band3 > div b { font-size: 1.3125rem; }
+  .legend { font-size: 1.25rem; gap: 10px; }
+  .duo .tagline { font-size: 1.125rem; }
+  .figure > figcaption, .figure > .figcap, .sum-vis figcaption { font-size: 1.1875rem; }
+  .term pre { font-size: clamp(13px, 1.5vw, 17px); padding: 20px 24px 22px; } /* sized so a line that fitted before still fits */
+  .term .bar em, .shot .bar em { font-size: .9375rem; }
+  .shot.phone .bar em { font-size: 12px; } /* a phone frame stays 250 px wide; its address must not be cut */
+  .vid-sound, .vid-sound[aria-pressed="true"] { font-size: 1rem; }
+
+  /* the written sections */
+  .prose p { margin-bottom: 22px; }
+  .prose ul { margin-bottom: 22px; }
+  .prose li { margin-bottom: 14px; padding-left: 32px; }
+  .prose li::before { left: 5px; width: 10px; height: 10px; }
+  .note { font-size: 1.3125rem; }
+  .repo-card { padding: 30px 34px; }
+  .repo-card p { font-size: 1.3125rem; }
+  .repo-card p b { font-size: 1.4375rem; }
+  .pager a { font-size: 1.5rem; padding: 18px 24px; }
+  .pager small { font-size: 1.0625rem; }
+  footer.site { font-size: 1.0625rem; }
+}
+/* === end desktop = the phone layout, wide === */
