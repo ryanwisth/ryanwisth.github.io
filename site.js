@@ -426,7 +426,7 @@
     };
     var lay = function () {
       var g = innerWidth <= 620 ? 9 : 12, leads = mainEl.querySelector('.lead-hero .leads'), S = [], q, s, i, k, px, py, end;
-      var y0 = leads ? box(leads).t - 10 : box(th1).b + 10; // home: where the guide's strand turns along the cards
+      var y0 = leads ? (box(th1).t + box(th1).b) / 2 : box(th1).b + 10; // home: from the headline, where the guide's strand starts, so the thread takes over from it
       stops = []; drawn = -1; mtop = mainEl.getBoundingClientRect().top + (window.scrollY || 0);
       [].forEach.call(mainEl.children, function (c) { // the blocks the strand runs beside, top to bottom
         var inner = c.matches('.prose, .figure, .sum') ? c : c.matches('section:not(.sum)') ? c.querySelector('.wrap') : null;
@@ -473,6 +473,7 @@
       tply.setAttribute('points', tpts.slice(0, Math.floor(lo / 6) + 1).join(' '));
       p = yarn.getPointAtLength(lo); head.style.transform = 'translate(' + p.x.toFixed(1) + 'px,' + p.y.toFixed(1) + 'px)';
       head.style.opacity = lo < 2 ? 0 : 1;
+      mainEl.classList.toggle('th-go', lo > 2); // one yarn at a time: the opening guide's strand bows out once the thread is under way
     };
     var relay = function () { if (!tick) tick = requestAnimationFrame(function () { lay(); run(); }); };
     addEventListener('scroll', function () { if (!tick) tick = requestAnimationFrame(run); }, { passive: true });
@@ -505,10 +506,11 @@
     v.addEventListener('play', function () { box.classList.remove('paused'); });
     box.appendChild(btn);
     // a clip with a soundtrack starts muted (browsers require it); this button turns the sound on
+    // (its label is the action, worded so it cannot be read as the state)
     if (v.hasAttribute('data-sound')) {
       var sb = d.createElement('button');
       sb.type = 'button'; sb.className = 'vid-sound';
-      var label = function () { sb.textContent = v.muted ? '\u266A Sound on' : '\u266A Sound off'; sb.setAttribute('aria-pressed', v.muted ? 'false' : 'true'); };
+      var label = function () { sb.textContent = v.muted ? '\u266A Play with sound' : '\u266A Mute'; sb.setAttribute('aria-pressed', v.muted ? 'false' : 'true'); };
       sb.addEventListener('click', function (e) {
         e.preventDefault();
         v.muted = !v.muted;

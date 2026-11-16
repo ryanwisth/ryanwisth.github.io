@@ -1510,6 +1510,10 @@ main { position: relative; z-index: 0; }
 }
 /* phones: the margin is 18 px wide, so both button heads (thread and guide) are 16 px and sit wholly inside it */
 @media (max-width: 620px) { .th-head, .g-ball::before, .g-ball::after { left: -8px; top: -8px; width: 16px; height: 16px; } }
+/* one yarn at a time: once the thread is drawn past its first stitch, the opening guide's strand and button fade out
+   (they return at the very top), so the page never shows two strands and two buttons */
+.guide { transition: opacity .35s ease; }
+main.th-go .guide { opacity: 0; }
 @media print { .thread { display: none; } }
 /* === end thread === */
 
