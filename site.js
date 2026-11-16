@@ -471,7 +471,9 @@
       drawn = lo;
       tsh.style.strokeDasharray = ted.style.strokeDasharray = yarn.style.strokeDasharray = lo.toFixed(1) + ' 99999';
       tply.setAttribute('points', tpts.slice(0, Math.floor(lo / 6) + 1).join(' '));
-      p = yarn.getPointAtLength(lo); head.style.transform = 'translate(' + p.x.toFixed(1) + 'px,' + p.y.toFixed(1) + 'px)';
+      // the button rolls down the strand and bobs like a needle, so a scroll reads as sewing: without this the head sits
+      // still at the reading line while the page slides under it, and the thread looks frozen
+      p = yarn.getPointAtLength(lo); head.style.transform = 'translate(' + (p.x + 2.5 * Math.sin(lo / 11)).toFixed(1) + 'px,' + p.y.toFixed(1) + 'px) rotate(' + (lo * 1.3).toFixed(0) + 'deg)';
       head.style.opacity = lo < 2 ? 0 : 1;
       mainEl.classList.toggle('th-go', lo > 2); // one yarn at a time: the opening guide's strand bows out once the thread is under way
     };
