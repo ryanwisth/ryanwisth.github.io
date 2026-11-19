@@ -6,6 +6,7 @@
 <title>Long AI jobs that check the bill first | Ryan Wisth</title>
 <meta name="description" content="A small tool that hands the AI Claude a long written job, checks which account pays first, caps the spending, and keeps going in fresh rounds until the job is done.">
 <meta property="og:title" content="Long AI jobs that check the bill first | Ryan Wisth">
+<meta property="og:url" content="https://ryanwisth.github.io/agent-runner.html">
 <meta property="og:description" content="A small tool that hands the AI Claude a long written job, checks which account pays first, caps the spending, and keeps going in fresh rounds until the job is done.">
 <meta property="og:image" content="https://ryanwisth.github.io/img/card.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -17,6 +18,7 @@
 <script src="look.js"></script>
 </head>
 <body class="case">
+<a class="skip-link" href="#main">Skip to content</a>
 <header class="topbar">
   <div class="wrap">
     <a class="brand" href="index.html"><span class="mark">RW</span>Ryan Wisth</a>
@@ -29,7 +31,7 @@
   </div>
 </header>
 
-<main>
+<main id="main">
   <div class="prose case-head">
     <a class="back" href="index.html#work">&larr; All projects</a>
     <p class="kicker">AI tools &middot; safe limits when nobody is watching</p>
@@ -37,7 +39,7 @@
     <p class="lede">A small tool that hands Claude, an AI assistant, a long job written out as instructions. It checks which account pays, caps the spending and the number of steps, and runs the job in fresh rounds until a &ldquo;done&rdquo; file appears.</p>
     <dl class="brief">
       <dt>Problem</dt><dd>Long AI jobs are easier to hand off as written instructions than as a live chat. Running them with nobody watching raises three questions: which account pays, how to stop a run that goes over budget, and how to continue a job that does not finish in one round.</dd>
-      <dt>Result</dt><dd>Ran real jobs of several rounds in October 2026, paid from my subscription by default since 2026-10-25. Every run confirms who pays before any work. Each round is capped at $20 by default. Rounds repeat until the &ldquo;done&rdquo; file appears, and the first failed round stops everything, with 0 retries.</dd>
+      <dt>Result</dt><dd>Ran real jobs of several rounds in October 2026, paid from my subscription by default since October 25, 2026. Every run confirms who pays before any work. Each round is capped at $20 by default. Rounds repeat until the &ldquo;done&rdquo; file appears, and the first failed round stops everything, with 0 retries.</dd>
     </dl>
   </div>
 
@@ -60,7 +62,8 @@
     </ol>
   </section>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-agent-runner.jpg" width="960" height="540" aria-label="Narrated film, 37 seconds: Long AI jobs, capped at $20 a round by default, with who pays checked first. A small tool hands the AI a long written job, and runs it in fresh rounds until a done file appears. Each round checks who pays, works under a budget, and repeats until the job is done. Two ways to pay. A mismatch stops the run with no work done. Zero retries: the first failed round stops the run. It has run real jobs of several rounds, paid from the subscription. Long AI jobs that check the bill first."><source src="video/film-agent-runner.mp4" type="video/mp4"></video></span><figcaption>The project in 37 seconds, narrated. Tap ♪ for sound.</figcaption></figure>
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-agent-runner.jpg" width="960" height="540" aria-label="Narrated film, 37 seconds" aria-describedby="film-script-text"><source src="video/film-agent-runner.mp4" type="video/mp4"></video></span><figcaption>The project in 37 seconds, narrated. Press ♪ for sound.</figcaption></figure>
+  <details class="film-script"><summary>Read the script</summary><p id="film-script-text">Long AI jobs, capped at $20 a round by default, with who pays checked first. A small tool hands the AI a long written job, and runs it in fresh rounds until a done file appears. Each round checks who pays, works under a budget, and repeats until the job is done. Two ways to pay. A mismatch stops the run with no work done. Zero retries: the first failed round stops the run. It has run real jobs of several rounds, paid from the subscription. Long AI jobs that check the bill first.</p></details>
 
   <figure class="figure">
     <ol class="flow c3">
@@ -105,9 +108,10 @@
       <a class="btn primary" href="https://github.com/ryanwisth/agent-sdk-runner">See the code on GitHub &rarr;</a>
     </div>
     <nav class="pager" aria-label="More projects">
-      <a class="prev" href="token-scan.html"><small>&larr; Previous</small>Finding where my AI spending went</a>
-      <a class="next" href="mcp-servers.html"><small>Next &rarr;</small>Giving the AI on my laptop tools to use</a>
+      <a class="prev" href="token-guard.html"><small>&larr; Previous</small>Spending rules an AI can&rsquo;t skip</a>
+      <a class="next" href="local-ai-stack.html"><small>Next &rarr;</small>A private AI assistant on my laptop</a>
     </nav>
+    <p class="pager-contact"><a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></p>
   </div>
 </main>
 

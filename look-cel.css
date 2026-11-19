@@ -173,11 +173,9 @@ html[data-look="cel"] .topnav a::after { content: none; }
 
 /* ---------- the round buttons: the light/dark one is the sun (by day) or the moon (by night), a lit ball; the look switch
    is a ball in the next look's own colour. Their line pictures are not drawn in this look. ---------- */
-html[data-look="cel"] .topnav .theme-toggle { --l: var(--c-sun); --s: var(--c-sun-sh); --u: var(--c-drop-cloud); width: 34px; height: 34px; min-width: 0; padding: 0; color: transparent; margin-right: 0; }
+html[data-look="cel"] .topnav .theme-toggle { --l: var(--c-sun); --s: var(--c-sun-sh); --u: var(--c-drop-cloud); width: 34px; height: 34px; min-width: 0; padding: 0; margin-right: 0; }
 html[data-look="cel"] .topnav .look-toggle { --l: #f58fb0; --s: #95576f; }
-html[data-look="cel"] .theme-toggle svg { display: none; }
-html[data-look="cel"] .theme-toggle::before,
-html[data-look="cel"] .theme-toggle::after { content: none; }
+html[data-look="cel"] .theme-toggle::before { content: none; } /* ::after keeps the 46 px tap area from style.css */
 html[data-look="cel"] .theme-toggle:is(:hover, :active) { transform: none; }
 html[data-look="cel"] .theme-toggle:focus-visible { outline-offset: 4px; border-radius: 50%; }
 
@@ -227,10 +225,18 @@ html[data-look="cel"] .leads::before {
   --fade: 460px;
   content: ""; position: absolute; z-index: -1; left: calc(50% - 50vw); width: 100vw; top: var(--gap); bottom: calc(var(--fade) * -1); height: auto;
   pointer-events: none;
+  /* without color-mix (Safari before 16.2) a whole background using it is dropped at computed time, island and all,
+     so the plain fade is the base and the eased one sits behind @supports */
   background: var(--c-band) 42% 0 / auto var(--sh) no-repeat,
-    linear-gradient(var(--c-sea) calc(100% - var(--fade)), color-mix(in srgb, var(--c-sea) 90%, transparent) calc(100% - var(--fade) * .72),
-      color-mix(in srgb, var(--c-sea) 60%, transparent) calc(100% - var(--fade) * .45), color-mix(in srgb, var(--c-sea) 25%, transparent) calc(100% - var(--fade) * .2), transparent)
-      0 calc(var(--sh) - 1px) / 100% calc(100% - var(--sh) + 1px) no-repeat;
+    linear-gradient(var(--c-sea) calc(100% - var(--fade)), transparent) 0 calc(var(--sh) - 1px) / 100% calc(100% - var(--sh) + 1px) no-repeat;
+}
+@supports (color: color-mix(in srgb, red, blue)) {
+  html[data-look="cel"] .leads::before {
+    background: var(--c-band) 42% 0 / auto var(--sh) no-repeat,
+      linear-gradient(var(--c-sea) calc(100% - var(--fade)), color-mix(in srgb, var(--c-sea) 90%, transparent) calc(100% - var(--fade) * .72),
+        color-mix(in srgb, var(--c-sea) 60%, transparent) calc(100% - var(--fade) * .45), color-mix(in srgb, var(--c-sea) 25%, transparent) calc(100% - var(--fade) * .2), transparent)
+        0 calc(var(--sh) - 1px) / 100% calc(100% - var(--sh) + 1px) no-repeat;
+  }
 }
 @media (max-width: 620px) { html[data-look="cel"] .leads::before { --fade: 320px; } }
 html[data-look="cel"] .leads::after {
@@ -441,8 +447,16 @@ html[data-look="cel"] .case-head::after {
   background:
     var(--c-boat) 42% 0 / auto var(--sh) no-repeat,
     var(--c-band) 42% 0 / auto var(--sh) no-repeat,
-    linear-gradient(var(--c-sea), color-mix(in srgb, var(--c-sea) 92%, transparent) 30%, color-mix(in srgb, var(--c-sea) 62%, transparent) 55%,
-      color-mix(in srgb, var(--c-sea) 26%, transparent) 78%, transparent) 0 calc(var(--sh) - 1px) / 100% calc(var(--ch-fade) + 1px) no-repeat;
+    linear-gradient(var(--c-sea), transparent) 0 calc(var(--sh) - 1px) / 100% calc(var(--ch-fade) + 1px) no-repeat;
+}
+@supports (color: color-mix(in srgb, red, blue)) {
+  html[data-look="cel"] .case-head::after {
+    background:
+      var(--c-boat) 42% 0 / auto var(--sh) no-repeat,
+      var(--c-band) 42% 0 / auto var(--sh) no-repeat,
+      linear-gradient(var(--c-sea), color-mix(in srgb, var(--c-sea) 92%, transparent) 30%, color-mix(in srgb, var(--c-sea) 62%, transparent) 55%,
+        color-mix(in srgb, var(--c-sea) 26%, transparent) 78%, transparent) 0 calc(var(--sh) - 1px) / 100% calc(var(--ch-fade) + 1px) no-repeat;
+  }
 }
 html[data-look="cel"] .case-head h1 { color: var(--c-text); text-shadow: none; -webkit-text-stroke: 0; }
 html[data-look="cel"] .case-head .lede { color: var(--c-muted); }
@@ -774,3 +788,33 @@ html[data-look="cel"] .demo-poster .play::before, html[data-look="cel"] .demo-po
 @keyframes c-pulse { 0%, 100% { scale: 1; } 50% { scale: .78; } }
 @keyframes c-drift-bg { to { background-position: -100vw calc(300vh - 40px), 0 0; } }
 @keyframes c-bob-bg { 0%, 100% { background-position: 42% 0, 42% 0, 0 calc(var(--sh) - 1px); } 50% { background-position: 42% -5px, 42% 0, 0 calc(var(--sh) - 1px); } }
+
+/* ---------- Pass 1 fixes (Nov 19) ---------- */
+/* keyboard focus: the look's own 3 px yellow ring (line 141) was beaten by the outline: 0 in the slab, sphere, card and
+   pager recipes; this restores it for keyboard focus only, on everything focusable */
+html[data-look="cel"] :is(a, button, summary, video, input, select, textarea, [tabindex]):focus-visible { outline: 3px solid #ffef10; outline-offset: 4px; }
+/* under 620 px the opening guide's trail is a thin yellow line (the colour of its ball), so it no longer reads as one
+   broken line with the page's thick white thread beside it (the thread is unchanged; the trail's dashes are drawn by
+   site.js, so a dotted trail is not possible from CSS) */
+@media (max-width: 620px) {
+  html[data-look="cel"] .guide .g-trail { stroke: #ffef10; stroke-width: 2.5; }
+}
+/* by night a link in running text is underlined; the pale band under it read as a smudge and pulled the footer email
+   down to 3.71:1 */
+html[data-look="cel"][data-theme="dark"] :is(.hero-sub, footer.site, .prose, .lede) a:not(.btn, .back, .pager a) {
+  background: none; text-decoration: underline 2px; text-underline-offset: .22em; text-decoration-color: var(--c-foam);
+}
+@media (prefers-color-scheme: dark) {
+  html[data-look="cel"]:not([data-theme="light"]) :is(.hero-sub, footer.site, .prose, .lede) a:not(.btn, .back, .pager a) {
+    background: none; text-decoration: underline 2px; text-underline-offset: .22em; text-decoration-color: var(--c-foam);
+  }
+}
+/* PROBLEM / RESULT pills: a little room before the paragraph they name */
+html[data-look="cel"] .brief dt { margin-bottom: 8px; }
+/* a frame's address line wraps instead of being cut ("this computer only, sa…" in the 250 px phone frame) */
+html[data-look="cel"] .shot .bar em { white-space: normal; overflow: visible; text-overflow: clip; line-height: 1.35; }
+/* phone case pages: the cloud strip is clipped 20 px in from each side (it still drifts), so it stops at the title card's sides; so only cloud tops show above the card and no cloud
+   is left half-hidden at the screen edge beside it (family-tree-3d, claim-ledger) */
+@media (max-width: 620px) {
+  html[data-look="cel"] .case-head::before { box-sizing: border-box; padding-inline: 20px; background-clip: content-box, border-box; background-origin: content-box, border-box; }
+}

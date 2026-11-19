@@ -388,12 +388,48 @@ footer.site a { color: var(--muted); }
   border-radius: 0; border: 1px solid var(--line); background: var(--card); color: var(--muted); cursor: pointer;
   position: relative; flex: none;
 }
-.theme-toggle::after { content: ""; position: absolute; inset: -6px; } /* 46 px tap area around the 34 px button */
+.theme-toggle::after { content: ""; position: absolute; inset: -8px; } /* tap area reaching 6 to 7 px past the drawn button */
 .theme-toggle[hidden] { display: none; }
 .theme-toggle:hover { color: var(--text); border-color: var(--faint); }
 .theme-toggle svg { width: 16px; height: 16px; transition: rotate .5s cubic-bezier(.2, .7, .2, 1); }
 :root[data-theme="dark"] .theme-toggle svg { rotate: 180deg; }
 .topnav { align-items: center; }
+
+/* the look picker (built by look.js): "Style: <look>" opens a list of the four looks. Plain colours of its own, so it
+   reads on every look's top bar in light and dark; a look sheet may restyle it. */
+.look-pick { position: relative; flex: none; --lp-bg: #fffaf1; --lp-ink: #2a2030; --lp-rim: #2a2030; --lp-hi: #2a2030; --lp-on-hi: #fffaf1; }
+:root[data-theme="dark"] .look-pick { --lp-bg: #171a33; --lp-ink: #f7f2ea; --lp-rim: #f7f2ea; --lp-hi: #f7f2ea; --lp-on-hi: #171a33; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .look-pick { --lp-bg: #171a33; --lp-ink: #f7f2ea; --lp-rim: #f7f2ea; --lp-hi: #f7f2ea; --lp-on-hi: #171a33; }
+}
+.look-pick-btn {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 44px; min-width: 44px; margin: -6px 0; padding: 0 12px 0 14px;
+  border: 1.5px solid var(--lp-rim); border-radius: 999px; background: var(--lp-bg); color: var(--lp-ink);
+  font: 700 14px/1.1 var(--round); letter-spacing: 0; text-transform: none; white-space: nowrap; cursor: pointer; box-shadow: none;
+}
+.look-pick-btn::after { content: ""; width: 0; height: 0; border: 5px solid transparent; border-top-color: currentColor; border-bottom-width: 0; margin-top: 1px; }
+.look-pick-btn[aria-expanded="true"]::after { border-top-width: 0; border-bottom: 5px solid currentColor; }
+.look-pick-btn:focus-visible { outline: 3px solid var(--lp-ink); outline-offset: 2px; }
+.look-menu {
+  position: absolute; right: 0; top: calc(100% + 10px); z-index: 40; min-width: 11.5em; margin: 0; padding: 6px; list-style: none;
+  background: var(--lp-bg); color: var(--lp-ink); border: 1.5px solid var(--lp-rim); border-radius: 14px;
+  box-shadow: 0 10px 28px -6px rgba(0, 0, 0, .35); font: 600 15px/1.2 var(--round); text-align: left;
+}
+.look-menu[hidden] { display: none; }
+.look-menu li { display: flex; align-items: center; gap: 8px; min-height: 44px; margin: 0; padding: 0 14px 0 10px; border-radius: 9px; cursor: pointer; white-space: nowrap; color: inherit; background: none; }
+.look-menu li::before { content: ""; width: 1em; text-align: center; flex: none; position: static; border: 0; background: none; }
+.look-menu li[aria-selected="true"]::before { content: "\2713"; }
+.look-menu li:hover, .look-menu li:focus { background: var(--lp-hi); color: var(--lp-on-hi); outline: none; }
+.look-menu li:focus-visible { outline: 2px solid var(--lp-hi); outline-offset: 2px; }
+@media (max-width: 480px) {
+  /* narrow phones: the look's name alone; "Style:" is still read out */
+  .look-pick-k { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .look-pick-btn { padding: 0 10px 0 12px; font-size: 13px; }
+}
+@media (max-width: 420px) {
+  /* the first word of the look's name on screen; the whole name is still read out */
+  .look-pick .lp-b { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: pre; }
+}
 
 .card { position: relative; }
 .card::after {
@@ -401,13 +437,13 @@ footer.site a { color: var(--muted); }
   background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), color-mix(in srgb, var(--hue, var(--accent)) 14%, transparent), transparent 70%);
 }
 .card:hover::after { opacity: 1; }
-.card .badge {
+.card .badge, .lead-wrap > .badge {
   position: absolute; top: 12px; left: 12px; z-index: 1; display: inline-flex; align-items: center; gap: 7px;
   font: 600 12px var(--label); color: #fff;
   background: rgba(14, 16, 21, .72); border: 1px solid rgba(255, 255, 255, .18); border-radius: 0; padding: 5px 10px;
   -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
 }
-.dot { width: 7px; height: 7px; border-radius: 50%; background: #34d399; box-shadow: 0 0 0 0 rgba(52, 211, 153, .6); animation: ping 2s ease-out infinite; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: #34d399; box-shadow: 0 0 0 0 rgba(52, 211, 153, .6); animation: ping 2s ease-out 3; } /* three pings, then still */
 @keyframes ping { to { box-shadow: 0 0 0 8px rgba(52, 211, 153, 0); } }
 
 .demo-poster { display: block; position: relative; color: #fff; text-decoration: none; }
@@ -553,10 +589,8 @@ video { max-width: 100%; height: auto; }
 .vid-toggle {
   position: absolute; right: 10px; bottom: 10px; z-index: 2; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%;
   background: rgba(14, 16, 21, .62); color: #fff; cursor: pointer; display: grid; place-items: center;
-  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); opacity: .0; transition: opacity .2s ease, background .2s ease;
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); transition: background .2s ease;
 }
-.vid:hover .vid-toggle, .vid-toggle:focus-visible, .vid.paused .vid-toggle { opacity: 1; }
-@media (hover: none) { .vid-toggle { opacity: .85; } }
 .vid-toggle:hover { background: rgba(67, 56, 202, .92); }
 .vid-sound { position: absolute; left: 10px; bottom: 10px; z-index: 2; min-height: 44px; padding: 0 16px; border: 0; border-radius: 0; background: rgba(67, 56, 202, .94); color: #fff; font: 600 14px var(--sans); cursor: pointer; }
 .vid-sound:hover, .vid-sound:focus-visible { background: #3730a3; }
@@ -685,7 +719,7 @@ video { max-width: 100%; height: auto; }
 .card .body { padding: 12px 16px 15px; }
 .card h4 { margin: 0; font-size: 16px; line-height: 1.3; }
 .card:hover h4 { color: var(--accent); }
-.card .badge { top: 10px; left: 10px; font-size: 11px; padding: 4px 9px; }
+.card .badge, .lead-wrap > .badge { top: 10px; left: 10px; font-size: 11px; padding: 4px 9px; }
 
 /* small figure drawings; each only restates the number printed under it */
 .glyph { flex: 1; min-height: 0; display: flex; align-items: center; margin-bottom: 8px; }
@@ -825,12 +859,10 @@ video { max-width: 100%; height: auto; }
 
   .g-ball.hit::after { animation: ripple .65s ease-out; }
   .g-ball.hit::before { animation: squash .45s ease; }
-  .g-ball.rest::after { animation: ripple 2.6s ease-out .4s infinite; }
-  body.case .g-ball.rest::after { animation-iteration-count: 3; }
+  .g-ball.rest::after { animation: ripple 2.6s ease-out .4s 3; } /* three ripples where the ball rests, every page */
 
-  /* each spot waits dimmed, then lights when the ball arrives */
-  .g-stop { transition: opacity .45s ease, border-color .4s ease; }
-  .g-run .g-stop:not(.lit) { opacity: .5; }
+  /* each spot lights when the ball arrives; nothing waits dimmed (content read before the ball gets there stays full strength) */
+  .g-stop { transition: border-color .4s ease; }
   .g-run .method > li.lit, .g-run .fact.lit { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); }
   .g-run .method > li.lit, .g-run .fact.lit, .g-run .btn.lit, .g-run .sum-vis.lit > :first-child { animation: litring .9s ease-out; }
   .g-run .method > li:not(.lit) .pills span, .g-run .method > li:not(.lit) .ticks li { opacity: 0; }
@@ -916,6 +948,7 @@ a { text-decoration-thickness: 1.5px; }
 .topnav a { color: var(--text); }
 .theme-toggle { color: var(--text); border-width: 2px; box-shadow: 0 0 0 3px var(--card), 0 1px 1.5px 3px var(--shade), 0 5px 9px 0 var(--shade); margin-right: 3px; }
 .theme-toggle:hover { color: var(--sig-ink); }
+html:not([data-look]) .theme-toggle::after { inset: -10px; } /* yarn only: it draws a 3 px ring outside its 2 px border: reach 5 px past the ring */
 
 /* hero */
 .hero { padding: 96px 0 72px; overflow: visible; }
@@ -986,7 +1019,7 @@ a { text-decoration-thickness: 1.5px; }
 .shot .bar i:nth-child(2) { background-color: var(--btn); } .shot .bar i:nth-child(3) { background-color: var(--y-green); }
 .shot > img, .shot > video, .shot > a, .term pre, .demo-frame { border-radius: 0 0 11px 11px; }
 .paper { padding: 14px 10px; }
-.card .badge { top: 26px; left: 26px; background: var(--card); color: var(--text); border: 2px dashed var(--s-green); border-radius: 999px; -webkit-backdrop-filter: none; backdrop-filter: none; font: 700 12px/1.2 var(--round); padding: 5px 11px; }
+.card .badge, .lead-wrap > .badge { top: 26px; left: 26px; background: var(--card); color: var(--text); border: 2px dashed var(--s-green); border-radius: 999px; -webkit-backdrop-filter: none; backdrop-filter: none; font: 700 12px/1.2 var(--round); padding: 5px 11px; }
 .dot { background: #3f9a4d; box-shadow: 0 0 0 0 rgba(63, 154, 77, .6); }
 @keyframes ping { to { box-shadow: 0 0 0 8px rgba(63, 154, 77, 0); } }
 .demo-poster .play { background: #cf3f68; color: #fff; border: 2.5px dashed #ffd3df; border-radius: 999px; box-shadow: 0 0 0 5px #cf3f68, 0 6px 12px 3px rgba(0, 0, 0, .3); -webkit-backdrop-filter: none; backdrop-filter: none; font-family: var(--round); font-weight: 700; }
@@ -1294,7 +1327,7 @@ footer.site { margin-top: 84px; border-top: 3px dashed var(--y-pink); color: var
   .card::after { inset: 6px; border-width: 2px; border-radius: 13px; }
   .card .thumb-wrap, .card .thumb-wrap.ink { padding: 14px 14px 0; }
   .card video.preview { inset: 14px 14px 0; width: calc(100% - 28px); height: calc(100% - 14px); }
-  .card .badge { top: 20px; left: 20px; }
+  .card .badge, .lead-wrap > .badge { top: 20px; left: 20px; }
   .card .stat, .cards.g3 .stat { padding: 20px 16px 10px; min-height: 0; }
   .card .stat span { font-size: 12.5px; }
   .card .body { padding: 10px 16px 20px; }
@@ -1648,3 +1681,100 @@ main.th-go .guide { opacity: 0; }
   footer.site { font-size: 1.0625rem; }
 }
 /* === end desktop = the phone layout, wide === */
+
+
+/* ===== Pass 1 (Nov 19): player strip, motion pause, new page parts, print ===== */
+
+/* films: the two buttons sit in .vid-bar (built by site.js). On wide screens the bar is not a box at all, so the buttons
+   stay over the frame's lower corners, the pause button always visible. Under 800 px they move to a strip under the
+   frame, so they never cover the film's burned-in captions. */
+.vid-bar { display: contents; }
+@media (max-width: 799px) {
+  .vid-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px; background: var(--card); }
+  .vid-bar .vid-toggle, .vid-bar .vid-sound { position: relative; inset: auto; left: auto; right: auto; bottom: auto; flex: none; }
+  .vid-bar .vid-sound:only-child { margin-right: auto; }
+}
+
+/* "Pause motion" (footer button, site.js) turns this on and takes .motion off <html>: the same stillness as the
+   system's reduced-motion setting. Look sheets run their loops under html.motion only; this stops the rest. */
+html[data-motion="paused"] *, html[data-motion="paused"] *::before, html[data-motion="paused"] *::after { animation: none !important; transition: none !important; }
+html[data-motion="paused"] { scroll-behavior: auto; }
+.motion-toggle {
+  display: inline-flex; align-items: center; min-height: 44px; margin: -10px 0; padding: 0 2px; border: 0; background: none; color: var(--muted);
+  font: inherit; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; cursor: pointer;
+}
+.motion-toggle:hover { color: var(--text); text-decoration-thickness: 2px; }
+footer.site a { display: inline-flex; align-items: center; min-height: 44px; margin: -10px 0; }
+footer.site .wrap { align-items: center; }
+
+/* skip link: off screen until a keyboard user tabs to it */
+.skip-link { position: absolute; left: 12px; top: -200px; z-index: 100; padding: 12px 18px; background: #2a2030; color: #fffaf1; font: 700 16px/1.2 var(--sans); text-decoration: none; border-radius: 10px; }
+.skip-link:focus, .skip-link:focus-visible { top: 12px; outline: 3px solid #f9cf5c; outline-offset: 2px; }
+
+/* "Read the script": closed by default, quiet */
+.film-script { max-width: 960px; margin: 12px auto 0; padding: 0 24px; color: var(--muted); font-size: 15px; line-height: 1.6; }
+.film .film-script, .how2 .film-script { padding: 0; }
+.film-script > summary { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; cursor: pointer; color: var(--muted); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; list-style: none; }
+.film-script > summary::-webkit-details-marker { display: none; }
+.film-script > summary::before { content: ""; width: 0; height: 0; border: 5px solid transparent; border-left: 7px solid currentColor; border-right-width: 0; transition: rotate .2s ease; }
+.film-script[open] > summary::before { rotate: 90deg; }
+.film-script > summary:hover { color: var(--text); }
+.film-script > p { margin: 4px 0 0; max-width: 68ch; }
+@media (max-width: 620px) { .film-script { padding: 0 18px; } .film .film-script, .how2 .film-script { padding: 0; } }
+
+/* the home film's caption reads like a case film's figcaption */
+.film-cap { color: var(--muted); margin: 14px 0 0; font-size: 15px; line-height: 1.5; }
+
+/* the email under the pager on case pages */
+.pager-contact { margin: 18px 0 0; text-align: center; font-size: 15px; }
+.pager-contact a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 6px; color: var(--muted); }
+.pager-contact a:hover { color: var(--text); }
+
+/* home: two projects in one list row, side by side with a rule between; stacked on narrow phones */
+.more li.more-pair { display: flex; align-items: stretch; }
+.more li.more-pair > a { flex: 1 1 0; min-width: 0; }
+.more li.more-pair > a + a { margin-left: 14px; padding-left: 14px; border-left: 1px solid var(--line); }
+@media (max-width: 480px) {
+  .more li.more-pair { display: block; }
+  .more li.more-pair > a + a { margin-left: 0; padding-left: 0; border-left: 0; border-top: 1px solid var(--line); }
+}
+
+/* home: the family-tree lead card with its "Live demo" badge as a separate link on top of it */
+.lead-wrap { position: relative; display: flex; flex-direction: column; min-width: 0; }
+.lead-wrap > .card { flex: 1 1 auto; }
+.lead-wrap > .badge-link { z-index: 3; text-decoration: none; }
+.lead-wrap > .badge-link::after { content: ""; position: absolute; inset: -8px -6px; } /* a tap area of 44 px or more round the small label */
+.lead-wrap > .badge-link:hover { text-decoration: underline; }
+.lead-wrap > .badge-link:focus-visible { outline: 3px solid var(--text); outline-offset: 3px; }
+
+/* dark theme: films and pictures sit on a dark mat, so a bright frame does not glare; their colours are not changed */
+:root[data-theme="dark"] :is(.shot, .figure > img, .figure > video) { outline: 6px solid #0d0f22; outline-offset: 0; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) :is(.shot, .figure > img, .figure > video) { outline: 6px solid #0d0f22; outline-offset: 0; }
+}
+
+/* narrow phones: each figure sits above its caption, not beside it */
+@media (max-width: 480px) {
+  .fact, .sum .fact { flex-direction: column; flex-wrap: nowrap; align-items: flex-start; gap: 2px; }
+  .fact span { flex: 0 0 auto; }
+}
+
+/* print: dark ink on white whatever theme is on screen */
+@media print {
+  :root:is([data-theme], :not([data-theme])) {
+    --bg: #fff; --bg-soft: #fff; --text: #111; --muted: #333; --faint: #444; --line: #999; --card: #fff; --ink: #111;
+    --accent: #111; --accent-2: #333; --accent-soft: #fff; --sig-ink: #8a1f40; --felt-ink: #111; --mark-ink: #fff;
+    color-scheme: light;
+  }
+  body { background: #fff !important; color: #111 !important; }
+  *, *::before, *::after { color: #111 !important; text-shadow: none !important; -webkit-text-stroke: 0 transparent !important; }
+  .look-pick, .theme-toggle, .vid-bar, .motion-toggle, .skip-link, .guide { display: none !important; }
+}
+
+/* phones: no running text under 14 px */
+@media (max-width: 620px) {
+  .more a span, .flow li span, .card .stat span, .pills span, .figure > figcaption, .figure > .figcap, .sum-vis figcaption,
+  .chart-card .sub, .brief dt, .pager small, .card .badge, .lead-wrap > .badge, .lead-k, .look-pick-btn, .film-cap, .film-script { font-size: 14px; }
+}
+/* phones: the extra top-bar link stays hidden even when a look sheet gives .topnav a its own display (wash, Nov 19) */
+@media (max-width: 620px) { .topnav .hide-sm { display: none !important; } }

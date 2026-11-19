@@ -6,6 +6,7 @@
 <title>AI feedback, handwritten onto a paper tablet | Ryan Wisth</title>
 <meta name="description" content="Tap one button on a reMarkable paper tablet and an AI checks the handwritten work, then writes its notes on the page in pen strokes. Plus a careful look at how its color screen draws.">
 <meta property="og:title" content="AI feedback, handwritten onto a paper tablet | Ryan Wisth">
+<meta property="og:url" content="https://ryanwisth.github.io/paper-grader.html">
 <meta property="og:description" content="Tap one button on a reMarkable paper tablet and an AI checks the handwritten work, then writes its notes on the page in pen strokes. Plus a careful look at how its color screen draws.">
 <meta property="og:image" content="https://ryanwisth.github.io/img/card.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -17,6 +18,7 @@
 <script src="look.js"></script>
 </head>
 <body class="case">
+<a class="skip-link" href="#main">Skip to content</a>
 <header class="topbar">
   <div class="wrap">
     <a class="brand" href="index.html"><span class="mark">RW</span>Ryan Wisth</a>
@@ -29,7 +31,7 @@
   </div>
 </header>
 
-<main>
+<main id="main">
   <div class="prose case-head">
     <a class="back" href="index.html#work">&larr; All projects</a>
     <p class="kicker">AI on my own devices &middot; working out how a screen draws</p>
@@ -45,7 +47,7 @@
     <div class="sum-top">
       <figure class="figure sum-vis">
         <div class="paper"><img src="img/ink-feedback.svg" alt="Two lines of handwriting-style text, one blue and one red, drawn stroke by stroke" width="742" height="219" loading="lazy"></div>
-    <figcaption>Two made-up feedback lines as pen strokes from the grader&rsquo;s handwriting part (<code>ems.py</code>), in the tablet&rsquo;s blue and red. Drawn here as a picture, not a photo of the tablet.</figcaption>
+    <figcaption>A made-up note and its feedback as pen strokes from the grader&rsquo;s handwriting part (<code>ems.py</code>), in the tablet&rsquo;s blue and red. Drawn here as a picture, not a photo of the tablet.</figcaption>
       </figure>
       <div class="facts">
         <div class="fact"><b>0</b><span>erase or delete commands in the link to the tablet: the AI can add, never remove</span></div>
@@ -60,7 +62,8 @@
     </ol>
   </section>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-paper-grader.jpg" width="960" height="540" aria-label="Narrated film, 37 seconds: 24 pages, graded at once, from one button press. An AI checks handwritten work on a paper tablet, then writes its notes on the page in pen strokes. Tap Grade. Within seconds the page shows a verdict, the mistake crossed out, and the next steps. The student's own writing is changed 0 times. The AI can add, never remove. For the color screen, all 314 drawing files were decoded. Then new code drew on the color screen, in 3 modes. Tap Grade, and within seconds the notes appear, in ink."><source src="video/film-paper-grader.mp4" type="video/mp4"></video></span><figcaption>The project in 37 seconds, narrated. Tap ♪ for sound.</figcaption></figure>
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-paper-grader.jpg" width="960" height="540" aria-label="Narrated film, 37 seconds" aria-describedby="film-script-text"><source src="video/film-paper-grader.mp4" type="video/mp4"></video></span><figcaption>The project in 37 seconds, narrated. Press ♪ for sound.</figcaption></figure>
+  <details class="film-script"><summary>Read the script</summary><p id="film-script-text">24 pages, graded at once, from one button press. An AI checks handwritten work on a paper tablet, then writes its notes on the page in pen strokes. Tap Grade. Within seconds the page shows a verdict, the mistake crossed out, and the next steps. The student's own writing is changed 0 times. The AI can add, never remove. For the color screen, all 314 drawing files were decoded. Then new code drew on the color screen, in 3 modes. Tap Grade, and within seconds the notes appear, in ink.</p></details>
 
   <figure class="figure">
     <ol class="flow c3">
@@ -145,9 +148,10 @@
       <a class="btn primary" href="https://github.com/ryanwisth/paper-pro-display-re">See the code on GitHub &rarr;</a>
     </div>
     <nav class="pager" aria-label="More projects">
-      <a class="prev" href="local-ai-stack.html"><small>&larr; Previous</small>A private AI assistant on my laptop</a>
-      <a class="next" href="claude-phone.html"><small>Next &rarr;</small>Claude Code, run from my iPhone</a>
+      <a class="prev" href="mcp-servers.html"><small>&larr; Previous</small>Giving the AI on my laptop tools to use</a>
+      <a class="next" href="family-tree-3d.html"><small>Next &rarr;</small>A 3D family tree that opens from one file</a>
     </nav>
+    <p class="pager-contact"><a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></p>
   </div>
 </main>
 

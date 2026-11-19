@@ -6,6 +6,7 @@
 <title>Finding where my AI spending went | Ryan Wisth</title>
 <meta name="description" content="Small scripts that read my AI assistant&rsquo;s own logs and show where the usage went, so each cause of overspending could be found and fixed.">
 <meta property="og:title" content="Finding where my AI spending went | Ryan Wisth">
+<meta property="og:url" content="https://ryanwisth.github.io/token-scan.html">
 <meta property="og:description" content="Small scripts that read my AI assistant&rsquo;s own logs and show where the usage went, so each cause of overspending could be found and fixed.">
 <meta property="og:image" content="https://ryanwisth.github.io/img/card.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -17,6 +18,7 @@
 <script src="look.js"></script>
 </head>
 <body class="case">
+<a class="skip-link" href="#main">Skip to content</a>
 <header class="topbar">
   <div class="wrap">
     <a class="brand" href="index.html"><span class="mark">RW</span>Ryan Wisth</a>
@@ -29,7 +31,7 @@
   </div>
 </header>
 
-<main>
+<main id="main">
   <div class="prose case-head">
     <a class="back" href="index.html#work">&larr; All projects</a>
     <p class="kicker">AI costs &middot; find the cause, then cut</p>
@@ -76,7 +78,8 @@
     </ol>
   </section>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-token-scan.jpg" width="960" height="540" aria-label="Narrated film, 45 seconds: 482 of 662 AI helpers started far bigger than they needed to. Six small scans find where the AI spending went. The scans read the AI's own logs, count each step once, and print one table per question. AI use is counted in pieces of text. A big helper's first step took 53.8k. A light one, 16k to 20k. 39% of the AI's re-reading happened during long stretches with nobody typing. And 4,816 images in one week. Each finding became a spending rule. Vague overspending, turned into fixable causes."><source src="video/film-token-scan.mp4" type="video/mp4"></video></span><figcaption>The project in 45 seconds, narrated. Tap ♪ for sound.</figcaption></figure>
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-token-scan.jpg" width="960" height="540" aria-label="Narrated film, 45 seconds" aria-describedby="film-script-text"><source src="video/film-token-scan.mp4" type="video/mp4"></video></span><figcaption>The project in 45 seconds, narrated. Press ♪ for sound.</figcaption></figure>
+  <details class="film-script"><summary>Read the script</summary><p id="film-script-text">482 of 662 AI helpers started far bigger than they needed to. Six small scans find where the AI spending went. The scans read the AI's own logs, count each step once, and print one table per question. AI use is counted in pieces of text. A big helper's first step took 53.8k. A light one, 16k to 20k. 39% of the AI's re-reading happened during long stretches with nobody typing. And 4,816 images in one week. Each finding became a spending rule. Vague overspending, turned into fixable causes.</p></details>
 
   <figure class="figure">
     <ol class="flow c3">
@@ -122,9 +125,10 @@
       <a class="btn primary" href="https://github.com/ryanwisth/claude-code-token-scan">See the code on GitHub &rarr;</a>
     </div>
     <nav class="pager" aria-label="More projects">
-      <a class="prev" href="token-guard.html"><small>&larr; Previous</small>Spending rules an AI can&rsquo;t skip</a>
-      <a class="next" href="agent-runner.html"><small>Next &rarr;</small>Long AI jobs that check the bill first</a>
+      <a class="prev" href="pinball-study.html"><small>&larr; Previous</small>A study set up so it could prove me wrong</a>
+      <a class="next" href="token-guard.html"><small>Next &rarr;</small>Spending rules an AI can&rsquo;t skip</a>
     </nav>
+    <p class="pager-contact"><a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></p>
   </div>
 </main>
 

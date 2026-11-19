@@ -4,9 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ryan Wisth: projects built with AI</title>
-<meta name="description" content="Fifteen short case studies of AI tools built by directing coding agents: the problem, what was directed, how results were verified, and the outcome.">
+<meta name="description" content="Here are 15 of my projects. For each one, I decided what it had to do, AI wrote most of the code, and I tested it before calling it finished.">
 <meta property="og:title" content="Ryan Wisth: projects built with AI">
-<meta property="og:description" content="Working AI tools built by directing coding agents, with the checks that proved them.">
+<meta property="og:url" content="https://ryanwisth.github.io/">
+<meta property="og:description" content="I build useful tools with AI, and I test every one.">
 <meta property="og:image" content="https://ryanwisth.github.io/img/card.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#f58fb0" media="(prefers-color-scheme: light)">
@@ -17,6 +18,7 @@
 <script src="look.js"></script>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 <header class="topbar">
   <div class="wrap">
     <a class="brand" href="index.html"><span class="mark">RW</span>Ryan Wisth</a>
@@ -29,7 +31,7 @@
   </div>
 </header>
 
-<main>
+<main id="main">
   <section class="hero lead-hero">
     <div class="wrap">
       <div class="hero-one">
@@ -37,17 +39,20 @@
         <p class="hero-sub">Here are 15 of my projects. For each one, I decided what it had to do, AI wrote most of the code, and I tested it before calling it finished. Some I use every day, some keep AI costs down, and some catch AI mistakes. Start with these three. <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></p>
       </div>
       <div class="leads">
-        <a class="card lead h-indigo" href="family-tree-3d.html" data-preview="video/family-tree-3d.mp4">
-            <span class="badge"><span class="dot"></span>Live demo</span><span class="thumb-wrap"><img class="thumb" src="img/family-tree-3d.jpg" alt="The 3D family tree viewer showing an invented 420-person family" loading="lazy" width="1600" height="1000"></span>
-            <div class="body"><p class="lead-k">Things I use</p><h4 style="view-transition-name: t-family-tree-3d">A 3D family tree that opens from one file</h4><p class="lead-what">A family tree you can turn and explore in 3D, with a map of where each family moved. It all fits in one small file that opens without the internet or extra software. Try the demo, filled with 420 made-up people.</p><p class="lead-role"><b>My rules</b> One file &middot; still easy to read with hundreds of people &middot; safe to share</p><span class="lead-go">Read the case &rarr;</span></div>
-        </a>
         <a class="card lead h-violet" href="paper-grader.html">
             <span class="thumb-wrap ink"><img class="thumb" src="img/ink-feedback.svg" alt="Handwriting-style feedback drawn stroke by stroke" loading="lazy" width="742" height="219"></span>
-            <div class="body"><p class="lead-k">AI on my own devices</p><h4 style="view-transition-name: t-paper-grader">AI feedback, handwritten onto a paper tablet</h4><p class="lead-what">A reMarkable is a tablet that feels like writing on paper. Tap one button and an AI checks the handwritten work, then writes its notes on the page in pen strokes, up to 24 pages at a time. The original writing is never changed. I also worked out how its color screen draws, so my own code can use it.</p><p class="lead-role"><b>My rules</b> Never change the original writing &middot; runs only when the button is tapped &middot; look before changing anything</p><span class="lead-go">Read the case &rarr;</span></div>
+            <div class="body"><p class="lead-k">AI on my own devices</p><h4 role="heading" aria-level="2" style="view-transition-name: t-paper-grader">AI feedback, handwritten onto a paper tablet</h4><p class="lead-what">A reMarkable is a tablet that feels like writing on paper. Tap one button and an AI checks the handwritten work, then writes its notes on the page in pen strokes, up to 24 pages at a time. The original writing is never changed. I also worked out how its color screen draws, so my own code can use it.</p><p class="lead-role"><b>My rules</b> Never change the original writing &middot; runs only when the button is tapped &middot; look before changing anything</p><span class="lead-go">Read the case &rarr;</span></div>
         </a>
+        <div class="lead lead-wrap">
+          <a class="card lead h-indigo" href="family-tree-3d.html" data-preview="video/family-tree-3d.mp4">
+              <span class="thumb-wrap"><img class="thumb" src="img/family-tree-3d.jpg" alt="The 3D family tree viewer showing an invented 420-person family" loading="lazy" width="1600" height="1000"></span>
+              <div class="body"><p class="lead-k">Things I use</p><h4 role="heading" aria-level="2" style="view-transition-name: t-family-tree-3d">A 3D family tree that opens from one file</h4><p class="lead-what">A family tree you can turn and explore in 3D, with a map of where each family moved. It all fits in one small file that opens without the internet or extra software. Try the demo, filled with 420 made-up people.</p><p class="lead-role"><b>My rules</b> One file &middot; still easy to read with hundreds of people &middot; safe to share</p><span class="lead-go">Read the case &rarr;</span></div>
+          </a>
+          <a class="badge badge-link" href="demo/family-tree-3d.html"><span class="dot"></span>Live demo</a>
+        </div>
         <a class="card lead h-indigo" href="claude-phone.html">
             <span class="thumb-wrap phone"><img class="thumb" src="img/claude-phone.jpg" alt="The phone page open on an invented chat, Fix flaky checkout test, with a reply streaming in" loading="lazy" width="780" height="1400"></span>
-            <div class="body"><p class="lead-k">Things I use every day</p><h4 style="view-transition-name: t-claude-phone">Claude Code, run from my iPhone</h4><p class="lead-what">Claude Code is an AI assistant that does real work on my Mac: it edits files, runs commands and asks me questions as it goes. I built my own private iPhone app to follow every chat live, answer its questions, reply, and start new work from anywhere, while the Mac does the work. 12 of the 16 desktop features also work on the phone.</p><p class="lead-role"><b>My rules</b> Built by me, on my own network &middot; show the chats I already have &middot; a reply continues the same chat</p><span class="lead-go">Read the case &rarr;</span></div>
+            <div class="body"><p class="lead-k">Things I use every day</p><h4 role="heading" aria-level="2" style="view-transition-name: t-claude-phone">Claude Code, run from my iPhone</h4><p class="lead-what">Claude Code is an AI assistant that does real work on my Mac: it edits files, runs commands and asks me questions as it goes. I built my own private iPhone app to follow every chat live, answer its questions, reply, and start new work from anywhere, while the Mac does the work. 12 of the 16 desktop features also work on the phone.</p><p class="lead-role"><b>My rules</b> Built by me, on my own network &middot; show the chats I already have &middot; a reply continues the same chat</p><span class="lead-go">Read the case &rarr;</span></div>
         </a>
       </div>
     </div>
@@ -72,22 +77,21 @@
           <ul>
             <li><a href="checking-ai-work.html"><b>Making AI work easy to check</b><span>3 tools; 517 statements written by AI, each checked and recorded</span></a></li>
             <li><a href="evidence-pipeline.html"><b>A family tree built only from real records</b><span>Every fact quotes its record; 31 weak guesses were thrown out</span></a></li>
-            <li><a href="claim-ledger.html"><b>A fact-checking routine that stopped slipping</b><span>Used daily; problems cut from 27% to 7%</span></a></li>
+            <li><a href="claim-ledger.html"><b>A fact-checking routine that stopped slipping</b><span>Used daily; new problems found fell from 27% to 7%</span></a></li>
             <li><a href="pinball-study.html"><b>A study set up so it could prove me wrong</b><span>9 predictions written down first, then tested on 94 real pinball tables</span></a></li>
           </ul>
         </div>
         <div class="more-g h-amber" id="g-cost">
           <h3 class="group-h">Keeping AI costs down</h3>
           <ul>
-            <li><a href="token-scan.html"><b>Finding where my AI spending went</b><span>One cause: 482 of 662 AI helpers started far bigger than needed</span></a></li>
-            <li><a href="token-guard.html"><b>Spending rules an AI can&rsquo;t skip</b><span>Used daily; each AI helper now starts at about a third of the old size</span></a></li>
-            <li><a href="agent-runner.html"><b>Long AI jobs that check the bill first</b><span>Confirms who pays before starting; stops at $20 a run</span></a></li>
+            <li class="more-pair"><a href="token-scan.html"><b>Finding where my AI spending went</b><span>One cause: 482 of 662 AI helpers started far bigger than needed</span></a><a href="token-guard.html"><b>Spending rules an AI can&rsquo;t skip</b><span>Used daily; each AI helper now starts at about a third of the old size</span></a></li>
+            <li><a href="agent-runner.html"><b>Long AI jobs that check the bill first</b><span>Confirms who pays before starting; stops at $20 a round</span></a></li>
           </ul>
         </div>
         <div class="more-g h-violet" id="g-local">
           <h3 class="group-h">AI on my own devices</h3>
           <ul>
-            <li><a href="local-ai-stack.html"><b>A private AI assistant on my laptop</b><span>Made to answer 2.7 times faster, with nothing sent online</span></a></li>
+            <li><a href="local-ai-stack.html"><b>A private AI assistant on my laptop</b><span>Made to answer up to 2.7 times faster</span></a></li>
             <li><a href="mcp-servers.html"><b>Giving the AI on my laptop tools to use</b><span>6 small toolkits of 15 tools or fewer, so it isn&rsquo;t overwhelmed</span></a></li>
           </ul>
         </div>
@@ -107,13 +111,15 @@
           <li><p class="who">I test it</p><p>before I call it done <span class="okmark"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 4.8"/></svg></span></p></li>
         </ol>
         <div class="film">
-        <span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-index.jpg" width="960" height="540" aria-label="Narrated film, 34 seconds: 15 projects, each one built with AI. Tools for everyday problems, from family trees to AI costs. A 3D family tree that opens from one file. AI feedback, handwritten onto a paper tablet. And AI chats from the computer, answered from a phone. Problems in a fact-checking routine, cut from 27% to 7%. Each AI helper now starts at about a third of its old size. The code is public, on GitHub."><source src="video/film-index.mp4" type="video/mp4"></video></span>
+        <span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-index.jpg" width="960" height="540" aria-label="Narrated film, 34 seconds" aria-describedby="film-script-text"><source src="video/film-index.mp4" type="video/mp4"></video></span>
+        <p class="film-cap">Narrated film, 34 s. Press ♪ for sound.</p>
+        <details class="film-script"><summary>Read the script</summary><p id="film-script-text">15 projects, each one built with AI. Tools for everyday problems, from family trees to AI costs. A 3D family tree that opens from one file. AI feedback, handwritten onto a paper tablet. And AI chats from the computer, answered from a phone. Problems in a fact-checking routine, cut from 27% to 7%. Each AI helper now starts at about a third of its old size. The code is public, on GitHub.</p></details>
       </div>
       </div>
 
       <div class="band">
         <div>
-          <h2>The code for 13 of these is public on GitHub</h2>
+          <h2>The code for 13 of these is public on GitHub, in 14 repos</h2>
         </div>
         <div class="ctas band-ctas"><a class="btn primary" href="mailto:ryanwisth@gmail.com">Email ryanwisth@gmail.com</a><a class="btn" href="https://github.com/ryanwisth">Open github.com/ryanwisth &rarr;</a></div>
       </div>

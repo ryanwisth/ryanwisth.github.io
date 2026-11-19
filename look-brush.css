@@ -420,8 +420,8 @@ html[data-look="brush"] .case-head h1 { position: relative; padding-bottom: 16px
 html[data-look="brush"] .case-head h1::after { content: ""; position: absolute; left: -6px; bottom: 0; width: min(100%, 520px); height: 15px; pointer-events: none; background: var(--verm); mask: var(--b-sweep0) 0 0 / 100% 100% no-repeat; }
 html[data-look="brush"] .kicker { color: var(--sig-ink); font-weight: 700; letter-spacing: .03em; }
 html[data-look="brush"] .kicker::before { content: ""; display: inline-block; width: .8em; height: .8em; margin: 0 .5em -.06em 0; background: var(--seal); mask: var(--b-sealo) 0 0 / 100% 100% no-repeat; }
-html[data-look="brush"] .back { color: var(--text); position: relative; }
-html[data-look="brush"] .back::after { content: ""; position: absolute; left: 0; right: 0; bottom: 4px; height: 7px; pointer-events: none; background: var(--sig); mask: var(--b-sweep1) 0 0 / 100% 100% no-repeat; clip-path: inset(0 100% 0 0); }
+html[data-look="brush"] .back { color: var(--text); position: relative; padding: 14px 0; margin: -14px 0 16px; min-height: 44px; box-sizing: border-box; align-items: center; } /* a 44 px tap target, same place on the page */
+html[data-look="brush"] .back::after { content: ""; position: absolute; left: 0; right: 0; bottom: 8px; height: 7px; pointer-events: none; background: var(--sig); mask: var(--b-sweep1) 0 0 / 100% 100% no-repeat; clip-path: inset(0 100% 0 0); }
 html[data-look="brush"] .back:is(:hover, :focus-visible)::after { clip-path: inset(0); }
 /* the brief: each label an indigo cartouche */
 html[data-look="brush"] .brief dt,
@@ -649,7 +649,7 @@ html[data-look="brush"] .demo-poster:hover img { scale: 1; }
   html[data-look="brush"].motion .hero-one::before { animation: b-pop .3s var(--snap) 1.45s both, b-turn 80s linear 1.75s infinite; }
   html[data-look="brush"].motion .hero-one::after { animation: b-in .5s ease-out 1.6s both, b-petals 26s linear infinite; }
   html[data-look="brush"].motion .brand .mark { animation: b-stamp .2s var(--snap) .15s both; }
-  html[data-look="brush"].motion .dot { animation: b-dab .5s steps(1) infinite; }
+  html[data-look="brush"].motion .dot { animation: b-dab .5s steps(1) 3; } /* three dabs, then still */
 
   /* the round buttons' rings boil; a hover gives a quick turn, a press pushes in */
   html[data-look="brush"].motion .theme-toggle::before { animation: b-boil-ring .375s steps(1) infinite; }
@@ -785,4 +785,15 @@ html[data-look="brush"] .demo-poster:hover img { scale: 1; }
 @supports not (mask-image: none) {
   html[data-look="brush"] *::before,
   html[data-look="brush"] *::after { background: none !important; }
+}
+
+/* ---------- Pass 1 fixes (Nov 19) ---------- */
+/* the reading bar's brush stroke sat flush on the window's top edge and read as a cut-off stroke; it now lies inside
+   the top mounting, clear of the edge */
+html[data-look="brush"] body.case::before { top: 5px; pointer-events: none; } /* drawn inside the header: never takes a tap meant for a link */
+/* phones: the rail's seal is smaller and the rail thinner, so both stay in the 18 px gutter left of the text (the seal
+   was 18 px wide on a rail 9 px from the edge, over the first letters and the card frames) */
+@media (max-width: 620px) {
+  html[data-look="brush"] .th-head { width: 10px; height: 10px; left: -5px; top: -5px; }
+  html[data-look="brush"] .th-line { stroke-width: 2.4; }
 }

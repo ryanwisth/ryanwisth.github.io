@@ -6,6 +6,7 @@
 <title>A study app built around mistakes | Ryan Wisth</title>
 <meta name="description" content="A study app that practices each kind of mistake until it is fixed, on time, and then checks again days later.">
 <meta property="og:title" content="A study app built around mistakes | Ryan Wisth">
+<meta property="og:url" content="https://ryanwisth.github.io/practice-engine.html">
 <meta property="og:description" content="A study app that practices each kind of mistake until it is fixed, on time, and then checks again days later.">
 <meta property="og:image" content="https://ryanwisth.github.io/img/practice-engine.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -17,6 +18,7 @@
 <script src="look.js"></script>
 </head>
 <body class="case">
+<a class="skip-link" href="#main">Skip to content</a>
 <header class="topbar">
   <div class="wrap">
     <a class="brand" href="index.html"><span class="mark">RW</span>Ryan Wisth</a>
@@ -29,7 +31,7 @@
   </div>
 </header>
 
-<main>
+<main id="main">
   <div class="prose case-head">
     <a class="back" href="index.html#work">&larr; All projects</a>
     <p class="kicker">Things I use &middot; built around mistakes</p>
@@ -37,7 +39,7 @@
     <p class="lede">A study app that groups questions by the mistake they test, and practices each mistake until it is fixed, on time. Timed sets are graded on pacing as well as score.</p>
     <dl class="brief">
       <dt>Problem</dt><dd>Practicing by topic treats every wrong answer on &ldquo;percents&rdquo; the same. But most come from one specific error: adding two percent changes instead of multiplying them, or averaging times instead of adding rates.</dd>
-      <dt>Result</dt><dd>A working app that practices each mistake until it is mastered: 3 correct, on-time answers in a row on 3 different questions. It checks again after 3, 7 and 21 days, so mastery has to last. Timed sets are graded on pacing as well as score. It runs from 2 files with nothing to install, and loads anyone&rsquo;s own questions from a spreadsheet file.</dd>
+      <dt>Result</dt><dd>A working app that practices each mistake until it is mastered: 3 correct, on-time answers in a row on 3 different questions. It checks again after 3, 7 and 21 days, so mastery has to last. Timed sets are graded on pacing as well as score. It runs from 2 files plus Python 3.9, and loads anyone&rsquo;s own questions from a spreadsheet file.</dd>
     </dl>
   </div>
 
@@ -50,7 +52,7 @@
       <div class="facts">
         <div class="fact"><b>3 in a row</b><span>correct, on-time answers on 3 different questions master a kind of mistake</span></div>
         <div class="fact"><b>3, 7, 21</b><span>days later, a mastered mistake is checked again; one wrong answer reopens it</span></div>
-        <div class="fact"><b>2 files</b><span>run the whole app, nothing to install</span></div>
+        <div class="fact"><b>2 files</b><span>run the whole app, with Python 3.9</span></div>
       </div>
     </div>
     <ol class="method" aria-label="My rules, who wrote it, how it was tested">
@@ -60,7 +62,8 @@
     </ol>
   </section>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-practice-engine.jpg" width="960" height="540" aria-label="Narrated film, 38 seconds: 3 correct, on-time answers in a row, on 3 different questions, master a mistake. A study app built around mistakes, not topics. Questions are grouped by the mistake they test. A slow right answer does not count. And a missed question never comes up again. Mastered mistakes are checked again after 3, 7 and 21 days. One wrong answer reopens them. Timed sets are graded on pacing, as well as score. 2 files run the whole app, with nothing to install. Practice aimed at the error, and mastery that has to last."><source src="video/film-practice-engine.mp4" type="video/mp4"></video></span><figcaption>The project in 38 seconds, narrated. Tap ♪ for sound.</figcaption></figure>
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-practice-engine.jpg" width="960" height="540" aria-label="Narrated film, 38 seconds" aria-describedby="film-script-text"><source src="video/film-practice-engine.mp4" type="video/mp4"></video></span><figcaption>The project in 38 seconds, narrated. Press ♪ for sound.</figcaption></figure>
+  <details class="film-script"><summary>Read the script</summary><p id="film-script-text">3 correct, on-time answers in a row, on 3 different questions, master a mistake. A study app built around mistakes, not topics. Questions are grouped by the mistake they test. A slow right answer does not count. And a missed question never comes up again. Mastered mistakes are checked again after 3, 7 and 21 days. One wrong answer reopens them. Timed sets are graded on pacing, as well as score. 2 files run the whole app, with nothing to install. Practice aimed at the error, and mastery that has to last.</p></details>
 
   <figure class="figure">
     <div class="shot"><div class="bar"><i></i><i></i><i></i><em>this computer only, practice screen</em></div><img src="img/practice-engine.jpg" alt="The practice screen after a correct answer: the kind of mistake, the time against the target, the streak and the explanation" width="1600" height="1231" loading="lazy"></div>
@@ -109,9 +112,10 @@
       <a class="btn primary" href="https://github.com/ryanwisth/adaptive-drill-engine">See the code on GitHub &rarr;</a>
     </div>
     <nav class="pager" aria-label="More projects">
-      <a class="prev" href="family-tree-3d.html"><small>&larr; Previous</small>A 3D family tree that opens from one file</a>
-      <a class="next" href="evidence-pipeline.html"><small>Next &rarr;</small>A family tree built only from real records</a>
+      <a class="prev" href="claude-phone.html"><small>&larr; Previous</small>Claude Code, run from my iPhone</a>
+      <a class="next" href="streaks-trainer.html"><small>Next &rarr;</small>A study app where one wrong answer resets your streak</a>
     </nav>
+    <p class="pager-contact"><a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></p>
   </div>
 </main>
 

@@ -6,6 +6,7 @@
 <title>Dark mode for any website in Safari | Ryan Wisth</title>
 <meta name="description" content="A Safari add-on for the Mac that turns light websites dark in six color themes. A program tuned each theme to its target colors, and the add-on is built and installed without Xcode, Apple&rsquo;s app-building tool.">
 <meta property="og:title" content="Dark mode for any website in Safari | Ryan Wisth">
+<meta property="og:url" content="https://ryanwisth.github.io/safari-dark-mode.html">
 <meta property="og:description" content="A Safari add-on for the Mac that turns light websites dark in six color themes. A program tuned each theme to its target colors, and the add-on is built and installed without Xcode, Apple&rsquo;s app-building tool.">
 <meta property="og:image" content="https://ryanwisth.github.io/img/safari-all-themes.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -17,6 +18,7 @@
 <script src="look.js"></script>
 </head>
 <body class="case">
+<a class="skip-link" href="#main">Skip to content</a>
 <header class="topbar">
   <div class="wrap">
     <a class="brand" href="index.html"><span class="mark">RW</span>Ryan Wisth</a>
@@ -29,7 +31,7 @@
   </div>
 </header>
 
-<main>
+<main id="main">
   <div class="prose case-head">
     <a class="back" href="index.html#work">&larr; All projects</a>
     <p class="kicker">Browser add-on &middot; built and installed start to finish</p>
@@ -60,7 +62,8 @@
     </ol>
   </section>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-safari-dark-mode.jpg" width="960" height="540" aria-label="Narrated film, 39 seconds: 6 dark themes for Safari, each tuned by a program to its target colors. A Safari add-on turns light websites dark, and leaves dark ones alone. One filter darkens the whole page. A program tuned each theme. Photos are flipped back to their real colors. The biggest color error in any theme is 0.9, on a 0-to-1 scale. It asks for 1 permission, storage, and has no internet access. Version 1.0.0 is built, signed and installed by one script, without Xcode. 6 tuned themes, 1 permission, built start to finish."><source src="video/film-safari-dark-mode.mp4" type="video/mp4"></video></span><figcaption>The project in 39 seconds, narrated. Tap ♪ for sound.</figcaption></figure>
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-safari-dark-mode.jpg" width="960" height="540" aria-label="Narrated film, 39 seconds" aria-describedby="film-script-text"><source src="video/film-safari-dark-mode.mp4" type="video/mp4"></video></span><figcaption>The project in 39 seconds, narrated. Press ♪ for sound.</figcaption></figure>
+  <details class="film-script"><summary>Read the script</summary><p id="film-script-text">6 dark themes for Safari, each tuned by a program to its target colors. A Safari add-on turns light websites dark, and leaves dark ones alone. One filter darkens the whole page. A program tuned each theme. Photos are flipped back to their real colors. The biggest color error in any theme is 0.9, on a 0-to-1 scale. It asks for 1 permission, storage, and has no internet access. Version 1.0.0 is built, signed and installed by one script, without Xcode. 6 tuned themes, 1 permission, built start to finish.</p></details>
 
   <figure class="figure">
     <img class="narrow" src="img/safari-all-themes.jpg" alt="One test page rendered in each of the six themes: Dark, Black, Dim, Sepia, Nord and Dracula" width="1000" height="965" loading="lazy">
@@ -94,7 +97,7 @@
     <h2>Decisions I made</h2>
     <ul>
       <li><b>One filter, not a rewrite of every page.</b> A single fast filter over the whole page darkens every site with no special rules. For pages with pictures set on a light background, a &ldquo;Never&rdquo; setting turns it off for that site.</li>
-      <li><b>Themes tuned by a program, not by eye.</b> A program searches for the filter settings that land each theme on its chosen colors. The final error runs from 0.0 (Black background) to 0.9 (Sepia background), on a 0-to-1 scale.</li>
+      <li><b>Themes tuned by a program, not by eye.</b> A program searches for the filter settings that land each theme on its chosen colors. The final error runs from 0.0 (Black background) to 0.9 (Sepia background), on a 0-to-100 scale.</li>
       <li><b>Photos keep their real colors.</b> Pictures and video are flipped back with a tuned correction, so strong colors like yellow do not come back beige.</li>
       <li><b>Already-dark pages are spotted.</b> The background color is checked at five points, and a page that is already dark is left alone.</li>
       <li><b>As few permissions as possible.</b> Storage only, no internet access.</li>
@@ -121,6 +124,7 @@
       <a class="prev" href="streaks-trainer.html"><small>&larr; Previous</small>A study app where one wrong answer resets your streak</a>
       <a class="next" href="checking-ai-work.html"><small>Next &rarr;</small>Making AI work easy to check</a>
     </nav>
+    <p class="pager-contact"><a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></p>
   </div>
 </main>
 

@@ -6,6 +6,7 @@
 <title>A private AI assistant on my laptop | Ryan Wisth</title>
 <meta name="description" content="A private AI assistant that runs entirely on my Mac laptop, with tools, voice, document reading and web search, and nothing sent to the cloud.">
 <meta property="og:title" content="A private AI assistant on my laptop | Ryan Wisth">
+<meta property="og:url" content="https://ryanwisth.github.io/local-ai-stack.html">
 <meta property="og:description" content="A private AI assistant that runs entirely on my Mac laptop, with tools, voice, document reading and web search, and nothing sent to the cloud.">
 <meta property="og:image" content="https://ryanwisth.github.io/img/card.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -17,6 +18,7 @@
 <script src="look.js"></script>
 </head>
 <body class="case">
+<a class="skip-link" href="#main">Skip to content</a>
 <header class="topbar">
   <div class="wrap">
     <a class="brand" href="index.html"><span class="mark">RW</span>Ryan Wisth</a>
@@ -29,7 +31,7 @@
   </div>
 </header>
 
-<main>
+<main id="main">
   <div class="prose case-head">
     <a class="back" href="index.html#work">&larr; All projects</a>
     <p class="kicker">Local AI &middot; private by design</p>
@@ -60,7 +62,7 @@
     <figcaption>The first run at each depth; repeat runs at depth 0 and depth 3 gave 13.6 and 32.1.</figcaption>
       </figure>
       <div class="facts">
-        <div class="fact"><b>13.7 &rarr; 37.5</b><span>tokens per second by guessing several tokens ahead: 2.7 times the normal speed of the same 27B model</span></div>
+        <div class="fact"><b>13.7 &rarr; 37.5</b><span>tokens per second by guessing several tokens ahead: up to 2.7 times the normal speed of the same 27B model</span></div>
         <div class="fact"><b>26</b><span>toolkits the AI can use, all behind one door that needs a key</span></div>
         <div class="fact"><b>60 s</b><span>watchdog check: any part that stops is back up within a minute, with no one at the keyboard</span></div>
       </div>
@@ -72,7 +74,8 @@
     </ol>
   </section>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-local-ai-stack.jpg" width="960" height="540" aria-label="Narrated film, 38 seconds: Up to 37.5 pieces of text per second, from a large AI model on one laptop. A private AI assistant that runs entirely on one laptop. A chat window, an AI model on the laptop, and toolkits behind a locked door. 26 toolkits, all behind one door that needs a key. And a watchdog that brings any stopped part back within 60 seconds. A built-in limit quietly threw away tool requests that ran too long. That failure was made loud. Private by design, with every part reachable only from this computer."><source src="video/film-local-ai-stack.mp4" type="video/mp4"></video></span><figcaption>The project in 38 seconds, narrated. Tap ♪ for sound.</figcaption></figure>
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-local-ai-stack.jpg" width="960" height="540" aria-label="Narrated film, 38 seconds" aria-describedby="film-script-text"><source src="video/film-local-ai-stack.mp4" type="video/mp4"></video></span><figcaption>The project in 38 seconds, narrated. Press ♪ for sound.</figcaption></figure>
+  <details class="film-script"><summary>Read the script</summary><p id="film-script-text">Up to 37.5 pieces of text per second, from a large AI model on one laptop. A private AI assistant that runs entirely on one laptop. A chat window, an AI model on the laptop, and toolkits behind a locked door. 26 toolkits, all behind one door that needs a key. And a watchdog that brings any stopped part back within 60 seconds. A built-in limit quietly threw away tool requests that ran too long. That failure was made loud. Private by design, with every part reachable only from this computer.</p></details>
 
   <figure class="figure">
     <ol class="flow c3">
@@ -139,9 +142,10 @@
       <a class="btn primary" href="https://github.com/ryanwisth/local-ai-stack">See the code on GitHub &rarr;</a>
     </div>
     <nav class="pager" aria-label="More projects">
-      <a class="prev" href="mcp-servers.html"><small>&larr; Previous</small>Giving the AI on my laptop tools to use</a>
-      <a class="next" href="paper-grader.html"><small>Next &rarr;</small>AI feedback, handwritten onto a paper tablet</a>
+      <a class="prev" href="agent-runner.html"><small>&larr; Previous</small>Long AI jobs that check the bill first</a>
+      <a class="next" href="mcp-servers.html"><small>Next &rarr;</small>Giving the AI on my laptop tools to use</a>
     </nav>
+    <p class="pager-contact"><a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></p>
   </div>
 </main>
 

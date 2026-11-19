@@ -6,6 +6,7 @@
 <title>A 3D family tree that opens from one file | Ryan Wisth</title>
 <meta name="description" content="A family tree you can explore in 3D, with a map of where each family moved, all in one file that works without the internet.">
 <meta property="og:title" content="A 3D family tree that opens from one file | Ryan Wisth">
+<meta property="og:url" content="https://ryanwisth.github.io/family-tree-3d.html">
 <meta property="og:description" content="A family tree you can explore in 3D, with a map of where each family moved, all in one file that works without the internet.">
 <meta property="og:image" content="https://ryanwisth.github.io/img/family-tree-3d.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -17,6 +18,7 @@
 <script src="look.js"></script>
 </head>
 <body class="case">
+<a class="skip-link" href="#main">Skip to content</a>
 <header class="topbar">
   <div class="wrap">
     <a class="brand" href="index.html"><span class="mark">RW</span>Ryan Wisth</a>
@@ -29,7 +31,7 @@
   </div>
 </header>
 
-<main>
+<main id="main">
   <div class="prose case-head">
     <a class="back" href="index.html#work">&larr; All projects</a>
     <p class="kicker">Things I use &middot; built start to finish</p>
@@ -44,7 +46,7 @@
   <section class="sum" aria-label="Summary">
     <div class="sum-top">
       <figure class="figure sum-vis">
-        <div class="shot demo"><div class="bar"><i></i><i></i><i></i><em>family-tree-3d.html</em></div><a class="demo-poster" href="demo/family-tree-3d.html"><img src="img/family-tree-3d.jpg" alt="The 3D family tree: a tall trunk of ancestors with branches colored by birthplace, a search panel and a timeline" width="1600" height="1000"><span class="play"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 2.5v11l9.5-5.5z"/></svg>Explore the live demo</span></a></div>
+        <div class="shot demo"><div class="bar"><i></i><i></i><i></i><em>family-tree-3d.html</em></div><a class="demo-poster" href="demo/family-tree-3d.html"><img src="img/family-tree-3d.jpg" alt="The 3D family tree: a tall trunk of ancestors with branches colored by birthplace" width="1600" height="1000"><span class="play"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 2.5v11l9.5-5.5z"/></svg>Explore the live demo</span></a></div>
     <figcaption>The public demo: 420 made-up people. Higher means born later; color shows where each was born. Click to load the real page here (about 1 MB), or <a href="demo/family-tree-3d.html">open it full screen</a>.</figcaption>
       </figure>
       <div class="facts">
@@ -60,7 +62,8 @@
     </ol>
   </section>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-family-tree-3d.jpg" width="960" height="540" aria-label="Narrated film, 37 seconds: 1 file holds everything, and it works offline. A 3D family tree, with a map of where each family moved. It opens with no internet. Living people can be hidden, so it is safe to share. Height is birth year. Distance from the center shows closeness. Direction shows the family branch. 0 add-on code from others, so nothing outside can break it. The public demo holds 420 made-up people, with no real family data. One page of about 1 MB, with no internet needed."><source src="video/film-family-tree-3d.mp4" type="video/mp4"></video></span><figcaption>The project in 37 seconds, narrated. Tap ♪ for sound.</figcaption></figure>
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-family-tree-3d.jpg" width="960" height="540" aria-label="Narrated film, 37 seconds" aria-describedby="film-script-text"><source src="video/film-family-tree-3d.mp4" type="video/mp4"></video></span><figcaption>The project in 37 seconds, narrated. Press ♪ for sound.</figcaption></figure>
+  <details class="film-script"><summary>Read the script</summary><p id="film-script-text">1 file holds everything, and it works offline. A 3D family tree, with a map of where each family moved. It opens with no internet. Living people can be hidden, so it is safe to share. Height is birth year. Distance from the center shows closeness. Direction shows the family branch. 0 add-on code from others, so nothing outside can break it. The public demo holds 420 made-up people, with no real family data. One page of about 1 MB, with no internet needed.</p></details>
 
   <figure class="figure">
     <ol class="flow c3">
@@ -80,7 +83,7 @@
 
   <figure class="figure">
     <div class="shot"><div class="bar"><i></i><i></i><i></i><em>demo/family-tree-3d.html, recorded</em></div><video data-auto controls muted loop playsinline preload="none" poster="img/family-tree-video.jpg" width="960" height="600" aria-label="The 3D family tree turning as the mouse drags it, then zooming in to the colored branches"><source src="video/family-tree-3d.mp4" type="video/mp4"></video></div>
-    <figcaption>Turning and zooming the public demo (the made-up family of 420). It was recorded by an automated browser at about nine frames a second.</figcaption>
+    <figcaption>Turning and zooming the public demo (the made-up family of 420). It was recorded by an automated browser at about 12 frames a second.</figcaption>
   </figure>
 
   <div class="prose">
@@ -115,9 +118,10 @@
       <a class="btn primary" href="https://github.com/ryanwisth/family-tree-3d">See the code on GitHub &rarr;</a>
     </div>
     <nav class="pager" aria-label="More projects">
-      <a class="prev" href="checking-ai-work.html"><small>&larr; Previous</small>Making AI work easy to check</a>
-      <a class="next" href="practice-engine.html"><small>Next &rarr;</small>A study app built around mistakes</a>
+      <a class="prev" href="paper-grader.html"><small>&larr; Previous</small>AI feedback, handwritten onto a paper tablet</a>
+      <a class="next" href="claude-phone.html"><small>Next &rarr;</small>Claude Code, run from my iPhone</a>
     </nav>
+    <p class="pager-contact"><a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></p>
   </div>
 </main>
 

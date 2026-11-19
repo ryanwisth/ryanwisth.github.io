@@ -2,17 +2,31 @@
 (function () {
   var d = document, r = d.documentElement;
 
-  // light / dark toggle (remembers the choice)
+  // light / dark toggle (remembers the choice). The browser bar's colour follows the click: both theme-color tags
+  // (one per system setting; look.js has already set them for the look) are given the chosen theme's colour.
+  var metas = [].slice.call(d.querySelectorAll('meta[name="theme-color"]')), tint = { light: null, dark: null };
+  metas.forEach(function (m) { tint[/dark/.test(m.media) ? 'dark' : 'light'] = m.content; });
+  function barTint() {
+    var t = r.dataset.theme;
+    metas.forEach(function (m) { var c = t ? tint[t] : tint[/dark/.test(m.media) ? 'dark' : 'light']; if (c) m.content = c; });
+  }
+  barTint();
   var b = d.querySelector('.theme-toggle');
   if (b) {
     b.hidden = false;
     b.addEventListener('click', function () {
       var cur = r.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
       var next = cur === 'dark' ? 'light' : 'dark';
-      r.dataset.theme = next;
+      r.dataset.theme = next; barTint();
       try { localStorage.setItem('theme', next); } catch (e) {}
     });
   }
+  // Back or Forward from the page cache: take up a light/dark choice made on another page since
+  addEventListener('pageshow', function (e) {
+    if (!e.persisted) return;
+    var t = null; try { t = localStorage.getItem('theme'); } catch (er) {}
+    if (t && t !== r.dataset.theme) { r.dataset.theme = t; barTint(); }
+  });
 
   // the 3D demo loads in place on larger screens; on phones the link opens it full screen
   d.querySelectorAll('.demo-poster').forEach(function (a) {
@@ -152,8 +166,83 @@
     try { plied(ln.ownerSVGElement, ln.nextSibling).setAttribute('points', samples(ln, 1e9).join(' ')); } catch (e) {}
   });
 
-  // motion, only when the visitor has not asked for less of it
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) return;
+  // ---------- motion: off when the system asks for less of it, or when "Pause motion" (footer) is on ----------
+  // Paused is html[data-motion="paused"] (set before the first paint by look.js from localStorage "motion") and no
+  // .motion class: every look sheet runs its loops only under html.motion, and style.css stops the rest under the attribute.
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function paused() { return r.getAttribute('data-motion') === 'paused'; }
+  function moving() { return !reduce && !paused(); }
+
+  // screen captures and films: play while on screen (only when motion is on), pause off screen, with a pause button.
+  // Built before the motion return, so a reduced-motion or paused visitor still gets the buttons (the film then waits for a click).
+  var ICON = '<svg class="i-pause" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 2.5h3v11H4zM9 2.5h3v11H9z"/></svg><svg class="i-play" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4.5 2.2v11.6L13.5 8z"/></svg>';
+  var vio = 'IntersectionObserver' in window && new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      var v = en.target;
+      v._seen = en.isIntersecting;
+      if (en.isIntersecting && !v.dataset.held && (moving() || !v.muted)) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+      else if (!en.isIntersecting) v.pause();
+    });
+  }, { threshold: 0.35 });
+  var autos = [].slice.call(d.querySelectorAll('video[data-auto]'));
+  autos.forEach(function (v) {
+    var box = v.parentNode, bar = d.createElement('div'), btn = d.createElement('button');
+    v.removeAttribute('controls'); v.muted = true;
+    box.classList.add('vid');
+    bar.className = 'vid-bar';
+    // one fixed name; aria-pressed says whether it is paused (the icon shows the same)
+    btn.type = 'button'; btn.className = 'vid-toggle'; btn.innerHTML = ICON;
+    btn.setAttribute('aria-label', v.hasAttribute('data-sound') ? 'Pause film' : 'Pause capture');
+    function state() { box.classList.toggle('paused', v.paused); btn.setAttribute('aria-pressed', v.paused ? 'true' : 'false'); }
+    function flip(e) {
+      if (e) e.preventDefault();
+      if (v.paused) { delete v.dataset.held; var p = v.play(); if (p && p.catch) p.catch(function () {}); } else { v.dataset.held = '1'; v.pause(); }
+    }
+    btn.addEventListener('click', flip); v.addEventListener('click', flip);
+    v.addEventListener('pause', state); v.addEventListener('play', state);
+    bar.appendChild(btn);
+    // a clip with a soundtrack starts muted (browsers require it); this button turns the sound on
+    // (its label is the action, worded so it cannot be read as the state)
+    if (v.hasAttribute('data-sound')) {
+      var sb = d.createElement('button');
+      sb.type = 'button'; sb.className = 'vid-sound';
+      var label = function () { sb.textContent = v.muted ? '\u266A Play with sound' : '\u266A Mute'; sb.setAttribute('aria-pressed', v.muted ? 'false' : 'true'); };
+      sb.addEventListener('click', function (e) {
+        e.preventDefault();
+        v.muted = !v.muted;
+        if (!v.muted) { v.currentTime = 0; delete v.dataset.held; var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+        label();
+      });
+      label(); bar.insertBefore(sb, btn);
+    }
+    box.appendChild(bar);
+    state();
+    if (vio) vio.observe(v);
+  });
+
+  // "Pause motion" / "Resume motion": a button in the footer, remembered by this browser. Not shown when the system
+  // already asks for reduced motion (everything is still then).
+  var foot = d.querySelector('footer.site .wrap');
+  if (foot && !reduce) {
+    var mb = d.createElement('button');
+    mb.type = 'button'; mb.className = 'motion-toggle';
+    var mlabel = function () { mb.textContent = paused() ? 'Resume motion' : 'Pause motion'; };
+    mb.addEventListener('click', function () {
+      var stop = !paused();
+      if (stop) { r.setAttribute('data-motion', 'paused'); r.classList.remove('motion'); }
+      else { r.removeAttribute('data-motion'); r.classList.add('motion'); }
+      try { if (stop) localStorage.setItem('motion', 'paused'); else localStorage.removeItem('motion'); } catch (e) {}
+      autos.forEach(function (v) {                 // looping films stop; one playing with sound is the reader's choice
+        if (stop && v.muted && !v.paused) v.pause();
+        else if (!stop && v._seen && !v.dataset.held && v.paused) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+      });
+      mlabel();
+    });
+    mlabel(); foot.appendChild(mb);
+  }
+
+  // the rest is decoration that moves: built only when motion is on at load
+  if (!moving() || !('IntersectionObserver' in window)) return;
   r.classList.add('motion');
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (en) {
@@ -205,31 +294,7 @@
     c.addEventListener('focus', on); c.addEventListener('blur', off);
   });
 
-  // figures count up once, when first seen; the final text is what the page shipped with
-  function countUp(el) {
-    var txt = el.textContent, parts = txt.split(/(\d[\d,]*(?:\.\d+)?)/), t0 = 0;
-    if (parts.length < 2) return;
-    el.style.minHeight = el.getBoundingClientRect().height + 'px';
-    function step(now) {
-      if (!t0) t0 = now;
-      var k = Math.min(1, (now - t0) / 1100), e = 1 - Math.pow(1 - k, 3);
-      if (k >= 1) { el.textContent = txt; el.style.removeProperty('min-height'); return; }
-      el.textContent = parts.map(function (p, i) {
-        if (!(i % 2)) return p;
-        var dec = (p.split('.')[1] || '').length, n = parseFloat(p.replace(/,/g, '')) * e;
-        return p.indexOf(',') > -1 ? Math.round(n).toLocaleString('en-US') : n.toFixed(dec);
-      }).join('');
-      requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-  }
-  var cio = new IntersectionObserver(function (entries) {
-    entries.forEach(function (en) {
-      if (!en.isIntersecting) return;
-      cio.unobserve(en.target);
-      countUp(en.target);
-    });
-  }, { threshold: 0.6 });
+  // figures show their final value at once: a count-up shows wrong figures mid-count ("1 of 1")
 
   // figure drawings: each dot and box knows its place in line
   d.querySelectorAll('.g-dots, .g-box').forEach(function (g) {
@@ -398,13 +463,9 @@
           if (L) p.push({ x: xr, y: yb }, { x: xr, y: L.cy, hit: lim });
         }
         return p;
-      }, function (el) { if (el.classList.contains('fact')) countUp(el.querySelector('b')); });
+      });
     }
   }
-  d.querySelectorAll('.fact b, .card .stat b, .collage .float b').forEach(function (b) {
-    if (guided && b.closest('.sum')) return; // these count when the ball lands on them
-    cio.observe(b);
-  });
 
   // every page: one thread runs down the left margin beside the content, from under the headline to the last block.
   // It keeps the same distance from the content as the guide's strand, so it winds in where the column narrows,
@@ -417,7 +478,7 @@
     th.className = 'thread'; th.setAttribute('aria-hidden', 'true');
     th.innerHTML = '<svg focusable="false"><path class="th-holes"/><path class="y-sh"/><path class="y-edge"/><path class="th-line"/></svg><i class="th-head"></i>';
     mainEl.appendChild(th);
-    var holes = th.querySelector('.th-holes'), yarn = th.querySelector('.th-line'), head = th.lastChild, stops = [], tlen = 0, tick = 0, mtop = 0, drawn = -1;
+    var plyT = 0, holes = th.querySelector('.th-holes'), yarn = th.querySelector('.th-line'), head = th.lastChild, stops = [], tlen = 0, tick = 0, mtop = 0, drawn = -1;
     var tsh = th.querySelector('.y-sh'), ted = th.querySelector('.y-edge'), tply = plied(th.firstChild), tpts = [];
     var box = function (el) { // place in <main>, from layout offsets, so a reveal in mid-flight cannot shift it
       var x = 0, y = 0, e = el;
@@ -470,7 +531,8 @@
       if (Math.abs(lo - drawn) < .5) return;
       drawn = lo;
       tsh.style.strokeDasharray = ted.style.strokeDasharray = yarn.style.strokeDasharray = lo.toFixed(1) + ' 99999';
-      tply.setAttribute('points', tpts.slice(0, Math.floor(lo / 6) + 1).join(' '));
+      // twist marks are re-laid only when the scroll rests (every frame cost dropped frames on long pages)
+      clearTimeout(plyT); plyT = setTimeout(function () { tply.setAttribute('points', tpts.slice(0, Math.floor(drawn / 6) + 1).join(' ')); }, 150);
       // the button rolls down the strand and bobs like a needle, so a scroll reads as sewing: without this the head sits
       // still at the reading line while the page slides under it, and the thread looks frozen
       p = yarn.getPointAtLength(lo); head.style.transform = 'translate(' + (p.x + 2.5 * Math.sin(lo / 11)).toFixed(1) + 'px,' + p.y.toFixed(1) + 'px) rotate(' + (lo * 1.3).toFixed(0) + 'deg)';
@@ -484,43 +546,4 @@
     lay(); run();
   }
 
-  // screen captures: play while on screen, pause off screen, with a pause button
-  var ICON = '<svg class="i-pause" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 2.5h3v11H4zM9 2.5h3v11H9z"/></svg><svg class="i-play" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4.5 2.2v11.6L13.5 8z"/></svg>';
-  var vio = new IntersectionObserver(function (entries) {
-    entries.forEach(function (en) {
-      var v = en.target;
-      if (en.isIntersecting && !v.dataset.held) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
-      else v.pause();
-    });
-  }, { threshold: 0.35 });
-  d.querySelectorAll('video[data-auto]').forEach(function (v) {
-    var box = v.parentNode, btn = d.createElement('button');
-    v.removeAttribute('controls'); v.muted = true;
-    box.classList.add('vid');
-    btn.type = 'button'; btn.className = 'vid-toggle'; btn.innerHTML = ICON;
-    btn.setAttribute('aria-label', 'Pause or play this capture');
-    function flip(e) {
-      if (e) e.preventDefault();
-      if (v.paused) { delete v.dataset.held; v.play(); } else { v.dataset.held = '1'; v.pause(); }
-    }
-    btn.addEventListener('click', flip); v.addEventListener('click', flip);
-    v.addEventListener('pause', function () { box.classList.toggle('paused', !!v.dataset.held); });
-    v.addEventListener('play', function () { box.classList.remove('paused'); });
-    box.appendChild(btn);
-    // a clip with a soundtrack starts muted (browsers require it); this button turns the sound on
-    // (its label is the action, worded so it cannot be read as the state)
-    if (v.hasAttribute('data-sound')) {
-      var sb = d.createElement('button');
-      sb.type = 'button'; sb.className = 'vid-sound';
-      var label = function () { sb.textContent = v.muted ? '\u266A Play with sound' : '\u266A Mute'; sb.setAttribute('aria-pressed', v.muted ? 'false' : 'true'); };
-      sb.addEventListener('click', function (e) {
-        e.preventDefault();
-        v.muted = !v.muted;
-        if (!v.muted) { v.currentTime = 0; delete v.dataset.held; var p = v.play(); if (p && p.catch) p.catch(function () {}); }
-        label();
-      });
-      label(); box.appendChild(sb);
-    }
-    vio.observe(v);
-  });
 })();
