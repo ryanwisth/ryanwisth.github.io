@@ -25,7 +25,8 @@
     <nav class="topnav">
       <a href="index.html#work">Projects</a>
       <a class="hide-sm" href="index.html#how">How I work</a>
-      <a href="https://github.com/ryanwisth">GitHub</a>
+      <a class="nav-gh" href="https://github.com/ryanwisth">GitHub</a>
+      <a class="nav-mail" href="mailto:ryanwisth@gmail.com">Email</a>
       <button class="theme-toggle" type="button" hidden aria-label="Switch between light and dark"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
     </nav>
   </div>
@@ -36,11 +37,6 @@
     <a class="back" href="index.html#work">&larr; All projects</a>
     <p class="kicker">Things I use &middot; the study method built into the app</p>
     <h1 style="view-transition-name: t-streaks-trainer">A study app where one wrong answer resets your streak</h1>
-    <p class="lede">A study app for any multiple-choice subject. You work one topic at a time, easy to hard, and one wrong answer resets your streak. My part: the streak rules and the testing. AI wrote most of the code.</p>
-    <dl class="brief">
-      <dt>Problem</dt><dd>A percent score hides weak spots: 80% on a topic can mean you know it, or that you guess well.</dd>
-      <dt>Result</dt><dd>A working app that enforces streaks: 10, 10 and 5 right in a row on easy, medium and hard. Any wrong answer or guess resets the count to zero, and a short written note is required before the next question. It comes with 66 sample questions, every answer checked by a program. It runs from two files plus Python 3.9, and nothing leaves the computer.</dd>
-    </dl>
   </div>
 
   <section class="sum" aria-label="Summary">
@@ -55,6 +51,23 @@
         <div class="fact"><b>66</b><span>sample questions, every answer checked by a program</span></div>
       </div>
     </div>
+  </section>
+
+  <div class="prose case-part">
+    <dl class="brief">
+      <dt>Problem</dt><dd>A percent score hides weak spots: 80% on a topic can mean you know it, or that you guess well.</dd>
+      <dt>Result</dt><dd>A working app that enforces streaks: 10, 10 and 5 right in a row on easy, medium and hard. Any wrong answer or guess resets the count to zero, and a short written note is required before the next question. It comes with 66 sample questions, every answer checked by a program. It runs from two files plus Python 3.9, and nothing leaves the computer.</dd>
+    </dl>
+  </div>
+
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-streaks-trainer.jpg" width="960" height="540" aria-label="Narrated film, 35 seconds" aria-describedby="film-script-text"><source src="video/film-streaks-trainer.mp4" type="video/mp4"></video></span><figcaption>The project in 35 seconds, narrated. Press ♪ for sound.</figcaption></figure>
+  <details class="film-script"><summary>Read the script</summary><p id="film-script-text">1 wrong answer, or 1 guess, resets the streak to zero. A percent score hides weak spots. In this study app, a streak tells knowing from guessing. 10 in a row on easy, 10 on medium, and 5 on hard. You work one topic at a time. A guessed answer does not count, and no question repeats. After a wrong answer, a short note is written before the next question. 66 sample questions, every answer checked by a program. It runs from two files, and nothing leaves the computer.</p></details>
+
+  <div class="prose case-part">
+    <p class="lede">A study app for any multiple-choice subject. You work one topic at a time, easy to hard, and one wrong answer resets your streak. My part: the streak rules and the testing. AI wrote most of the code.</p>
+  </div>
+
+  <section class="sum sum-method" aria-label="How it was built">
     <ol class="method" aria-label="My rules, who wrote it, how it was tested">
       <li><p class="who">My rules</p><ul class="ticks"><li>The app enforces the rules</li><li>A guess does not count</li><li>No repeats</li></ul></li>
       <li class="ag"><p class="who">AI wrote</p><p>most of the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
@@ -62,13 +75,28 @@
     </ol>
   </section>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-streaks-trainer.jpg" width="960" height="540" aria-label="Narrated film, 35 seconds" aria-describedby="film-script-text"><source src="video/film-streaks-trainer.mp4" type="video/mp4"></video></span><figcaption>The project in 35 seconds, narrated. Press ♪ for sound.</figcaption></figure>
-  <details class="film-script"><summary>Read the script</summary><p id="film-script-text">1 wrong answer, or 1 guess, resets the streak to zero. A percent score hides weak spots. In this study app, a streak tells knowing from guessing. 10 in a row on easy, 10 on medium, and 5 on hard. You work one topic at a time. A guessed answer does not count, and no question repeats. After a wrong answer, a short note is written before the next question. 66 sample questions, every answer checked by a program. It runs from two files, and nothing leaves the computer.</p></details>
+  <div class="prose">
+    <h2>The problem</h2>
+    <p>A streak tells the two apart. You move from easy to medium to hard only after 10, 10 and 5 right in a row. Any wrong answer, or any right answer you guessed, sends the count back to zero.</p>
+    <p>The payoff comes at each break. Before the next question, you write down what went wrong and what you will do differently. The app enforces this.</p>
+  </div>
 
   <figure class="figure">
     <div class="shot"><div class="bar"><i></i><i></i><i></i><em>On my computer, practice screen</em></div><img src="img/streaks-practice.jpg" alt="The practice screen after a right answer: the practice plan, the streak counter with its dots, the question, and the line Right. Streak 4/5." width="1600" height="1216" loading="lazy"></div>
     <figcaption>The practice screen, on a plan with chosen targets.</figcaption>
   </figure>
+
+  <div class="prose">
+    <h2>Decisions I made</h2>
+    <ul>
+      <li><b>The app enforces the rules.</b> Streaks, cleared levels and the required note are handled behind the scenes, so the screen cannot stray from the method.</li>
+      <li><b>A guess does not count.</b> A right answer marked &ldquo;I guessed&rdquo; resets the count, just like a wrong one.</li>
+      <li><b>No repeats.</b> Each question is shown at most once, so a streak cannot come from memory.</li>
+      <li><b>History is never rewritten.</b> Every answer is saved, and the streak is counted back from the latest one.</li>
+      <li><b>Any subject.</b> Sections and topics come from one data file. Nothing about a subject is built into the code, so any multiple-choice subject works.</li>
+    </ul>
+  </div>
+
   <figure class="figure">
     <ol class="flow c3">
       <li><b>Set up a plan</b><span>a section or one topic, with streak targets</span></li>
@@ -80,32 +108,22 @@
     </ol>
     <figcaption>How it works, simplified. After the note, the next new question appears.</figcaption>
   </figure>
-  <figure class="figure">
-    <div class="shot"><div class="bar"><i></i><i></i><i></i><em>On my computer, after a wrong answer</em></div><img src="img/streaks-break-note.jpg" alt="The screen after a wrong answer: The streak broke, a prompt asking what broke it and what to do differently, a menu for the kind of break, a text box and a Save and continue button." width="1600" height="872" loading="lazy"></div>
-    <figcaption>The next question will not appear until a note is written.</figcaption>
-  </figure>
 
   <div class="prose">
-    <h2>The problem</h2>
-    <p>A streak tells the two apart. You move from easy to medium to hard only after 10, 10 and 5 right in a row. Any wrong answer, or any right answer you guessed, sends the count back to zero.</p>
-    <p>The payoff comes at each break. Before the next question, you write down what went wrong and what you will do differently. The app enforces this.</p>
-
-    <h2>Decisions I made</h2>
-    <ul>
-      <li><b>The app enforces the rules.</b> Streaks, cleared levels and the required note are handled behind the scenes, so the screen cannot stray from the method.</li>
-      <li><b>A guess does not count.</b> A right answer marked &ldquo;I guessed&rdquo; resets the count, just like a wrong one.</li>
-      <li><b>No repeats.</b> Each question is shown at most once, so a streak cannot come from memory.</li>
-      <li><b>History is never rewritten.</b> Every answer is saved, and the streak is counted back from the latest one.</li>
-      <li><b>Any subject.</b> Sections and topics come from one data file. Nothing about a subject is built into the code, so any multiple-choice subject works.</li>
-    </ul>
-
     <h2>How it was tested</h2>
     <ul>
       <li>Every main step (plans, notes, cleared levels, speed rounds, the tracker, loading questions) was tried from start to finish.</li>
       <li>The 66 sample questions are made from fill-in patterns, and a program checks every answer.</li>
       <li>Tested by using the app.</li>
     </ul>
+  </div>
 
+  <figure class="figure">
+    <div class="shot"><div class="bar"><i></i><i></i><i></i><em>On my computer, after a wrong answer</em></div><img src="img/streaks-break-note.jpg" alt="The screen after a wrong answer: The streak broke, a prompt asking what broke it and what to do differently, a menu for the kind of break, a text box and a Save and continue button." width="1600" height="872" loading="lazy"></div>
+    <figcaption>The next question will not appear until a note is written.</figcaption>
+  </figure>
+
+  <div class="prose">
     <h2>Scope</h2>
     <ul>
       <li>A general public version: the parts tied to one subject, and the original questions, are removed.</li>

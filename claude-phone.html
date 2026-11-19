@@ -25,7 +25,8 @@
     <nav class="topnav">
       <a href="index.html#work">Projects</a>
       <a class="hide-sm" href="index.html#how">How I work</a>
-      <a href="https://github.com/ryanwisth">GitHub</a>
+      <a class="nav-gh" href="https://github.com/ryanwisth">GitHub</a>
+      <a class="nav-mail" href="mailto:ryanwisth@gmail.com">Email</a>
       <button class="theme-toggle" type="button" hidden aria-label="Switch between light and dark"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
     </nav>
   </div>
@@ -36,11 +37,6 @@
     <a class="back" href="index.html#work">&larr; All projects</a>
     <p class="kicker">Things I use every day &middot; private network</p>
     <h1 style="view-transition-name: t-claude-phone">Claude Code, run from my iPhone</h1>
-    <p class="lede">Claude Code is Anthropic&rsquo;s AI coding assistant, and it does real work on my Mac. It reads and edits files, runs commands, writes code, and stops to ask me questions along the way. Normally that happens in an app on the desk. Anthropic has its own ways to reach Claude Code from a phone, but they did not fit how I work, so I built a private app for my iPhone that shows every Claude Code chat as it happens and lets me answer, steer or start work from anywhere, while the Mac keeps doing the work. Only my own devices can reach it. My part: the requirements, the priorities and the testing. AI wrote the code.</p>
-    <dl class="brief">
-      <dt>Problem</dt><dd>Claude Code often works for several minutes, then stops to ask me something. If I was away from the desk, the work just sat there waiting. I wanted to keep it moving from my phone, without sending my code through someone else&rsquo;s server.</dd>
-      <dt>Result</dt><dd>Before, work waited until I was back at the desk. Now I reply from the phone and the answer starts in 6 seconds. I use it every day to watch each chat live, tap answers, start new work, and get a notification when Claude finishes or needs me. 12 of the 16 desktop features I prioritized work on the phone and are tested. The app is never on the public internet.</dd>
-    </dl>
   </div>
 
   <section class="sum" aria-label="Summary">
@@ -55,40 +51,29 @@
         <div class="fact"><b>6 s</b><span>from a phone reply to the answer appearing in the same chat on the computer</span></div>
       </div>
     </div>
+  </section>
+
+  <div class="prose case-part">
+    <dl class="brief">
+      <dt>Problem</dt><dd>Claude Code often works for several minutes, then stops to ask me something. If I was away from the desk, the work just sat there waiting. I wanted to keep it moving from my phone, without sending my code through someone else&rsquo;s server.</dd>
+      <dt>Result</dt><dd>Before, work waited until I was back at the desk. Now I reply from the phone and the answer starts in 6 seconds. I use it every day to watch each chat live, tap answers, start new work, and get a notification when Claude finishes or needs me. 12 of the 16 desktop features I prioritized work on the phone and are tested. The app is never on the public internet.</dd>
+    </dl>
+  </div>
+
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-claude-phone.jpg" width="960" height="540" aria-label="Narrated film, 43 seconds" aria-describedby="film-script-text"><source src="video/film-claude-phone.mp4" type="video/mp4"></video></span><figcaption>The project in 43 seconds, narrated. Press ♪ for sound.</figcaption></figure>
+  <details class="film-script"><summary>Read the script</summary><p id="film-script-text">12 of 16 desktop features now work on the phone, added most-used first. Claude Code is an AI assistant that edits files and runs commands on a Mac. This build runs it from an iPhone. Every desktop chat shows up live. Its questions get a tap, and messages reach it mid-task. Anthropic's own phone options use a cloud copy, or need each session switched on. Here the work stays on the Mac. A reply from the phone picks up the same chat, with everything said so far, in 6 seconds. It runs only over a private network, never the public internet. It is in daily use, on an iPhone.</p></details>
+
+  <div class="prose case-part">
+    <p class="lede">Claude Code is Anthropic&rsquo;s AI coding assistant, and it does real work on my Mac. It reads and edits files, runs commands, writes code, and stops to ask me questions along the way. Normally that happens in an app on the desk. Anthropic has its own ways to reach Claude Code from a phone, but they did not fit how I work, so I built a private app for my iPhone that shows every Claude Code chat as it happens and lets me answer, steer or start work from anywhere, while the Mac keeps doing the work. Only my own devices can reach it. My part: the requirements, the priorities and the testing. AI wrote the code.</p>
+  </div>
+
+  <section class="sum sum-method" aria-label="How it was built">
     <ol class="method" aria-label="My rules, who wrote it, how it was tested">
       <li><p class="who">My rules</p><ul class="ticks"><li>Built by me, on my own network</li><li>Show the chats I already have</li><li>A reply continues the same chat</li></ul></li>
       <li class="ag"><p class="who">AI wrote</p><p>the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
       <li><p class="who">I tested</p><ul class="ticks ok"><li>Fake requests turned away, tested again after the last change</li><li>A real reply landed in the same chat</li></ul></li>
     </ol>
   </section>
-
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-claude-phone.jpg" width="960" height="540" aria-label="Narrated film, 43 seconds" aria-describedby="film-script-text"><source src="video/film-claude-phone.mp4" type="video/mp4"></video></span><figcaption>The project in 43 seconds, narrated. Press ♪ for sound.</figcaption></figure>
-  <details class="film-script"><summary>Read the script</summary><p id="film-script-text">12 of 16 desktop features now work on the phone, added most-used first. Claude Code is an AI assistant that edits files and runs commands on a Mac. This build runs it from an iPhone. Every desktop chat shows up live. Its questions get a tap, and messages reach it mid-task. Anthropic's own phone options use a cloud copy, or need each session switched on. Here the work stays on the Mac. A reply from the phone picks up the same chat, with everything said so far, in 6 seconds. It runs only over a private network, never the public internet. It is in daily use, on an iPhone.</p></details>
-
-  <figure class="figure">
-        <div class="chart-card">
-      <h3>Where it stands</h3>
-      <p class="sub">16 things the computer app could do that the phone page could not, ranked, by status on November 15, 2026.</p>
-      <div class="bars" role="img" aria-label="Bar chart. Of 16 gaps: 12 built and tested, 1 built but not yet proven on the iPhone, 2 not built, 1 not possible.">
-        <div class="row" title="Built and tested: 12"><span class="lab">Built and tested</span><span class="track"><i class="" style="--v:75%"></i></span><span class="val">12</span></div>
-        <div class="row" title="Built, not yet checked on the iPhone: 1"><span class="lab">Built, not yet checked on the iPhone</span><span class="track"><i class="" style="--v:6.25%"></i></span><span class="val">1</span></div>
-        <div class="row" title="Not built: 2"><span class="lab">Not built</span><span class="track"><i class="" style="--v:12.5%"></i></span><span class="val">2</span></div>
-        <div class="row" title="Not possible: 1"><span class="lab">Not possible</span><span class="track"><i class="" style="--v:6.25%"></i></span><span class="val">1</span></div>
-      </div>
-    </div>
-  </figure>
-
-  <figure class="figure">
-    <ol class="flow c3">
-      <li><b>iPhone</b><span>a web page saved to the Home Screen</span></li>
-      <li><b>Private network</b><span>Tailscale; the page is not on the public internet</span></li>
-      <li><b>A small program on the Mac</b><span>reads Claude Code&rsquo;s own record of each chat as it grows</span></li>
-      <li class="key"><b>One chat, one writer</b><span>a reply first closes that chat on the computer</span></li>
-      <li class="key"><b>Continue, not copy</b><span>Claude Code reopens the same chat, with its history and settings</span></li>
-      <li><b>Same chat</b><span>the answer appears on the phone and in the chat on the computer</span></li>
-    </ol>
-    <figcaption>From a reply typed on the phone to the same chat on the Mac. Drawn from the project&rsquo;s notes and code.</figcaption>
-  </figure>
 
   <div class="prose">
     <h2>What I can do from my phone</h2>
@@ -103,7 +88,22 @@
       <li><b>Send and see pictures and video.</b> I can attach photos, files and video, and images or videos Claude makes show up right in the chat.</li>
       <li><b>Get notified.</b> A notification on the iPhone when Claude finishes or needs an answer, even with the app closed.</li>
     </ul>
+  </div>
 
+  <figure class="figure">
+        <div class="chart-card">
+      <h3>Where it stands</h3>
+      <p class="sub">16 things the computer app could do that the phone page could not, ranked, by status on November 15, 2026.</p>
+      <div class="bars" role="img" aria-label="Bar chart. Of 16 gaps: 12 built and tested, 1 built but not yet proven on the iPhone, 2 not built, 1 not possible.">
+        <div class="row" title="Built and tested: 12"><span class="lab">Built and tested</span><span class="track"><i class="" style="--v:75%"></i></span><span class="val">12</span></div>
+        <div class="row" title="Built, not yet checked on the iPhone: 1"><span class="lab">Built, not yet checked on the iPhone</span><span class="track"><i class="" style="--v:6.25%"></i></span><span class="val">1</span></div>
+        <div class="row" title="Not built: 2"><span class="lab">Not built</span><span class="track"><i class="" style="--v:12.5%"></i></span><span class="val">2</span></div>
+        <div class="row" title="Not possible: 1"><span class="lab">Not possible</span><span class="track"><i class="" style="--v:6.25%"></i></span><span class="val">1</span></div>
+      </div>
+    </div>
+  </figure>
+
+  <div class="prose">
     <h2>Build or buy: why Anthropic&rsquo;s own options did not fit</h2>
     <p>The Claude app on the iPhone already has two ways to use Claude Code. Neither did what I needed.</p>
     <ul>
@@ -111,7 +111,9 @@
       <li><b>Remote Control.</b> Lets the Claude app steer a Claude Code session running on my Mac. Each session has to be switched on for it, the connection runs through Anthropic&rsquo;s servers, and some settings, such as letting Claude work without stopping for approval, cannot be chosen from the phone.</li>
       <li><b>My build.</b> Every chat already in the desktop app shows up on the phone, with nothing to switch on. The work runs on my Mac with all its files and tools, and the phone talks to it only over my own private network. On top of that I added the pieces I use most, one at a time, in order of how often I would reach for them: live replies, answering questions, steering mid-task, step details, attachments, pictures and video, and notifications.</li>
     </ul>
+  </div>
 
+  <div class="prose">
     <h2>How it works with Claude Code</h2>
     <ul>
       <li><b>Reading.</b> Claude Code keeps a written record of every chat on the Mac. A small program on the Mac reads those records and sends each new line to the phone as it appears.</li>
@@ -119,10 +121,26 @@
       <li><b>One writer at a time.</b> The risk: an open chat is held by the desktop app, and two programs writing to it would split the conversation in two. So a reply first closes that chat on the desktop, then reopens it. If the chat changed in the last 20 seconds, the reply waits so it never collides with work in progress.</li>
       <li><b>Private.</b> The phone reaches the Mac over Tailscale, a private network only my own devices can join. It works even while the Mac is locked.</li>
     </ul>
+  </div>
 
+  <figure class="figure">
+    <ol class="flow c3">
+      <li><b>iPhone</b><span>a web page saved to the Home Screen</span></li>
+      <li><b>Private network</b><span>Tailscale; the page is not on the public internet</span></li>
+      <li><b>A small program on the Mac</b><span>reads Claude Code&rsquo;s own record of each chat as it grows</span></li>
+      <li class="key"><b>One chat, one writer</b><span>a reply first closes that chat on the computer</span></li>
+      <li class="key"><b>Continue, not copy</b><span>Claude Code reopens the same chat, with its history and settings</span></li>
+      <li><b>Same chat</b><span>the answer appears on the phone and in the chat on the computer</span></li>
+    </ol>
+    <figcaption>From a reply typed on the phone to the same chat on the Mac. Drawn from the project&rsquo;s notes and code.</figcaption>
+  </figure>
+
+  <div class="prose">
     <h2>The hard part</h2>
     <p>Reading the chats on the phone was the easy half. Replying into the same chat, without splitting it in two and without someone else&rsquo;s server, was the hard half.</p>
+  </div>
 
+  <div class="prose">
     <h2>Decisions I made</h2>
     <ul>
       <li><b>Built by me, on my own network.</b> The page can be reached only over my private Tailscale network, never the public internet. I tried Anthropic&rsquo;s Remote Control first and chose to build. The trade-off I accepted: I maintain it myself, and no chat or code passes through a server I do not run.</li>
@@ -130,7 +148,9 @@
       <li><b>A proper connection, not fake typing.</b> Typing into the app automatically was tried first and dropped: the Mac blocked the keystrokes, and it could never work with the Mac locked. Picking up the chat directly works even while the Mac is locked.</li>
       <li><b>Match the computer, most-used first.</b> The 16 missing features were ranked by how often I would use each from the phone, and built in that order: live replies, answering the AI&rsquo;s questions, the task list, step details showing what changed, and attachments.</li>
     </ul>
+  </div>
 
+  <div class="prose">
     <h2>How it was tested</h2>
     <ul>
       <li><b>Closed to other websites.</b> Five kinds of fake request are turned away, such as a message from another website or an upload that does not say where it came from. The tests run again after every change, so no change has opened the page back up.</li>
@@ -139,7 +159,9 @@
       <li><b>Live text measured, not guessed.</b> The answer grew to 115, then 496, then 1,052 characters before it finished. The phone shows the answer as it is written.</li>
       <li><b>Alerts reach the iPhone.</b> Proven first in a browser on the computer, then confirmed on the phone itself.</li>
     </ul>
+  </div>
 
+  <div class="prose">
     <h2>What's next</h2>
     <ul>
       <li>Next on the list: archiving, renaming and pinning chats from the phone.</li>

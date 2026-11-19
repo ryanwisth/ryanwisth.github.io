@@ -459,7 +459,7 @@ html[data-look="cel"] .case-head::after {
   }
 }
 html[data-look="cel"] .case-head h1 { color: var(--c-text); text-shadow: none; -webkit-text-stroke: 0; }
-html[data-look="cel"] .case-head .lede { color: var(--c-muted); }
+html[data-look="cel"] :is(.case-head, .case-part) .lede { color: var(--c-muted); }
 html[data-look="cel"] .kicker { color: var(--c-accent); font-weight: 750; letter-spacing: .02em; }
 html[data-look="cel"] .kicker::before, html[data-look="cel"] .kicker::after { content: none; }
 /* the back link: a white slab (a control) */

@@ -25,7 +25,8 @@
     <nav class="topnav">
       <a href="index.html#work">Projects</a>
       <a class="hide-sm" href="index.html#how">How I work</a>
-      <a href="https://github.com/ryanwisth">GitHub</a>
+      <a class="nav-gh" href="https://github.com/ryanwisth">GitHub</a>
+      <a class="nav-mail" href="mailto:ryanwisth@gmail.com">Email</a>
       <button class="theme-toggle" type="button" hidden aria-label="Switch between light and dark"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
     </nav>
   </div>
@@ -36,11 +37,6 @@
     <a class="back" href="index.html#work">&larr; All projects</a>
     <p class="kicker">Browser add-on &middot; built and installed start to finish</p>
     <h1 style="view-transition-name: t-safari-dark-mode">Dark mode for any website in Safari</h1>
-    <p class="lede">An add-on for Safari, the Mac&rsquo;s web browser. It turns light websites dark in six color themes and leaves sites that are already dark alone. Photos keep their real colors. My part: the design rules and the testing. AI wrote the code.</p>
-    <dl class="brief">
-      <dt>Problem</dt><dd>Many websites have no dark mode. The usual fix rewrites the look of every page. That is a big job, and the bright page can flash up first.</dd>
-      <dt>Result</dt><dd>A finished add-on with 6 themes, each within 0.9 of its target colors on a standard 0-to-100 color-difference scale. It has brightness and contrast sliders, settings for each site, a keyboard shortcut and an option to follow the Mac&rsquo;s dark mode. Version 1.0.0 is built, signed and installed by one script, without Xcode. It asks for 1 permission: storage.</dd>
-    </dl>
   </div>
 
   <section class="sum" aria-label="Summary">
@@ -55,6 +51,23 @@
         <div class="fact"><b>1</b><span>permission: storage only, no internet access</span></div>
       </div>
     </div>
+  </section>
+
+  <div class="prose case-part">
+    <dl class="brief">
+      <dt>Problem</dt><dd>Many websites have no dark mode. The usual fix rewrites the look of every page. That is a big job, and the bright page can flash up first.</dd>
+      <dt>Result</dt><dd>A finished add-on with 6 themes, each within 0.9 of its target colors on a standard 0-to-100 color-difference scale. It has brightness and contrast sliders, settings for each site, a keyboard shortcut and an option to follow the Mac&rsquo;s dark mode. Version 1.0.0 is built, signed and installed by one script, without Xcode. It asks for 1 permission: storage.</dd>
+    </dl>
+  </div>
+
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-safari-dark-mode.jpg" width="960" height="540" aria-label="Narrated film, 39 seconds" aria-describedby="film-script-text"><source src="video/film-safari-dark-mode.mp4" type="video/mp4"></video></span><figcaption>The project in 39 seconds, narrated. Press ♪ for sound.</figcaption></figure>
+  <details class="film-script"><summary>Read the script</summary><p id="film-script-text">6 dark themes for Safari, each tuned by a program to its target colors. A Safari add-on turns light websites dark, and leaves dark ones alone. One filter darkens the whole page. A program tuned each theme. Photos are flipped back to their real colors. The biggest color error in any theme is 0.9, on a 0-to-1 scale. It asks for 1 permission, storage, and has no internet access. Version 1.0.0 is built, signed and installed by one script, without Xcode. 6 tuned themes, 1 permission, built start to finish.</p></details>
+
+  <div class="prose case-part">
+    <p class="lede">An add-on for Safari, the Mac&rsquo;s web browser. It turns light websites dark in six color themes and leaves sites that are already dark alone. Photos keep their real colors. My part: the design rules and the testing. AI wrote the code.</p>
+  </div>
+
+  <section class="sum sum-method" aria-label="How it was built">
     <ol class="method" aria-label="My rules, what AI wrote, how I tested it">
       <li><p class="who">My rules</p><ul class="ticks"><li>One filter, not a rewrite of every page</li><li>Themes tuned by a program, not by eye</li><li>Photos keep their real colors</li></ul></li>
       <li class="ag"><p class="who">AI wrote</p><p>the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
@@ -62,13 +75,36 @@
     </ol>
   </section>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-safari-dark-mode.jpg" width="960" height="540" aria-label="Narrated film, 39 seconds" aria-describedby="film-script-text"><source src="video/film-safari-dark-mode.mp4" type="video/mp4"></video></span><figcaption>The project in 39 seconds, narrated. Press ♪ for sound.</figcaption></figure>
-  <details class="film-script"><summary>Read the script</summary><p id="film-script-text">6 dark themes for Safari, each tuned by a program to its target colors. A Safari add-on turns light websites dark, and leaves dark ones alone. One filter darkens the whole page. A program tuned each theme. Photos are flipped back to their real colors. The biggest color error in any theme is 0.9, on a 0-to-1 scale. It asks for 1 permission, storage, and has no internet access. Version 1.0.0 is built, signed and installed by one script, without Xcode. 6 tuned themes, 1 permission, built start to finish.</p></details>
+  <div class="prose">
+    <h2>The problem</h2>
+    <p>Beyond making websites dark, the goal was to build, sign and install a Safari add-on without Xcode, Apple&rsquo;s app-building tool.</p>
+  </div>
 
   <figure class="figure">
     <img class="narrow" src="img/safari-all-themes.jpg" alt="One test page rendered in each of the six themes: Dark, Black, Dim, Sepia, Nord and Dracula" width="1000" height="965" loading="lazy">
     <figcaption>All six themes on the same test page.</figcaption>
   </figure>
+
+  <div class="prose">
+    <h2>Decisions I made</h2>
+    <ul>
+      <li><b>One filter, not a rewrite of every page.</b> A single fast filter over the whole page darkens every site with no special rules. For pages with pictures set on a light background, a &ldquo;Never&rdquo; setting turns it off for that site.</li>
+      <li><b>Themes tuned by a program, not by eye.</b> A program searches for the filter settings that land each theme on its chosen colors. The final error runs from 0.0 (Black background) to 0.9 (Sepia background), on a 0-to-100 scale.</li>
+      <li><b>Photos keep their real colors.</b> Pictures and video are flipped back with a tuned correction, so strong colors like yellow do not come back beige.</li>
+      <li><b>Already-dark pages are spotted.</b> The background color is checked at five points, and a page that is already dark is left alone.</li>
+      <li><b>As few permissions as possible.</b> Storage only, no internet access.</li>
+    </ul>
+  </div>
+
+  <div class="prose">
+    <h2>How it was tested</h2>
+    <ul>
+      <li>A test setup built for this project shows pages in WebKit, the engine inside Safari, with the add-on running.</li>
+      <li>Tested there: all six themes, headers while scrolling, photos, already-dark pages, the settings menu in light and dark, and real websites.</li>
+      <li>Version 1.0.0 builds, signs and installs into Safari&rsquo;s add-on list.</li>
+    </ul>
+  </div>
+
   <figure class="figure">
     <div class="chart-grid">
       <div class="chart-card">
@@ -91,25 +127,6 @@
   </figure>
 
   <div class="prose">
-    <h2>The problem</h2>
-    <p>Beyond making websites dark, the goal was to build, sign and install a Safari add-on without Xcode, Apple&rsquo;s app-building tool.</p>
-
-    <h2>Decisions I made</h2>
-    <ul>
-      <li><b>One filter, not a rewrite of every page.</b> A single fast filter over the whole page darkens every site with no special rules. For pages with pictures set on a light background, a &ldquo;Never&rdquo; setting turns it off for that site.</li>
-      <li><b>Themes tuned by a program, not by eye.</b> A program searches for the filter settings that land each theme on its chosen colors. The final error runs from 0.0 (Black background) to 0.9 (Sepia background), on a 0-to-100 scale.</li>
-      <li><b>Photos keep their real colors.</b> Pictures and video are flipped back with a tuned correction, so strong colors like yellow do not come back beige.</li>
-      <li><b>Already-dark pages are spotted.</b> The background color is checked at five points, and a page that is already dark is left alone.</li>
-      <li><b>As few permissions as possible.</b> Storage only, no internet access.</li>
-    </ul>
-
-    <h2>How it was tested</h2>
-    <ul>
-      <li>A test setup built for this project shows pages in WebKit, the engine inside Safari, with the add-on running.</li>
-      <li>Tested there: all six themes, headers while scrolling, photos, already-dark pages, the settings menu in light and dark, and real websites.</li>
-      <li>Version 1.0.0 builds, signs and installs into Safari&rsquo;s add-on list.</li>
-    </ul>
-
     <h2>Limits</h2>
     <ul>
       <li>The display tests ran in the test setup, with Safari&rsquo;s add-on system imitated.</li>

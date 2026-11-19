@@ -25,7 +25,8 @@
     <nav class="topnav">
       <a href="index.html#work">Projects</a>
       <a class="hide-sm" href="index.html#how">How I work</a>
-      <a href="https://github.com/ryanwisth">GitHub</a>
+      <a class="nav-gh" href="https://github.com/ryanwisth">GitHub</a>
+      <a class="nav-mail" href="mailto:ryanwisth@gmail.com">Email</a>
       <button class="theme-toggle" type="button" hidden aria-label="Switch between light and dark"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
     </nav>
   </div>
@@ -36,11 +37,6 @@
     <a class="back" href="index.html#work">&larr; All projects</a>
     <p class="kicker">AI tools &middot; safe limits when nobody is watching</p>
     <h1 style="view-transition-name: t-agent-runner">Long AI jobs that check the bill first</h1>
-    <p class="lede">A small tool that hands Claude, an AI assistant, a long job written out as instructions. It checks which account pays, caps the spending and the number of steps, and runs the job in fresh rounds until a &ldquo;done&rdquo; file appears. My part: the who-pays and spending rules, and the testing. AI wrote the code.</p>
-    <dl class="brief">
-      <dt>Problem</dt><dd>Long AI jobs are easier to hand off as written instructions than as a live chat. Running them with nobody watching raises three questions: which account pays, how to stop a run that goes over budget, and how to continue a job that does not finish in one round.</dd>
-      <dt>Result</dt><dd>Ran real jobs of several rounds in October 2026, paid from my subscription by default since October 25, 2026. Every run confirms who pays before any work. Each round is capped at $20 by default. Rounds repeat until the &ldquo;done&rdquo; file appears, and the first failed round stops everything, with 0 retries.</dd>
-    </dl>
   </div>
 
   <section class="sum" aria-label="Summary">
@@ -55,6 +51,23 @@
         <div class="fact"><b>0</b><span>retries: the first failed round stops the run</span></div>
       </div>
     </div>
+  </section>
+
+  <div class="prose case-part">
+    <dl class="brief">
+      <dt>Problem</dt><dd>Long AI jobs are easier to hand off as written instructions than as a live chat. Running them with nobody watching raises three questions: which account pays, how to stop a run that goes over budget, and how to continue a job that does not finish in one round.</dd>
+      <dt>Result</dt><dd>Ran real jobs of several rounds in October 2026, paid from my subscription by default since October 25, 2026. Every run confirms who pays before any work. Each round is capped at $20 by default. Rounds repeat until the &ldquo;done&rdquo; file appears, and the first failed round stops everything, with 0 retries.</dd>
+    </dl>
+  </div>
+
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-agent-runner.jpg" width="960" height="540" aria-label="Narrated film, 37 seconds" aria-describedby="film-script-text"><source src="video/film-agent-runner.mp4" type="video/mp4"></video></span><figcaption>The project in 37 seconds, narrated. Press ♪ for sound.</figcaption></figure>
+  <details class="film-script"><summary>Read the script</summary><p id="film-script-text">Long AI jobs, capped at $20 a round by default, with who pays checked first. A small tool hands the AI a long written job, and runs it in fresh rounds until a done file appears. Each round checks who pays, works under a budget, and repeats until the job is done. Two ways to pay. A mismatch stops the run with no work done. Zero retries: the first failed round stops the run. It has run real jobs of several rounds, paid from the subscription. Long AI jobs that check the bill first.</p></details>
+
+  <div class="prose case-part">
+    <p class="lede">A small tool that hands Claude, an AI assistant, a long job written out as instructions. It checks which account pays, caps the spending and the number of steps, and runs the job in fresh rounds until a &ldquo;done&rdquo; file appears. My part: the who-pays and spending rules, and the testing. AI wrote the code.</p>
+  </div>
+
+  <section class="sum sum-method" aria-label="How it was built">
     <ol class="method" aria-label="What was set, who wrote it, how it was checked">
       <li><p class="who">My rules</p><ul class="ticks"><li>Who pays is checked, not assumed</li><li>Use the built-in budget</li><li>Stop on the first failure</li></ul></li>
       <li class="ag"><p class="who">AI wrote</p><p>the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
@@ -62,8 +75,10 @@
     </ol>
   </section>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-agent-runner.jpg" width="960" height="540" aria-label="Narrated film, 37 seconds" aria-describedby="film-script-text"><source src="video/film-agent-runner.mp4" type="video/mp4"></video></span><figcaption>The project in 37 seconds, narrated. Press ♪ for sound.</figcaption></figure>
-  <details class="film-script"><summary>Read the script</summary><p id="film-script-text">Long AI jobs, capped at $20 a round by default, with who pays checked first. A small tool hands the AI a long written job, and runs it in fresh rounds until a done file appears. Each round checks who pays, works under a budget, and repeats until the job is done. Two ways to pay. A mismatch stops the run with no work done. Zero retries: the first failed round stops the run. It has run real jobs of several rounds, paid from the subscription. Long AI jobs that check the bill first.</p></details>
+  <div class="prose">
+    <h2>The problem</h2>
+    <p>Claude can be paid for two ways: a pay-per-use key, billed to that key&rsquo;s account, or a subscription. The risk: if a key happens to be set up, it quietly wins over the subscription, so a run with nobody watching could bill the wrong account. The tool closes that gap.</p>
+  </div>
 
   <figure class="figure">
     <ol class="flow c3">
@@ -78,9 +93,6 @@
   </figure>
 
   <div class="prose">
-    <h2>The problem</h2>
-    <p>Claude can be paid for two ways: a pay-per-use key, billed to that key&rsquo;s account, or a subscription. The risk: if a key happens to be set up, it quietly wins over the subscription, so a run with nobody watching could bill the wrong account. The tool closes that gap.</p>
-
     <h2>Decisions I made</h2>
     <ul>
       <li><b>Who pays is checked, not assumed.</b> The tool stops before the AI does anything if the reported account does not match the setting.</li>
@@ -90,13 +102,17 @@
       <li><b>My standing rules still apply.</b> The tool loads my usual settings, so the same rules govern every run, even unwatched.</li>
       <li><b>Spend nothing on a typo.</b> The command is checked before any round starts.</li>
     </ul>
+  </div>
 
+  <div class="prose">
     <h2>How it was tested</h2>
     <ul>
       <li>The exact account label was confirmed in a live test with the smallest AI model.</li>
       <li>The who-pays check, the settings, a fresh run and a restart were tested with the smallest model before the first real job.</li>
     </ul>
+  </div>
 
+  <div class="prose">
     <h2>Limits</h2>
     <ul>
       <li>By default the AI acts without asking first, so point it at a folder it is allowed to change.</li>

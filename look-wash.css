@@ -143,20 +143,20 @@ html[data-look="wash"] .hero::before,
 html[data-look="wash"] .case-head::before { content: none; }
 html[data-look="wash"] :is(.hero-one, .brief) { position: relative; }
 html[data-look="wash"] .hero-sub,
-html[data-look="wash"] .case-head .lede { position: relative; padding-bottom: calc(var(--u) * 486); background: linear-gradient(90deg, var(--rule-soft), var(--rule) 72%) 0 100% / 100% 1px no-repeat; }
+html[data-look="wash"] :is(.case-head, .case-part) .lede { position: relative; padding-bottom: calc(var(--u) * 486); background: linear-gradient(90deg, var(--rule-soft), var(--rule) 72%) 0 100% / 100% 1px no-repeat; }
 html[data-look="wash"] .hero-sub { margin-bottom: 44px; }
 html[data-look="wash"] .brief { margin-top: 34px; }
 @media (min-width: 1000px) {
   html[data-look="wash"] { --scene: min(1032px, 100vw - 48px); }
   html[data-look="wash"] .hero-sub,
-  html[data-look="wash"] .case-head .lede { box-sizing: border-box; min-height: calc(var(--u) * 484); padding-right: 46%; padding-bottom: calc(var(--u) * 124); }
+  html[data-look="wash"] :is(.case-head, .case-part) .lede { box-sizing: border-box; min-height: calc(var(--u) * 484); padding-right: 46%; padding-bottom: calc(var(--u) * 124); }
 }
 /* the moon: its box is centred on the disc, so turning the box turns the orbits */
 html[data-look="wash"] .hero-sub::before,
-html[data-look="wash"] .case-head .lede::before { content: ""; position: absolute; z-index: -1; pointer-events: none; right: calc(var(--u) * 100); bottom: 0; width: calc(var(--u) * 483); aspect-ratio: 1; background: var(--art-moon) center / 100% 100% no-repeat; }
+html[data-look="wash"] :is(.case-head, .case-part) .lede::before { content: ""; position: absolute; z-index: -1; pointer-events: none; right: calc(var(--u) * 100); bottom: 0; width: calc(var(--u) * 483); aspect-ratio: 1; background: var(--art-moon) center / 100% 100% no-repeat; }
 /* the city, feet on the horizon line */
 html[data-look="wash"] .hero-sub::after,
-html[data-look="wash"] .case-head .lede::after { content: ""; position: absolute; z-index: -1; pointer-events: none; left: 0; right: 0; bottom: 0; height: calc(var(--u) * 400); background: var(--art-city) right bottom / var(--scene) auto no-repeat; }
+html[data-look="wash"] :is(.case-head, .case-part) .lede::after { content: ""; position: absolute; z-index: -1; pointer-events: none; left: 0; right: 0; bottom: 0; height: calc(var(--u) * 400); background: var(--art-city) right bottom / var(--scene) auto no-repeat; }
 /* the cloud, behind both and densest behind the moon; hung from the block that carries the paragraph (home) or the one that follows it (case pages) */
 html[data-look="wash"] .hero-one::before,
 html[data-look="wash"] .brief::before { content: ""; position: absolute; z-index: -2; pointer-events: none; right: calc(var(--u) * -60); bottom: calc(44px - var(--u) * 70); width: calc(var(--u) * 1040); aspect-ratio: 1040 / 560;
@@ -428,11 +428,11 @@ html[data-look="wash"] footer.site::before { content: ""; position: absolute; le
   html[data-look="wash"].motion .hero-one::before,
   html[data-look="wash"].motion .brief::before { transform-origin: 61% 45%; animation: wash-bloom 3.4s cubic-bezier(.2, .6, .2, 1) both, wash-drift 34s ease-in-out 3.4s infinite alternate; }
   html[data-look="wash"].motion .hero-sub,
-  html[data-look="wash"].motion .case-head .lede { animation-name: wash-line; animation-duration: 2.2s; animation-timing-function: cubic-bezier(.3, .5, .2, 1); animation-delay: .2s; animation-fill-mode: both; }
+  html[data-look="wash"].motion :is(.case-head, .case-part) .lede { animation-name: wash-line; animation-duration: 2.2s; animation-timing-function: cubic-bezier(.3, .5, .2, 1); animation-delay: .2s; animation-fill-mode: both; }
   html[data-look="wash"].motion .hero-sub::before,
-  html[data-look="wash"].motion .case-head .lede::before { animation: wash-moon 2.8s cubic-bezier(.2, .7, .2, 1) .5s both, wash-orbit 240s linear infinite; }
+  html[data-look="wash"].motion :is(.case-head, .case-part) .lede::before { animation: wash-moon 2.8s cubic-bezier(.2, .7, .2, 1) .5s both, wash-orbit 240s linear infinite; }
   html[data-look="wash"].motion .hero-sub::after,
-  html[data-look="wash"].motion .case-head .lede::after { animation: wash-draw 2.6s cubic-bezier(.3, .5, .2, 1) .7s both; }
+  html[data-look="wash"].motion :is(.case-head, .case-part) .lede::after { animation: wash-draw 2.6s cubic-bezier(.3, .5, .2, 1) .7s both; }
   html[data-look="wash"].motion :is(.hero, .case-head) h1::before { animation: wash-motes 90s linear infinite; }
   /* a title's stroke of colour is brushed in from the left; a group's tree takes its colour when the line reaches it */
   html[data-look="wash"].motion .section-head h2::before { clip-path: inset(0); transition: clip-path 1.5s cubic-bezier(.3, .5, .2, 1) .15s; }
@@ -460,7 +460,7 @@ html[data-look="wash"] footer.site::before { content: ""; position: absolute; le
 @supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {
     html[data-look="wash"].motion .hero-sub::before,
-    html[data-look="wash"].motion .case-head .lede::before { animation: wash-moon 2.8s cubic-bezier(.2, .7, .2, 1) .5s both, wash-orbit 240s linear infinite, wash-set linear both; animation-timeline: auto, auto, scroll(root block); animation-range: normal, normal, 0px 620px; }
+    html[data-look="wash"].motion :is(.case-head, .case-part) .lede::before { animation: wash-moon 2.8s cubic-bezier(.2, .7, .2, 1) .5s both, wash-orbit 240s linear infinite, wash-set linear both; animation-timeline: auto, auto, scroll(root block); animation-range: normal, normal, 0px 620px; }
   }
 }
 

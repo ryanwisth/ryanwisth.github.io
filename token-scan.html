@@ -25,7 +25,8 @@
     <nav class="topnav">
       <a href="index.html#work">Projects</a>
       <a class="hide-sm" href="index.html#how">How I work</a>
-      <a href="https://github.com/ryanwisth">GitHub</a>
+      <a class="nav-gh" href="https://github.com/ryanwisth">GitHub</a>
+      <a class="nav-mail" href="mailto:ryanwisth@gmail.com">Email</a>
       <button class="theme-toggle" type="button" hidden aria-label="Switch between light and dark"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
     </nav>
   </div>
@@ -36,11 +37,6 @@
     <a class="back" href="index.html#work">&larr; All projects</a>
     <p class="kicker">AI costs &middot; find the cause, then cut</p>
     <h1 style="view-transition-name: t-token-scan">Finding where my AI spending went</h1>
-    <p class="lede">Claude Code is Anthropic’s AI coding assistant. Six small scripts read its logs and show where the usage went: by project, AI model, day, chat and tool. My part: the questions, the rules and the testing. AI wrote the code.</p>
-    <dl class="brief">
-      <dt>Problem</dt><dd>Every AI call costs tokens, the units AI use is billed in. The usage meter shows a total, not a cause. When a week&rsquo;s allowance ran out early, I needed to know what used it up.</dd>
-      <dt>Result</dt><dd>Six scans turned a bare total on the meter into causes I could fix. 482 of 662 AI helpers ran as the heavy default type: 53.8k tokens in the first step, against 16k to 20k for lighter types. And 39% of cache reads (the AI re-reading text it saved earlier) came during long stretches with nobody typing, which a check on each message never saw. Each finding became a rule in my spending guard.</dd>
-    </dl>
   </div>
 
   <section class="sum" aria-label="Summary">
@@ -71,6 +67,23 @@
         <div class="fact"><b>4,816</b><span>images held in the AI&rsquo;s working memory in one week, found by one scan</span></div>
       </div>
     </div>
+  </section>
+
+  <div class="prose case-part">
+    <dl class="brief">
+      <dt>Problem</dt><dd>Every AI call costs tokens, the units AI use is billed in. The usage meter shows a total, not a cause. When a week&rsquo;s allowance ran out early, I needed to know what used it up.</dd>
+      <dt>Result</dt><dd>Six scans turned a bare total on the meter into causes I could fix. 482 of 662 AI helpers ran as the heavy default type: 53.8k tokens in the first step, against 16k to 20k for lighter types. And 39% of cache reads (the AI re-reading text it saved earlier) came during long stretches with nobody typing, which a check on each message never saw. Each finding became a rule in my spending guard.</dd>
+    </dl>
+  </div>
+
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-token-scan.jpg" width="960" height="540" aria-label="Narrated film, 45 seconds" aria-describedby="film-script-text"><source src="video/film-token-scan.mp4" type="video/mp4"></video></span><figcaption>The project in 45 seconds, narrated. Press ♪ for sound.</figcaption></figure>
+  <details class="film-script"><summary>Read the script</summary><p id="film-script-text">482 of 662 AI helpers started far bigger than they needed to. Six small scans find where the AI spending went. The scans read the AI's own logs, count each step once, and print one table per question. AI use is counted in pieces of text. A big helper's first step took 53.8k. A light one, 16k to 20k. 39% of the AI's re-reading happened during long stretches with nobody typing. And 4,816 images in one week. Each finding became a spending rule. Vague overspending, turned into fixable causes.</p></details>
+
+  <div class="prose case-part">
+    <p class="lede">Claude Code is Anthropic’s AI coding assistant. Six small scripts read its logs and show where the usage went: by project, AI model, day, chat and tool. My part: the questions, the rules and the testing. AI wrote the code.</p>
+  </div>
+
+  <section class="sum sum-method" aria-label="How it was built">
     <ol class="method" aria-label="What was set, who wrote it, how it was checked">
       <li><p class="who">My rules</p><ul class="ticks"><li>One number to compare everything</li><li>Count each step once</li><li>One question per script</li></ul></li>
       <li class="ag"><p class="who">AI wrote</p><p>the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
@@ -78,8 +91,10 @@
     </ol>
   </section>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-token-scan.jpg" width="960" height="540" aria-label="Narrated film, 45 seconds" aria-describedby="film-script-text"><source src="video/film-token-scan.mp4" type="video/mp4"></video></span><figcaption>The project in 45 seconds, narrated. Press ♪ for sound.</figcaption></figure>
-  <details class="film-script"><summary>Read the script</summary><p id="film-script-text">482 of 662 AI helpers started far bigger than they needed to. Six small scans find where the AI spending went. The scans read the AI's own logs, count each step once, and print one table per question. AI use is counted in pieces of text. A big helper's first step took 53.8k. A light one, 16k to 20k. 39% of the AI's re-reading happened during long stretches with nobody typing. And 4,816 images in one week. Each finding became a spending rule. Vague overspending, turned into fixable causes.</p></details>
+  <div class="prose">
+    <h2>The problem</h2>
+    <p>Every AI call&rsquo;s tokens are already written to log files on my computer. But nothing added them up. Without a root cause, every fix was a guess.</p>
+  </div>
 
   <figure class="figure">
     <ol class="flow c3">
@@ -89,15 +104,8 @@
     </ol>
     <figcaption>Simplified from the diagram in the project&rsquo;s notes.</figcaption>
   </figure>
-  <figure class="figure">
-    <div class="term"><div class="bar"><i></i><i></i><i></i><em>usage_by_model.py</em></div><pre tabindex="0" role="img" aria-label="Terminal output: usage_by_model.py"><span class="ln cmd">python3 -I usage_by_model.py 2026-01-05T00:00:00Z --root sample-transcripts</span><span class="ln">since 2026-01-05T00:00:00Z: 3 transcript files, 290 model calls</span><span class="ln hl">model                      calls   input  cache-write  cache-read   output   units(M)  share</span><span class="ln">claude-haiku-5-5             128    0.0M        0.2M       11.6M     0.1M       2.0  43.5%</span><span class="ln">claude-sonnet-5-5            111    0.0M        0.2M       12.4M     0.1M       2.0  43.0%</span><span class="ln">claude-opus-5-5               51    0.0M        0.1M        3.0M     0.0M       0.6  13.5%</span><span class="ln"></span><span class="ln hl">by day (units, M):      claude-haiku-5-5  claude-sonnet-5-   claude-opus-5-5</span><span class="ln">Mon 05                               0.2               0.1               0.1</span><span class="ln">Tue 06                               0.2               0.2               0.1</span><span class="ln">Wed 07                               0.2               0.3               0.1</span><span class="ln dim">…</span><span class="ln"></span><span class="ln hl">by project folder (units, M):</span><span class="ln">notes-app                                    claude-haiku:0.6  claude-sonne:2.0</span><span class="ln">website                                      claude-haiku:1.3</span><span class="ln">data-cleanup                                 claude-haiku:0.1  claude-opus-:0.6</span></pre></div>
-    <figcaption>One of the scripts, run on a few made-up logs (290 AI calls in three project folders). The layout is real; the numbers mean nothing. The figures above come from the real scans.</figcaption>
-  </figure>
 
   <div class="prose">
-    <h2>The problem</h2>
-    <p>Every AI call&rsquo;s tokens are already written to log files on my computer. But nothing added them up. Without a root cause, every fix was a guess.</p>
-
     <h2>Decisions I made</h2>
     <ul>
       <li><b>One comparable number.</b> Each AI call gets one number, weighted by the price list, so cheap kinds of usage and expensive kinds land on the same scale. It is a ruler for comparing, not a bill.</li>
@@ -106,14 +114,23 @@
       <li><b>Read-only and local.</b> No extra software to install, and nothing leaves the computer.</li>
       <li><b>Guesses written down.</b> Where a script has to guess, the rule is written down and its numbers can be changed, so every figure can be traced back to its rule.</li>
     </ul>
+  </div>
 
+  <div class="prose">
     <h2>How it was tested</h2>
     <ul>
       <li>Used for a real weekly spending review in November 2026, then kept as tools to reuse.</li>
       <li>The findings became rules in <a href="https://github.com/ryanwisth/claude-code-token-guard">claude-code-token-guard</a>, aimed at the heavy helper type behind 482 of 662 helpers and the unattended stretches behind 39% of cache reads.</li>
       <li>Each new rule was checked against the next week&rsquo;s scan, so the same scripts that found a leak showed it was closed.</li>
     </ul>
+  </div>
 
+  <figure class="figure">
+    <div class="term"><div class="bar"><i></i><i></i><i></i><em>usage_by_model.py</em></div><pre tabindex="0" role="img" aria-label="Terminal output: usage_by_model.py"><span class="ln cmd">python3 -I usage_by_model.py 2026-01-05T00:00:00Z --root sample-transcripts</span><span class="ln">since 2026-01-05T00:00:00Z: 3 transcript files, 290 model calls</span><span class="ln hl">model                      calls   input  cache-write  cache-read   output   units(M)  share</span><span class="ln">claude-haiku-5-5             128    0.0M        0.2M       11.6M     0.1M       2.0  43.5%</span><span class="ln">claude-sonnet-5-5            111    0.0M        0.2M       12.4M     0.1M       2.0  43.0%</span><span class="ln">claude-opus-5-5               51    0.0M        0.1M        3.0M     0.0M       0.6  13.5%</span><span class="ln"></span><span class="ln hl">by day (units, M):      claude-haiku-5-5  claude-sonnet-5-   claude-opus-5-5</span><span class="ln">Mon 05                               0.2               0.1               0.1</span><span class="ln">Tue 06                               0.2               0.2               0.1</span><span class="ln">Wed 07                               0.2               0.3               0.1</span><span class="ln dim">…</span><span class="ln"></span><span class="ln hl">by project folder (units, M):</span><span class="ln">notes-app                                    claude-haiku:0.6  claude-sonne:2.0</span><span class="ln">website                                      claude-haiku:1.3</span><span class="ln">data-cleanup                                 claude-haiku:0.1  claude-opus-:0.6</span></pre></div>
+    <figcaption>One of the scripts, run on a few made-up logs (290 AI calls in three project folders). The layout is real; the numbers mean nothing. The figures above come from the real scans.</figcaption>
+  </figure>
+
+  <div class="prose">
     <h2>Limits</h2>
     <ul>
       <li>Reads Claude Code&rsquo;s own log format, which can change with new versions.</li>

@@ -440,20 +440,21 @@
   var sum = d.querySelector('.sum');
   if (sum && top0) {
     var sv = sum.querySelector('.sum-vis'), sf = sum.querySelectorAll('.fact'), sl = sum.querySelectorAll('.method > li'), lim = sum.querySelector('.ticks .no');
-    if (sv && sf.length === 3 && sl.length === 3) { // the limit line is optional: without it the ball rests on "I checked"
+    if (sv && sf.length === 3 && (sl.length === 3 || !sl.length)) { // the strip now sits lower on the page, in its own block: then the ball rests on the third figure
       guided = true;
       guide(sum, [sv].concat([].slice.call(sf), [].slice.call(sl)), function (R, g) {
-        var V = R(sv), F = [R(sf[0]), R(sf[1]), R(sf[2])], M = [R(sl[0]), R(sl[1]), R(sl[2])], L = lim && R(lim), x = V.l - g, p = [];
+        var V = R(sv), F = [R(sf[0]), R(sf[1]), R(sf[2])], M = sl.length ? [R(sl[0]), R(sl[1]), R(sl[2])] : null, L = lim && R(lim), x = V.l - g, p = [];
         if (F[0].l > V.r - 1) { // figures beside the visual: down the gap between them, then back along the gap above the strip
-          var cx = (V.r + F[0].l) / 2, yt = Math.min(V.t, F[0].t) - 10, hy = (Math.max(V.b, F[2].b) + M[0].t) / 2;
+          var cx = (V.r + F[0].l) / 2, yt = Math.min(V.t, F[0].t) - 10, hy = M ? (Math.max(V.b, F[2].b) + M[0].t) / 2 : 0;
           p.push({ x: V.l + 24, y: yt, hit: sv }, { x: cx, y: yt });
           F.forEach(function (f, i) { p.push({ x: cx, y: f.cy, hit: sf[i] }); });
-          p.push({ x: cx, y: hy }, { x: x, y: hy });
+          if (M) p.push({ x: cx, y: hy }, { x: x, y: hy });
         } else {
           p.push({ x: x, y: V.t + 24, hit: sv });
           if (F[1].t > F[0].b - 2) F.forEach(function (f, i) { p.push({ x: x, y: f.cy, hit: sf[i] }); });
           else p.push({ x: x, y: F[0].cy, hit: sf });
         }
+        if (!M) return p;
         if (M[1].t > M[0].b - 2) { // strip stacked
           M.forEach(function (m, i) { p.push({ x: x, y: m.t + 20, hit: sl[i] }); });
           if (L) p.push({ x: x, y: L.cy, hit: lim });

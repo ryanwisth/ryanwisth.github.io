@@ -25,7 +25,8 @@
     <nav class="topnav">
       <a href="index.html#work">Projects</a>
       <a class="hide-sm" href="index.html#how">How I work</a>
-      <a href="https://github.com/ryanwisth">GitHub</a>
+      <a class="nav-gh" href="https://github.com/ryanwisth">GitHub</a>
+      <a class="nav-mail" href="mailto:ryanwisth@gmail.com">Email</a>
       <button class="theme-toggle" type="button" hidden aria-label="Switch between light and dark"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.75a6.25 6.25 0 0 1 0 12.5z" fill="currentColor"/></svg></button>
     </nav>
   </div>
@@ -36,11 +37,6 @@
     <a class="back" href="index.html#work">&larr; All projects</a>
     <p class="kicker">Honest research &middot; predictions written down first</p>
     <h1 style="view-transition-name: t-pinball-study">A study set up so it could prove me wrong</h1>
-    <p class="lede">A research tool that converts pinball table designs into one format, measures their shape, plays them with simulated players at four skill levels, and tests whether any of that predicts how much people enjoy a table. My part: the study rules and the checks. AI wrote the code and ran the experiments.</p>
-    <dl class="brief">
-      <dt>Problem</dt><dd>The goal was to score a new pinball table before anyone has played it, by learning what sets well-rated tables apart, without fooling myself with measures that fit by chance.</dd>
-      <dt>Result</dt><dd>A clear &ldquo;no&rdquo;, with the test settled before the data came in. 9 predictions were locked with a digital fingerprint before any result, tested on 79 real tables and retested on 94, and none held. The best model&rsquo;s typical error was 0.425, against 0.448 for simply guessing the average rating. Year, maker and a few build details alone did as well, at 0.421. What a 2D simulator can measure does not predict how players rate a table.</dd>
-    </dl>
   </div>
 
   <section class="sum" aria-label="Summary">
@@ -62,6 +58,23 @@
         <div class="fact"><b>5%</b><span>better than guessing the average rating: too small to use, and called a failure</span></div>
       </div>
     </div>
+  </section>
+
+  <div class="prose case-part">
+    <dl class="brief">
+      <dt>Problem</dt><dd>The goal was to score a new pinball table before anyone has played it, by learning what sets well-rated tables apart, without fooling myself with measures that fit by chance.</dd>
+      <dt>Result</dt><dd>A clear &ldquo;no&rdquo;, with the test settled before the data came in. 9 predictions were locked with a digital fingerprint before any result, tested on 79 real tables and retested on 94, and none held. The best model&rsquo;s typical error was 0.425, against 0.448 for simply guessing the average rating. Year, maker and a few build details alone did as well, at 0.421. What a 2D simulator can measure does not predict how players rate a table.</dd>
+    </dl>
+  </div>
+
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-pinball-study.jpg" width="960" height="540" aria-label="Narrated film, 40 seconds" aria-describedby="film-script-text"><source src="video/film-pinball-study.mp4" type="video/mp4"></video></span><figcaption>The project in 40 seconds, narrated. Press ♪ for sound.</figcaption></figure>
+  <details class="film-script"><summary>Read the script</summary><p id="film-script-text">9 predictions, locked before any result. A pinball study, set up so it could be proven wrong. Each table is converted into one format, its shape is measured, and simulated players at four skill levels play it. Run on 79 real tables, then on 94. None of the 9 held, and the study says so. The best model barely beat guessing the average: 0.425 against 0.448. Ratings mostly reward theme, rules and sound, which a 2D simulator cannot see. A clear no, settled before the data came in.</p></details>
+
+  <div class="prose case-part">
+    <p class="lede">A research tool that converts pinball table designs into one format, measures their shape, plays them with simulated players at four skill levels, and tests whether any of that predicts how much people enjoy a table. My part: the study rules and the checks. AI wrote the code and ran the experiments.</p>
+  </div>
+
+  <section class="sum sum-method" aria-label="How it was built">
     <ol class="method" aria-label="My rules, what AI wrote, how I tested it">
       <li><p class="who">My rules</p><ul class="ticks"><li>Predictions before results</li><li>Year and maker always counted</li><li>Trust only what holds up</li></ul></li>
       <li class="ag"><p class="who">AI wrote</p><p>the code and ran the experiments</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
@@ -69,8 +82,10 @@
     </ol>
   </section>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-pinball-study.jpg" width="960" height="540" aria-label="Narrated film, 40 seconds" aria-describedby="film-script-text"><source src="video/film-pinball-study.mp4" type="video/mp4"></video></span><figcaption>The project in 40 seconds, narrated. Press ♪ for sound.</figcaption></figure>
-  <details class="film-script"><summary>Read the script</summary><p id="film-script-text">9 predictions, locked before any result. A pinball study, set up so it could be proven wrong. Each table is converted into one format, its shape is measured, and simulated players at four skill levels play it. Run on 79 real tables, then on 94. None of the 9 held, and the study says so. The best model barely beat guessing the average: 0.425 against 0.448. Ratings mostly reward theme, rules and sound, which a 2D simulator cannot see. A clear no, settled before the data came in.</p></details>
+  <div class="prose">
+    <h2>The problem</h2>
+    <p>The main risk in a study like this is to try many measures and report the ones that happen to fit. This study fixed its tests and verdicts in advance, so the result could not be bent afterward.</p>
+  </div>
 
   <figure class="figure">
     <ol class="flow c5">
@@ -82,6 +97,27 @@
     </ol>
     <figcaption>The study, simplified from the project&rsquo;s own diagram.</figcaption>
   </figure>
+
+  <div class="prose">
+    <h2>Decisions I made</h2>
+    <ul>
+      <li><b>Predictions before results.</b> Designers&rsquo; rules of thumb were written down, each with the direction it predicted, a fixed test and a fixed rule for the verdict. Then they were locked with a digital fingerprint, before any measure was compared with a rating.</li>
+      <li><b>One shared board format.</b> The simulator never sees an original file, so a new design can be measured exactly like a converted commercial table.</li>
+      <li><b>Borrow the physics, do not invent it.</b> A flipper tuned by hand was replaced with the flipper from an established pinball simulator.</li>
+      <li><b>Year and maker always counted.</b> Every model includes them, so a table&rsquo;s era and brand are not mistaken for &ldquo;fun&rdquo;.</li>
+      <li><b>Trust only what holds up.</b> The expert simulated player did not reliably beat the medium-skill one, so every prediction uses the medium-skill player.</li>
+    </ul>
+  </div>
+
+  <div class="prose">
+    <h2>How it was tested</h2>
+    <ul>
+      <li>Every rating model was judged the same way: each table was predicted by a model that had not seen it, and the result was compared with simply guessing the average.</li>
+      <li>Each prediction was tested with error ranges (bootstrap intervals) on two separate measures of success: public rating and how many tables were made.</li>
+      <li>The fingerprints of the prediction files are stored with the results, so any later edit shows.</li>
+    </ul>
+  </div>
+
   <figure class="figure">
     <div class="split">
       <div class="shot"><div class="bar"><i></i><i></i><i></i><em>ball-path tracer</em></div><video data-auto controls muted loop playsinline preload="none" poster="img/pinball-trace.jpg" width="362" height="800" aria-label="A top-down pinball board with the ball's path drawn as a growing yellow line over one simulated minute"><source src="video/pinball-trace.mp4" type="video/mp4"></video></div>
@@ -98,25 +134,6 @@
   </figure>
 
   <div class="prose">
-    <h2>The problem</h2>
-    <p>The main risk in a study like this is to try many measures and report the ones that happen to fit. This study fixed its tests and verdicts in advance, so the result could not be bent afterward.</p>
-
-    <h2>Decisions I made</h2>
-    <ul>
-      <li><b>Predictions before results.</b> Designers&rsquo; rules of thumb were written down, each with the direction it predicted, a fixed test and a fixed rule for the verdict. Then they were locked with a digital fingerprint, before any measure was compared with a rating.</li>
-      <li><b>One shared board format.</b> The simulator never sees an original file, so a new design can be measured exactly like a converted commercial table.</li>
-      <li><b>Borrow the physics, do not invent it.</b> A flipper tuned by hand was replaced with the flipper from an established pinball simulator.</li>
-      <li><b>Year and maker always counted.</b> Every model includes them, so a table&rsquo;s era and brand are not mistaken for &ldquo;fun&rdquo;.</li>
-      <li><b>Trust only what holds up.</b> The expert simulated player did not reliably beat the medium-skill one, so every prediction uses the medium-skill player.</li>
-    </ul>
-
-    <h2>How it was tested</h2>
-    <ul>
-      <li>Every rating model was judged the same way: each table was predicted by a model that had not seen it, and the result was compared with simply guessing the average.</li>
-      <li>Each prediction was tested with error ranges (bootstrap intervals) on two separate measures of success: public rating and how many tables were made.</li>
-      <li>The fingerprints of the prediction files are stored with the results, so any later edit shows.</li>
-    </ul>
-
     <h2>Limits</h2>
     <ul>
       <li>The finding: ratings mostly reward theme, license, how deep the game&rsquo;s rules go, sound and software, which a 2D simulator cannot see.</li>

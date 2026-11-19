@@ -478,9 +478,9 @@ footer.site a { color: var(--muted); }
   @keyframes drift { 50% { transform: translate(3%, 4%) scale(1.08); } }
   .hero::before { animation: drift 18s ease-in-out infinite; }
   .hero .eyebrow, .hero h1, .hero .lede, .hero .chips, .hero .ctas,
-  .case-head .kicker, .case-head h1, .case-head .lede, .case-head .facts { animation: rise .7s cubic-bezier(.2, .7, .2, 1) both; }
+  .case-head .kicker, .case-head h1, :is(.case-head, .case-part) .lede, .case-head .facts { animation: rise .7s cubic-bezier(.2, .7, .2, 1) both; }
   .hero h1, .case-head h1 { animation-delay: .06s; }
-  .hero .lede, .case-head .lede { animation-delay: .14s; }
+  .hero .lede, :is(.case-head, .case-part) .lede { animation-delay: .14s; }
   .hero .chips, .case-head .facts { animation-delay: .22s; }
   .hero .ctas { animation-delay: .3s; }
   .collage .shot.a { animation: pop .9s cubic-bezier(.2, .7, .2, 1) .2s both, bob 7s ease-in-out 1.2s infinite; }
@@ -1260,7 +1260,7 @@ footer.site { margin-top: 84px; border-top: 3px dashed var(--y-pink); color: var
   @keyframes sway { 50% { rotate: .5deg; translate: 0 -5px; } }
   @keyframes sway2 { 50% { rotate: -1.2deg; translate: 0 -4px; } }
 
-  .hero .eyebrow, .hero h1, .hero .method, .hero .ctas, .case-head .kicker, .case-head h1, .case-head .lede, .case-head .back, .sum { animation-duration: .85s; animation-timing-function: ease-out; }
+  .hero .eyebrow, .hero h1, .hero .method, .hero .ctas, .case-head .kicker, .case-head h1, :is(.case-head, .case-part) .lede, .case-head .back, .sum { animation-duration: .85s; animation-timing-function: ease-out; }
   .case-head .fact { animation-duration: .8s; animation-timing-function: ease-out; }
   .collage .shot.a { animation: pop 1s ease-out .2s both, sway 7s ease-in-out 1.3s infinite; }
   .collage .shot.b { animation: pop 1s ease-out .4s both, sway2 8s ease-in-out 1.7s infinite; }
@@ -1469,8 +1469,8 @@ footer.site::before {
 }
 
 /* the one-sentence "what it is" sits under the title, before any figure */
-.case-head .lede { margin: 18px 0 0; max-width: 46em; font-size: 19px; line-height: 1.5; color: var(--text); }
-@media (max-width: 620px) { .case-head .lede { font-size: 17px; margin-top: 14px; } }
+:is(.case-head, .case-part) .lede { margin: 18px 0 0; max-width: 46em; font-size: 19px; line-height: 1.5; color: var(--text); }
+@media (max-width: 620px) { :is(.case-head, .case-part) .lede { font-size: 17px; margin-top: 14px; } }
 
 /* ==========================================================================
    RECRUITER-READ: STRUCTURE ONLY (branch recruiter-read, Nov 15 2026).
@@ -1583,7 +1583,7 @@ main.th-go .guide { opacity: 0; }
 
   /* one column, one left edge, home and case pages alike */
   .prose, .case-head, .sum, .figure, main > .figure { max-width: 1080px; }
-  .hero-one, .film, .brief, .case-head .lede, .hero-sub { max-width: none; }
+  .hero-one, .film, .brief, :is(.case-head, .case-part) .lede, .hero-sub { max-width: none; }
   .shot:has(> img[width="800"]) { max-width: 816px; margin-inline: auto; } /* an 800 px screenshot is not stretched across the column */
   .leads, .more, .how2, .sum-top, .method, .sum .method, .how2 .method, .flow, .flow.c4, .flow.c5, .band3, .duo,
   .figure .pair, .split, .chart-grid, .cards, .cards.g3, .principles { grid-template-columns: minmax(0, 1fr); }
@@ -1596,7 +1596,7 @@ main.th-go .guide { opacity: 0; }
   .case-head h1 { font-size: clamp(36px, 4.2vw, 60px); }
   .section-head h2 { font-size: clamp(32px, 3.4vw, 46px); }
   .prose h2 { font-size: 2rem; margin-top: 72px; }
-  .case-head .lede, .hero-sub { font-size: 1.75rem; line-height: 1.45; }
+  :is(.case-head, .case-part) .lede, .hero-sub { font-size: 1.75rem; line-height: 1.45; }
   .back { font-size: 1.1875rem; }
   .kicker { font-size: 1.1875rem; }
   .brief dt { font-size: .9375rem; line-height: 2.4; }
@@ -1778,3 +1778,21 @@ footer.site .wrap { align-items: center; }
 }
 /* phones: the extra top-bar link stays hidden even when a look sheet gives .topnav a its own display (wash, Nov 19) */
 @media (max-width: 620px) { .topnav .hide-sm { display: none !important; } }
+
+/* ---------- Placement (Nov 19 2026): proof first ----------
+   Home: headline, film, opener, email, three leads, list, method strip, band.
+   Case: title, picture, three figures, Problem/Result, film, opener, method strip, then each section with its diagram. */
+.nav-mail { font-weight: 600; }
+@media (max-width: 480px) { .topnav .nav-gh { display: none !important; } } /* phones: the bar holds four things, so Email takes GitHub's seat (GitHub stays in the band and on every repo card) */
+.hero-sub { margin-bottom: 4px; }
+.hero-mail { margin: 0 0 20px; font-size: 19px; line-height: 1.5; }
+.hero-mail a { display: inline-flex; align-items: center; min-height: 44px; }
+.hero-film { margin: 0 0 22px; max-width: 860px; }
+@media (min-width: 821px) { .hero-film { max-width: 720px; } } /* desktop: held to 720 px so the opener still starts on screen 1 */
+.how2 { grid-template-columns: 1fr; }
+@media (min-width: 821px) { .how2 .method { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.prose.case-part { max-width: 968px; margin-top: 26px; }
+.case-part > :last-child { margin-bottom: 0; }
+.case-part .brief, .case-part .lede { margin-top: 0; }
+.sum.sum-method { margin-top: 26px; }
+.prose + .figure { margin-top: 28px; }
