@@ -336,7 +336,15 @@
     }
     function lenTo(k) { if (k < 1) return 0; meter.setAttribute('d', dOf(k)); return meter.getTotalLength(); }
     function layout() {
-      pts = build(R, innerWidth <= 620 ? 9 : 12);
+      // The run stays on the first screen: it always reaches its first stop, then goes on only as far as the stops in view,
+      // so the ball rests where the reader can see it. A stop left out is simply sewn down.
+      var all = build(R, innerWidth <= 620 ? 9 : 12), top = host.getBoundingClientRect().top + (window.scrollY || 0), must = 1, keep = 1;
+      while (must < all.length - 1 && !all[must].hit) must++;
+      while (keep < all.length && top + all[keep].y <= innerHeight - 20) keep++;
+      keep = Math.max(keep, must + 1);
+      while (keep > must + 1 && !all[keep - 1].hit) keep--;
+      pts = all.slice(0, keep);
+      all.slice(keep).forEach(function (p) { each(p.hit, function (el) { el.classList.add('lit'); }); });
       mid = host.getBoundingClientRect().width / 2; cum = [0]; slack = [0]; snapT = [0];
       var path = 'M' + pts[0].x + ' ' + pts[0].y, i;
       for (i = 1; i < pts.length; i++) {
@@ -423,16 +431,19 @@
     });
   }
 
-  // home, three-lead first screen: headline, then the three lead cases; the ball rests on the third
+  // home, three-lead first screen: headline, the film under it, then the three lead cases; the ball rests on the last one in view
+  // (with the film on top that is the film on most screens)
   var lh = d.querySelector('.lead-hero > .wrap');
   if (lh && top0 && lh.querySelectorAll('.leads > .lead').length === 3 && lh.querySelector('h1')) {
-    var lc = lh.querySelectorAll('.leads > .lead'), l1 = lh.querySelector('h1');
+    var lc = lh.querySelectorAll('.leads > .lead'), l1 = lh.querySelector('h1'), lf = lh.querySelector('.hero-film .shot');
     guide(lh, [].slice.call(lc), function (R, g) {
-      var a = R(lc[0]), b = R(lc[1]), c = R(lc[2]), H = R(l1), x = a.l - g;
+      var a = R(lc[0]), b = R(lc[1]), c = R(lc[2]), H = R(l1), F = lf && R(lf), x = a.l - g;
+      var p = [{ x: x, y: H.cy, hit: l1, dwell: 300 }];
+      if (F && F.t > H.b - 2 && F.b < a.t) p.push({ x: x, y: Math.min(F.t + 40, F.cy), hit: lf, dwell: 460 }); // the film sits between the headline and the cards
       if (b.t > a.b - 2) // cards stacked (phones): straight down the left edge
-        return [{ x: x, y: H.cy, hit: l1, dwell: 300 }, { x: x, y: a.t + 40, hit: lc[0] }, { x: x, y: b.t + 40, hit: lc[1] }, { x: x, y: c.t + 40, hit: lc[2] }];
+        return p.concat([{ x: x, y: a.t + 40, hit: lc[0] }, { x: x, y: b.t + 40, hit: lc[1] }, { x: x, y: c.t + 40, hit: lc[2] }]);
       var y1 = a.t - 10; // along the gap above the cards
-      return [{ x: x, y: H.cy, hit: l1, dwell: 300 }, { x: x, y: y1 }, { x: a.l + 24, y: y1, hit: lc[0] }, { x: b.l + 24, y: y1, hit: lc[1] }, { x: c.l + 24, y: y1, hit: lc[2] }];
+      return p.concat([{ x: x, y: y1 }, { x: a.l + 24, y: y1, hit: lc[0] }, { x: b.l + 24, y: y1, hit: lc[1] }, { x: c.l + 24, y: y1, hit: lc[2] }]);
     });
   }
 

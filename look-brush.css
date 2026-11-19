@@ -195,6 +195,8 @@ html[data-look="brush"] a { text-decoration: none; color: inherit; }
 /* a link is underlined by one quick vermilion stroke (a background, so it follows the words onto a second line) */
 html[data-look="brush"] :is(.hero-sub, footer.site, .prose, .lede) a { color: var(--text); padding-bottom: .14em; background: var(--b-ul) 0 100% / 100% .34em no-repeat; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
 html[data-look="brush"] :is(.hero-sub, footer.site, .prose, .lede) a:hover { color: var(--sig-ink); background-size: 100% .5em; }
+html[data-look="brush"] .hero-mail a { color: var(--text); background: var(--b-ul) 0 calc(50% + .78em) / 100% .34em no-repeat; } /* the email line under the opener: the same swept underline, held under the words (the link is 44 px tall) */
+html[data-look="brush"] .hero-mail a:hover { color: var(--sig-ink); background-size: 100% .5em; }
 
 html[data-look="brush"] :is(h1, h2, h3, h4, .brand, .group-h, .lead-k, .lead-go, .method .who, .btn, .badge, .topnav a, .vid-sound, .pills span) { font-family: var(--display); }
 html[data-look="brush"] :is(.hero h1, .case-head h1, .section-head h2, .band h2) { font-weight: 900; letter-spacing: .005em; }
@@ -250,13 +252,13 @@ html[data-look="brush"] { --sh: clamp(210px, (100vw - 48px) * .3, 310px); }
 html[data-look="brush"] .hero::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 150px; z-index: -1; pointer-events: none; animation: none; transform: none; background: linear-gradient(var(--sky), transparent); }
 html[data-look="brush"] .hero::after { content: none; }
 html[data-look="brush"] .hero-one { position: relative; }
-html[data-look="brush"] .hero-sub { position: relative; margin-bottom: 30px; padding-bottom: calc(var(--sh) + 22px); }
+html[data-look="brush"] .hero-mail { position: relative; margin-bottom: 30px; padding-bottom: calc(var(--sh) + 22px); } /* the email line closes the opening words; the scene stands under it */
 /* colour: the scene, and a band of mist that drifts across it */
-html[data-look="brush"] .hero-sub::before { content: ""; position: absolute; z-index: -1; left: 0; right: 0; bottom: 0; height: var(--sh); pointer-events: none;
+html[data-look="brush"] .hero-mail::before { content: ""; position: absolute; z-index: -1; left: 0; right: 0; bottom: 0; height: var(--sh); pointer-events: none;
   background: var(--b-mist) 0 calc(var(--sh) * .5) / calc(var(--sh) * 2.6) calc(var(--sh) * .26) repeat-x, var(--b-scene) right bottom / auto 100% no-repeat;
   mask: linear-gradient(90deg, #0000, #000 7%), linear-gradient(#000 78%, #0000); mask-composite: intersect; }
 /* ink: the outlines, on top of the colour */
-html[data-look="brush"] .hero-sub::after { content: ""; position: absolute; z-index: -1; left: 0; right: 0; bottom: 0; height: var(--sh); pointer-events: none; background: var(--ink);
+html[data-look="brush"] .hero-mail::after { content: ""; position: absolute; z-index: -1; left: 0; right: 0; bottom: 0; height: var(--sh); pointer-events: none; background: var(--ink);
   mask: var(--b-scene-ink0) right bottom / auto 100% no-repeat, linear-gradient(90deg, #0000, #000 7%); mask-composite: intersect; }
 /* the sun's rays, behind the colour (so the mountains and the disc cover their feet); centred on the sun */
 html[data-look="brush"] .hero-one::before { content: ""; position: absolute; z-index: -2; pointer-events: none; width: calc(var(--sh) * .62); aspect-ratio: 1;
@@ -644,8 +646,8 @@ html[data-look="brush"] .demo-poster:hover img { scale: 1; }
   /* the head of the page: the headline is written in, the scene's outlines are painted left to right, then colour
      floods out from the sun, the rays come up and turn, petals start to fall and the mist drifts */
   html[data-look="brush"].motion .hero h1 { animation: rise .55s var(--snap) .05s both; }
-  html[data-look="brush"].motion .hero-sub::after { animation: b-wipe 1s cubic-bezier(.3, .6, .3, 1) .25s both, b-boil-scene .375s steps(1) 1.3s infinite; }
-  html[data-look="brush"].motion .hero-sub::before { animation: b-bloom .55s cubic-bezier(.3, .7, .3, 1) 1.15s both, b-mist 70s linear 1.7s infinite; }
+  html[data-look="brush"].motion .hero-mail::after { animation: b-wipe 1s cubic-bezier(.3, .6, .3, 1) .25s both, b-boil-scene .375s steps(1) 1.3s infinite; }
+  html[data-look="brush"].motion .hero-mail::before { animation: b-bloom .55s cubic-bezier(.3, .7, .3, 1) 1.15s both, b-mist 70s linear 1.7s infinite; }
   html[data-look="brush"].motion .hero-one::before { animation: b-pop .3s var(--snap) 1.45s both, b-turn 80s linear 1.75s infinite; }
   html[data-look="brush"].motion .hero-one::after { animation: b-in .5s ease-out 1.6s both, b-petals 26s linear infinite; }
   html[data-look="brush"].motion .brand .mark { animation: b-stamp .2s var(--snap) .15s both; }
