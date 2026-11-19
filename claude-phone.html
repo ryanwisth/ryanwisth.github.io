@@ -36,17 +36,17 @@
     <a class="back" href="index.html#work">&larr; All projects</a>
     <p class="kicker">Things I use every day &middot; private network</p>
     <h1 style="view-transition-name: t-claude-phone">Claude Code, run from my iPhone</h1>
-    <p class="lede">Claude Code is an AI assistant from Anthropic that does real work on my Mac. It reads and edits files, runs commands, writes code, and stops to ask me questions along the way. Normally all of that happens in an app on the desk. Anthropic has its own ways to reach Claude Code from a phone, but they did not fit how I work (the differences are below), so I built a private app for my iPhone that shows every Claude Code chat as it happens and lets me answer, steer or start work from anywhere, while the Mac keeps doing the work. Only my own devices can reach it.</p>
+    <p class="lede">Claude Code is Anthropic&rsquo;s AI coding assistant, and it does real work on my Mac. It reads and edits files, runs commands, writes code, and stops to ask me questions along the way. Normally that happens in an app on the desk. Anthropic has its own ways to reach Claude Code from a phone, but they did not fit how I work, so I built a private app for my iPhone that shows every Claude Code chat as it happens and lets me answer, steer or start work from anywhere, while the Mac keeps doing the work. Only my own devices can reach it. My part: the requirements, the priorities and the testing. AI wrote the code.</p>
     <dl class="brief">
       <dt>Problem</dt><dd>Claude Code often works for several minutes, then stops to ask me something. If I was away from the desk, the work just sat there waiting. I wanted to keep it moving from my phone, without sending my code through someone else&rsquo;s server.</dd>
-      <dt>Result</dt><dd>I use it every day. From the phone I can watch every Claude Code chat live, tap answers to its questions, reply into the same chat with everything said so far (the answer starts in 6 seconds), start new work, and get a notification when Claude finishes or needs me. 12 of the 16 desktop features I ranked work on the phone and are tested. The app is never on the public internet.</dd>
+      <dt>Result</dt><dd>Before, work waited until I was back at the desk. Now I reply from the phone and the answer starts in 6 seconds. I use it every day to watch each chat live, tap answers, start new work, and get a notification when Claude finishes or needs me. 12 of the 16 desktop features I prioritized work on the phone and are tested. The app is never on the public internet.</dd>
     </dl>
   </div>
 
   <section class="sum" aria-label="Summary">
     <div class="sum-top">
       <figure class="figure sum-vis">
-        <div class="shot phone"><div class="bar"><i></i><i></i><i></i><em>this computer only, sample chats</em></div><img src="img/claude-phone.jpg" alt="The phone page open on a chat titled Fix flaky checkout test: the question, a 3 steps button, the answer, a follow-up, and a reply still being written with the line Bash: Run the full test suite under it" width="780" height="1400"></div>
+        <div class="shot phone"><div class="bar"><i></i><i></i><i></i><em>On my computer, sample chats</em></div><img src="img/claude-phone.jpg" alt="The phone page open on a chat titled Fix flaky checkout test: the question, a 3 steps button, the answer, a follow-up, and a reply still being written with the line Bash: Run the full test suite under it" width="780" height="1400"></div>
     <figcaption>The real phone page, at iPhone size, while a reply is being written. It ran on made-up chats and a made-up project, so no real chat appears here.</figcaption>
       </figure>
       <div class="facts">
@@ -104,8 +104,8 @@
       <li><b>Get notified.</b> A notification on the iPhone when Claude finishes or needs an answer, even with the app closed.</li>
     </ul>
 
-    <h2>How it is different from Anthropic&rsquo;s own options</h2>
-    <p>The Claude app on the iPhone already has a Code tab with two ways to use Claude Code. Neither did what I needed, so this build fills the gaps.</p>
+    <h2>Build or buy: why Anthropic&rsquo;s own options did not fit</h2>
+    <p>The Claude app on the iPhone already has two ways to use Claude Code. Neither did what I needed.</p>
     <ul>
       <li><b>Claude Code in the cloud.</b> Runs on Anthropic&rsquo;s computers, on a copy of a project pulled from GitHub. It keeps going with the laptop closed, but it cannot use the files, tools and setup on my Mac, and it does not show the chats I already have open on the desktop.</li>
       <li><b>Remote Control.</b> Lets the Claude app steer a Claude Code session running on my Mac. Each session has to be switched on for it, the connection runs through Anthropic&rsquo;s servers, and some settings, such as letting Claude work without stopping for approval, cannot be chosen from the phone.</li>
@@ -116,7 +116,7 @@
     <ul>
       <li><b>Reading.</b> Claude Code keeps a written record of every chat on the Mac. A small program on the Mac reads those records and sends each new line to the phone as it appears.</li>
       <li><b>Replying.</b> Claude Code can reopen an earlier chat by its ID and keep going. A reply from the phone uses that, so the answer lands in the same chat, with the same settings, not a copy.</li>
-      <li><b>One writer at a time.</b> An open chat is held by the desktop app, and two programs writing to it would split the conversation in two. So a reply first closes that chat on the desktop, then reopens it. If the chat changed in the last 20 seconds, the reply waits so it never collides with work in progress.</li>
+      <li><b>One writer at a time.</b> The risk: an open chat is held by the desktop app, and two programs writing to it would split the conversation in two. So a reply first closes that chat on the desktop, then reopens it. If the chat changed in the last 20 seconds, the reply waits so it never collides with work in progress.</li>
       <li><b>Private.</b> The phone reaches the Mac over Tailscale, a private network only my own devices can join. It works even while the Mac is locked.</li>
     </ul>
 
@@ -125,10 +125,10 @@
 
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>Built by me, on my own network.</b> The page can be reached only over my private Tailscale network, never the public internet. I tried Anthropic&rsquo;s Remote Control first and chose my own build instead, so no chat or code passes through a server I do not run.</li>
+      <li><b>Built by me, on my own network.</b> The page can be reached only over my private Tailscale network, never the public internet. I tried Anthropic&rsquo;s Remote Control first and chose to build. The trade-off I accepted: I maintain it myself, and no chat or code passes through a server I do not run.</li>
       <li><b>Show the chats I already have.</b> The list is Claude Code&rsquo;s own chats from the desktop app. Nothing to copy over or set up.</li>
       <li><b>A proper connection, not fake typing.</b> Typing into the app automatically was tried first and dropped: the Mac blocked the keystrokes, and it could never work with the Mac locked. Picking up the chat directly works even while the Mac is locked.</li>
-      <li><b>Match the computer, most-used first.</b> The 16 missing features were ranked by how often I would use each from the phone, and built in that order: live replies, answering the AI&rsquo;s questions, the task list, step details showing what changed, and attachments. The features I use most came first.</li>
+      <li><b>Match the computer, most-used first.</b> The 16 missing features were ranked by how often I would use each from the phone, and built in that order: live replies, answering the AI&rsquo;s questions, the task list, step details showing what changed, and attachments.</li>
     </ul>
 
     <h2>How it was tested</h2>
