@@ -1,20 +1,21 @@
-/* Which look the site wears. One site carries all three:
+/* Which look the site wears. One site carries all four:
      "yarn"   yarn and felt     (style.css on its own)
      "wash"   ink and wash      (style.css, then look-wash.css on top)
      "brush"  brush and scroll  (style.css, then look-brush.css on top)
+     "cel"    cel and tide      (style.css, then look-cel.css on top)
 
    TO SWITCH THE DEFAULT for every visitor, change the one word on the next line. */
 var SITE_LOOK = "yarn";
 
-/* The small round button beside the light/dark button in the top bar steps through the looks: yarn, wash, brush, yarn.
+/* The small round button beside the light/dark button in the top bar steps through the looks: yarn, wash, brush, cel, yarn.
    TO TAKE THAT BUTTON AWAY, change true to false on the next line (both looks and ?look= keep working). */
 var LOOK_SWITCH = true;
 
-/* To try a look without changing anything, add ?look=wash, ?look=brush or ?look=yarn to any page address.
+/* To try a look without changing anything, add ?look=wash, ?look=brush, ?look=cel or ?look=yarn to any page address.
    That choice lasts for that browser tab (so two tabs can show the two looks side by side).
    A click on the button is remembered by that browser for later visits. */
 (function () {
-  var LOOKS = ["yarn", "wash", "brush"], look = SITE_LOOK, m = /[?&]look=(yarn|wash|brush)\b/.exec(location.search), kept = null;
+  var LOOKS = ["yarn", "wash", "brush", "cel"], look = SITE_LOOK, m = /[?&]look=(yarn|wash|brush|cel)\b/.exec(location.search), kept = null;
   try {
     if (m) sessionStorage.setItem("look", m[1]);
     kept = sessionStorage.getItem("look") || localStorage.getItem("look");
@@ -22,7 +23,7 @@ var LOOK_SWITCH = true;
   if (LOOKS.indexOf(kept) >= 0) look = kept;
 
   var root = document.documentElement;
-  var TINT = { wash: ["#f5f1ea", "#0f1730"], brush: ["#efe5cf", "#141a33"] };   // the browser bar's colour: light, dark
+  var TINT = { wash: ["#f5f1ea", "#0f1730"], brush: ["#efe5cf", "#141a33"], cel: ["#5078ff", "#101b4d"] };   // the browser bar's colour: light, dark
   if (look !== "yarn") {                              // yarn adds no stylesheet: the page is drawn exactly as before
     root.setAttribute("data-look", look);
     document.write('<link rel="stylesheet" href="look-' + look + '.css">');
@@ -32,10 +33,10 @@ var LOOK_SWITCH = true;
   if (!document.addEventListener) return;
 
   /* Each page's narrated film has a twin per look: video/film-<name>.mp4 (yarn), video/film-<name>-<look>.mp4 with poster
-     img/film-<name>-<look>.jpg (wash, brush). Same length and soundtrack, so a click on the switch carries the moment over.
+     img/film-<name>-<look>.jpg (wash, brush, cel). Same length and soundtrack, so a click on the switch carries the moment over.
      A twin that is missing falls back to the yarn film. The yarn look writes nothing to the films. Other videos
      (captures, previews) are never touched. */
-  var FILM = /video\/film-([a-z0-9-]+?)(-wash|-brush)?\.mp4$/, swapped = typeof WeakMap === "function" ? new WeakMap() : null;
+  var FILM = /video\/film-([a-z0-9-]+?)(-wash|-brush|-cel)?\.mp4$/, swapped = typeof WeakMap === "function" ? new WeakMap() : null;
   function srcOf(v) { var s = v.querySelector("source[src]"); return s || (v.hasAttribute("src") ? v : null); }
   function nameOf(v) { var e = srcOf(v), m = e && FILM.exec(e.getAttribute("src") || ""); return m ? m[1] : null; }
   function resume(v, s) {                             // put a film back at a moment: time, sound, playing or held
@@ -106,10 +107,13 @@ var LOOK_SWITCH = true;
   if (!LOOK_SWITCH) return;
 
   /* The switch. It borrows the light/dark button's class, so each look already draws it in its own material
-     (a stitched button in yarn, an ink ring in wash, a brushed ring in brush). The picture on it is the look a click takes you to. */
+     (a stitched button in yarn, an ink ring in wash, a brushed ring in brush, a lit disc in cel). The picture on it is the look a click takes you to. */
   var next = LOOKS[(LOOKS.indexOf(look) + 1) % LOOKS.length];
-  var label = next === "wash" ? "Switch to the ink and wash look" : next === "brush" ? "Switch to the brush and scroll look" : "Switch to the yarn and felt look";
-  var art = next === "brush"
+  var label = next === "wash" ? "Switch to the ink and wash look" : next === "brush" ? "Switch to the brush and scroll look" : next === "cel" ? "Switch to the cel and tide look" : "Switch to the yarn and felt look";
+  var art = next === "cel"
+    ? '<circle cx="5.7" cy="5.6" r="3.2" fill="currentColor"/>' +
+      '<path d="M1 11.4c1.5-1.4 3.1-1.4 4.6 0 1.5 1.4 3.1 1.4 4.6 0 1.5-1.4 3.1-1.4 4.8-.1V15H1z" fill="currentColor"/>'
+    : next === "brush"
     ? '<circle cx="8" cy="8.6" r="3.4" fill="currentColor"/>' +
       '<path d="M2.2 9.4c.3-3.6 2.9-6.4 6.2-6.6 2.6-.1 4.7 1.4 5.5 3.6M13.4 10.6c-.9 1.9-2.6 3.1-4.8 3.3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>'
     : next === "wash"
