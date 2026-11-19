@@ -36,10 +36,10 @@
     <a class="back" href="index.html#work">&larr; All projects</a>
     <p class="kicker">Things I use &middot; built start to finish</p>
     <h1 style="view-transition-name: t-family-tree-3d">A 3D family tree that opens from one file</h1>
-    <p class="lede">A family tree saved from a genealogy site becomes one web page: a 3D tree, a map of where people moved, an ancestry view and charts. It opens with no internet.</p>
+    <p class="lede">A family tree saved from a genealogy site becomes one web page: a 3D tree, a map of where people moved, an ancestry view and charts. It opens with no internet. My part: the rules (one file, offline, safe to share) and the testing. AI wrote most of the code.</p>
     <dl class="brief">
       <dt>Problem</dt><dd>A family tree saved from a genealogy site can grow to tens of thousands of people. Normal charts and printed posters become hard to read long before that. Online viewers need an account and an internet connection.</dd>
-      <dt>Result</dt><dd>One page of about 1 MB shows the whole tree in 3D, plus the map and charts. It needs no internet, no website and 0 add-on code from others. It runs my own private tree. A public copy is built from a made-up family of 420 people: its data check found 0 problems, and two builds came out exactly the same.</dd>
+      <dt>Result</dt><dd>One page of about 1 MB shows the whole tree in 3D, plus the map and charts. Unlike online viewers, it needs no internet, no website and 0 add-on code from others. It runs my own private tree. A public copy is built from a made-up family of 420 people: its data check found 0 problems, and two builds came out exactly the same.</dd>
     </dl>
   </div>
 
@@ -88,12 +88,12 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>A real family tree needs a view that stays easy to read as it grows. Online viewers need an account and an internet connection. I wanted a viewer I fully own: one file that opens anywhere, offline, and can be shared without exposing living relatives.</p>
+    <p>A real family tree needs a view that stays easy to read as it grows. I wanted a viewer I fully own: one file that opens anywhere, offline, and can be shared without exposing living relatives.</p>
 
     <h2>Decisions I made</h2>
     <ul>
       <li><b>One file, no internet needed.</b> A page opened straight from the computer cannot load other files, so all the data is built into the page. It opens offline, with nothing to set up or keep running.</li>
-      <li><b>No add-on code.</b> The 3D view uses the browser&rsquo;s own drawing tools (WebGL) and 0 add-on code from others. Nothing outside can break it or needs the internet.</li>
+      <li><b>No add-on code.</b> The 3D view uses the browser&rsquo;s own drawing tools (WebGL) and 0 add-on code from others.</li>
       <li><b>Easy to read at any size.</b> Height is birth year. Distance from the center is how far someone is from one chosen person&rsquo;s line. Direction is the family branch. So position alone shows generation, closeness and branch.</li>
       <li><b>Every view uses the same data.</b> The 3D tree, a map of births, marriages, deaths and moves, an ancestry view, and charts. Chart captions are written from the chart&rsquo;s own data, so they cannot disagree.</li>
       <li><b>Safe to share.</b> A sharing mode shows living people as &ldquo;Living person&rdquo;, with no dates or places, even in saved images. The tree can be shown publicly without exposing living relatives.</li>
@@ -102,7 +102,7 @@
 
     <h2>How it was tested</h2>
     <ul>
-      <li><b>Mismatched data is refused.</b> Each large chunk of data is stamped with the list of people it was made for. Chunks that disagree are not combined, so an old chunk can never attach facts to the wrong person.</li>
+      <li><b>Mismatched data is refused.</b> Each large chunk of data is stamped with the list of people it was made for. The risk: an old chunk attaching facts to the wrong person, so chunks that disagree are not combined.</li>
       <li><b>Builds repeat exactly.</b> Two builds of the sample make exactly the same data file, so any change in the result traces back to a change in what went in.</li>
       <li><b>Rules that come from real bugs.</b> Each fill-in spot must appear exactly once. The page&rsquo;s 59 code pieces are checked for repeated names before they are joined, so those bugs cannot quietly return.</li>
       <li><b>Clean from start to finish.</b> On the sample, every step runs without errors, the data check finds 0 problems, and the page&rsquo;s code passes a basic error check.</li>
@@ -114,7 +114,7 @@
     </ul>
 
     <div class="repo-card">
-      <p><b>ryanwisth/family-tree-3d</b>The code, with honest notes on what it can and cannot do.</p>
+      <p><b>ryanwisth/family-tree-3d</b>The code, with its real status and limits.</p>
       <a class="btn primary" href="https://github.com/ryanwisth/family-tree-3d">See the code on GitHub &rarr;</a>
     </div>
     <nav class="pager" aria-label="More projects">

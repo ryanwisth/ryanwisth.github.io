@@ -36,7 +36,7 @@
     <a class="back" href="index.html#work">&larr; All projects</a>
     <p class="kicker">AI tools &middot; safe limits when nobody is watching</p>
     <h1 style="view-transition-name: t-agent-runner">Long AI jobs that check the bill first</h1>
-    <p class="lede">A small tool that hands Claude, an AI assistant, a long job written out as instructions. It checks which account pays, caps the spending and the number of steps, and runs the job in fresh rounds until a &ldquo;done&rdquo; file appears.</p>
+    <p class="lede">A small tool that hands Claude, an AI assistant, a long job written out as instructions. It checks which account pays, caps the spending and the number of steps, and runs the job in fresh rounds until a &ldquo;done&rdquo; file appears. My part: the who-pays and spending rules, and the testing. AI wrote the code.</p>
     <dl class="brief">
       <dt>Problem</dt><dd>Long AI jobs are easier to hand off as written instructions than as a live chat. Running them with nobody watching raises three questions: which account pays, how to stop a run that goes over budget, and how to continue a job that does not finish in one round.</dd>
       <dt>Result</dt><dd>Ran real jobs of several rounds in October 2026, paid from my subscription by default since October 25, 2026. Every run confirms who pays before any work. Each round is capped at $20 by default. Rounds repeat until the &ldquo;done&rdquo; file appears, and the first failed round stops everything, with 0 retries.</dd>
@@ -79,7 +79,7 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>Claude can be paid for two ways: a pay-per-use key, billed to that key&rsquo;s account, or a subscription. If a key happens to be set up, it quietly wins over the subscription, so a run with nobody watching could bill the wrong account. The tool closes that gap: the account the AI reports must match the <code>--auth</code> setting, or the run stops with no work done.</p>
+    <p>Claude can be paid for two ways: a pay-per-use key, billed to that key&rsquo;s account, or a subscription. The risk: if a key happens to be set up, it quietly wins over the subscription, so a run with nobody watching could bill the wrong account. The tool closes that gap.</p>
 
     <h2>Decisions I made</h2>
     <ul>

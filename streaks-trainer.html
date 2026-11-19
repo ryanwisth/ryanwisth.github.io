@@ -36,7 +36,7 @@
     <a class="back" href="index.html#work">&larr; All projects</a>
     <p class="kicker">Things I use &middot; the study method built into the app</p>
     <h1 style="view-transition-name: t-streaks-trainer">A study app where one wrong answer resets your streak</h1>
-    <p class="lede">A small study app for any multiple-choice subject. You work one topic at a time, easy to hard, and one wrong answer resets your streak.</p>
+    <p class="lede">A study app for any multiple-choice subject. You work one topic at a time, easy to hard, and one wrong answer resets your streak. My part: the streak rules and the testing. AI wrote most of the code.</p>
     <dl class="brief">
       <dt>Problem</dt><dd>A percent score hides weak spots: 80% on a topic can mean you know it, or that you guess well.</dd>
       <dt>Result</dt><dd>A working app that enforces streaks: 10, 10 and 5 right in a row on easy, medium and hard. Any wrong answer or guess resets the count to zero, and a short written note is required before the next question. It comes with 66 sample questions, every answer checked by a program. It runs from two files plus Python 3.9, and nothing leaves the computer.</dd>
@@ -46,7 +46,7 @@
   <section class="sum" aria-label="Summary">
     <div class="sum-top">
       <figure class="figure sum-vis">
-        <div class="shot"><div class="bar"><i></i><i></i><i></i><em>this computer only, from start to the first broken streak, recorded</em></div><video data-auto controls muted loop playsinline preload="none" poster="img/streaks-video.jpg" width="960" height="640" aria-label="A practice session: a practice plan is set up, two right answers build a streak, a wrong answer resets it to zero and a note has to be written before the next question"><source src="video/streaks-trainer.mp4" type="video/mp4"></video></div>
+        <div class="shot"><div class="bar"><i></i><i></i><i></i><em>On my computer, from start to the first broken streak, recorded</em></div><video data-auto controls muted loop playsinline preload="none" poster="img/streaks-video.jpg" width="960" height="640" aria-label="A practice session: a practice plan is set up, two right answers build a streak, a wrong answer resets it to zero and a note has to be written before the next question"><source src="video/streaks-trainer.mp4" type="video/mp4"></video></div>
     <figcaption>One session: a practice plan with chosen targets, two right answers, a wrong one that resets the streak, and the required note. The circle is the recording&rsquo;s pointer.</figcaption>
       </figure>
       <div class="facts">
@@ -66,7 +66,7 @@
   <details class="film-script"><summary>Read the script</summary><p id="film-script-text">1 wrong answer, or 1 guess, resets the streak to zero. A percent score hides weak spots. In this study app, a streak tells knowing from guessing. 10 in a row on easy, 10 on medium, and 5 on hard. You work one topic at a time. A guessed answer does not count, and no question repeats. After a wrong answer, a short note is written before the next question. 66 sample questions, every answer checked by a program. It runs from two files, and nothing leaves the computer.</p></details>
 
   <figure class="figure">
-    <div class="shot"><div class="bar"><i></i><i></i><i></i><em>this computer only, practice screen</em></div><img src="img/streaks-practice.jpg" alt="The practice screen after a right answer: the practice plan, the streak counter with its dots, the question, and the line Right. Streak 4/5." width="1600" height="1216" loading="lazy"></div>
+    <div class="shot"><div class="bar"><i></i><i></i><i></i><em>On my computer, practice screen</em></div><img src="img/streaks-practice.jpg" alt="The practice screen after a right answer: the practice plan, the streak counter with its dots, the question, and the line Right. Streak 4/5." width="1600" height="1216" loading="lazy"></div>
     <figcaption>The practice screen, on a plan with chosen targets.</figcaption>
   </figure>
   <figure class="figure">
@@ -81,14 +81,14 @@
     <figcaption>How it works, simplified. After the note, the next new question appears.</figcaption>
   </figure>
   <figure class="figure">
-    <div class="shot"><div class="bar"><i></i><i></i><i></i><em>this computer only, after a wrong answer</em></div><img src="img/streaks-break-note.jpg" alt="The screen after a wrong answer: The streak broke, a prompt asking what broke it and what to do differently, a menu for the kind of break, a text box and a Save and continue button." width="1600" height="872" loading="lazy"></div>
-    <figcaption>After a wrong answer. The next question will not appear until a note is written.</figcaption>
+    <div class="shot"><div class="bar"><i></i><i></i><i></i><em>On my computer, after a wrong answer</em></div><img src="img/streaks-break-note.jpg" alt="The screen after a wrong answer: The streak broke, a prompt asking what broke it and what to do differently, a menu for the kind of break, a text box and a Save and continue button." width="1600" height="872" loading="lazy"></div>
+    <figcaption>The next question will not appear until a note is written.</figcaption>
   </figure>
 
   <div class="prose">
     <h2>The problem</h2>
     <p>A streak tells the two apart. You move from easy to medium to hard only after 10, 10 and 5 right in a row. Any wrong answer, or any right answer you guessed, sends the count back to zero.</p>
-    <p>The payoff comes at each break. Before the next question, you write down what went wrong and what you will do differently. The app enforces this, so it cannot be skipped.</p>
+    <p>The payoff comes at each break. Before the next question, you write down what went wrong and what you will do differently. The app enforces this.</p>
 
     <h2>Decisions I made</h2>
     <ul>
@@ -113,7 +113,7 @@
     </ul>
 
     <div class="repo-card">
-      <p><b>ryanwisth/streaks-trainer</b>The code, with honest notes on what it can and cannot do.</p>
+      <p><b>ryanwisth/streaks-trainer</b>The code, with its real status and limits.</p>
       <a class="btn primary" href="https://github.com/ryanwisth/streaks-trainer">See the code on GitHub &rarr;</a>
     </div>
     <nav class="pager" aria-label="More projects">

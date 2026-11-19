@@ -36,10 +36,10 @@
     <a class="back" href="index.html#work">&larr; All projects</a>
     <p class="kicker">Local AI &middot; private by design</p>
     <h1 style="view-transition-name: t-local-ai-stack">A private AI assistant on my laptop</h1>
-    <p class="lede">A written-up setup for running a private AI assistant entirely on one Mac: a 27B AI model (27 billion settings, a measure of its size), a chat window, about two dozen tools, voice, document reading and web search.</p>
+    <p class="lede">A written-up setup for running a private AI assistant entirely on one Mac: a 27B AI model (27 billion settings, a measure of its size), a chat window, about two dozen tools, voice, document reading and web search. My part: the safety rules, the setup choices and the testing. AI wrote most of the scripts.</p>
     <dl class="brief">
       <dt>Problem</dt><dd>Online AI assistants send every message and file off the computer. Keeping it all at home means making the AI, its tools, search and voice run together on one laptop with limited memory.</dd>
-      <dt>Result</dt><dd>A private assistant running entirely on one 64 GB MacBook Pro, in regular use through September 2026. The 27B model writes up to 37.5 tokens per second (a token is a small chunk of text), 2.7 times its normal speed. 26 toolkits sit behind one locked door. Every part is reachable only from this computer. And a watchdog restarts anything that goes down within 60 seconds.</dd>
+      <dt>Result</dt><dd>A private assistant running entirely on one 64 GB MacBook Pro, in regular use through September 2026. The 27B model went from 13.7 to as much as 37.5 tokens per second (the units AI use is billed in), 2.7 times its normal speed. 26 toolkits sit behind one locked door. Every part is reachable only from this computer. And a watchdog restarts anything that goes down within 60 seconds.</dd>
     </dl>
   </div>
 
@@ -86,7 +86,7 @@
       <li><b>Result comes back</b><span>and this repeats until the AI has its answer</span></li>
       <li class="key"><b>Watchdog</b><span>at login and every 60 seconds, starts whichever part is down</span></li>
     </ol>
-    <figcaption>One chat message that uses a tool, simplified from the diagram in the project&rsquo;s notes, plus the watchdog that keeps every part running. Every part can be reached only from this computer.</figcaption>
+    <figcaption>One chat message that uses a tool, simplified from the diagram in the project&rsquo;s notes, plus the watchdog that keeps every part running.</figcaption>
   </figure>
   <figure class="figure">
     <div class="chart-grid">
@@ -111,7 +111,7 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>Everything stays on one MacBook Pro with 64 GB of memory: the AI model, the chat history, the tools and the search engine all run there, reachable only from that computer.</p>
+    <p>Everything stays on one MacBook Pro with 64 GB of memory: the AI model, the chat history, the tools and the search engine all run there.</p>
     <p>Installing the pieces is easy. Making them work together on one laptop is the real job: tools the AI can actually use, parts that survive crashes and log-outs, and an AI fast enough for daily use. All while the model, which uses up to about 42 GB of memory, shares the laptop with everything else.</p>
 
     <h2>Decisions I made</h2>
@@ -119,14 +119,14 @@
       <li><b>Reachable only from this computer, and checked.</b> Every part accepts connections only from the laptop itself, and the tool door needs a key, so nothing on the network can reach the AI or its tools.</li>
       <li><b>A watchdog, because programs crash.</b> At login and every 60 seconds, a starter script checks each part, starts whatever is down, in the right order, and is safe to run again and again. So the setup recovers from crashes and log-outs on its own.</li>
       <li><b>Limit what the tools can touch.</b> The file tool sees four folders, not all my files. The tools that run commands or drive a web browser are off unless turned on for one chat.</li>
-      <li><b>Read the logs to find the stall.</b> Long chats in the chat window (about 190k tokens) were re-reading about 188k tokens before every tool step, 21 to 25 minutes each time. The logs showed a different app, a text-only coding assistant, lets the AI keep its earlier reading instead of starting over, so I moved long jobs there.</li>
+      <li><b>Read the logs to find the stall.</b> The root cause: long chats in the chat window (about 190k tokens) were re-reading about 188k tokens before every tool step, 21 to 25 minutes each time. The logs showed a different app, a text-only coding assistant, lets the AI keep its earlier reading instead of starting over, so I moved long jobs there.</li>
       <li><b>Make a silent failure loud.</b> A built-in limit quietly threw away any tool request over 2,048 tokens, so the AI could seem to write files that never existed. The starter script raises that limit to the most the AI can hold.</li>
     </ul>
 
     <h2>How it was tested</h2>
     <ul>
       <li><b>Speed, measured on the laptop.</b> 13.7 tokens per second normally, against 32 to 37.5 when guessing 3 ahead. Each extra step ahead was faster (22.9 at 1, 28.4 at 2).</li>
-      <li><b>Idle against real use.</b> A typical 23.4 tokens per second in use, against 37.5 idle. The gap came from other heavy work on the same laptop, not the setup.</li>
+      <li><b>Idle against real use.</b> A typical 23.4 tokens per second in use, against 37.5 idle.</li>
       <li><b>Memory, measured.</b> The model uses up to about 42 GB in tests, and one large reply reached 62.6 GB, so everything else was planned around what was left.</li>
       <li><b>Network openings, checked.</b> A list of open connections caught the one part that was open to the network. The fix locked it to this computer, with one starter per part.</li>
     </ul>
@@ -134,7 +134,7 @@
     <h2>Limits</h2>
     <ul>
       <li>A written-up setup and step-by-step guide for a Mac, not a one-click installer.</li>
-      <li>The tool that runs commands has no list of allowed or banned commands, so it stays off unless turned on for a chat.</li>
+      <li>The risk: the tool that runs commands has no list of allowed or banned commands, so it stays off unless turned on for a chat.</li>
     </ul>
 
     <div class="repo-card">

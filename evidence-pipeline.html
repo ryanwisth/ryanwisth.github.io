@@ -36,10 +36,10 @@
     <a class="back" href="index.html#work">&larr; All projects</a>
     <p class="kicker">AI research &middot; every fact has a source</p>
     <h1 style="view-transition-name: t-evidence-pipeline">A family tree built only from real records</h1>
-    <p class="lede">A research process for a family tree. AI helpers suggest additions. A small free program checks what code can check. A second AI tries to disprove each one. Accepted facts go into a permanent record that is only ever added to.</p>
+    <p class="lede">A research workflow for a family tree. AI helpers suggest additions. Free code checks what it can. A second AI tries to disprove each one. Accepted facts go into a permanent record that is only ever added to. My part: the proof rules and the testing. AI wrote most of the code.</p>
     <dl class="brief">
       <dt>Problem</dt><dd>Online family trees copy each other. So two trees agreeing is not proof; often it is the same mistake copied twice.</dd>
-      <dt>Result</dt><dd>Three research rounds on a private family tree in September 2026. Every accepted fact quotes an original record. In round 1, &ldquo;skeptic&rdquo; AIs, told to hunt for mistakes, rejected 31 statements from a quick first pass and 3 of 147 from a careful one, so weak guesses never reached the tree. By round 3, moving checks into simple code brought AI use down to about 57k tokens (the units AI use is measured in) per research target.</dd>
+      <dt>Result</dt><dd>Three research rounds on a private family tree in September 2026. Every accepted fact quotes an original record. In round 1, &ldquo;skeptic&rdquo; AIs, told to hunt for mistakes, rejected 31 statements from a quick first pass and 3 of 147 from a careful one, so weak guesses never reached the tree. By round 3, moving checks into simple code brought AI use down to about 57k tokens (the units AI use is billed in) per research target.</dd>
     </dl>
   </div>
 
@@ -78,7 +78,7 @@
       <li><b>Merge, losing nothing</b><span>with firm blocks against wrong merges</span></li>
       <li><b>Check</b><span>proves every person and fact survived</span></li>
       <li><b>Targets picked by code</b><span>ancestors whose line stops, short case files, groups by place</span></li>
-      <li><b>Finder AIs</b><span>suggestions only</span></li>
+      <li><b>AI helpers</b><span>suggestions only</span></li>
       <li class="key"><b>Free filter</b><span>rule checks, and every quote checked against the saved page</span></li>
       <li class="key"><b>Skeptic AIs</b><span>disprove, or reject when it cannot be confirmed</span></li>
       <li><b>Permanent record</b><span>each item stamped with its round and entry number</span></li>
@@ -98,8 +98,8 @@
 
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>AI suggests; code checks what code can check.</b> On the private tree, round 2&rsquo;s finder AIs averaged 78 back-and-forth steps each. For round 3 I moved the case files, the filter and short review sheets into simple code, and the round ran at about 57k tokens per target.</li>
-      <li><b>A second AI tries to disprove.</b> The skeptic&rsquo;s rule is &ldquo;when you cannot confirm, reject&rdquo;, so a statement enters the tree only if it survives the attack.</li>
+      <li><b>AI suggests; code checks what code can check.</b> On the private tree, round 2&rsquo;s AI helpers averaged 78 back-and-forth steps each. For round 3 I moved the case files, the filter and short review sheets into simple code, and the round ran at about 57k tokens per target.</li>
+      <li><b>A second AI tries to disprove.</b> The skeptic&rsquo;s rule is &ldquo;when you cannot confirm, reject&rdquo;.</li>
       <li><b>A free filter between the two rounds of AI.</b> Before any skeptic time is spent, it drops statements that name no record, match on fewer than two details, repeat a recorded fact, duplicate a child already in the tree, or add a living person.</li>
       <li><b>Quotes are matched loosely, not word for word.</b> The filter ignores capital letters, accents, punctuation and field labels, and looks for 80% of the telling words close together. A miss flags the statement for the skeptic instead of dropping it.</li>
       <li><b>Nothing is deleted.</b> Disproved parent links are recorded and left out of later counts. The original file is never edited, so every change can be traced to its round and entry.</li>

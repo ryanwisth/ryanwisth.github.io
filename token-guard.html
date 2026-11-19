@@ -36,10 +36,10 @@
     <a class="back" href="index.html#work">&larr; All projects</a>
     <p class="kicker">AI costs &middot; rules the AI can&rsquo;t ignore</p>
     <h1 style="view-transition-name: t-token-guard">Spending rules an AI can&rsquo;t skip</h1>
-    <p class="lede">Claude Code is an AI assistant that writes code for me, and it can hand parts of a job to AI helpers. Four small automatic checks, and nine cheaper kinds of helper, stop it from using far more than the work needs.</p>
+    <p class="lede">Claude Code is Anthropic’s AI coding assistant, and it can hand parts of a job to AI helpers. Four automatic checks and nine cheaper kinds of helper stop it from using far more than the work needs. My part: measuring the leaks, the rules and the testing. AI wrote most of the code.</p>
     <dl class="brief">
-      <dt>Problem</dt><dd>AI use is measured in tokens, small chunks of text the AI reads or writes. Spending rules written into my instructions did not hold: the AI agreed with them and broke them an hour later.</dd>
-      <dt>Result</dt><dd>In daily use since October 2026. Four checks and nine lighter helper types block the waste my scans measured. That includes the 482 of 662 helpers that ran as the heavy default type: 53.8k tokens in the first step, against 16k to 20k. Every block says how to fix it, so the AI corrects itself on its next try without me stepping in.</dd>
+      <dt>Problem</dt><dd>Every step costs tokens, the units AI use is billed in. Spending rules written into my instructions did not hold: the AI agreed with them and broke them an hour later.</dd>
+      <dt>Result</dt><dd>In daily use since October 2026. The checks block the waste my scans measured. That includes the 482 of 662 helpers that ran as the heavy default type: 53.8k tokens in the first step, against 16k to 20k. Every block says the fix, so the AI corrects itself without me stepping in.</dd>
     </dl>
   </div>
 
@@ -109,11 +109,11 @@
     <ul>
       <li><b>Check every step, not just my instructions.</b> A blocked step is a fact the AI must work around, and the block message tells it how.</li>
       <li><b>Two size limits, not one.</b> The soft limit at 200k gives the AI one turn to save its progress. Over 240k, new messages are blocked with a ready-to-paste start for a fresh chat, so a chat always ends with a clean handoff.</li>
-      <li><b>Guard every step, not just every message.</b> The message check runs only when a person types. Yet 39% of one week&rsquo;s re-reading came past the soft limit, mostly during long stretches with nobody typing. The check on every step closes that gap: past 260k, any work that is not saving progress is blocked.</li>
+      <li><b>Guard every step, not just every message.</b> The root cause: the message check runs only when a person types. Yet 39% of one week&rsquo;s re-reading came past the soft limit, mostly during long stretches with nobody typing. The check on every step closes that gap: past 260k, any work that is not saving progress is blocked.</li>
       <li><b>Saving progress is always allowed.</b> A blocked chat ends with its progress written down, never at a dead end.</li>
       <li><b>Block the heavy default helper.</b> Nine lighter helper types, each with a set AI model, a step limit and few tools, became the only way through. That fixed the 482 of 662.</li>
       <li><b>Images cost the most.</b> One week held 4,816 images in the chat, so large originals are now blocked, and the message gives the exact command to shrink them.</li>
-      <li><b>When unsure, step aside.</b> If a check hits an error or can&rsquo;t find the chat log, it quietly lets the step run, so the guard can never break a working chat.</li>
+      <li><b>When unsure, step aside.</b> The risk: a broken check stopping good work. If a check hits an error or can&rsquo;t find the chat log, it lets the step run.</li>
     </ul>
 
     <h2>How it was tested</h2>

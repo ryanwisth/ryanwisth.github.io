@@ -36,9 +36,9 @@
     <a class="back" href="index.html#work">&larr; All projects</a>
     <p class="kicker">Checking AI &middot; three tools in use</p>
     <h1 style="view-transition-name: t-checking-ai-work">Making AI work easy to check</h1>
-    <p class="lede">One idea, used in three tools: the AI suggests, plain code enforces the rules, and a second check tries to prove the first one wrong.</p>
+    <p class="lede">One idea, used in three tools: the AI suggests, plain code enforces the rules, and a second check tries to prove the first one wrong. My part: the rules and the testing. AI wrote most of the code.</p>
     <dl class="brief">
-      <dt>Problem</dt><dd>AI writing sounds right and is still wrong in places, and reading it will not show you where. Asking the AI to check itself just gives a second confident answer, with no record behind it.</dd>
+      <dt>Problem</dt><dd>AI writing sounds right and is still wrong in places, and reading it will not show you where. Asking the AI to check itself just gives a second confident answer.</dd>
       <dt>Result</dt><dd>Three tools that turn AI output into checked work with a written record. The fact-checker checked and recorded 517 statements in one AI-written report. In the research tool, &ldquo;skeptic&rdquo; AI helpers, told to hunt for mistakes, still rejected 3 of 147 statements that had passed a careful check. The spending guard now makes every AI helper use the light setup; before, 482 of 662 had used the heavy one. The fact-checker and the spending guard have been used daily since October 2026. The research tool ran three rounds in September 2026.</dd>
     </dl>
   </div>
@@ -66,7 +66,7 @@
 
   <figure class="figure">
     <ol class="flow c5">
-      <li><b>Finder AIs</b><span>suggestions only</span></li>
+      <li><b>AI helpers</b><span>suggestions only</span></li>
       <li class="key"><b>Code filter</b><span>free checks; the quote must match</span></li>
       <li class="key"><b>Skeptic AIs</b><span>disprove or reject</span></li>
       <li><b>Permanent record</b><span>accepted facts, each with its quote</span></li>
@@ -77,7 +77,7 @@
   <figure class="figure">
     <div class="chart-card">
       <h3>The spending guard&rsquo;s check on each message</h3>
-      <p class="sub">What happens to a new message, by how much the chat already holds, counted in tokens (the units AI use is measured in). From the guard&rsquo;s own diagram.</p>
+      <p class="sub">What happens to a new message, by how much the chat already holds, counted in tokens (the units AI use is billed in). From the guard&rsquo;s own diagram.</p>
       <div class="band3">
         <div class="ok"><b>Under 200k</b>The message goes through.</div>
         <div class="warn"><b>200k to 240k</b>It goes through, and the AI is told to save its progress and wrap up.</div>
@@ -98,9 +98,9 @@
 
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>Research: <a href="https://github.com/ryanwisth/genealogy-evidence-pipeline">genealogy-evidence-pipeline</a>.</b> Every statement must name and quote an original record. A small free program drops anything that breaks the rules before any AI time is spent. Then a skeptic AI tries to disprove the rest.</li>
-      <li><b>Reports: <a href="https://github.com/ryanwisth/claim-ledger">claim-ledger</a>.</b> Every point in a long report gets a fixed ID, a statement that can be tested, what would prove it wrong, quoted evidence and a verdict. Code enforces this form: one incomplete entry rejects the whole batch, so no check is ever half-done.</li>
-      <li><b>Cost: <a href="https://github.com/ryanwisth/claude-code-token-guard">claude-code-token-guard</a>.</b> Checks that run automatically block a wasteful AI action the moment it is tried, and the message tells the AI what to do instead.</li>
+      <li><b>Research: <a href="https://github.com/ryanwisth/genealogy-evidence-pipeline">genealogy-evidence-pipeline</a>.</b> Every statement must name and quote an original record. Free code drops anything that breaks the rules before any AI time is spent. Then a skeptic AI tries to disprove the rest.</li>
+      <li><b>Reports: <a href="https://github.com/ryanwisth/claim-ledger">claim-ledger</a>.</b> Every point in a long report gets a fixed ID, a statement that can be tested, what would prove it wrong, quoted evidence and a verdict. Code enforces this form: one incomplete entry rejects the whole batch.</li>
+      <li><b>Cost: <a href="https://github.com/ryanwisth/claude-code-token-guard">claude-code-token-guard</a>.</b> Automatic checks block a wasteful AI action the moment it is tried, and the message tells the AI what to do instead.</li>
     </ul>
     <p class="note">Each tool also has its own page: <a href="evidence-pipeline.html">the records-only family tree</a>, <a href="claim-ledger.html">the fact-checking routine</a> and <a href="token-guard.html">the spending rules</a>.</p>
 
@@ -113,7 +113,7 @@
 
     <h2>Limits</h2>
     <ul>
-      <li>The same AI writes and checks, so the fact-checker marks any verdict that rests on the project&rsquo;s own notes for a person to verify.</li>
+      <li>The risk: the same AI writes and checks, so the fact-checker marks any verdict that rests on the project&rsquo;s own notes for a person to verify.</li>
       <li>The public research demo uses a made-up family of 420 people.</li>
     </ul>
 

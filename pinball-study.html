@@ -36,10 +36,10 @@
     <a class="back" href="index.html#work">&larr; All projects</a>
     <p class="kicker">Honest research &middot; predictions written down first</p>
     <h1 style="view-transition-name: t-pinball-study">A study set up so it could prove me wrong</h1>
-    <p class="lede">A research tool that converts pinball table designs into one format, measures their shape, plays them with simulated players at four skill levels, and tests whether any of that predicts how much people enjoy a table.</p>
+    <p class="lede">A research tool that converts pinball table designs into one format, measures their shape, plays them with simulated players at four skill levels, and tests whether any of that predicts how much people enjoy a table. My part: the study rules and the checks. AI wrote the code and ran the experiments.</p>
     <dl class="brief">
       <dt>Problem</dt><dd>The goal was to score a new pinball table before anyone has played it, by learning what sets well-rated tables apart, without fooling myself with measures that fit by chance.</dd>
-      <dt>Result</dt><dd>A clear &ldquo;no&rdquo;, with the test settled before the data came in. 9 predictions were locked with a digital fingerprint (a hash) before any result, tested on 79 real tables and retested on 94, and none held. The best model&rsquo;s typical error was 0.425, against 0.448 for simply guessing the average rating. Year, maker and a few build details alone did as well, at 0.421. What a 2D simulator can measure does not predict how players rate a table.</dd>
+      <dt>Result</dt><dd>A clear &ldquo;no&rdquo;, with the test settled before the data came in. 9 predictions were locked with a digital fingerprint before any result, tested on 79 real tables and retested on 94, and none held. The best model&rsquo;s typical error was 0.425, against 0.448 for simply guessing the average rating. Year, maker and a few build details alone did as well, at 0.421. What a 2D simulator can measure does not predict how players rate a table.</dd>
     </dl>
   </div>
 
@@ -48,7 +48,7 @@
       <figure class="figure sum-vis">
         <div class="chart-card">
       <h3>Prediction error, lower is better</h3>
-      <p class="sub">Typical error on player ratings, with each table predicted by a model that never saw it (leave-one-out RMSE). The model barely beats guessing the average, and year, maker and build details alone do as well.</p>
+      <p class="sub">Typical error on player ratings, with each table predicted by a model that never saw it (leave-one-out RMSE). Year, maker and build details alone do as well.</p>
       <div class="bars" role="img" aria-label="Bar chart. Guess the average 0.448, best combined model 0.425, year maker and build details alone 0.421.">
         <div class="row" title="Guess the average rating: 0.448"><span class="lab">Guess the average rating</span><span class="track"><i class="base" style="--v:89.6%"></i></span><span class="val">0.448</span></div>
         <div class="row" title="Best combined model: 0.425"><span class="lab">Best combined model</span><span class="track"><i class="" style="--v:85.0%"></i></span><span class="val">0.425</span></div>
@@ -99,13 +99,13 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>The easy trap in a study like this is to try many measures and report the ones that happen to fit. This study fixed its tests and verdicts in advance, so the result could not be bent afterward.</p>
+    <p>The main risk in a study like this is to try many measures and report the ones that happen to fit. This study fixed its tests and verdicts in advance, so the result could not be bent afterward.</p>
 
     <h2>Decisions I made</h2>
     <ul>
       <li><b>Predictions before results.</b> Designers&rsquo; rules of thumb were written down, each with the direction it predicted, a fixed test and a fixed rule for the verdict. Then they were locked with a digital fingerprint, before any measure was compared with a rating.</li>
       <li><b>One shared board format.</b> The simulator never sees an original file, so a new design can be measured exactly like a converted commercial table.</li>
-      <li><b>Borrow the physics, do not invent it.</b> A flipper tuned by hand was replaced with the flipper from an established pinball simulator, so the simulated play rests on an established model.</li>
+      <li><b>Borrow the physics, do not invent it.</b> A flipper tuned by hand was replaced with the flipper from an established pinball simulator.</li>
       <li><b>Year and maker always counted.</b> Every model includes them, so a table&rsquo;s era and brand are not mistaken for &ldquo;fun&rdquo;.</li>
       <li><b>Trust only what holds up.</b> The expert simulated player did not reliably beat the medium-skill one, so every prediction uses the medium-skill player.</li>
     </ul>

@@ -36,10 +36,10 @@
     <a class="back" href="index.html#work">&larr; All projects</a>
     <p class="kicker">Browser add-on &middot; built and installed start to finish</p>
     <h1 style="view-transition-name: t-safari-dark-mode">Dark mode for any website in Safari</h1>
-    <p class="lede">An add-on for Safari, the Mac&rsquo;s web browser. It turns light websites dark in six color themes and leaves sites that are already dark alone. Photos keep their real colors.</p>
+    <p class="lede">An add-on for Safari, the Mac&rsquo;s web browser. It turns light websites dark in six color themes and leaves sites that are already dark alone. Photos keep their real colors. My part: the design rules and the testing. AI wrote the code.</p>
     <dl class="brief">
       <dt>Problem</dt><dd>Many websites have no dark mode. The usual fix rewrites the look of every page. That is a big job, and the bright page can flash up first.</dd>
-      <dt>Result</dt><dd>A finished add-on with 6 themes, each within 0.9 of its target colors on a standard color-difference scale (&Delta;E in OKLab). It has brightness and contrast sliders, settings for each site, a keyboard shortcut and an option to follow the Mac&rsquo;s dark mode. Version 1.0.0 is built, signed and installed by one script, without Xcode. It asks for 1 permission: storage.</dd>
+      <dt>Result</dt><dd>A finished add-on with 6 themes, each within 0.9 of its target colors on a standard 0-to-100 color-difference scale. It has brightness and contrast sliders, settings for each site, a keyboard shortcut and an option to follow the Mac&rsquo;s dark mode. Version 1.0.0 is built, signed and installed by one script, without Xcode. It asks for 1 permission: storage.</dd>
     </dl>
   </div>
 
@@ -67,13 +67,13 @@
 
   <figure class="figure">
     <img class="narrow" src="img/safari-all-themes.jpg" alt="One test page rendered in each of the six themes: Dark, Black, Dim, Sepia, Nord and Dracula" width="1000" height="965" loading="lazy">
-    <figcaption>All six themes on the same test page, captured by the project&rsquo;s test setup.</figcaption>
+    <figcaption>All six themes on the same test page.</figcaption>
   </figure>
   <figure class="figure">
     <div class="chart-grid">
       <div class="chart-card">
         <h3>How close each theme got</h3>
-        <p class="sub">Distance from the target color (&Delta;E in OKLab). Lower is closer. Each bar runs on a scale of 0 to 1.</p>
+        <p class="sub">Distance from the target color (&Delta;E in OKLab). Lower is closer. Each bar shows 0 to 1 of a 0-to-100 scale.</p>
         <table class="minis">
           <tr><th>Theme</th><th>Background</th><th>Text</th></tr>
           <tr><td class="n">Dark</td><td><div class="cell"><span class="track"><i style="--v:40%"></i></span><span>0.4</span></div></td><td><div class="cell"><span class="track"><i style="--v:10%"></i></span><span>0.1</span></div></td></tr>
@@ -92,7 +92,7 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>Beyond making websites dark, the goal was to build, sign and install a Safari add-on without Xcode, Apple&rsquo;s app-building tool. One script does all three.</p>
+    <p>Beyond making websites dark, the goal was to build, sign and install a Safari add-on without Xcode, Apple&rsquo;s app-building tool.</p>
 
     <h2>Decisions I made</h2>
     <ul>
