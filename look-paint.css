@@ -1,0 +1,365 @@
+/* Paint & Meadow: the site's fifth look. The page itself is painted, the way a hand-painted feature background is: the
+   sky behind the opening words, a horizon band with a big tree mass at the edge, meadow and hill bands between sections,
+   and every card and panel a painted board in the same palette and marks. It integrates into the page; it is never a
+   picture with the page placed on a sign. No people anywhere (Ryan, Nov 19).
+   Spec: page-films/out/paint/LOOK.md. The rules that lead everything:
+     - the world is opaque paint with no outline; boards for words are painted (base pass in the centre, marks at the edges);
+     - drawn things (tags, buttons, the leaf, the seed dots) are a slightly organic line in the fill's own dark hue around flat
+       colour, with a shade shape on the side away from the sun (upper right);
+     - shade is a colour (sunlit and shaded pairs measured on the reference stills), never grey or black;
+     - every painting is baked by the stroke painter (_tools/paint/art/ -> img/paint/*.webp), never painted live.
+   This file loads only when the paint look is on (look.js). Yarn, wash, brush and cel never see it.
+   Home page only in this sample (case pages are the roll-out). */
+
+/* ---------- paints (LCh in LOOK.md section 3; hex here) ----------
+   sky (behind words) #006494 top to #0275a0 low; cream text #fbf6ed; ripe grain #f3d48b; page ground (meadow in haze) #d9d5b9;
+   board face #f3eadc, its shade edge #c9b29e; ink (deep leaf shade) #1b3b2e, muted #405a4d; bar (earth) #dcc2a6;
+   tags: warm #e4a271, cream #f5edde, leaf #9bb37e, grain #e8c981, sky #91c3da, earth #daad91.
+   night (moonlight): sky #113148 to #224358, ground #19343b, board #1f3e44, bar #18373e, cream text #f3ede2, muted #bfd6d6. */
+html[data-look="paint"] {
+  --pm-sky-c: #0275a0; --pm-ground-c: #d9d5b9; --pm-board-c: #f3eadc; --pm-bar-c: #dcc2a6;
+  --pm-ink: #1b3b2e; --pm-muted: #405a4d; --pm-cream: #fbf6ed; --pm-grain: #f3d48b; --pm-path: #b39a7b; --pm-under: #e4a271;
+  --pm-sky: url("img/paint/sky.webp"); --pm-sky-n: url("img/paint/sky-n.webp"); --pm-cloud: url("img/paint/cloud.webp");
+  --pm-band: url("img/paint/band.webp"); --pm-band-n: url("img/paint/band-n.webp"); --pm-ground: url("img/paint/ground.webp");
+  --pm-hill: url("img/paint/hill.webp"); --pm-foot: url("img/paint/foot.webp"); --pm-gust: url("img/paint/gust.webp");
+  --pm-board: url("img/paint/board.webp"); --pm-bar: url("img/paint/bar.webp");
+  --pm-t-warm: url("img/paint/tag-warm.webp"); --pm-t-cream: url("img/paint/tag-cream.webp"); --pm-t-leaf: url("img/paint/tag-leaf.webp");
+  --pm-t-grain: url("img/paint/tag-grain.webp"); --pm-t-sky: url("img/paint/tag-sky.webp"); --pm-t-earth: url("img/paint/tag-earth.webp");
+  --pm-tag-ink: #1b3b2e;
+  /* drawn leaf (theme switch): sunlit face up by day */
+  --pm-leaf: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M5 27C4 15 11 5 27 4c1 14-7 23-22 23z' fill='%23a9bd5e'/%3E%3Cpath d='M5 27C4 15 11 5 27 4 18 10 10 17 5 27z' fill='%2379934a'/%3E%3Cpath d='M5 27C4 15 11 5 27 4c1 14-7 23-22 23z' fill='none' stroke='%234d5a2a' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M6 26C11 18 17 11 25 6' fill='none' stroke='%234d5a2a' stroke-width='1.3' stroke-linecap='round'/%3E%3C/svg%3E");
+  --pm-token: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 2.6c9.8.2 17.5 7.6 17.4 17.6-.1 9.6-7.8 17.4-17.5 17.2C10.2 37.3 2.5 29.7 2.6 20 2.7 10 10.3 2.4 20 2.6z' fill='%23b9ca9c'/%3E%3Cpath d='M8 9C3 15 3 27 11 33c6 4 15 5 22-1-9 3-21 1-25-23z' fill='%23a6b98b'/%3E%3Cpath d='M20 2.6c9.8.2 17.5 7.6 17.4 17.6-.1 9.6-7.8 17.4-17.5 17.2C10.2 37.3 2.5 29.7 2.6 20 2.7 10 10.3 2.4 20 2.6z' fill='none' stroke='%23546b40' stroke-width='2.2'/%3E%3C/svg%3E");
+  --pm-seed: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M7 1.3c3.4 1.6 5 4.4 4.6 7.2C11.2 11.4 9 12.8 7 12.7 4.6 12.6 2.6 11 2.5 8.4 2.4 5.6 4 3 7 1.3z' fill='%23c9a65c'/%3E%3Cpath d='M4 4.6C2.4 7 2.4 10.6 6 12.5 3.6 11 3.2 7.6 4 4.6z' fill='%23a98843'/%3E%3Cpath d='M7 1.3c3.4 1.6 5 4.4 4.6 7.2C11.2 11.4 9 12.8 7 12.7 4.6 12.6 2.6 11 2.5 8.4 2.4 5.6 4 3 7 1.3z' fill='none' stroke='%23735a2c' stroke-width='1.2'/%3E%3C/svg%3E");
+  --pm-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 3.4 15.6 10 5.2 16.7c-.6-4.4-.7-8.9-.2-13.3z' fill='%23daad91'/%3E%3Cpath d='M5 3.4 15.6 10 5.2 16.7c-.6-4.4-.7-8.9-.2-13.3z' fill='none' stroke='%237b5640' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --pm-tick: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1.8c5.8.1 10.3 4.5 10.2 10.3-.1 5.6-4.6 10.2-10.3 10.1C6.2 22.1 1.7 17.6 1.8 12 1.9 6.1 6.3 1.7 12 1.8z' fill='%239bb37e'/%3E%3Cpath d='M12 1.8c5.8.1 10.3 4.5 10.2 10.3-.1 5.6-4.6 10.2-10.3 10.1C6.2 22.1 1.7 17.6 1.8 12 1.9 6.1 6.3 1.7 12 1.8z' fill='none' stroke='%23546b40' stroke-width='1.6'/%3E%3Cpath d='M6.6 12.4l3.6 3.5 7.3-7.6' fill='none' stroke='%231b3b2e' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+  /* the yarn look's tokens, pointed at this look's paints (or emptied, for its cloth and stitches) */
+  --bg: #d9d5b9; --bg-soft: #f3eadc; --text: #1b3b2e; --muted: #405a4d; --faint: #405a4d; --line: transparent;
+  --card: #f3eadc; --ink: #1b3b2e; --accent: #1b3b2e; --accent-2: #1b3b2e; --accent-soft: #e9dfcd; --mark-ink: #1b3b2e;
+  --sig: #e4a271; --sig-ink: #1b3b2e; --on-sig: #1b3b2e;
+  --shade: transparent; --shade-2: transparent; --shadow: none; --shadow-hover: none;
+  --y-pink: #f3eadc; --y-blue: #f3eadc; --y-green: #f3eadc; --y-yellow: #f3eadc;
+  --s-pink: #1b3b2e; --s-blue: #1b3b2e; --s-green: #1b3b2e; --s-yellow: #1b3b2e;
+  --felt-ink: #1b3b2e; --bead: #f3eadc; --bead-ink: #1b3b2e; --stk: transparent; --felt: transparent; --seam: transparent; --sew: transparent;
+  --yarn-hi: #1b3b2e; --yarn-lo: #1b3b2e; --dot: transparent; --ging: transparent;
+  --btn: #e4a271; --btn-rim: transparent; --btn-hole: transparent;
+  --loop: transparent; --loop-hi: transparent; --loop-lo: transparent;
+  --h-indigo: #1b3b2e; --h-teal: #1b3b2e; --h-amber: #1b3b2e; --h-rose: #1b3b2e; --h-violet: #1b3b2e; --h-sky: #1b3b2e; --h-green: #1b3b2e;
+  --radius: 6px;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --display: "Baskerville", "Hoefler Text", Georgia, serif;
+  --round: var(--display); --label: var(--display);
+  --st: none; --st-v: none; --st-cream: none; --zip-closed: none; --zip-row: none; --zip-pull: none;
+  --g-felt: none; --g-cotton: none; --quilt: none; --strand-sig: none; --strand-pink: none; --strand-yellow: none; --zip-dim: none; --beads: none;
+  --pop: cubic-bezier(.25, .8, .3, 1); --spring: cubic-bezier(.25, .8, .3, 1);
+  /* the hero band's height: the plate is 2560 x 760, shown at least 1280 wide (2x on a 1280 screen) */
+  --pm-bw: max(100vw, 1280px); --pm-bh: calc(var(--pm-bw) * .296875);
+  color-scheme: light;
+}
+@media (max-width: 620px) { html[data-look="paint"] { --pm-bw: 100vw; --pm-bh: calc(100vw * 1.0133); } }
+/* night: the same meadow by moonlight (moon out of frame). Boards are moonlit, words light. */
+@media (prefers-color-scheme: dark) {
+  html[data-look="paint"]:not([data-theme="light"]) {
+    --pm-sky-c: #224358; --pm-ground-c: #19343b; --pm-board-c: #1f3e44; --pm-bar-c: #18373e;
+    --pm-ink: #f3ede2; --pm-muted: #bfd6d6; --pm-cream: #f3ede2; --pm-grain: #eacf91; --pm-path: #5b6e6a; --pm-under: #c99a6c;
+    --pm-sky: url("img/paint/sky-night.webp"); --pm-sky-n: url("img/paint/sky-n-night.webp"); --pm-cloud: url("img/paint/cloud-night.webp");
+    --pm-band: url("img/paint/band-night.webp"); --pm-band-n: url("img/paint/band-n-night.webp"); --pm-ground: url("img/paint/ground-night.webp");
+    --pm-hill: url("img/paint/hill-night.webp"); --pm-foot: url("img/paint/foot-night.webp"); --pm-gust: url("img/paint/gust-night.webp");
+    --pm-board: url("img/paint/board-night.webp"); --pm-bar: url("img/paint/bar-night.webp");
+    --pm-t-warm: url("img/paint/tag-warm-night.webp"); --pm-t-cream: url("img/paint/tag-cream-night.webp"); --pm-t-leaf: url("img/paint/tag-leaf-night.webp");
+    --pm-t-grain: url("img/paint/tag-grain-night.webp"); --pm-t-sky: url("img/paint/tag-sky-night.webp"); --pm-t-earth: url("img/paint/tag-earth-night.webp");
+    --pm-tag-ink: #f3ede2;
+    --pm-leaf: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M5 27C4 15 11 5 27 4c1 14-7 23-22 23z' fill='%23577a78'/%3E%3Cpath d='M5 27C4 15 11 5 27 4 18 10 10 17 5 27z' fill='%23426260'/%3E%3Cpath d='M5 27C4 15 11 5 27 4c1 14-7 23-22 23z' fill='none' stroke='%23c4dad6' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M6 26C11 18 17 11 25 6' fill='none' stroke='%23c4dad6' stroke-width='1.3' stroke-linecap='round'/%3E%3C/svg%3E");
+    --bg: #19343b; --bg-soft: #1f3e44; --text: #f3ede2; --muted: #bfd6d6; --faint: #bfd6d6; --card: #1f3e44; --ink: #f3ede2;
+    --accent: #f3ede2; --accent-2: #f3ede2; --accent-soft: #18373e; --mark-ink: #f3ede2; --sig: #c99a6c; --sig-ink: #f3ede2; --on-sig: #f3ede2;
+    --y-pink: #1f3e44; --y-blue: #1f3e44; --y-green: #1f3e44; --y-yellow: #1f3e44;
+    --s-pink: #f3ede2; --s-blue: #f3ede2; --s-green: #f3ede2; --s-yellow: #f3ede2; --felt-ink: #f3ede2; --bead: #1f3e44; --bead-ink: #f3ede2;
+    --yarn-hi: #f3ede2; --yarn-lo: #f3ede2; --h-indigo: #f3ede2; --h-teal: #f3ede2; --h-amber: #f3ede2; --h-rose: #f3ede2; --h-violet: #f3ede2; --h-sky: #f3ede2; --h-green: #f3ede2;
+    --shade: transparent; --shade-2: transparent; --stk: transparent; --dot: transparent; --ging: transparent; --line: transparent; --felt: transparent; --seam: transparent;
+    --g-felt: none; --g-cotton: none; --quilt: none; --strand-sig: none; --strand-pink: none; --strand-yellow: none; --zip-dim: none;
+    color-scheme: dark;
+  }
+}
+html[data-look="paint"][data-theme="dark"] {
+  --pm-sky-c: #224358; --pm-ground-c: #19343b; --pm-board-c: #1f3e44; --pm-bar-c: #18373e;
+  --pm-ink: #f3ede2; --pm-muted: #bfd6d6; --pm-cream: #f3ede2; --pm-grain: #eacf91; --pm-path: #5b6e6a; --pm-under: #c99a6c;
+  --pm-sky: url("img/paint/sky-night.webp"); --pm-sky-n: url("img/paint/sky-n-night.webp"); --pm-cloud: url("img/paint/cloud-night.webp");
+  --pm-band: url("img/paint/band-night.webp"); --pm-band-n: url("img/paint/band-n-night.webp"); --pm-ground: url("img/paint/ground-night.webp");
+  --pm-hill: url("img/paint/hill-night.webp"); --pm-foot: url("img/paint/foot-night.webp"); --pm-gust: url("img/paint/gust-night.webp");
+  --pm-board: url("img/paint/board-night.webp"); --pm-bar: url("img/paint/bar-night.webp");
+  --pm-t-warm: url("img/paint/tag-warm-night.webp"); --pm-t-cream: url("img/paint/tag-cream-night.webp"); --pm-t-leaf: url("img/paint/tag-leaf-night.webp");
+  --pm-t-grain: url("img/paint/tag-grain-night.webp"); --pm-t-sky: url("img/paint/tag-sky-night.webp"); --pm-t-earth: url("img/paint/tag-earth-night.webp");
+  --pm-tag-ink: #f3ede2;
+  --pm-leaf: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M5 27C4 15 11 5 27 4c1 14-7 23-22 23z' fill='%23577a78'/%3E%3Cpath d='M5 27C4 15 11 5 27 4 18 10 10 17 5 27z' fill='%23426260'/%3E%3Cpath d='M5 27C4 15 11 5 27 4c1 14-7 23-22 23z' fill='none' stroke='%23c4dad6' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M6 26C11 18 17 11 25 6' fill='none' stroke='%23c4dad6' stroke-width='1.3' stroke-linecap='round'/%3E%3C/svg%3E");
+  --bg: #19343b; --bg-soft: #1f3e44; --text: #f3ede2; --muted: #bfd6d6; --faint: #bfd6d6; --card: #1f3e44; --ink: #f3ede2;
+  --accent: #f3ede2; --accent-2: #f3ede2; --accent-soft: #18373e; --mark-ink: #f3ede2; --sig: #c99a6c; --sig-ink: #f3ede2; --on-sig: #f3ede2;
+  --y-pink: #1f3e44; --y-blue: #1f3e44; --y-green: #1f3e44; --y-yellow: #1f3e44;
+  --s-pink: #f3ede2; --s-blue: #f3ede2; --s-green: #f3ede2; --s-yellow: #f3ede2; --felt-ink: #f3ede2; --bead: #1f3e44; --bead-ink: #f3ede2;
+  --yarn-hi: #f3ede2; --yarn-lo: #f3ede2; --h-indigo: #f3ede2; --h-teal: #f3ede2; --h-amber: #f3ede2; --h-rose: #f3ede2; --h-violet: #f3ede2; --h-sky: #f3ede2; --h-green: #f3ede2;
+  --shade: transparent; --shade-2: transparent; --stk: transparent; --dot: transparent; --ging: transparent; --line: transparent; --felt: transparent; --seam: transparent;
+  --g-felt: none; --g-cotton: none; --quilt: none; --strand-sig: none; --strand-pink: none; --strand-yellow: none; --zip-dim: none;
+  color-scheme: dark;
+}
+
+/* ---------- the two kinds of surface, as reusable recipes ----------
+   BOARD (a panel that carries words): the painted 9-slice; its edge slices (marks, the irregular edge, the coloured cast
+   shadow thrown down-left) sit in the outer 24 px, outside the padding, so the edge never meets the words. A board that
+   fails to load shows its flat token colour, which is also what the text contrast is set against.
+   TAG (a drawn control or label): the drawn 9-slice, flat fill, organic line, shade shape on the side away from the sun. */
+html[data-look="paint"] :is(.card.lead, .film .shot, .more-g, .method > li, .band, footer.site .wrap > span) {
+  border: 0 solid transparent; border-radius: 0; outline: 0; box-shadow: none; color: var(--pm-ink);
+  background: var(--pm-board-c); background-clip: padding-box;
+  border-image: var(--pm-board) 56 fill / 28px / 6px 6px 8px 10px stretch;
+}
+html[data-look="paint"] :is(.card.lead, .film .shot, .more-g, .method > li, .band)::before { content: none; }
+html[data-look="paint"] :is(.card, .band, .film .shot, .more-g)::after,
+html[data-look="paint"].js .card::after { content: none; }
+html[data-look="paint"] :is(.lead-k, .lead-go, .badge, .group-h, .method .who, .pills span, .btn, .vid-sound, .motion-toggle) {
+  --t: var(--pm-t-cream);
+  border: 0 solid transparent; border-radius: 0; outline: 0; box-shadow: none; text-shadow: none; -webkit-text-stroke: 0;
+  background: none; color: var(--pm-tag-ink); font-family: var(--display); font-weight: 700; rotate: none;
+  border-image: var(--t) 40 fill / 13px stretch;
+}
+html[data-look="paint"] :is(.lead-k, .lead-go, .badge, .group-h, .method .who, .pills span, .btn, .vid-sound)::before,
+html[data-look="paint"] :is(.lead-k, .lead-go, .badge, .group-h, .method .who, .pills span, .btn, .vid-sound)::after { content: none; }
+html[data-look="paint"] :is(.btn.primary, .lead-go, .vid-sound) { --t: var(--pm-t-warm); }
+html[data-look="paint"] :is(.h-indigo .group-h, .lead-k, .method > li:first-child .who) { --t: var(--pm-t-leaf); }
+html[data-look="paint"] :is(.h-teal .group-h, .method > li.ag .who) { --t: var(--pm-t-sky); }
+html[data-look="paint"] :is(.h-amber .group-h, .badge) { --t: var(--pm-t-grain); }
+html[data-look="paint"] :is(.h-violet .group-h, .method > li:last-child .who) { --t: var(--pm-t-earth); }
+
+/* ---------- page, type ---------- */
+html[data-look="paint"] body {
+  position: relative; isolation: isolate; color: var(--pm-ink); font-family: var(--sans);
+  background: var(--pm-ground) 0 0 / 800px 800px repeat, var(--pm-ground-c);
+}
+html[data-look="paint"] ::selection { background: #afb75f; color: #1b3b2e; }
+html[data-look="paint"] :is(a, button, summary, video, input, select, textarea, [tabindex]):focus-visible { outline: 3px solid var(--pm-under); outline-offset: 4px; border-radius: 4px; }
+html[data-look="paint"] :is(.seam, .loop) { display: none; }
+html[data-look="paint"] a { color: inherit; text-decoration: none; }
+/* a link in running text: a short drawn underline in the warm accent (never on buttons) */
+html[data-look="paint"] :is(.hero-sub, .hero-mail, footer.site) a:not(.btn) {
+  color: inherit; font-weight: 600; text-decoration: underline; text-decoration-color: var(--pm-under); text-decoration-thickness: 2px; text-underline-offset: 4px; background: none;
+}
+html[data-look="paint"] :is(.hero-sub, .hero-mail, footer.site) a:not(.btn):hover { text-decoration-thickness: 3px; }
+html[data-look="paint"] :is(h1, h2, h3, h4, .brand, .group-h, .lead-k, .lead-go, .method .who, .btn, .badge, .topnav a, .vid-sound, .pills span) { font-family: var(--display); }
+html[data-look="paint"] :is(.hero h1, .section-head h2, .band h2) { font-weight: 700; letter-spacing: 0; }
+html[data-look="paint"] :is(.card h4, .group-h, .brand, .more a b) { font-weight: 700; }
+html[data-look="paint"] .skip-link { border-radius: 4px; border: 0; }
+
+/* ---------- top bar: an earth-coloured painted board; its own painted lower edge throws a coloured shadow (the hem) ---------- */
+html[data-look="paint"] .topbar {
+  background: var(--pm-bar-c); background-image: none; -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none; color: var(--pm-ink);
+  border: 0 solid transparent; border-image: var(--pm-bar) 20 60 56 60 fill / 10px 30px 28px 30px / 0 0 14px 0 stretch;
+}
+html[data-look="paint"] .topbar::before,
+html[data-look="paint"] .topbar::after { content: none; }
+html[data-look="paint"] .brand::before { content: none; }
+html[data-look="paint"] .brand { background: none; color: var(--pm-ink); box-shadow: none; border: 0; }
+/* "RW": a drawn round token in leaf green */
+html[data-look="paint"] .brand .mark { width: 34px; height: 34px; border-radius: 50%; color: #1b3b2e; font: 700 13px/1 var(--display); letter-spacing: .02em;
+  background: var(--pm-token) center / 100% 100% no-repeat; box-shadow: none; border: 0; }
+html[data-look="paint"] .topnav a,
+html[data-look="paint"] .topnav a:hover { color: var(--pm-ink); font-weight: 600; background: none; box-shadow: none; text-decoration: none; }
+html[data-look="paint"] .topnav a { border-radius: 4px; }
+html[data-look="paint"] .topnav a:is(:hover, :focus-visible) { text-decoration: underline; text-decoration-color: var(--pm-under); text-decoration-thickness: 2px; text-underline-offset: 5px; }
+html[data-look="paint"] .topnav a::before,
+html[data-look="paint"] .topnav a::after { content: none; }
+/* the light/dark switch: a drawn leaf, sunlit face up by day, its shaded underside by night */
+html[data-look="paint"] .topnav .theme-toggle { width: 34px; height: 34px; min-width: 0; padding: 0; margin-right: 0; border: 0; border-radius: 50%; box-shadow: none; background: var(--pm-leaf) center / 30px 30px no-repeat; color: transparent; }
+html[data-look="paint"] .theme-toggle svg { visibility: hidden; }
+html[data-look="paint"] .theme-toggle::before { content: none; }
+html[data-look="paint"] .theme-toggle:is(:hover, :active) { transform: translateY(-1px); }
+
+/* ---------- the head of the page ----------
+   The sky (the section's own background) runs from the top of the page to the horizon band; the opening words, the film
+   and the e-mail line sit straight on the calm deep sky, in cream. One cumulus heap drifts in the free sky right of the
+   film (.lead-hero::after, wide screens only). The horizon band (sky, low cumulus, far trees, the big tree mass at the
+   left edge, a path and a fence, the meadow fading into the page ground) is .leads::before; the lead cards stand in it.
+   The wind in the grass along the front of the band is .leads::after (three drawings, stepped). */
+html[data-look="paint"] .lead-hero { position: relative; overflow: clip; background: var(--pm-sky) center top / var(--pm-bw) auto no-repeat, var(--pm-sky-c); }
+@media (max-width: 620px) { html[data-look="paint"] .lead-hero { background: var(--pm-sky-n) center top / 100% auto no-repeat, var(--pm-sky-c); } }
+html[data-look="paint"] .lead-hero::before { content: none; }
+html[data-look="paint"] .lead-hero::after { content: none; }
+@media (min-width: 1100px) {
+  html[data-look="paint"] .lead-hero::after {
+    content: ""; position: absolute; z-index: 0; pointer-events: none; width: 560px; height: 407px; top: 210px;
+    left: calc(50% + 516px - 560px + 150px); background: var(--pm-cloud) center / 100% 100% no-repeat; border: 0; opacity: 1; transform: none; filter: none;
+  }
+}
+html[data-look="paint"] .lead-hero .wrap { position: relative; z-index: 1; }
+html[data-look="paint"] .hero-one { position: relative; background: none; box-shadow: none; border: 0; }
+html[data-look="paint"] .hero h1 { position: relative; color: var(--pm-cream); text-shadow: none; }
+html[data-look="paint"] .hero h1 .grad { color: var(--pm-grain); background: none; -webkit-text-fill-color: currentColor; animation: none; text-decoration: none; }
+html[data-look="paint"] :is(.hero-sub, .hero-mail, .film-cap) { color: var(--pm-cream); }
+html[data-look="paint"] .hero-sub { position: relative; margin-bottom: 0; }
+html[data-look="paint"] .film-script { color: var(--pm-cream); }
+html[data-look="paint"] .film-script summary { color: var(--pm-cream); }
+html[data-look="paint"] .film-script summary::before { border: 0; background: none; content: "\25B8"; color: var(--pm-grain); width: auto; height: auto; }
+html[data-look="paint"] .film-script[open] summary::before { content: "\25BE"; }
+html[data-look="paint"] .film-script p { color: var(--pm-cream); }
+html[data-look="paint"] .leads { position: relative; margin-top: 0; padding-top: calc(var(--pm-bh) * .80); }
+html[data-look="paint"] .leads::before {
+  content: ""; position: absolute; z-index: -1; left: calc(50% - 50vw); width: 100vw; top: 0; bottom: -240px; height: auto; pointer-events: none;
+  border: 0; border-radius: 0; opacity: 1; transform: none; filter: none; box-shadow: none;
+  background: var(--pm-band) center top / var(--pm-bw) auto no-repeat, var(--pm-ground) 0 0 / 800px 800px repeat, var(--pm-ground-c);
+}
+@media (max-width: 620px) { html[data-look="paint"] .leads::before { background: var(--pm-band-n) center top / 100% auto no-repeat, var(--pm-ground) 0 0 / 800px 800px repeat, var(--pm-ground-c); } }
+html[data-look="paint"] .leads::after {
+  content: ""; position: absolute; z-index: -1; left: calc(50% - 50vw); width: 100vw; top: calc(var(--pm-bh) * .80 - 96px); height: 110px; pointer-events: none;
+  background: var(--pm-gust) 0 0 / 1600px 330px repeat-x; border: 0; opacity: 1; transform: none; filter: none;
+}
+@media (max-width: 620px) { html[data-look="paint"] .leads::after { height: 74px; top: calc(var(--pm-bh) * .80 - 64px); background-size: 1077px 222px; } }
+
+/* ---------- lead cards: painted boards standing in the meadow ---------- */
+html[data-look="paint"] .card { overflow: visible; transition: transform .25s var(--pop); }
+html[data-look="paint"] .card:hover { transform: translateY(-3px); box-shadow: none; }
+html[data-look="paint"] .card:active { transform: translateY(0); }
+html[data-look="paint"] .card:focus-visible { outline-offset: 8px; }
+html[data-look="paint"] .card .thumb-wrap { margin: 20px 20px 0; border: 0; border-radius: 3px; overflow: hidden; background: #2a3a32; box-shadow: none; }
+html[data-look="paint"] .card .thumb-wrap.ink { background: #ffffff; }
+html[data-look="paint"] .card :is(.thumb, .thumb-wrap .thumb) { border: 0; border-radius: 0; box-shadow: none; }
+html[data-look="paint"] .card video.preview { border-radius: 0; }
+html[data-look="paint"] .card .body { border: 0; padding: 14px 30px 30px; }
+html[data-look="paint"] .card h4 { color: var(--pm-ink); }
+html[data-look="paint"] .card:hover h4 { color: var(--pm-ink); text-decoration: underline; text-decoration-color: var(--pm-under); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+html[data-look="paint"] .card p { color: var(--pm-muted); }
+html[data-look="paint"] .lead-role b { color: var(--pm-ink); }
+html[data-look="paint"] .lead-k { align-self: flex-start; padding: 4px 13px 5px; letter-spacing: .02em; margin-bottom: 4px; }
+html[data-look="paint"] .lead-go { align-self: flex-start; margin-top: 8px; padding: 7px 16px 8px; color: var(--pm-tag-ink); }
+/* "Live demo": a drawn grain tag; its dot a small drawn seed */
+html[data-look="paint"] .lead-wrap > .badge, html[data-look="paint"] .card .badge { z-index: 3; -webkit-backdrop-filter: none; backdrop-filter: none; top: 30px; left: 30px; padding: 5px 13px 6px 10px; font-size: 12px; color: var(--pm-tag-ink); }
+html[data-look="paint"] .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--pm-seed) center / 100% 100% no-repeat; box-shadow: none; animation: none; }
+
+/* ---------- sections: each opens with a low painted hill band (meadow, hedge clumps) rising from the page ground;
+   the title sits under it on the calm ground, in the heading serif, in the deep shade colour ---------- */
+html[data-look="paint"] .section { position: relative; background: none; padding-top: 196px; margin-top: 10px; }
+html[data-look="paint"] .section::before {
+  content: ""; position: absolute; z-index: -1; left: calc(50% - 50vw); width: 100vw; top: 0; height: 188px; pointer-events: none;
+  background: var(--pm-hill) center top / max(100vw, 1600px) 188px no-repeat; border: 0; border-radius: 0; opacity: 1; transform: none; filter: none; box-shadow: none; inset: 0 auto auto calc(50% - 50vw);
+}
+html[data-look="paint"] .section::after,
+html[data-look="paint"] .section-head::before,
+html[data-look="paint"] .section-head::after,
+html[data-look="paint"] .section-head h2::before,
+html[data-look="paint"] .section-head h2::after,
+html[data-look="paint"].motion .section-head h2::after,
+html[data-look="paint"].motion .section-head.in h2::after { content: none; }
+html[data-look="paint"] .section-head h2 { position: relative; color: var(--pm-ink); padding: 0; margin-left: 0; border-radius: 0; rotate: none; background: none; box-shadow: none; }
+html[data-look="paint"] main { overflow-x: clip; }
+
+/* ---------- the project groups: one board each; titles on drawn tags in four natural hues; rows marked by seed dots ---------- */
+html[data-look="paint"] .more-g { padding: 30px 32px 22px; }
+html[data-look="paint"] .group-h { display: inline-flex; width: fit-content; min-height: 0; padding: 5px 15px 6px; margin: 0 0 12px; font-size: 15px; }
+html[data-look="paint"] .more li { position: relative; border: 0; padding-left: 22px; }
+html[data-look="paint"] .more li + li { border: 0; }
+html[data-look="paint"] .more li::before { content: ""; position: absolute; left: 0; top: 15px; width: 12px; height: 12px; border: 0; border-radius: 0; box-shadow: none; background: var(--pm-seed) center / 100% 100% no-repeat; }
+html[data-look="paint"] .more a { border-radius: 4px; background: none; }
+html[data-look="paint"] .more a b { color: var(--pm-ink); }
+html[data-look="paint"] .more a span { color: var(--pm-muted); }
+html[data-look="paint"] .more a:is(:hover, :focus-visible) b { text-decoration: underline; text-decoration-color: var(--pm-under); text-decoration-thickness: 2px; text-underline-offset: 4px; color: var(--pm-ink); }
+
+/* ---------- how each one is built: three boards; labels and pills drawn tags; the code lines painted strokes in shade
+   colour; the tick a drawn leaf-green token; the arrow between steps a small drawn earth chevron ---------- */
+html[data-look="paint"] .method > li { padding: 30px 32px 30px; }
+html[data-look="paint"] .method > li::after { content: ""; background: var(--pm-arrow) center / 100% 100% no-repeat; right: -22px; width: 18px; height: 18px; border: 0; box-shadow: none; border-radius: 0; }
+html[data-look="paint"] .method .who,
+html[data-look="paint"] .method .ag .who,
+html[data-look="paint"] .method > li:last-child .who { display: block; width: fit-content; padding: 4px 13px 5px; margin-bottom: 12px; font-size: 13px; letter-spacing: .02em; }
+html[data-look="paint"] .method p { color: var(--pm-ink); }
+html[data-look="paint"] .pills { gap: 9px 8px; }
+html[data-look="paint"] .pills span { padding: 4px 12px 5px; font-weight: 600; font-size: 13px; }
+html[data-look="paint"] .codelines { gap: 9px; margin-top: 14px; }
+html[data-look="paint"] .codelines i { height: 7px; border-radius: 4px 2px 5px 3px; background: #7f957a; box-shadow: none; border: 0; }
+html[data-look="paint"] .codelines i:nth-child(2) { background: #94a585; }
+html[data-look="paint"] .okmark { width: 24px; height: 24px; color: transparent; vertical-align: -6px; background: var(--pm-tick) center / 100% 100% no-repeat; border: 0; border-radius: 50%; box-shadow: none; }
+html[data-look="paint"] .okmark svg { visibility: hidden; }
+
+/* ---------- the film: a painted board mount; pause and sound are drawn controls ---------- */
+html[data-look="paint"] .film { position: relative; }
+html[data-look="paint"] .film::before,
+html[data-look="paint"] .film::after { content: none; }
+html[data-look="paint"] .film .shot { padding: 16px; overflow: visible; }
+html[data-look="paint"] .film .shot video { position: relative; z-index: 0; border-radius: 2px; display: block; }
+html[data-look="paint"] .vid-toggle { width: 44px; height: 44px; border: 0; border-radius: 50%; color: #1b3b2e; -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none; background: var(--pm-token) center / 100% 100% no-repeat; }
+html[data-look="paint"] .vid-sound, html[data-look="paint"] .vid-sound[aria-pressed="true"] { -webkit-backdrop-filter: none; backdrop-filter: none; color: var(--pm-tag-ink); padding: 0 18px; }
+html[data-look="paint"] .vid-sound[aria-pressed="true"] { --t: var(--pm-t-cream); }
+
+/* ---------- the closing band: a wide sunlit board; the e-mail button drawn in the warm accent, GitHub in cream ---------- */
+html[data-look="paint"] .band { padding: 34px 36px; }
+html[data-look="paint"] .band h2 { color: var(--pm-ink); }
+html[data-look="paint"] .btn { position: relative; padding: 11px 20px 12px; transition: transform .18s var(--pop); color: var(--pm-tag-ink); }
+html[data-look="paint"] .btn:is(:hover, :focus-visible) { transform: translateY(-2px); color: var(--pm-tag-ink); }
+html[data-look="paint"] :is(.btn, .lead-go, .vid-sound, .pills span):active,
+html[data-look="paint"] .card:active .lead-go { transform: translateY(1px); }
+
+/* ---------- the thread down the margin: a worn path line in earth; its head a drawn leaf. The opening guide likewise. ---------- */
+html[data-look="paint"] :is(.thread, .guide) :is(.y-sh, .y-edge, .y-ply, .ply-mark, .th-holes, .g-track) { display: none; }
+html[data-look="paint"] .th-line,
+html[data-look="paint"] .guide .g-trail { stroke: var(--pm-path); stroke-width: 3; stroke-linecap: round; filter: none; }
+html[data-look="paint"] .th-head,
+html[data-look="paint"] .g-ball::before { width: 20px; height: 20px; left: -10px; top: -10px; border: 0; border-radius: 0; box-shadow: none; background: var(--pm-leaf) center / 100% 100% no-repeat; }
+html[data-look="paint"] .g-ball::after { border: 0; box-shadow: none; background: none; }
+html[data-look="paint"] .g-run :is(.method > li, .btn).lit { border-color: transparent; }
+
+/* ---------- footer: the meadow's far edge, a tree line against an evening band of sky, tall grass in front; the words
+   sit on two small boards ---------- */
+html[data-look="paint"] footer.site { position: relative; margin-top: 40px; border: 0; color: var(--pm-ink); padding: 168px 0 34px; background: var(--pm-foot) center top / cover no-repeat, var(--pm-ground-c); }
+html[data-look="paint"] footer.site::before,
+html[data-look="paint"] footer.site::after { content: none; }
+html[data-look="paint"] footer.site .wrap { gap: 12px; }
+html[data-look="paint"] footer.site .wrap > span { padding: 12px 20px 13px; color: var(--pm-ink); }
+html[data-look="paint"] footer.site .motion-toggle { padding: 6px 14px 7px; font-weight: 600; }
+
+@media (max-width: 620px) {
+  html[data-look="paint"] .method > li::after { display: none; }
+  html[data-look="paint"] .card .body { padding: 12px 24px 26px; }
+  html[data-look="paint"] .card .thumb-wrap { margin: 16px 16px 0; }
+  html[data-look="paint"] .more-g { padding: 26px 26px 18px; }
+  html[data-look="paint"] footer.site { padding-top: 150px; }
+}
+
+/* ---------- movement (LOOK.md section 8) ----------
+   The cumulus drifts slowly; the grass along the band's front bends in a gust now and then (three drawings, held, then
+   a still pause: ma); boards paint in by opacity only. No bounce anywhere. All of it sits inside "no-preference" and
+   under .motion: with reduced motion the page holds still in its finished place. */
+@keyframes pm-drift { from { transform: translateX(0); } to { transform: translateX(-46px); } }
+@keyframes pm-gust { 0%, 58% { background-position-y: 0; } 59.5% { background-position-y: -110px; } 62% { background-position-y: -220px; } 71% { background-position-y: -110px; } 73%, 100% { background-position-y: 0; } }
+@keyframes pm-gust-n { 0%, 58% { background-position-y: 0; } 59.5% { background-position-y: -74px; } 62% { background-position-y: -148px; } 71% { background-position-y: -74px; } 73%, 100% { background-position-y: 0; } }
+@keyframes pm-in { from { opacity: 0; } to { opacity: 1; } }
+/* The yarn look's entrances squash, tilt and bounce. The later @keyframes of a name wins, so here they are redefined in
+   this look's manner: a plain fade, no overshoot, no squash. */
+@keyframes rise { from { opacity: 0; } to { opacity: 1; } }
+@keyframes tile { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pop { from { opacity: 0; } to { opacity: 1; } }
+@keyframes sewn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes sew { from { opacity: 0; } to { opacity: 1; } }
+@keyframes popin { from { opacity: 0; } to { opacity: 1; } }
+@keyframes sewon { from { opacity: 0; } to { opacity: 1; } }
+@keyframes okpop { from { opacity: 0; } to { opacity: 1; } }
+@keyframes dotfill { from { opacity: 0; } to { opacity: 1; } }
+@keyframes chip { from { opacity: 0; } to { opacity: 1; } }
+@keyframes squash { from { opacity: 1; } to { opacity: 1; } }
+@keyframes sway { from { opacity: 1; } to { opacity: 1; } }
+@keyframes sway2 { from { opacity: 1; } to { opacity: 1; } }
+@keyframes bob { from { opacity: 1; } to { opacity: 1; } }
+@keyframes drift { from { opacity: 1; } to { opacity: 1; } }
+@keyframes ping { from { opacity: 1; } to { opacity: 1; } }
+@keyframes ripple { from { opacity: 0; } to { opacity: 0; } }
+@keyframes litring { from { opacity: 1; } to { opacity: 1; } }
+@keyframes tighten { from { opacity: 1; } to { opacity: 1; } }
+@keyframes grow { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: no-preference) {
+  html[data-look="paint"].motion .lead-hero::after { animation: pm-drift 70s ease-in-out infinite alternate; }
+  html[data-look="paint"].motion .leads::after { animation: pm-gust 7s steps(1, end) infinite; }
+  html[data-look="paint"].motion .reveal { opacity: 0; transform: none; transition: opacity .7s ease; transition-delay: var(--d, 0ms); }
+  html[data-look="paint"].motion .reveal.in { opacity: 1; transform: none; }
+  html[data-look="paint"].motion .reveal :is(.shot img, .shot video),
+  html[data-look="paint"].motion .reveal > img { scale: 1; transition: none; }
+  html[data-look="paint"].motion .hero h1 { animation: pm-in .6s ease .05s both; }
+  html[data-look="paint"].motion .hero-sub { animation: pm-in .6s ease .2s both; }
+  html[data-look="paint"].motion .th-head { animation: none; }
+}
+@media (prefers-reduced-motion: no-preference) and (max-width: 620px) {
+  html[data-look="paint"].motion .leads::after { animation-name: pm-gust-n; }
+}
