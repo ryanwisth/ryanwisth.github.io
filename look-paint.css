@@ -19,8 +19,10 @@
 html[data-look="paint"] {
   --pm-sky-c: #0275a0; --pm-ground-c: #d9d5b9; --pm-board-c: #f3eadc; --pm-bar-c: #dcc2a6;
   --pm-ink: #1b3b2e; --pm-muted: #405a4d; --pm-cream: #fbf6ed; --pm-grain: #f3d48b; --pm-path: #b39a7b; --pm-under: #e4a271;
-  --pm-sky: url("img/paint/sky.webp"); --pm-sky-n: url("img/paint/sky-n.webp"); --pm-cloud: url("img/paint/cloud.webp");
-  --pm-band: url("img/paint/band.webp"); --pm-band-n: url("img/paint/band-n.webp"); --pm-ground: url("img/paint/ground.webp");
+  --pm-sky: image-set(url("img/paint/sky-1x.webp") 1x, url("img/paint/sky.webp") 2x); --pm-sky-n: image-set(url("img/paint/sky-n-1x.webp") 1x, url("img/paint/sky-n.webp") 2x);
+  --pm-cloud: image-set(url("img/paint/cloud-1x.webp") 1x, url("img/paint/cloud.webp") 2x);
+  --pm-band: image-set(url("img/paint/band-1x.webp") 1x, url("img/paint/band.webp") 2x); --pm-band-n: image-set(url("img/paint/band-n-1x.webp") 1x, url("img/paint/band-n.webp") 2x);
+  --pm-ground: url("img/paint/ground.webp"); --pm-ground-m: url("img/paint/ground-m.webp");
   --pm-hill: url("img/paint/hill.webp"); --pm-foot: url("img/paint/foot.webp"); --pm-gust: url("img/paint/gust.webp");
   --pm-board: url("img/paint/board.webp"); --pm-bar: url("img/paint/bar.webp");
   --pm-t-warm: url("img/paint/tag-warm.webp"); --pm-t-cream: url("img/paint/tag-cream.webp"); --pm-t-leaf: url("img/paint/tag-leaf.webp");
@@ -62,8 +64,10 @@ html[data-look="paint"] {
   html[data-look="paint"]:not([data-theme="light"]) {
     --pm-sky-c: #224358; --pm-ground-c: #19343b; --pm-board-c: #1f3e44; --pm-bar-c: #18373e;
     --pm-ink: #f3ede2; --pm-muted: #bfd6d6; --pm-cream: #f3ede2; --pm-grain: #eacf91; --pm-path: #5b6e6a; --pm-under: #c99a6c;
-    --pm-sky: url("img/paint/sky-night.webp"); --pm-sky-n: url("img/paint/sky-n-night.webp"); --pm-cloud: url("img/paint/cloud-night.webp");
-    --pm-band: url("img/paint/band-night.webp"); --pm-band-n: url("img/paint/band-n-night.webp"); --pm-ground: url("img/paint/ground-night.webp");
+    --pm-sky: image-set(url("img/paint/sky-night-1x.webp") 1x, url("img/paint/sky-night.webp") 2x); --pm-sky-n: image-set(url("img/paint/sky-n-night-1x.webp") 1x, url("img/paint/sky-n-night.webp") 2x);
+  --pm-cloud: image-set(url("img/paint/cloud-night-1x.webp") 1x, url("img/paint/cloud-night.webp") 2x);
+    --pm-band: image-set(url("img/paint/band-night-1x.webp") 1x, url("img/paint/band-night.webp") 2x); --pm-band-n: image-set(url("img/paint/band-n-night-1x.webp") 1x, url("img/paint/band-n-night.webp") 2x);
+  --pm-ground: url("img/paint/ground-night.webp"); --pm-ground-m: url("img/paint/ground-m-night.webp");
     --pm-hill: url("img/paint/hill-night.webp"); --pm-foot: url("img/paint/foot-night.webp"); --pm-gust: url("img/paint/gust-night.webp");
     --pm-board: url("img/paint/board-night.webp"); --pm-bar: url("img/paint/bar-night.webp");
     --pm-t-warm: url("img/paint/tag-warm-night.webp"); --pm-t-cream: url("img/paint/tag-cream-night.webp"); --pm-t-leaf: url("img/paint/tag-leaf-night.webp");
@@ -83,8 +87,10 @@ html[data-look="paint"] {
 html[data-look="paint"][data-theme="dark"] {
   --pm-sky-c: #224358; --pm-ground-c: #19343b; --pm-board-c: #1f3e44; --pm-bar-c: #18373e;
   --pm-ink: #f3ede2; --pm-muted: #bfd6d6; --pm-cream: #f3ede2; --pm-grain: #eacf91; --pm-path: #5b6e6a; --pm-under: #c99a6c;
-  --pm-sky: url("img/paint/sky-night.webp"); --pm-sky-n: url("img/paint/sky-n-night.webp"); --pm-cloud: url("img/paint/cloud-night.webp");
-  --pm-band: url("img/paint/band-night.webp"); --pm-band-n: url("img/paint/band-n-night.webp"); --pm-ground: url("img/paint/ground-night.webp");
+  --pm-sky: image-set(url("img/paint/sky-night-1x.webp") 1x, url("img/paint/sky-night.webp") 2x); --pm-sky-n: image-set(url("img/paint/sky-n-night-1x.webp") 1x, url("img/paint/sky-n-night.webp") 2x);
+  --pm-cloud: image-set(url("img/paint/cloud-night-1x.webp") 1x, url("img/paint/cloud-night.webp") 2x);
+  --pm-band: image-set(url("img/paint/band-night-1x.webp") 1x, url("img/paint/band-night.webp") 2x); --pm-band-n: image-set(url("img/paint/band-n-night-1x.webp") 1x, url("img/paint/band-n-night.webp") 2x);
+  --pm-ground: url("img/paint/ground-night.webp"); --pm-ground-m: url("img/paint/ground-m-night.webp");
   --pm-hill: url("img/paint/hill-night.webp"); --pm-foot: url("img/paint/foot-night.webp"); --pm-gust: url("img/paint/gust-night.webp");
   --pm-board: url("img/paint/board-night.webp"); --pm-bar: url("img/paint/bar-night.webp");
   --pm-t-warm: url("img/paint/tag-warm-night.webp"); --pm-t-cream: url("img/paint/tag-cream-night.webp"); --pm-t-leaf: url("img/paint/tag-leaf-night.webp");
@@ -131,9 +137,11 @@ html[data-look="paint"] :is(.h-violet .group-h, .method > li:last-child .who) { 
 /* ---------- page, type ---------- */
 html[data-look="paint"] body {
   position: relative; isolation: isolate; color: var(--pm-ink); font-family: var(--sans);
-  background: var(--pm-ground) 0 0 / 800px 800px repeat, var(--pm-ground-c);
+  background: var(--pm-day-wash, none), var(--pm-ground-m) 0 0 / 900px 900px repeat, var(--pm-ground) 0 0 / 1600px 1600px repeat, var(--pm-ground-c);
 }
-html[data-look="paint"] ::selection { background: #afb75f; color: #1b3b2e; }
+html[data-look="paint"] ::selection { background: #f5df98; color: #1b3b2e; }
+html[data-look="paint"][data-theme="dark"] ::selection { background: #e6cd86; color: #17313a; }
+@media (prefers-color-scheme: dark) { html[data-look="paint"]:not([data-theme="light"]) ::selection { background: #e6cd86; color: #17313a; } }
 html[data-look="paint"] :is(a, button, summary, video, input, select, textarea, [tabindex]):focus-visible { outline: 3px solid var(--pm-under); outline-offset: 4px; border-radius: 4px; }
 html[data-look="paint"] :is(.seam, .loop) { display: none; }
 html[data-look="paint"] a { color: inherit; text-decoration: none; }
@@ -202,9 +210,11 @@ html[data-look="paint"] .leads { position: relative; margin-top: 0; padding-top:
 html[data-look="paint"] .leads::before {
   content: ""; position: absolute; z-index: -1; left: calc(50% - 50vw); width: 100vw; top: 0; bottom: -240px; height: auto; pointer-events: none;
   border: 0; border-radius: 0; opacity: 1; transform: none; filter: none; box-shadow: none;
-  background: var(--pm-band) center top / var(--pm-bw) auto no-repeat, var(--pm-ground) 0 0 / 800px 800px repeat, var(--pm-ground-c);
+  background: var(--pm-band) center top / var(--pm-bw) auto no-repeat, var(--pm-ground-m) 0 0 / 900px 900px repeat, var(--pm-ground) 0 0 / 1600px 1600px repeat, var(--pm-ground-c);
+  /* the band's sky fades in over the hero sky, so the two skies never meet at a line (the sample's seam) */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 calc(var(--pm-bh) * .2)); mask-image: linear-gradient(to bottom, transparent 0, #000 calc(var(--pm-bh) * .2));
 }
-@media (max-width: 620px) { html[data-look="paint"] .leads::before { background: var(--pm-band-n) center top / 100% auto no-repeat, var(--pm-ground) 0 0 / 800px 800px repeat, var(--pm-ground-c); } }
+@media (max-width: 620px) { html[data-look="paint"] .leads::before { background: var(--pm-band-n) center top / 100% auto no-repeat, var(--pm-ground-m) 0 0 / 900px 900px repeat, var(--pm-ground) 0 0 / 1600px 1600px repeat, var(--pm-ground-c); } }
 html[data-look="paint"] .leads::after {
   content: ""; position: absolute; z-index: -1; left: calc(50% - 50vw); width: 100vw; top: calc(var(--pm-bh) * .80 - 96px); height: 110px; pointer-events: none;
   background: var(--pm-gust) 0 0 / 1600px 330px repeat-x; border: 0; opacity: 1; transform: none; filter: none;
@@ -225,10 +235,10 @@ html[data-look="paint"] .card h4 { color: var(--pm-ink); }
 html[data-look="paint"] .card:hover h4 { color: var(--pm-ink); text-decoration: underline; text-decoration-color: var(--pm-under); text-decoration-thickness: 2px; text-underline-offset: 4px; }
 html[data-look="paint"] .card p { color: var(--pm-muted); }
 html[data-look="paint"] .lead-role b { color: var(--pm-ink); }
-html[data-look="paint"] .lead-k { align-self: flex-start; padding: 4px 13px 5px; letter-spacing: .02em; margin-bottom: 4px; }
+html[data-look="paint"] .lead-k { align-self: flex-start; padding: 5px 14px 6px; font-size: 14px; letter-spacing: .02em; margin-bottom: 4px; }
 html[data-look="paint"] .lead-go { align-self: flex-start; margin-top: 8px; padding: 7px 16px 8px; color: var(--pm-tag-ink); }
 /* "Live demo": a drawn grain tag; its dot a small drawn seed */
-html[data-look="paint"] .lead-wrap > .badge, html[data-look="paint"] .card .badge { z-index: 3; -webkit-backdrop-filter: none; backdrop-filter: none; top: 30px; left: 30px; padding: 5px 13px 6px 10px; font-size: 12px; color: var(--pm-tag-ink); }
+html[data-look="paint"] .lead-wrap > .badge, html[data-look="paint"] .card .badge { z-index: 3; -webkit-backdrop-filter: none; backdrop-filter: none; top: 30px; left: 30px; padding: 6px 14px 7px 11px; font-size: 13.5px; color: var(--pm-tag-ink); }
 html[data-look="paint"] .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--pm-seed) center / 100% 100% no-repeat; box-shadow: none; animation: none; }
 
 /* ---------- sections: each opens with a low painted hill band (meadow, hedge clumps) rising from the page ground;
@@ -236,7 +246,10 @@ html[data-look="paint"] .dot { width: 10px; height: 10px; border-radius: 50%; ba
 html[data-look="paint"] .section { position: relative; background: none; padding-top: 196px; margin-top: 10px; }
 html[data-look="paint"] .section::before {
   content: ""; position: absolute; z-index: -1; left: calc(50% - 50vw); width: 100vw; top: 0; height: 188px; pointer-events: none;
-  background: var(--pm-hill) center top / max(100vw, 1600px) 188px no-repeat; border: 0; border-radius: 0; opacity: 1; transform: none; filter: none; box-shadow: none; inset: 0 auto auto calc(50% - 50vw);
+  background: var(--pm-hill) center top / max(100vw, 1600px) 188px no-repeat; border: 0; border-radius: 0; opacity: 1; transform: none; box-shadow: none; inset: 0 auto auto calc(50% - 50vw);
+  -webkit-mask-image: linear-gradient(#000 62%, transparent); mask-image: linear-gradient(#000 62%, transparent);
+  translate: 0 var(--pm-hy, 0px);
+  filter: sepia(calc(var(--pm-day) * .16)) saturate(calc(1 + var(--pm-day) * .14));
 }
 html[data-look="paint"] .section::after,
 html[data-look="paint"] .section-head::before,
@@ -250,7 +263,7 @@ html[data-look="paint"] main { overflow-x: clip; }
 
 /* ---------- the project groups: one board each; titles on drawn tags in four natural hues; rows marked by seed dots ---------- */
 html[data-look="paint"] .more-g { padding: 30px 32px 22px; }
-html[data-look="paint"] .group-h { display: inline-flex; width: fit-content; min-height: 0; padding: 5px 15px 6px; margin: 0 0 12px; font-size: 15px; }
+html[data-look="paint"] .group-h { display: inline-flex; width: fit-content; min-height: 0; padding: 6px 16px 7px; margin: 0 0 12px; font-size: 16.5px; }
 html[data-look="paint"] .more li { position: relative; border: 0; padding-left: 22px; }
 html[data-look="paint"] .more li + li { border: 0; }
 html[data-look="paint"] .more li::before { content: ""; position: absolute; left: 0; top: 15px; width: 12px; height: 12px; border: 0; border-radius: 0; box-shadow: none; background: var(--pm-seed) center / 100% 100% no-repeat; }
@@ -265,10 +278,10 @@ html[data-look="paint"] .method > li { padding: 30px 32px 30px; }
 html[data-look="paint"] .method > li::after { content: ""; background: var(--pm-arrow) center / 100% 100% no-repeat; right: -22px; width: 18px; height: 18px; border: 0; box-shadow: none; border-radius: 0; }
 html[data-look="paint"] .method .who,
 html[data-look="paint"] .method .ag .who,
-html[data-look="paint"] .method > li:last-child .who { display: block; width: fit-content; padding: 4px 13px 5px; margin-bottom: 12px; font-size: 13px; letter-spacing: .02em; }
+html[data-look="paint"] .method > li:last-child .who { display: block; width: fit-content; padding: 5px 14px 6px; margin-bottom: 12px; font-size: 14.5px; letter-spacing: .02em; }
 html[data-look="paint"] .method p { color: var(--pm-ink); }
 html[data-look="paint"] .pills { gap: 9px 8px; }
-html[data-look="paint"] .pills span { padding: 4px 12px 5px; font-weight: 600; font-size: 13px; }
+html[data-look="paint"] .pills span { padding: 5px 13px 6px; font-weight: 600; font-size: 14px; }
 html[data-look="paint"] .codelines { gap: 9px; margin-top: 14px; }
 html[data-look="paint"] .codelines i { height: 7px; border-radius: 4px 2px 5px 3px; background: #7f957a; box-shadow: none; border: 0; }
 html[data-look="paint"] .codelines i:nth-child(2) { background: #94a585; }
@@ -323,7 +336,6 @@ html[data-look="paint"] footer.site .motion-toggle { padding: 6px 14px 7px; font
    The cumulus drifts slowly; the grass along the band's front bends in a gust now and then (three drawings, held, then
    a still pause: ma); boards paint in by opacity only. No bounce anywhere. All of it sits inside "no-preference" and
    under .motion: with reduced motion the page holds still in its finished place. */
-@keyframes pm-drift { from { transform: translateX(0); } to { transform: translateX(-46px); } }
 @keyframes pm-gust { 0%, 58% { background-position-y: 0; } 59.5% { background-position-y: -110px; } 62% { background-position-y: -220px; } 71% { background-position-y: -110px; } 73%, 100% { background-position-y: 0; } }
 @keyframes pm-gust-n { 0%, 58% { background-position-y: 0; } 59.5% { background-position-y: -74px; } 62% { background-position-y: -148px; } 71% { background-position-y: -74px; } 73%, 100% { background-position-y: 0; } }
 @keyframes pm-in { from { opacity: 0; } to { opacity: 1; } }
@@ -350,7 +362,6 @@ html[data-look="paint"] footer.site .motion-toggle { padding: 6px 14px 7px; font
 @keyframes tighten { from { opacity: 1; } to { opacity: 1; } }
 @keyframes grow { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion: no-preference) {
-  html[data-look="paint"].motion .lead-hero::after { animation: pm-drift 70s ease-in-out infinite alternate; }
   html[data-look="paint"].motion .leads::after { animation: pm-gust 7s steps(1, end) infinite; }
   html[data-look="paint"].motion .reveal { opacity: 0; transform: none; transition: opacity .7s ease; transition-delay: var(--d, 0ms); }
   html[data-look="paint"].motion .reveal.in { opacity: 1; transform: none; }
@@ -363,3 +374,152 @@ html[data-look="paint"] footer.site .motion-toggle { padding: 6px 14px 7px; font
 @media (prefers-reduced-motion: no-preference) and (max-width: 620px) {
   html[data-look="paint"].motion .leads::after { animation-name: pm-gust-n; }
 }
+
+/* ================= lively pass (Nov 19): the static half =================
+   4. The day passes down the page: the top of the page is late morning (the hero's sky), the ground warms toward golden late
+   afternoon by the footer (whose sky is the evening band). A wash on the page ground and a warmth on each hill band; boards
+   keep their own colour, so no words change. Night stays the measured moonlit night, all the way down.
+   1. Wind: each hill band has a fringe of grass along its foot (the same three drawings as the hero band's front). */
+html[data-look="paint"] { --pm-day-wash: linear-gradient(to bottom, rgba(244, 214, 150, 0) 0, rgba(244, 214, 150, 0) 1100px, rgba(240, 196, 120, .12) 72%, rgba(236, 182, 104, .2) 100%); --pm-day: 0; }
+html[data-look="paint"] .section { --pm-day: .45; }
+html[data-look="paint"] .section ~ .section { --pm-day: .8; }
+html[data-look="paint"][data-theme="dark"] { --pm-day-wash: none; }
+html[data-look="paint"][data-theme="dark"] .section::before { filter: none; }
+@media (prefers-color-scheme: dark) {
+  html[data-look="paint"]:not([data-theme="light"]) { --pm-day-wash: none; }
+  html[data-look="paint"]:not([data-theme="light"]) .section::before { filter: none; }
+}
+html[data-look="paint"] .section::after {
+  content: ""; position: absolute; z-index: -1; left: calc(50% - 50vw); width: 100vw; top: 70px; height: 110px; pointer-events: none;
+  background: var(--pm-gust) 0 0 / 1600px 330px repeat-x; border: 0; border-radius: 0; opacity: 1; transform: none; filter: none; box-shadow: none;
+  translate: 0 var(--pm-hy, 0px);
+  /* clumps at the sides (none behind the middle of the column), and the roots dissolve into the ground: no straight foot line */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 24%, transparent 36%, transparent 64%, #000 76%, #000 94%, transparent), linear-gradient(#000 64%, transparent 98%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 24%, transparent 36%, transparent 64%, #000 76%, #000 94%, transparent), linear-gradient(#000 64%, transparent 98%);
+  mask-composite: intersect;
+}
+@media (max-width: 620px) { html[data-look="paint"] .section::after { top: 114px; height: 74px; background-size: 1077px 222px; } }
+@media (prefers-reduced-motion: no-preference) {
+  /* the gust travels down the page: each band bends a beat after the one above */
+  html[data-look="paint"].motion .section::after { animation: pm-gust 7s steps(1, end) .9s infinite; }
+  html[data-look="paint"].motion .section ~ .section::after { animation-delay: 1.8s; }
+  /* faster scrolling raises the wind (look-paint.js sets .pm-windy while the scroll is quick, and takes it off at rest) */
+  html[data-look="paint"].motion.pm-windy :is(.leads, .section)::after { animation-duration: 2.6s; }
+}
+@media (prefers-reduced-motion: no-preference) and (max-width: 620px) {
+  html[data-look="paint"].motion .section::after { animation-name: pm-gust-n; }
+}
+
+/* ================= lively pass: what look-paint.js adds (html.pm-live only; all of it aria-hidden, no clicks) ================= */
+/* 3. depth: the sky and the cumulus move slower than the page (vars set by the script while scrolling) */
+html[data-look="paint"].pm-live .lead-hero { background-position: center var(--pm-sy, 0px), 0 0; }
+html[data-look="paint"].pm-live .lead-hero::after { translate: var(--pm-cx, 0px) var(--pm-cy, 0px); }
+.pm-layer { position: absolute; pointer-events: none; }
+/* 5. cloud shadows: soft, hue-keeping shade patches sliding over each hill band (masked to its paint) and the band's meadow */
+html[data-look="paint"] .pm-shade {
+  z-index: -1; left: calc(50% - 50vw); width: 100vw; top: 0; height: 188px; translate: 0 var(--pm-hy, 0px);
+  background: radial-gradient(closest-side, rgba(38, 74, 92, .3), rgba(38, 74, 92, 0)) 0 0 / 520px 150px repeat-x,
+    radial-gradient(closest-side, rgba(38, 74, 92, .22), rgba(38, 74, 92, 0)) 260px 46px / 760px 170px repeat-x;
+  background-position-x: var(--pm-shx, 0px), calc(var(--pm-shx, 0px) * .7 + 260px);
+  mix-blend-mode: multiply;
+  -webkit-mask: var(--pm-hill) center top / max(100vw, 1600px) 188px no-repeat; mask: var(--pm-hill) center top / max(100vw, 1600px) 188px no-repeat;
+}
+html[data-look="paint"] .pm-shade.pm-band {
+  top: calc(var(--pm-bh) * .5); height: calc(var(--pm-bh) * .3 + 140px); translate: none;
+  -webkit-mask: linear-gradient(transparent, #000 30%, #000 60%, transparent); mask: linear-gradient(transparent, #000 30%, #000 60%, transparent);
+}
+/* 6. leaf light: dapples through the big tree's leaves on the lead cards' painted edge ring (never where words are) */
+html[data-look="paint"].pm-live .card.lead { isolation: isolate; }
+html[data-look="paint"] .pm-dapple {
+  z-index: -1; inset: -2px; padding: 17px; box-sizing: border-box; opacity: .75; mix-blend-mode: screen;
+  background: radial-gradient(9px 7px, rgba(255, 226, 150, .75), rgba(255, 226, 150, 0)) var(--pm-lx, 0px) var(--pm-ly, 0px) / 58px 46px,
+    radial-gradient(6px 5px, rgba(255, 236, 170, .6), rgba(255, 236, 170, 0)) calc(var(--pm-lx, 0px) * -.8 + 23px) calc(var(--pm-ly, 0px) * .6 + 17px) / 41px 37px;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+/* 9. hovering a card: the sun breaks through on it (the board face warms and brightens, under the words), and the grass at
+   its foot leans away. By night a faint moon-glow instead. */
+html[data-look="paint"].pm-live .card.lead::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; border: 0; border-radius: 0; box-shadow: none; transform: none;
+  background: radial-gradient(130% 95% at 88% 4%, rgba(255, 196, 110, .5), rgba(255, 196, 110, .16) 55%, rgba(255, 196, 110, 0) 80%);
+  mix-blend-mode: screen; opacity: 0; transition: opacity .7s ease;
+}
+html[data-look="paint"].pm-live .card.lead.pm-sun::after { opacity: 1; }
+html[data-look="paint"].pm-live[data-theme="dark"] .card.lead::after { background: radial-gradient(130% 95% at 88% 4%, rgba(150, 196, 206, .14), rgba(150, 196, 206, 0) 70%); }
+html[data-look="paint"] .pm-tuft {
+  z-index: 2; bottom: -12px; width: 44px; height: 30px; transform-origin: 50% 100%; transition: transform .6s cubic-bezier(.3, .7, .3, 1);
+  background: var(--pm-tuft) center bottom / 100% 100% no-repeat;
+}
+html[data-look="paint"] .pm-tuft.l { left: 14px; }
+html[data-look="paint"] .pm-tuft.r { right: 10px; scale: -1 1; }
+html[data-look="paint"] .card.lead.pm-sun .pm-tuft.l { transform: rotate(-16deg); }
+html[data-look="paint"] .card.lead.pm-sun .pm-tuft.r { transform: rotate(-16deg); }
+/* 2. the footpath down the margin, painted as it is walked (the site's thin thread is hidden under it) */
+html[data-look="paint"].pm-live .thread .th-line { stroke: transparent; }
+html[data-look="paint"].pm-live .thread .th-head { visibility: hidden; }
+/* (.thread path sets fill: none in style.css; these name the thread so they outrank it) */
+.thread path.pm-fp-edge { fill: #a5875f; } .thread path.pm-fp-body { fill: #cbb189; } .thread path.pm-fp-worn { fill: none; stroke: #e2cfa7; stroke-width: 1.8; stroke-linecap: round; stroke-dasharray: 22 9 13 14 30 8; }
+.thread path.pm-fp-g1 { fill: #6c8a45; } .thread path.pm-fp-g2 { fill: #98b060; } .thread .pm-part path { fill: currentColor; stroke: none; }
+.pm-part path { transition: transform .55s cubic-bezier(.3, .7, .3, 1); transform-box: fill-box; transform-origin: 50% 100%; }
+.pm-part .pl { transform: rotate(-4deg); } .pm-part .pr { transform: rotate(4deg); }
+.pm-moving .pm-part .pl { transform: rotate(-30deg); } .pm-moving .pm-part .pr { transform: rotate(30deg); }
+/* 7, 8, 10. the gust's leaves, the leaf that lands by a heading, a tap's puff of seeds */
+.pm-leaf, .pm-seed { position: absolute; left: 0; top: 0; pointer-events: none; z-index: 5; will-change: transform; }
+.pm-leaf { width: 15px; height: 15px; background: var(--pm-fall) center / 100% 100% no-repeat; }
+.pm-seed { width: 11px; height: 11px; background: var(--pm-fluff) center / 100% 100% no-repeat; }
+html[data-look="paint"] .section-head h2 .pm-land { position: absolute; left: 100%; top: .1em; margin-left: 14px; }
+/* 11. a leading figure: a warm glint runs along under it once (never over the figure itself) */
+html[data-look="paint"].pm-live .pm-glint { position: relative; }
+html[data-look="paint"].pm-live .pm-glint::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 4px; border-radius: 3px; pointer-events: none;
+  background: linear-gradient(90deg, rgba(243, 212, 139, 0), #e8b65c 45%, #f6dc96 55%, rgba(243, 212, 139, 0)) -100% 0 / 60% 100% no-repeat;
+  animation: pm-glint 1.6s ease-out .2s 1 both;
+}
+@keyframes pm-glint { from { background-position: -120% 0; } to { background-position: 260% 0; } }
+/* 12. links in running text: on hover a painted grass-green stroke grows under the words from the side the pointer came in */
+html[data-look="paint"].pm-live :is(.hero-sub, .hero-mail, footer.site) a:not(.btn),
+html[data-look="paint"].pm-live .topnav a {
+  background: var(--pm-stroke) left 100% / 0% 7px no-repeat; padding-bottom: 3px; transition: background-size .45s cubic-bezier(.3, .7, .3, 1);
+}
+html[data-look="paint"].pm-live :is(.hero-sub, .hero-mail, footer.site) a:not(.btn)[data-pm-from="r"],
+html[data-look="paint"].pm-live .topnav a[data-pm-from="r"] { background-position: right 100%; }
+html[data-look="paint"].pm-live :is(.hero-sub, .hero-mail, footer.site) a:not(.btn):hover,
+html[data-look="paint"].pm-live .topnav a:hover { background-size: 100% 7px; text-decoration-color: transparent; }
+/* 14. keyboard focus: a painted ring of leaves round the usual ring (the 3 px ring stays, so it is never only decoration) */
+.pm-focus { position: absolute; left: 0; top: 0; z-index: 60; pointer-events: none; border: 13px solid transparent; border-image: var(--pm-ring) 22 round; opacity: 0; transition: opacity .25s ease, scale .35s cubic-bezier(.3, .7, .3, 1); scale: .96; }
+.pm-focus.pm-on { opacity: 1; scale: 1; }
+/* 15. at night: stars in the band's sky (they twinkle only as the page moves), fireflies near a fine pointer over open ground */
+.pm-stars { z-index: -1; left: calc(50% - 50vw); width: 100vw; top: 0; height: calc(var(--pm-bh) * .36); opacity: 0; display: none; }
+.pm-stars.f { top: 10px; height: 100px; }
+html[data-look="paint"][data-theme="dark"] .pm-stars { display: block; }
+@media (prefers-color-scheme: dark) { html[data-look="paint"]:not([data-theme="light"]) .pm-stars { display: block; } }
+.pm-fly { position: fixed; left: 0; top: 0; z-index: 50; width: 7px; height: 7px; border-radius: 50%; pointer-events: none; opacity: 0;
+  background: radial-gradient(circle, #f4f6b0 0 30%, rgba(214, 232, 120, .55) 55%, rgba(214, 232, 120, 0) 72%); transition: opacity .6s ease; }
+.pm-fly.pm-on { opacity: .95; }
+html[data-look="paint"] {
+  --pm-tuft: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 30'%3E%3Cpath d='M6 30C7 22 6 15 3 9c5 6 7 13 7 21zM12 30c0-9 2-17 7-24-3 8-4 16-3 24zM17 30c1-7 0-13-3-19 5 5 6 12 7 19zM23 30c1-8 4-15 9-20-3 6-5 13-5 20zM29 30c0-6-1-11-4-15 5 3 7 9 8 15zM35 30c1-6 3-11 7-14-2 4-4 9-3 14z' fill='%236c8a45'/%3E%3Cpath d='M9 30c0-7 1-13 4-18-1 6-1 12 0 18zM20 30c1-8 3-14 7-19-2 6-3 12-3 19zM31 30c1-5 3-9 6-12-2 4-2 8-2 12z' fill='%239bb262'/%3E%3C/svg%3E");
+  --pm-fall: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M2 14C1.5 7 6 2.5 14 2c.5 7-4 12-12 12z' fill='%23a4b45a'/%3E%3Cpath d='M2 14C1.5 7 6 2.5 14 2 9 5 5 9 2 14z' fill='%237c9240'/%3E%3Cpath d='M2.6 13.4C6 9.6 9 6.6 12.8 3.4' fill='none' stroke='%23556b2e' stroke-width='.9' stroke-linecap='round'/%3E%3C/svg%3E");
+  --pm-fluff: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cg stroke='%23f6f0dc' stroke-width='.8' stroke-linecap='round'%3E%3Cpath d='M6 6.5V2M6 6.5 2.4 3.6M6 6.5 9.6 3.6M6 6.5 2 6.2M6 6.5 10 6.2'/%3E%3C/g%3E%3Cpath d='M6 6.5v4' stroke='%23c9b994' stroke-width='.9'/%3E%3Ccircle cx='6' cy='2' r='.9' fill='%23fffaf0'/%3E%3Ccircle cx='2.4' cy='3.6' r='.8' fill='%23fffaf0'/%3E%3Ccircle cx='9.6' cy='3.6' r='.8' fill='%23fffaf0'/%3E%3C/svg%3E");
+  --pm-stroke: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 8' preserveAspectRatio='none'%3E%3Cpath d='M1 5.2C20 3.4 45 3 70 3.6s38 .6 49 .2c-12 2.4-33 3-60 2.8S14 6.4 1 5.2z' fill='%236f9a4a'/%3E%3C/svg%3E");
+  --pm-ring: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 66 66'%3E%3Cg fill='%237c9a45' stroke='%233f5a26' stroke-width='1'%3E%3Cpath d='M3 15C2 8 6 3 15 2c1 7-4 12-12 13z'/%3E%3Cpath d='M63 15c1-7-3-12-12-13-1 7 4 12 12 13z'/%3E%3Cpath d='M3 51c-1 7 3 12 12 13 1-7-4-12-12-13z'/%3E%3Cpath d='M63 51c1 7-3 12-12 13-1-7 4-12 12-13z'/%3E%3Cpath d='M27 7c3-4 8-5 12-3-3 4-8 5-12 3z'/%3E%3Cpath d='M27 59c3 4 8 5 12 3-3-4-8-5-12-3z'/%3E%3Cpath d='M7 27c-4 3-5 8-3 12 4-3 5-8 3-12z'/%3E%3Cpath d='M59 27c4 3 5 8 3 12-4-3-5-8-3-12z'/%3E%3C/g%3E%3C/svg%3E");
+}
+html[data-look="paint"][data-theme="dark"] { --pm-stroke: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 8' preserveAspectRatio='none'%3E%3Cpath d='M1 5.2C20 3.4 45 3 70 3.6s38 .6 49 .2c-12 2.4-33 3-60 2.8S14 6.4 1 5.2z' fill='%2397bd8a'/%3E%3C/svg%3E"); }
+html[data-look="paint"][data-theme="dark"] .thread path.pm-fp-edge { fill: #3b4d4c; }
+html[data-look="paint"][data-theme="dark"] .thread path.pm-fp-body { fill: #52665f; }
+html[data-look="paint"][data-theme="dark"] .thread path.pm-fp-worn { stroke: #6a7e76; }
+html[data-look="paint"][data-theme="dark"] .thread path.pm-fp-g1 { fill: #2e4a46; }
+html[data-look="paint"][data-theme="dark"] .thread path.pm-fp-g2 { fill: #436560; }
+@media (prefers-color-scheme: dark) {
+  html[data-look="paint"]:not([data-theme="light"]) { --pm-stroke: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 8' preserveAspectRatio='none'%3E%3Cpath d='M1 5.2C20 3.4 45 3 70 3.6s38 .6 49 .2c-12 2.4-33 3-60 2.8S14 6.4 1 5.2z' fill='%2397bd8a'/%3E%3C/svg%3E"); }
+  html[data-look="paint"]:not([data-theme="light"]) .thread path.pm-fp-edge { fill: #3b4d4c; }
+  html[data-look="paint"]:not([data-theme="light"]) .thread path.pm-fp-body { fill: #52665f; }
+  html[data-look="paint"]:not([data-theme="light"]) .thread path.pm-fp-worn { stroke: #6a7e76; }
+  html[data-look="paint"]:not([data-theme="light"]) .thread path.pm-fp-g1 { fill: #2e4a46; }
+  html[data-look="paint"]:not([data-theme="light"]) .thread path.pm-fp-g2 { fill: #436560; }
+  html[data-look="paint"].pm-live:not([data-theme="light"]) .card.lead::after { background: radial-gradient(130% 95% at 88% 4%, rgba(150, 196, 206, .14), rgba(150, 196, 206, 0) 70%); }
+}
+.pm-part { color: #6c8a45; transition: opacity .3s ease; }
+html[data-look="paint"][data-theme="dark"] .pm-part { color: #2e4a46; }
+@media (prefers-color-scheme: dark) { html[data-look="paint"]:not([data-theme="light"]) .pm-part { color: #2e4a46; } }
+.pm-stars.f { z-index: 0; }
