@@ -29,7 +29,7 @@ var LOOK_ROWS = [
   ["brush", "Brush & Scroll",  ["#efe5cf", "#141a33"],    ["#efe5cf", "#c23b22"],    true],
   ["cel",   "Cel & Tide",      ["#5078ff", "#101b4d"],    ["#0963e0", "#f2f2f2"],    true],
   ["paint", "Paint & Meadow",  ["#dcc2a6", "#18373e"],    ["#d9d5b9", "#0275a0"],    true],
-  ["dots",  "Dots & Panels",   ["#f6f0dc", "#272015"],    ["#f6f0dc", "#c8321e"],    false]
+  ["dots",  "Dots & Panels",   ["#f6f0dc", "#272015"],    ["#f6f0dc", "#c8321e"],    true]
 ];
 
 /* To try a look without changing anything, add ?look=<key> (?look=wash, ?look=cel, ?look=yarn ...) to any page address.
