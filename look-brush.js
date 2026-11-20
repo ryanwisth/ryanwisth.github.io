@@ -265,12 +265,12 @@
     rg.selectNodeContents(el);
     while ((n = w.nextNode())) { m = /[$\u00a3]?\d[\d.,:\u2009]*\s?(%|k|x|\u00d7)?/.exec(n.nodeValue); if (m) { rg.setStart(n, m.index); rg.setEnd(n, m.index + m[0].replace(/\s+$/, '').length); break; } }
     var q = rg.getBoundingClientRect(), e = el.getBoundingClientRect(), fs = parseFloat(getComputedStyle(el).fontSize) || 24;
-    // a square ring 1.9 lines tall round the figure's middle, stretched sideways to clear its ends (at most 1.6 em each side)
-    var S = Math.max(q.height, fs) * 1.9, Wd = Math.min(Math.max(S, q.width * 1.5 + fs * .4), q.width + fs * 3.2, S * 1.7);
+    // a square ring 1.3 lines tall (1.9 ran into the line below on phones) round the figure's middle, stretched sideways to clear its ends (at most 1.6 em each side)
+    var S = Math.max(q.height, fs) * 1.3, Wd = Math.min(Math.max(S, q.width * 1.35 + fs * .4), q.width + fs * 3.2, S * 2.3);
     prop(el, '--b-es', S.toFixed(1) + 'px');
     prop(el, '--b-sx', (Wd / S).toFixed(3));
     prop(el, '--b-cx', (q.left - e.left + q.width / 2).toFixed(1) + 'px');
-    prop(el, '--b-cy', (q.top - e.top + q.height / 2).toFixed(1) + 'px');
+    prop(el, "--b-cy", (q.top - e.top + q.height * .44).toFixed(1) + "px");
     claim('ring', 600);
     el.classList.add('b-enso');
     if (ms) later(function () { el.classList.remove('b-enso'); }, ms);
