@@ -71,7 +71,7 @@ html[data-look="paint"] {
     --pm-tag-ink: #f3ede2;
     --pm-leaf: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M5 27C4 15 11 5 27 4c1 14-7 23-22 23z' fill='%23577a78'/%3E%3Cpath d='M5 27C4 15 11 5 27 4 18 10 10 17 5 27z' fill='%23426260'/%3E%3Cpath d='M5 27C4 15 11 5 27 4c1 14-7 23-22 23z' fill='none' stroke='%23c4dad6' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M6 26C11 18 17 11 25 6' fill='none' stroke='%23c4dad6' stroke-width='1.3' stroke-linecap='round'/%3E%3C/svg%3E");
     --bg: #19343b; --bg-soft: #1f3e44; --text: #f3ede2; --muted: #bfd6d6; --faint: #bfd6d6; --card: #1f3e44; --ink: #f3ede2;
-    --accent: #f3ede2; --accent-2: #f3ede2; --accent-soft: #18373e; --mark-ink: #f3ede2; --sig: #c99a6c; --sig-ink: #f3ede2; --on-sig: #f3ede2;
+    --accent: #f3ede2; --accent-2: #f3ede2; --accent-soft: #18373e; --mark-ink: #f3ede2; --sig: #c99a6c; --sig-ink: #f3ede2; --on-sig: #19343b;
     --y-pink: #1f3e44; --y-blue: #1f3e44; --y-green: #1f3e44; --y-yellow: #1f3e44;
     --s-pink: #f3ede2; --s-blue: #f3ede2; --s-green: #f3ede2; --s-yellow: #f3ede2; --felt-ink: #f3ede2; --bead: #1f3e44; --bead-ink: #f3ede2;
     --yarn-hi: #f3ede2; --yarn-lo: #f3ede2; --h-indigo: #f3ede2; --h-teal: #f3ede2; --h-amber: #f3ede2; --h-rose: #f3ede2; --h-violet: #f3ede2; --h-sky: #f3ede2; --h-green: #f3ede2;
@@ -92,7 +92,7 @@ html[data-look="paint"][data-theme="dark"] {
   --pm-tag-ink: #f3ede2;
   --pm-leaf: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M5 27C4 15 11 5 27 4c1 14-7 23-22 23z' fill='%23577a78'/%3E%3Cpath d='M5 27C4 15 11 5 27 4 18 10 10 17 5 27z' fill='%23426260'/%3E%3Cpath d='M5 27C4 15 11 5 27 4c1 14-7 23-22 23z' fill='none' stroke='%23c4dad6' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M6 26C11 18 17 11 25 6' fill='none' stroke='%23c4dad6' stroke-width='1.3' stroke-linecap='round'/%3E%3C/svg%3E");
   --bg: #19343b; --bg-soft: #1f3e44; --text: #f3ede2; --muted: #bfd6d6; --faint: #bfd6d6; --card: #1f3e44; --ink: #f3ede2;
-  --accent: #f3ede2; --accent-2: #f3ede2; --accent-soft: #18373e; --mark-ink: #f3ede2; --sig: #c99a6c; --sig-ink: #f3ede2; --on-sig: #f3ede2;
+  --accent: #f3ede2; --accent-2: #f3ede2; --accent-soft: #18373e; --mark-ink: #f3ede2; --sig: #c99a6c; --sig-ink: #f3ede2; --on-sig: #19343b;
   --y-pink: #1f3e44; --y-blue: #1f3e44; --y-green: #1f3e44; --y-yellow: #1f3e44;
   --s-pink: #f3ede2; --s-blue: #f3ede2; --s-green: #f3ede2; --s-yellow: #f3ede2; --felt-ink: #f3ede2; --bead: #1f3e44; --bead-ink: #f3ede2;
   --yarn-hi: #f3ede2; --yarn-lo: #f3ede2; --h-indigo: #f3ede2; --h-teal: #f3ede2; --h-amber: #f3ede2; --h-rose: #f3ede2; --h-violet: #f3ede2; --h-sky: #f3ede2; --h-green: #f3ede2;
