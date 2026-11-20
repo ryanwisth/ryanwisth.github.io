@@ -471,3 +471,164 @@ html[data-look="wash"] footer.site::before { content: ""; position: absolute; le
 @media (max-width: 480px) { html[data-look="wash"] .th-head { display: none; } }
 /* the film and its controls: a 3 px ring, not the 1.5 px hairline, so keyboard focus on it is easy to see */
 html[data-look="wash"] :is(video, .vid-toggle, .vid-sound, .demo-poster):focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+
+/* ---------- liveliness (Nov 20): the parts look-wash.js drives ----------
+   look-wash.js puts .w-live on the root only while this look is worn, motion is on and reduced motion is not asked
+   for; every rule below needs it, so without the script the look is exactly as above. Watercolour, not brush: water,
+   pigment, blooms (backruns), glazes, granulation and dried edges, in the look's own washes and ink.
+   1 the margin line is a wet wash line (.w-th-core, .w-th-wash) with a bloom at its head when the scroll stops
+     (.w-th-bloom); 2 section washes and the swatches under captures flood in with the scroll (a view timeline; .w-sjs
+     and --w-p from the script where the browser has none); 3 the sky's cloud lags the page (--w-cloud-y); 4 a drop of
+     colour falls in the margin at a section boundary and dries into a ring (.w-fall, .w-ring); 5 a second glaze on the
+     nearest heading when the scroll stops (.w-glaze); 6 a card's wash bleeds wet-in-wet (hover, or .w-wet under a
+     finger); 7 a press lifts pigment off the ink button (.w-lift); 8 a link's wash swipes in from the side the pointer
+     came from; 9 a tap drops clear water (.w-tapb); 10 a wet round brush tip for a cursor (.w-tip); 11 a selection is a
+     glaze with a hard dried edge (.w-sel); 12 a pooled wash round a big figure (.w-pool); 13 keyboard focus is a wash
+     ring with a dried ink edge (.w-focus); 14 bars fill as a granulating wash with the scroll, and hovering (or tapping)
+     a row writes its value over a swatch; 15 a star glints now and then in the night sky (.w-star); slower drift on phones. */
+@keyframes wash-flood { from { opacity: 0; scale: .82; } }
+@keyframes wash-fill { from { clip-path: inset(-10px 100% -10px -2px); } to { clip-path: inset(-10px -14px -10px -2px); } }
+@keyframes wash-write { from { clip-path: inset(-6px 100% -6px -3px); } to { clip-path: inset(-6px -3px -6px -3px); } }
+@keyframes wash-swatch { from { scale: 0 1; opacity: 0; } }
+@keyframes wash-lift { from { opacity: 1; } to { opacity: 0; } }
+@keyframes wash-tap { from { scale: .2; opacity: .95; } 55% { opacity: .85; } to { scale: 1; opacity: 0; } }
+@keyframes wash-glint { 0%, 100% { opacity: 0; scale: .3; } 45% { opacity: .95; scale: 1; } }
+html[data-look="wash"] { --w-glz: 30%; --w-edge: 78%; }
+@media (prefers-color-scheme: dark) { html[data-look="wash"]:not([data-theme="light"]) { --w-glz: 34%; --w-edge: 85%; } }
+html[data-look="wash"][data-theme="dark"] { --w-glz: 34%; --w-edge: 85%; }
+@media (prefers-reduced-motion: no-preference) {
+  /* 1. the wet line: an ink core (thin where the scroll ran fast) in a dilute wash (only where it was laid slowly) */
+  html[data-look="wash"].motion.w-live.w-th-on .thread .th-line { stroke: transparent; }
+  html[data-look="wash"].motion.w-live .w-th-core { fill: var(--ink); }
+  html[data-look="wash"].motion.w-live .w-th-wash { fill: var(--w-blue); opacity: .28; }
+  html[data-look="wash"].motion.w-live .w-th-bloom { position: absolute; left: 0; top: 0; width: 32px; height: 32px; pointer-events: none; opacity: 0; scale: .2; transition: opacity .35s ease, scale .35s ease;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--w-bh, var(--w-blue)) 16%, transparent) 0 54%, color-mix(in srgb, var(--w-bh, var(--w-blue)) 62%, transparent) 68%, transparent 76%),
+      radial-gradient(closest-side at 30% 36%, color-mix(in srgb, var(--w-bh, var(--w-blue)) 12%, transparent) 0 46%, color-mix(in srgb, var(--w-bh, var(--w-blue)) 48%, transparent) 60%, transparent 68%) 0 0 / 70% 70% no-repeat; }
+  html[data-look="wash"].motion.w-live .w-th-bloom.w-on { opacity: 1; scale: 1; transition: opacity .6s ease, scale 1.6s cubic-bezier(.2, .6, .3, 1); }
+
+  /* 2. washes flood in as their part of the page scrolls in, and drain back when it scrolls back out */
+  @supports (animation-timeline: view()) {
+    html[data-look="wash"].motion.w-live :is(.section, .shot, .term, .paper, .figure, .duo figure, .sum-vis, .band) { view-timeline: --w-fl block; }
+    html[data-look="wash"].motion.w-live body .section::before { opacity: var(--wash-o); scale: none; transition: none; animation: wash-flood linear both; animation-timeline: --w-fl; animation-range: cover 0% cover 55vh; }
+    html[data-look="wash"].motion.w-live body :is(.shot, .term, .paper, .figure:has(> img.narrow), .duo figure, .sum-vis:has(> .shot.phone), .band)::before { animation: wash-flood linear both; animation-timeline: --w-fl; animation-range: cover 0% cover 50vh; }
+    /* 14. bars fill with the scroll */
+    html[data-look="wash"].motion.w-live body :is(.bars .track i, .minis .cell .track i) { transition: none; animation: wash-fill linear both; animation-timeline: view(); animation-range: entry 100% cover 40%; }
+  }
+  /* the same, where the browser has no scroll timelines: --w-p (0 to 1) is set by the script once a frame */
+  html[data-look="wash"].motion.w-live.w-sjs body .section::before { transition: none; opacity: calc(var(--wash-o) * var(--w-p, 1)); scale: calc(.82 + .18 * var(--w-p, 1)); }
+  html[data-look="wash"].motion.w-live.w-sjs body :is(.shot, .term, .paper, .figure, .duo figure, .sum-vis, .band)::before { opacity: calc(var(--swatch-o) * var(--w-p, 1)); scale: calc(.82 + .18 * var(--w-p, 1)); }
+  html[data-look="wash"].motion.w-live.w-sjs body :is(.bars .row, .minis tr) .track i { transition: none; clip-path: inset(-10px calc(100% - var(--w-p, 1) * (100% + 14px)) -10px -2px); }
+
+  /* 3. the sky's cloud lags the page as it scrolls away (the moon sets by its scroll timeline above, or by the script) */
+  html[data-look="wash"].motion.w-live :is(.hero-one, .case-part:has(> .lede))::before { transform: translateY(var(--w-cloud-y, 0px)); }
+  html[data-look="wash"].motion.w-live.w-sjs :is(.hero-mail, .case-head .lede, .case-part .lede)::before { translate: 0 var(--w-moon-y, 0px); }
+
+  /* 4. a drop of the section's colour falls in the margin and dries into a ring (behind everything on the page) */
+  html[data-look="wash"].motion.w-live .w-fall { position: fixed; z-index: -1; width: 7px; height: 10px; margin-top: -10px; pointer-events: none; opacity: 0;
+    background: radial-gradient(closest-side at 50% 62%, var(--w-dh) 0 58%, color-mix(in srgb, var(--w-dh) 60%, transparent) 82%, transparent); }
+  html[data-look="wash"].motion.w-live .w-ring { position: fixed; z-index: -1; width: 56px; height: 56px; pointer-events: none; opacity: 0;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--w-dh) 14%, transparent) 0 58%, color-mix(in srgb, var(--w-dh) 72%, transparent) 70%, color-mix(in srgb, var(--w-dh) 26%, transparent) 74%, transparent 80%),
+      radial-gradient(closest-side at 70% 66%, color-mix(in srgb, var(--w-dh) 10%, transparent) 0 52%, color-mix(in srgb, var(--w-dh) 50%, transparent) 64%, transparent 72%) 100% 100% / 62% 62% no-repeat; }
+  html[data-look="wash"].motion.w-live .w-ring.w-sm { width: 22px; height: 22px; } /* phones: the margin is narrow, so the ring stays mostly in it */
+
+  /* 5. the settle glaze: a second coat of the same colour over the nearest heading's wash */
+  html[data-look="wash"].motion.w-live .section-head h2::before { transition: clip-path 1.5s cubic-bezier(.3, .5, .2, 1) .15s, opacity 1.4s ease; }
+  html[data-look="wash"].motion.w-live .section-head h2.w-glaze::before { opacity: min(1, calc(var(--swatch-o) + .3)); }
+  html[data-look="wash"].motion.w-live .prose > h2::before { transition: background-color 1.4s ease; }
+  html[data-look="wash"].motion.w-live .prose > h2.w-glaze::before { background-color: color-mix(in srgb, var(--hue) 34%, transparent); }
+
+  /* 6. a card's wash bleeds wet-in-wet past its edge: hover on fine pointers, a finger down on touch */
+  html[data-look="wash"].motion.w-live .card .thumb-wrap::before { transition: inset .9s cubic-bezier(.2, .6, .3, 1), filter .9s ease, opacity .9s ease; }
+  html[data-look="wash"].motion.w-live .card.w-wet .thumb-wrap::before { inset: -22px -29px -6px; filter: blur(1.5px); opacity: calc(var(--swatch-o) + .12); }
+  html[data-look="wash"].motion.w-live .card.w-wet .thumb-wrap.phone::before { inset: -5px; }
+  @media (hover: hover) and (pointer: fine) {
+    html[data-look="wash"].motion.w-live .card:hover .thumb-wrap::before { inset: -22px -29px -6px; filter: blur(1.5px); opacity: calc(var(--swatch-o) + .12); }
+    html[data-look="wash"].motion.w-live .card:hover .thumb-wrap.phone::before { inset: -5px; }
+  }
+
+  /* 7. a press blots the ink button: paper shows through where the pigment was lifted, then it dries back */
+  html[data-look="wash"].motion.w-live .w-lift { position: absolute; z-index: 4; pointer-events: none; border-radius: var(--radius);
+    background: radial-gradient(circle var(--w-r, 24px) at var(--w-x, 50%) var(--w-y, 50%), color-mix(in srgb, var(--bg) 58%, transparent) 0, color-mix(in srgb, var(--bg) 34%, transparent) 58%, transparent 100%);
+    animation: wash-lift 1.1s ease-out .12s both; }
+
+  /* 8. a link's wash swipes in from the side the pointer came from (darker at its foot, where the pigment settles) */
+  @media (hover: hover) and (pointer: fine) {
+    html[data-look="wash"].motion.w-live.w-fine :is(.hero-sub, footer.site, .prose, .lede, .hero-mail) a:not(.btn, .back, .card, nav *) {
+      background-image: linear-gradient(color-mix(in srgb, var(--hue) 16%, transparent), color-mix(in srgb, var(--hue) 46%, transparent)); background-repeat: no-repeat;
+      background-size: 0% .62em; background-position: 0 94%; transition: background-size .5s cubic-bezier(.3, .6, .2, 1); }
+    html[data-look="wash"].motion.w-live.w-fine :is(.hero-sub, footer.site, .prose, .lede, .hero-mail) a[data-w-from="r"]:not(.btn, .back, .card, nav *) { background-position: 100% 94%; }
+    html[data-look="wash"].motion.w-live.w-fine :is(.hero-sub, footer.site, .prose, .lede, .hero-mail) a:not(.btn, .back, .card, nav *):hover { background-size: 100% .62em; }
+  }
+
+  /* 9. a tap drops clear water: a pale centre pushing the colour out to a darker rim */
+  html[data-look="wash"].motion.w-live .w-tapb { position: fixed; z-index: 30; width: 66px; height: 66px; margin: -33px 0 0 -33px; pointer-events: none;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--bg) 34%, transparent) 0 52%, color-mix(in srgb, var(--w-blue) 52%, transparent) 66%, color-mix(in srgb, var(--w-blue) 18%, transparent) 71%, transparent 77%),
+      radial-gradient(closest-side at 72% 68%, transparent 0 50%, color-mix(in srgb, var(--w-blue) 40%, transparent) 62%, transparent 70%) 100% 100% / 58% 58% no-repeat;
+    animation: wash-tap .9s cubic-bezier(.2, .6, .3, 1) both; }
+
+  /* 10. a wet round brush tip: an ink dot on the hit point (ringed in paper so it shows on ink), in a halo of dilute
+     colour that lags a little when the brush moves; over anything that takes a click it is loaded with the accent */
+  @media (hover: hover) and (pointer: fine) {
+    html[data-look="wash"].motion.w-live.w-tip-on,
+    html[data-look="wash"].motion.w-live.w-tip-on :not(input, textarea, select, [contenteditable], [contenteditable] *) { cursor: none !important; }
+  }
+  html[data-look="wash"].motion.w-live .w-tip { position: fixed; left: 0; top: 0; z-index: 2147483000; width: 0; height: 0; pointer-events: none; opacity: 0; transition: opacity .2s ease; }
+  html[data-look="wash"].motion.w-live .w-tip.w-on { opacity: 1; }
+  html[data-look="wash"].motion.w-live .w-tip.w-on.w-off { opacity: 0; }
+  html[data-look="wash"].motion.w-live .w-tip::before { content: ""; position: absolute; left: -16px; top: -16px; width: 32px; height: 32px; translate: var(--hx, 0px) var(--hy, 0px); transition: scale .3s ease;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--w-blue) 30%, transparent) 0 40%, color-mix(in srgb, var(--w-blue) 14%, transparent) 78%, transparent); }
+  html[data-look="wash"].motion.w-live .w-tip::after { content: ""; position: absolute; left: -6px; top: -6px; width: 12px; height: 12px; border-radius: 50%; transition: scale .2s ease;
+    background: radial-gradient(circle, var(--ink) 0 3.4px, var(--bg) 3.9px 5.3px, #0000 5.7px); }
+  html[data-look="wash"].motion.w-live .w-tip.w-link::before { scale: 1.3; background: radial-gradient(closest-side, color-mix(in srgb, var(--sig) 30%, transparent) 0 40%, color-mix(in srgb, var(--sig) 12%, transparent) 78%, transparent); }
+  html[data-look="wash"].motion.w-live .w-tip.w-link::after { scale: 1.2; background: radial-gradient(circle, var(--sig) 0 3.4px, var(--bg) 3.9px 5.3px, #0000 5.7px); }
+
+  /* 11. a selection: a glaze of the passage's colour laid behind the words, with the hard edge a dried wash leaves;
+     the browser's own highlight goes nearly clear there; copying is the browser's, untouched */
+  html[data-look="wash"].motion.w-live .w-selhost { isolation: isolate; }
+  html[data-look="wash"].motion.w-live .w-sel { position: absolute; left: 0; top: 0; width: 0; height: 0; z-index: -1; pointer-events: none; -webkit-user-select: none; user-select: none; }
+  html[data-look="wash"].motion.w-live .w-sel i { position: absolute; border-radius: 1px; background: color-mix(in srgb, var(--hue) var(--w-glz), transparent);
+    box-shadow: inset 0 -1.5px 0 color-mix(in srgb, var(--hue) var(--w-edge), var(--ink)), inset 1.5px 0 0 color-mix(in srgb, var(--hue) 50%, transparent), inset -1.5px 0 0 color-mix(in srgb, var(--hue) 50%, transparent); }
+  html[data-look="wash"].motion.w-live :is(.prose, .lede, .hero-sub, .hero h1, .card .body, .fact, .band) ::selection,
+  html[data-look="wash"].motion.w-live :is(.prose, .lede, .hero-sub, .hero h1, .card .body, .fact, .band)::selection { background: color-mix(in srgb, var(--hue) 10%, transparent); color: var(--text); }
+
+  /* 12. a pooled wash round a big figure's leading number: pale in the middle, the colour dried at the rim */
+  html[data-look="wash"].motion.w-live :is(.fact b, .bigfig b, .card .stat b) { position: relative; isolation: isolate; }
+  html[data-look="wash"].motion.w-live :is(.fact b, .bigfig b, .card .stat b)::after { content: ""; position: absolute; z-index: -1; pointer-events: none; border-radius: 50%; opacity: 0; scale: .25;
+    left: calc(var(--w-cx, 0px) - var(--w-pw, 0px) / 2); top: calc(var(--w-cy, 0px) - var(--w-ph, 0px) / 2); width: var(--w-pw, 0px); height: var(--w-ph, 0px);
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--w-pc, var(--hue)) 14%, transparent) 0 60%, color-mix(in srgb, var(--w-pc, var(--hue)) 42%, transparent) 84%, color-mix(in srgb, var(--w-pc, var(--hue)) 72%, transparent) 94%, transparent 100%);
+    transition: opacity .5s ease, scale 1.1s cubic-bezier(.2, .6, .3, 1); }
+  html[data-look="wash"].motion.w-live :is(.fact b, .bigfig b, .card .stat b).w-pool::after { opacity: 1; scale: 1; }
+
+  /* 13. keyboard focus: a wash ring with a hard dried ink edge, as dark as the outline it replaces and thicker */
+  html[data-look="wash"].motion.w-live.w-kbd :focus-visible,
+  html[data-look="wash"].motion.w-live.w-kbd .lp-on:focus-visible { outline-color: transparent !important; }
+  html[data-look="wash"].motion.w-live .w-focus { position: fixed; z-index: 2147482000; pointer-events: none; display: none; box-sizing: border-box; border: 2px solid var(--ink); border-radius: var(--radius);
+    outline: 4px solid color-mix(in srgb, var(--w-fc, var(--w-blue)) 45%, transparent); outline-offset: -6px; }
+  html[data-look="wash"].motion.w-live .w-focus.w-on { display: block; }
+  html[data-look="wash"].motion.w-live .w-focus.w-round { border-radius: 50%; }
+
+  /* 14. the bars granulate (pigment settling into the paper's grain) and keep a darker dried edge at their end;
+     hovering or tapping a row writes its value over a small swatch of the chart's colour */
+  html[data-look="wash"].motion.w-live :is(.bars .track i, .minis .cell .track i) { background-image: var(--grain); background-size: 70px 70px; background-blend-mode: multiply; }
+  html[data-look="wash"].motion.w-live :is(.bars .track i, .minis .cell .track i)::after { content: ""; position: absolute; top: 0; bottom: 0; right: 0; left: auto; width: 2px; height: auto; margin: 0; border: 0; border-radius: 0; box-shadow: none; pointer-events: none; background: color-mix(in srgb, var(--ink) 38%, transparent); } /* (resets the other look's bar-end button) */
+  html[data-look="wash"].motion.w-live .bars .val { position: relative; isolation: isolate; }
+  html[data-look="wash"].motion.w-live .bars .row.w-tap .val { animation: wash-write .5s cubic-bezier(.3, .6, .2, 1) both; }
+  html[data-look="wash"].motion.w-live .bars .row.w-tap .val::after { content: ""; position: absolute; z-index: -1; left: -4px; right: -4px; bottom: 0; height: .62em; pointer-events: none; transform-origin: 0 50%;
+    background: linear-gradient(90deg, var(--hue), color-mix(in srgb, var(--hue) 55%, transparent)); -webkit-mask: var(--wash-d) center / 100% 100% no-repeat; mask: var(--wash-d) center / 100% 100% no-repeat; opacity: var(--swatch-o); animation: wash-swatch .7s cubic-bezier(.3, .6, .2, 1) .1s both; }
+  @media (hover: hover) and (pointer: fine) {
+    html[data-look="wash"].motion.w-live .bars .row:hover .val { animation: wash-write .5s cubic-bezier(.3, .6, .2, 1) both; }
+    html[data-look="wash"].motion.w-live .bars .row:hover .val::after { content: ""; position: absolute; z-index: -1; left: -4px; right: -4px; bottom: 0; height: .62em; pointer-events: none; transform-origin: 0 50%;
+      background: linear-gradient(90deg, var(--hue), color-mix(in srgb, var(--hue) 55%, transparent)); -webkit-mask: var(--wash-d) center / 100% 100% no-repeat; mask: var(--wash-d) center / 100% 100% no-repeat; opacity: var(--swatch-o); animation: wash-swatch .7s cubic-bezier(.3, .6, .2, 1) .1s both; }
+  }
+
+  /* 15. the night sky: one star glints now and then (dark mode only; placed and timed by the script) */
+  html[data-look="wash"].motion.w-live .w-star { position: fixed; z-index: -1; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; pointer-events: none; opacity: 0;
+    background: radial-gradient(closest-side, #fff 0 22%, rgba(236, 239, 245, .55) 42%, transparent), linear-gradient(rgba(236, 239, 245, .7), rgba(236, 239, 245, .7)) center / 1px 100% no-repeat, linear-gradient(rgba(236, 239, 245, .7), rgba(236, 239, 245, .7)) center / 100% 1px no-repeat;
+    animation: wash-glint 1.8s ease-in-out both; }
+  /* 15. touch screens and narrow windows: the slow constants run slower still */
+  @media (pointer: coarse), (max-width: 620px) {
+    html[data-look="wash"].motion.w-live .hero-one::before,
+    html[data-look="wash"].motion.w-live .case-part:has(> .lede)::before { animation-duration: 3.4s, 56s; }
+    html[data-look="wash"].motion.w-live :is(.hero, .case-head) h1::before { animation-duration: 150s; }
+  }
+}
