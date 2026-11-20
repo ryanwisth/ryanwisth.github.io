@@ -818,3 +818,339 @@ html[data-look="cel"] .shot .bar em { white-space: normal; overflow: visible; te
 @media (max-width: 620px) {
   html[data-look="cel"] .case-head::before { box-sizing: border-box; padding-inline: 20px; background-clip: content-box, border-box; background-origin: content-box, border-box; }
 }
+
+/* ---------- liveliness (Nov 20 2026): the parts look-cel.js drives ----------
+   look-cel.js (fetched by site.js only in this look, never under reduced motion) puts .c-live on the root while the look
+   is worn with motion on, and takes it off again; every rule below needs it, so without the script, under reduced
+   motion, or after "Pause motion" the look is exactly as above. Paints are this file's own (foam, sun yellow, red, sea
+   blue, the drop colours) with their shades computed as lit x #9c8c86; nothing here has a border, outline or stroke.
+   1 the margin thread churns into foam (.cl-th) as the scroll passes and a foam curl breaks at the head (.cl-curl) when
+     it stops; 2 the calm water round each block rises with the scroll and ebbs going back, a foam crest riding on it
+     (a scroll timeline; .cl-sjs and --cl-p from the script where the browser has none); 3 clouds and the island band lag
+     at two rates as the opening scene scrolls away (--cl-cy, --cl-by); 4 a puff of foam (.cl-puff) crosses the margin at
+     a section boundary; 5 a sun glint (.cl-glint) slides once across the nearest heading when the scroll stops; 6 cards
+     and pager panels float up and bob, the drop shadow tightening as they sink (hover, or .cl-float while a finger is
+     down); 7 a pressed control sends out a ripple in its shadow's paint (.cl-ripple); 8 a link's band runs in from the
+     side the pointer came in ([data-cl-from]); 9 a tap splashes (.cl-splash); 10 a small sun ball follows a mouse
+     (.cl-dot); 11 a selection is a sunlit band with a shade lip (.cl-sel); 12 a big figure gets a buoy ring (.cl-ring);
+     13 keyboard focus is a painted ring (.cl-focus); 14 chart bars fill with the scroll and a bar's value pops onto a
+     yellow slab on hover or tap; 15 the look's constant motion runs slower on touch screens and narrow windows. */
+html[data-look="cel"] { --cl-foam-sh: #9c8c86; --cl-sheen: rgba(255, 255, 255, .42); --cl-selc: #ffef10; --cl-selsh: #9c8308; --cl-selnat: rgba(255, 239, 16, .06); }
+@media (prefers-color-scheme: dark) {
+  html[data-look="cel"]:not([data-theme="light"]) { --cl-foam-sh: #717080; --cl-sheen: rgba(185, 205, 245, .34); --cl-selc: #0963e0; --cl-selsh: #053675; --cl-selnat: rgba(9, 99, 224, .06); }
+}
+html[data-look="cel"][data-theme="dark"] { --cl-foam-sh: #717080; --cl-sheen: rgba(185, 205, 245, .34); --cl-selc: #0963e0; --cl-selsh: #053675; --cl-selnat: rgba(9, 99, 224, .06); }
+@keyframes cl-pop { 0% { opacity: 0; scale: .5; } 60% { opacity: 1; scale: 1.1 .9; } 82% { scale: .97 1.03; } 100% { opacity: 1; scale: 1; } }
+@keyframes cl-tide { from { clip-path: inset(100% -80px -80px -80px); } to { clip-path: inset(-80px -80px -80px -80px); } }
+@keyframes cl-crest { 0% { top: calc(100% + 8px); opacity: 1; } 85% { opacity: 1; } 100% { top: -100px; opacity: 0; } }
+@keyframes cl-bar { from { clip-path: inset(-10px 100% -10px -2px); } to { clip-path: inset(-10px -14px -10px -2px); } }
+@keyframes cl-rise { 0% { translate: 0 0; } 55% { translate: 0 -9px; } 100% { translate: 0 -6px; } }
+@keyframes cl-bob { 0%, 100% { translate: 0 -6px; box-shadow: 15px 26px 34px -12px var(--cl-dc); } 50% { translate: 0 -2px; box-shadow: 10px 15px 20px -9px var(--cl-dc); } }
+@keyframes cl-ripple { 0% { opacity: .95; scale: .94; } 100% { opacity: 0; scale: 1.38; } }
+@keyframes cl-splash { 0% { opacity: 1; scale: .35; } 65% { opacity: .9; } 100% { opacity: 0; scale: 1.25; } }
+@keyframes cl-glint { from { translate: -110% 0; } to { translate: 250% 0; } }
+@media (prefers-reduced-motion: no-preference) {
+  /* 1. the thread's foam: filled shapes over the plain white streak; they thin away when the scroll stops */
+  html[data-look="cel"].motion.c-live .thread .cl-th { opacity: 1; transition: opacity .12s; }
+  html[data-look="cel"].motion.c-live .thread .cl-th.cl-calm { opacity: 0; transition: opacity .5s ease-out; }
+  html[data-look="cel"].motion.c-live .thread .cl-th path { fill: var(--c-foam); stroke: none; }
+  html[data-look="cel"].motion.c-live .cl-curl { position: absolute; left: 0; top: 0; width: 26px; height: 26px; pointer-events: none; opacity: 0; scale: .3; transition: opacity .15s, scale .15s; }
+  html[data-look="cel"].motion.c-live .cl-curl::before { content: ""; position: absolute; inset: 0; border-radius: 50%; background: var(--c-foam);
+    -webkit-mask: radial-gradient(circle at 68% 32%, transparent 0 9.5px, #000 10.2px); mask: radial-gradient(circle at 68% 32%, transparent 0 9.5px, #000 10.2px); }
+  html[data-look="cel"].motion.c-live .cl-curl::after { content: ""; position: absolute; left: 21px; top: 1px; width: 5px; height: 5px; border-radius: 50%; background: var(--c-foam); }
+  html[data-look="cel"].motion.c-live .cl-curl.cl-on { opacity: 1; scale: 1; transition: none; animation: cl-pop .45s var(--pop) both; }
+
+  /* 2. the tide: the calm water round each block rises as it scrolls in and ebbs going back; at rest it holds still */
+  html[data-look="cel"].motion.c-live :is(.sum, .figure, .more, .how2)::after {
+    content: ""; position: absolute; z-index: -2; left: 34px; right: 34px; top: calc(100% + 8px); height: 12px; pointer-events: none; border-radius: 6px;
+    background: radial-gradient(circle at 50% 100%, var(--c-foam) 0 5.5px, transparent 6.5px) 0 0 / 17px 7px repeat-x, linear-gradient(var(--c-foam), var(--c-foam)) 0 6px / 100% 5px no-repeat;
+  }
+  @supports (animation-timeline: view()) {
+    html[data-look="cel"].motion.c-live :is(.sum, .figure, .more, .how2) { view-timeline: --cl-tide block; }
+    html[data-look="cel"].motion.c-live :is(.sum, .figure, .more, .how2)::before { animation: cl-tide linear both; animation-timeline: --cl-tide; animation-range: cover 0% cover 60vh; }
+    html[data-look="cel"].motion.c-live :is(.sum, .figure, .more, .how2)::after { animation: cl-crest linear both; animation-timeline: --cl-tide; animation-range: cover 0% cover 60vh; }
+    html[data-look="cel"].motion.c-live :is(.bars .track i, .minis .cell .track i),
+    html[data-look="cel"].motion.c-live .in :is(.bars .track i, .minis .cell .track i) { transition: none; animation: cl-bar linear both; animation-timeline: view(); animation-range: entry 100% cover 40%; }
+  }
+  /* the same, where the browser has no scroll timelines: --cl-p (0 to 1) is set by the script once a frame */
+  html[data-look="cel"].motion.c-live.cl-sjs :is(.sum, .figure, .more, .how2)::before { clip-path: inset(calc((1 - var(--cl-p, 1)) * (100% + 80px) - 80px) -80px -80px -80px); }
+  html[data-look="cel"].motion.c-live.cl-sjs :is(.sum, .figure, .more, .how2)::after { top: calc((1 - var(--cl-p, 1)) * (100% + 108px) - 100px); opacity: calc((1 - var(--cl-p, 1)) / .15); }
+  html[data-look="cel"].motion.c-live.cl-sjs :is(.bars .row, .minis tr) .track i,
+  html[data-look="cel"].motion.c-live.cl-sjs .in :is(.bars .row, .minis tr) .track i { transition: none; clip-path: inset(-10px calc(100% - var(--cl-p, 1) * (100% + 14px)) -10px -2px); }
+
+  /* 3. the opening scene: the clouds lag most, the island band and its boat a little; the gusts and the sun stay */
+  html[data-look="cel"].motion.c-live .hero::before,
+  html[data-look="cel"].motion.c-live .case-head::before { transform: translate3d(0, var(--cl-cy, 0px), 0); }
+  html[data-look="cel"].motion.c-live :is(.leads, .case-head)::after,
+  html[data-look="cel"].motion.c-live .leads::before { transform: translate3d(0, var(--cl-by, 0px), 0); }
+
+  /* 4. a puff of foam crossing the margin (four soft lumps of foam; the script moves it and thins it away) */
+  html[data-look="cel"].motion.c-live .cl-puff { position: fixed; top: 0; z-index: 5; pointer-events: none; opacity: 0;
+    background: radial-gradient(circle at 50% 64%, var(--c-foam) 0 33%, transparent 34.5%), radial-gradient(circle at 27% 52%, var(--c-foam) 0 25%, transparent 26.5%),
+      radial-gradient(circle at 73% 48%, var(--c-foam) 0 27%, transparent 28.5%), radial-gradient(circle at 48% 30%, var(--c-foam) 0 23%, transparent 24.5%); }
+
+  /* 5. the glint: a soft band of sunlight slides once over the heading's ground, under its words */
+  html[data-look="cel"].motion.c-live .cl-glinthost { position: relative; isolation: isolate; }
+  html[data-look="cel"].motion.c-live .cl-glint { position: absolute; inset: 0; z-index: -1; border-radius: inherit; overflow: hidden; pointer-events: none; -webkit-user-select: none; user-select: none; }
+  html[data-look="cel"].motion.c-live .cl-glint::before { content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 42%; translate: -110% 0;
+    background: linear-gradient(90deg, transparent, var(--cl-sheen) 38%, var(--cl-sheen) 62%, transparent); animation: cl-glint .9s cubic-bezier(.45, 0, .3, 1) both; }
+
+  /* 6. a panel afloat: it pops up off the water and bobs; going down its drop shadow tightens, going up it loosens */
+  html[data-look="cel"].motion.c-live .card { --cl-dc: var(--c-drop-sea); }
+  html[data-look="cel"].motion.c-live .pager a { --cl-dc: var(--c-drop-cloud); }
+  html[data-look="cel"].motion.c-live :is(.card:not(.reveal), .pager a).cl-float { animation: cl-rise .42s var(--pop) both, cl-bob 3.4s ease-in-out .42s infinite; }
+  @media (hover: hover) and (pointer: fine) {
+    html[data-look="cel"].motion.c-live :is(.card:not(.reveal), .pager a):hover { animation: cl-rise .42s var(--pop) both, cl-bob 3.4s ease-in-out .42s infinite; }
+  }
+
+  /* 7. the ripple from a pressed control: a band of its shadow's paint running out from under it */
+  html[data-look="cel"].motion.c-live .cl-ripple { position: absolute; z-index: 3; pointer-events: none; border-radius: 50%; background: var(--cl-u, var(--c-drop-cloud));
+    -webkit-mask: radial-gradient(closest-side, transparent 80%, #000 82%, #000 93%, transparent 95%); mask: radial-gradient(closest-side, transparent 80%, #000 82%, #000 93%, transparent 95%);
+    animation: cl-ripple .62s cubic-bezier(.2, .7, .3, 1) both; }
+
+  /* 8. a link's band runs in from the side the pointer came in (fine pointers; by night the band is the pale one) */
+  @media (hover: hover) and (pointer: fine) {
+    html[data-look="cel"].motion.c-live :is(.hero-sub, footer.site, .prose, .lede) a:not(.btn, .back, .pager a) {
+      background: linear-gradient(var(--c-link-under), var(--c-link-under)) 0 0 / 0% 100% no-repeat, linear-gradient(transparent 58%, var(--c-link-under) 58%) 0 0 / 100% 100% no-repeat;
+      transition: background-size .32s var(--pop);
+    }
+    html[data-look="cel"][data-theme="dark"].motion.c-live :is(.hero-sub, footer.site, .prose, .lede) a:not(.btn, .back, .pager a) { background: linear-gradient(var(--c-link-under), var(--c-link-under)) 0 0 / 0% 100% no-repeat; }
+    html[data-look="cel"].motion.c-live :is(.hero-sub, footer.site, .prose, .lede) a:not(.btn, .back, .pager a)[data-cl-from="r"] { background-position: 100% 0, 0 0; }
+    html[data-look="cel"].motion.c-live :is(.hero-sub, footer.site, .prose, .lede) a:not(.btn, .back, .pager a):hover { background-size: 100% 100%, 100% 100%; }
+  }
+  @media (prefers-color-scheme: dark) and (hover: hover) and (pointer: fine) {
+    html[data-look="cel"]:not([data-theme="light"]).motion.c-live :is(.hero-sub, footer.site, .prose, .lede) a:not(.btn, .back, .pager a) { background: linear-gradient(var(--c-link-under), var(--c-link-under)) 0 0 / 0% 100% no-repeat; }
+    html[data-look="cel"]:not([data-theme="light"]).motion.c-live :is(.hero-sub, footer.site, .prose, .lede) a:not(.btn, .back, .pager a)[data-cl-from="r"] { background-position: 100% 0; }
+    html[data-look="cel"]:not([data-theme="light"]).motion.c-live :is(.hero-sub, footer.site, .prose, .lede) a:not(.btn, .back, .pager a):hover { background-size: 100% 100%; }
+  }
+  html[data-look="cel"][data-theme="dark"].motion.c-live :is(.hero-sub, footer.site, .prose, .lede) a:not(.btn, .back, .pager a)[data-cl-from="r"] { background-position: 100% 0; }
+  html[data-look="cel"][data-theme="dark"].motion.c-live :is(.hero-sub, footer.site, .prose, .lede) a:not(.btn, .back, .pager a):hover { background-size: 100% 100%; }
+
+  /* 9. a tap: a foam ring (lit upper left, its shade lower right, one step) and four droplets, thinning to nothing */
+  html[data-look="cel"].motion.c-live .cl-splash { position: fixed; z-index: 30; width: 58px; height: 58px; margin: -29px 0 0 -29px; pointer-events: none; animation: cl-splash .7s cubic-bezier(.2, .7, .3, 1) both; }
+  html[data-look="cel"].motion.c-live .cl-splash::before { content: ""; position: absolute; inset: 9px; border-radius: 50%; background: linear-gradient(135deg, var(--c-foam) 50%, var(--cl-foam-sh) 50%);
+    -webkit-mask: radial-gradient(closest-side, transparent 66%, #000 68%, #000 97%, transparent); mask: radial-gradient(closest-side, transparent 66%, #000 68%, #000 97%, transparent); }
+  html[data-look="cel"].motion.c-live .cl-splash::after { content: ""; position: absolute; inset: 0;
+    background: radial-gradient(circle at 21% 15%, var(--c-foam) 0 2.6px, transparent 3.1px), radial-gradient(circle at 23% 17%, var(--cl-foam-sh) 0 3.2px, transparent 3.7px),
+      radial-gradient(circle at 80% 19%, var(--c-foam) 0 2.2px, transparent 2.7px), radial-gradient(circle at 82% 21%, var(--cl-foam-sh) 0 2.8px, transparent 3.3px),
+      radial-gradient(circle at 86% 78%, var(--c-foam) 0 2.6px, transparent 3.1px), radial-gradient(circle at 88% 80%, var(--cl-foam-sh) 0 3.2px, transparent 3.7px),
+      radial-gradient(circle at 14% 82%, var(--c-foam) 0 2.2px, transparent 2.7px), radial-gradient(circle at 16% 84%, var(--cl-foam-sh) 0 2.8px, transparent 3.3px); }
+
+  /* 10. a small sun ball follows a mouse (lit, its shade crescent lower right, a soft drop shadow); the system pointer
+     comes back in fields you type in */
+  html[data-look="cel"].motion.c-live.cl-dot-on,
+  html[data-look="cel"].motion.c-live.cl-dot-on :not(input, textarea, select, [contenteditable], [contenteditable] *) { cursor: none !important; }
+  html[data-look="cel"].motion.c-live .cl-dot { position: fixed; left: 0; top: 0; z-index: 2147483000; width: 0; height: 0; pointer-events: none; opacity: 0; }
+  html[data-look="cel"].motion.c-live .cl-dot.cl-on { opacity: 1; }
+  html[data-look="cel"].motion.c-live .cl-dot.cl-on.cl-off { opacity: 0; }
+  html[data-look="cel"].motion.c-live .cl-dot::after { content: ""; position: absolute; left: -6px; top: -6px; width: 12px; height: 12px; border-radius: 50%;
+    background: radial-gradient(circle at 36% 32%, #ffef10 62%, #9c8308 calc(62% + .6px)); box-shadow: 2px 4px 6px -2px rgba(11, 27, 51, .55); transition: scale .16s var(--pop); }
+  html[data-look="cel"].motion.c-live .cl-dot.cl-link::after { scale: 1.55; }
+
+  /* 11. the selection: a sunlit band per line behind the words (by night a sea-blue one), its shade lip below right;
+     the browser's own block nearly clear there, the words in the page's text colour */
+  html[data-look="cel"].motion.c-live .cl-selhost { isolation: isolate; }
+  html[data-look="cel"].motion.c-live .cl-sel { position: absolute; left: 0; top: 0; width: 0; height: 0; z-index: -1; pointer-events: none; -webkit-user-select: none; user-select: none; }
+  html[data-look="cel"].motion.c-live .cl-sel i { position: absolute; border-radius: 5px; background: var(--cl-selc); box-shadow: 2px 3px 0 var(--cl-selsh); }
+  html[data-look="cel"].motion.c-live.cl-selon .cl-selhost ::selection,
+  html[data-look="cel"].motion.c-live.cl-selon .cl-selhost::selection { background: var(--cl-selnat); color: var(--c-text); }
+
+  /* 12. a buoy ring round a big figure's leading number: a painted band (red lit upper left, its shade lower right),
+     cut by two ellipses, popping in with one overshoot */
+  html[data-look="cel"].motion.c-live :is(.fact b, .bigfig b, .card .stat b) { position: relative; }
+  html[data-look="cel"].motion.c-live :is(.fact b, .bigfig b, .card .stat b).cl-ring::after {
+    content: ""; position: absolute; z-index: 1; left: calc(var(--cl-rx, 0px) - var(--cl-rw, 0px) / 2); top: calc(var(--cl-ry, 0px) - var(--cl-rh, 0px) / 2); width: var(--cl-rw, 0px); height: var(--cl-rh, 0px);
+    pointer-events: none; background: linear-gradient(135deg, #ec5640 50%, #902f21 50%);
+    -webkit-mask: radial-gradient(closest-side, #000 calc(100% - 1px), transparent) center / 100% 100% no-repeat, radial-gradient(closest-side, #000 calc(100% - 1px), transparent) center / calc(100% - 2 * var(--cl-rb, 6px)) calc(100% - 2 * var(--cl-rb, 6px)) no-repeat;
+    -webkit-mask-composite: xor;
+    mask: radial-gradient(closest-side, #000 calc(100% - 1px), transparent) center / 100% 100% no-repeat exclude, radial-gradient(closest-side, #000 calc(100% - 1px), transparent) center / calc(100% - 2 * var(--cl-rb, 6px)) calc(100% - 2 * var(--cl-rb, 6px)) no-repeat;
+    animation: cl-pop .42s var(--pop) both;
+  }
+
+  /* 13. keyboard focus: a painted ring (a filled yellow band with its shade lip slid down right, like every slab) replaces the
+     3 px outline while it shows */
+  html[data-look="cel"].motion.c-live.cl-kbd :focus-visible { outline-color: transparent !important; }
+  html[data-look="cel"].motion.c-live .cl-focus { position: fixed; z-index: 2147482000; pointer-events: none; display: none; }
+  html[data-look="cel"].motion.c-live .cl-focus.cl-on { display: block; }
+  html[data-look="cel"].motion.c-live .cl-focus svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  html[data-look="cel"].motion.c-live .cl-focus path { stroke: none; }
+
+  /* 14. a bar's value pops onto a small yellow slab (a data thing: lit face, shade lip) on hover or a tap */
+  html[data-look="cel"].motion.c-live .bars .val { position: relative; isolation: isolate; }
+  html[data-look="cel"].motion.c-live .bars .row.cl-tap .val { color: #18264f; }
+  html[data-look="cel"].motion.c-live .bars .row.cl-tap .val::before { content: ""; position: absolute; inset: -2px -7px -1px; z-index: -1; border-radius: 999px; background: #ffef10; box-shadow: 2px 3px 0 #9c8308, 4px 7px 9px -3px var(--c-drop-cloud); animation: cl-pop .36s var(--pop) both; }
+  @media (hover: hover) and (pointer: fine) {
+    html[data-look="cel"].motion.c-live .bars .row:hover .val { color: #18264f; }
+    html[data-look="cel"].motion.c-live .bars .row:hover .val::before { content: ""; position: absolute; inset: -2px -7px -1px; z-index: -1; border-radius: 999px; background: #ffef10; box-shadow: 2px 3px 0 #9c8308, 4px 7px 9px -3px var(--c-drop-cloud); animation: cl-pop .36s var(--pop) both; }
+  }
+
+  /* 15. touch screens and narrow windows: the look's constant motion runs about half as fast again */
+  @media (pointer: coarse), (max-width: 620px) {
+    html[data-look="cel"].motion.c-live main::before { animation-duration: 140s, 14s; }
+    html[data-look="cel"].motion.c-live main::after { animation-duration: 105s, 16s; }
+    html[data-look="cel"].motion.c-live .hero::before { animation-duration: 330s; }
+    html[data-look="cel"].motion.c-live .leads::after { animation-duration: 6.6s; }
+    html[data-look="cel"].motion.c-live .case-head::before { animation-duration: 330s; }
+    html[data-look="cel"].motion.c-live .case-head::after { animation-duration: 6.6s; }
+    html[data-look="cel"].motion.c-live .hero-one::after { animation-duration: 13s; }
+    html[data-look="cel"].motion.c-live .dot { animation-duration: 2.4s; }
+    html[data-look="cel"].motion.c-live :is(.card:not(.reveal), .pager a).cl-float { animation-duration: .42s, 4.6s; }
+  }
+}
+
+/* ---------- material (Nov 20 2026): what the look is painted on and with ----------
+   The cel equivalent of Brush & Scroll's ink-and-paper pass. Cel animation is flat paint on clear acetate laid over a
+   hand-painted background; these rules give the page that contrast without breaking LOOK.md: one sun upper left; shade
+   = lit x #9c8c86; no outline; no cast shadow; sky and sea stay flat (sections 3 to 5), so the painted tone goes only
+   where the spec already says "painted": the soft panels and the sand. Controls and data things stay perfectly flat.
+   Static (no script, any motion setting): 2 painted panels and sand (img/cel/paint*.webp, sand*.webp); 3 a highlight
+   sliver on the big headings; 4 the far clouds a little out of focus and hazed (img/cel/far-clouds*.webp); 5 a foam
+   waterline under each panel on the sea and a faint acetate sheen on its sun side; 8 the footer as an end card with the
+   RW ball (img/cel/rw.webp). Need look-cel.js: 1 arrivals drawn "on twos" (motion only, .c-live); 6 sea glints in the
+   margins (motion only, .cl-spark); 7 collected buoy marks (.cm-mark) and 9 captures seen through water (.cm-water),
+   which are not motion and stay while motion is paused (.c-mat). Art: _tools/cel/paint.html via art.mjs. */
+html[data-look="cel"] {
+  --cm-paint: url("img/cel/paint.webp") 0 0 / 512px 512px repeat;
+  --cm-sheen: linear-gradient(116deg, transparent 3%, rgba(255, 255, 255, .34) 5.5%, rgba(255, 255, 255, .34) 7.5%, transparent 10%) 0 0 / 100% 100% no-repeat;
+  --cm-wl: rgba(255, 255, 255, .66);
+  --cm-hl: #2a3f80; --cm-hl-acc: #1a5bd0;
+  --cm-sand: url("img/cel/sand.webp") 0 0 / 480px 96px repeat;
+  --c-clouds: url("img/cel/far-clouds.webp");
+  --cm-tint: rgba(9, 99, 224, .2); --cm-tint-net: .2;
+}
+@media (prefers-color-scheme: dark) {
+  html[data-look="cel"]:not([data-theme="light"]) {
+    --cm-paint: url("img/cel/paint-night.webp") 0 0 / 512px 512px repeat;
+    --cm-sheen: linear-gradient(116deg, transparent 3%, rgba(185, 205, 245, .07) 5.5%, rgba(185, 205, 245, .07) 7.5%, transparent 10%) 0 0 / 100% 100% no-repeat;
+    --cm-wl: rgba(185, 205, 245, .34); --cm-hl: #fff4a8; --cm-hl-acc: #fff4a8;
+    --cm-sand: url("img/cel/sand-night.webp") 0 0 / 480px 96px repeat;
+    --c-clouds: url("img/cel/far-clouds-night.webp");
+    --cm-tint: rgba(6, 42, 115, .34); --cm-tint-net: .12;
+  }
+}
+html[data-look="cel"][data-theme="dark"] {
+  --cm-paint: url("img/cel/paint-night.webp") 0 0 / 512px 512px repeat;
+  --cm-sheen: linear-gradient(116deg, transparent 3%, rgba(185, 205, 245, .07) 5.5%, rgba(185, 205, 245, .07) 7.5%, transparent 10%) 0 0 / 100% 100% no-repeat;
+  --cm-wl: rgba(185, 205, 245, .34); --cm-hl: #fff4a8; --cm-hl-acc: #fff4a8;
+  --cm-sand: url("img/cel/sand-night.webp") 0 0 / 480px 96px repeat;
+  --c-clouds: url("img/cel/far-clouds-night.webp");
+  --cm-tint: rgba(6, 42, 115, .34); --cm-tint-net: .12;
+}
+
+/* 2 + 5. the soft panels: acetate sheen (sun side), then the gouache tones, then the panel's own smooth turn. The panels
+   that float on the sea also get a foam waterline: a soft white rim just under their lower edge, above the drop shadow.
+   Order follows the rules above (cloud white, then sail cloth, then the inner sail-cloth panels). */
+html[data-look="cel"] :is(.card, .method > li, .film .shot, .fact, .chart-card, .prose:not(.case-head), .flow li, .shot, .paper) {
+  background: var(--cm-sheen), var(--cm-paint), radial-gradient(140% 140% at 12% 0%, var(--c-panel-hi), var(--c-panel) 52%, var(--c-panel-turn));
+}
+html[data-look="cel"] :is(.hero-one, .case-head) {
+  background: var(--cm-sheen), var(--cm-paint), radial-gradient(130% 150% at 14% 0%, var(--c-panel-hi), var(--c-panel) 50%, var(--c-panel-turn));
+}
+html[data-look="cel"] :is(.more-g, .band, .method > li.ag, .flow) {
+  background: var(--cm-sheen), var(--cm-paint), radial-gradient(140% 140% at 12% 0%, var(--c-cloth-hi), var(--c-cloth) 52%, var(--c-cloth-turn));
+}
+html[data-look="cel"] :is(.repo-card, .pager a, .term, .split .legend),
+html[data-look="cel"] .band3 > div, html[data-look="cel"] .band3 > div:is(:first-child, :last-child) {
+  background: var(--cm-sheen), var(--cm-paint), radial-gradient(140% 140% at 12% 0%, var(--c-inner-hi), var(--c-inner) 52%, var(--c-inner-turn));
+}
+html[data-look="cel"] :is(.card, .method > li, .film .shot, .more-g, .band, .fact, .chart-card, .flow, .shot, .paper, .term) {
+  box-shadow: 0 7px 5px -3px var(--cm-wl), 12px 18px 28px -10px var(--c-drop-sea);
+}
+html[data-look="cel"] .card:hover { box-shadow: 0 7px 5px -3px var(--cm-wl), 14px 24px 30px -10px var(--c-drop-sea); }
+html[data-look="cel"] .prose:not(.case-head) { box-shadow: 0 7px 5px -3px var(--cm-wl), 12px 18px 28px -10px var(--c-drop-sea), 0 0 44px 28px var(--c-sea); }
+/* the shore's sand: its ripples painted on (LOOK.md section 3: sand #c5c69d, ripples #beba95) */
+html[data-look="cel"] footer.site { background: var(--cm-sand), var(--c-sand); }
+
+/* 3. a painted highlight on the big headings: one sliver of a lighter paint along the top of the tall letters on each
+   line (the sun is above), cut into the letters themselves (background-clip: text), so nothing is drawn round them and
+   the letters' own paint is unchanged below it. The sliver sits from the cap line down 0.12 em: the line box is 1lh,
+   the font's ascent + descent 1.16 em centred in it, the cap line 0.206 em under the top of that (measured for the
+   rounded system face; the common fallbacks land within 0.02 em). Day: navy letters, sliver #2a3f80 (8.2:1 or more on
+   their panels); night: pale letters, sliver the tower's lit-glass yellow #fff4a8 (13.5:1). The colour property is
+   kept, so anything reading it, and browsers without text clipping, see the letters as before. */
+@supports ((-webkit-background-clip: text) or (background-clip: text)) and (height: 1lh) {
+  html[data-look="cel"] :is(.hero h1, .case-head h1, .band h2) {
+    --cm-t0: calc((1lh - 1.16em) / 2 + .2em);
+    background: linear-gradient(transparent var(--cm-t0), var(--cm-hl) var(--cm-t0), var(--cm-hl) calc(var(--cm-t0) + .12em), transparent calc(var(--cm-t0) + .12em)) 0 0 / 100% 1lh repeat-y,
+      linear-gradient(var(--c-text), var(--c-text));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  html[data-look="cel"] .hero h1 .grad {
+    background: linear-gradient(transparent var(--cm-t0), var(--cm-hl-acc) var(--cm-t0), var(--cm-hl-acc) calc(var(--cm-t0) + .12em), transparent calc(var(--cm-t0) + .12em)) 0 0 / 100% 1lh repeat-y,
+      linear-gradient(var(--c-accent), var(--c-accent));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  html[data-look="cel"] :is(.hero h1, .case-head h1, .band h2) ::selection,
+  html[data-look="cel"] :is(.hero h1, .case-head h1, .band h2)::selection { -webkit-text-fill-color: var(--c-text); }
+}
+
+/* 8. the end card: the footer's own words centred on the sand like the last still of an episode, the RW ball (the
+   look's gold, its shade a crisp crescent lower right) beside "(c) Ryan Wisth". No new words: the ball is a picture. */
+html[data-look="cel"] footer.site .wrap { flex-direction: column; align-items: center; text-align: center; gap: 12px; }
+html[data-look="cel"] footer.site .wrap > span:nth-of-type(2)::before {
+  content: ""; display: inline-block; width: 46px; height: 46px; margin: -12px 12px -10px 0; vertical-align: middle; border-radius: 50%;
+  background: url("img/cel/rw.webp") 0 0 / 100% 100% no-repeat; box-shadow: 4px 8px 10px -3px var(--c-drop-sand);
+}
+
+/* 7. collected marks: a small buoy ball (lit paint, its shade a crescent lower right, one crisp edge) afloat in the
+   margin beside a section that has been read, with a collar of foam where it meets the water. Placed by look-cel.js
+   where no line of text is near; kept in localStorage "rw-cel-marks:<path>". */
+html[data-look="cel"] .cm-mark {
+  position: absolute; z-index: 2; width: 14px; height: 14px; margin: -7px 0 0 -7px; pointer-events: none; isolation: isolate; border-radius: 50%;
+  --l: #ec5640; --s: #902f21;
+  background: radial-gradient(circle at 36% 32%, var(--l) 64%, var(--s) calc(64% + .6px)); box-shadow: 2px 4px 5px -1px var(--cm-u, var(--c-drop-sea));
+}
+html[data-look="cel"] .cm-mark::after {
+  content: ""; position: absolute; z-index: -1; left: -6px; right: -6px; bottom: -4px; height: 8px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, var(--c-foam) 55%, transparent);
+}
+html[data-look="cel"] .cm-mark.cm-k1 { --l: #f7bf47; --s: #976825; }
+html[data-look="cel"] .cm-mark.cm-k2 { --l: #52aabd; --s: #325d63; }
+html[data-look="cel"] .cm-mark.cm-k3 { --l: #ffef10; --s: #9c8308; }
+html[data-look="cel"] .cm-mark.cm-k4 { --l: #ffffff; --s: #9c8c86; }
+html[data-look="cel"] .cm-mark.cm-on-panel::after { content: none; }
+@media (max-width: 620px) { html[data-look="cel"] .cm-mark { width: 11px; height: 11px; margin: -5.5px 0 0 -5.5px; } }
+
+/* 9. captures seen through water: a layer of the sea's tint with the look's net faint in it lies over each screenshot,
+   picture and film still; it clears (full colour) on hover, keyboard focus, being centred on a touch screen, or playing */
+html[data-look="cel"] .cm-water { position: absolute; z-index: 1; pointer-events: none; border-radius: 13px; background: var(--cm-tint); opacity: 1; }
+html[data-look="cel"] .cm-water::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; background: var(--c-foam); opacity: var(--cm-tint-net);
+  -webkit-mask: var(--c-net) 0 0 / 300px 300px repeat; mask: var(--c-net) 0 0 / 300px 300px repeat;
+}
+html[data-look="cel"] .cm-water.cm-clear { opacity: 0; }
+html[data-look="cel"] .cm-caphost { position: relative; }
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-look="cel"].motion .cm-water { transition: opacity .55s ease; }
+
+  /* 1. arrivals drawn on twos: the pop is five held drawings (12 a second, as a hand-drawn cel is shot on twos), not a
+     smooth tween: small, squashed, overshoot, settle, rest. Only with look-cel.js on (.c-live). */
+  html[data-look="cel"].motion.c-live :is(.reveal.in, .in .flow li, .in .band3 > div, .case-head .back, .brand .mark, .theme-toggle, .card.in .badge, .card.in .lead-k, .unzipped .group-h, .unzipped .method .who) {
+    animation-name: cl-twos-pop; animation-duration: .42s; animation-timing-function: step-end;
+  }
+  html[data-look="cel"].motion.c-live .unzipped .okmark { animation-name: cl-twos-pop; animation-duration: .42s; animation-timing-function: step-end; }
+  html[data-look="cel"].motion.c-live :is(.hero h1, .hero-sub) { animation-name: cl-twos-rise; animation-duration: .5s; animation-timing-function: step-end; }
+  html[data-look="cel"].motion.c-live .cm-mark.cm-new { animation: cl-twos-pop .42s step-end both; }
+  html[data-look="cel"].motion.c-live footer.site.cl-endin .wrap > span:nth-of-type(2)::before { animation: cl-twos-pop .5s step-end both; }
+
+  /* 6. sea glints in the margins (look-cel.js lays two strips a side where the margin is wide enough). Two layers of
+     glints cross-fade as the page scrolls, so the light catches on the water while it moves and holds when it rests. */
+  html[data-look="cel"].motion.c-live .cl-spark {
+    position: absolute; z-index: -2; pointer-events: none; opacity: 0;
+    background: url("img/cel/spark.webp") 50% 0 / 48px 720px repeat-y;
+  }
+  html[data-look="cel"].motion.c-live .cl-spark.cl-b { background-position: 50% 360px; }
+  @supports (animation-timeline: scroll()) {
+    html[data-look="cel"].motion.c-live .cl-spark { animation: cl-tw-a linear both; animation-timeline: scroll(root); animation-iteration-count: var(--cl-n, 12); }
+    html[data-look="cel"].motion.c-live .cl-spark.cl-b { animation-name: cl-tw-b; }
+  }
+}
+@media (prefers-reduced-motion: no-preference) and (prefers-color-scheme: dark) {
+  html[data-look="cel"]:not([data-theme="light"]).motion.c-live .cl-spark { background-image: url("img/cel/spark-night.webp"); }
+}
+html[data-look="cel"][data-theme="dark"].motion.c-live .cl-spark { background-image: url("img/cel/spark-night.webp"); }
+@keyframes cl-twos-pop { 0% { opacity: 0; scale: .55; } 20% { opacity: 1; scale: .9 .84; } 40% { opacity: 1; scale: 1.08 .93; } 60% { opacity: 1; scale: .97 1.03; } 80% { opacity: 1; scale: 1.01 .99; } 100% { opacity: 1; scale: 1; } }
+@keyframes cl-twos-rise { 0% { opacity: 0; translate: 0 26px; scale: .94; } 16.7% { opacity: 1; translate: 0 12px; scale: .97 1.02; } 33.3% { opacity: 1; translate: 0 -5px; scale: 1.02 .98; } 50% { opacity: 1; translate: 0 -2px; scale: 1 1; } 66.7% { opacity: 1; translate: 0 1px; scale: 1; } 83.3% { opacity: 1; translate: 0 0; scale: 1; } 100% { opacity: 1; translate: 0 0; scale: 1; } }
+@keyframes cl-tw-a { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
+@keyframes cl-tw-b { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
