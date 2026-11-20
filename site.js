@@ -241,9 +241,15 @@
     mlabel(); foot.appendChild(mb);
   }
 
-  // Paint & Meadow's moving extras (wind, the footpath, depth, light; scroll, pointer, focus) live in look-paint.js beside this
-  // file. It is fetched only while that look is worn and reduced motion is not asked for, and again if the look changes to it.
-  // (Brush & Scroll has the same hook on its own branch; when both merge they become one loader driven by the look registry.)
+  // Each look's moving extras live in look-<name>.js beside this file (Brush & Scroll: scroll, pointer, selection, focus;
+  // Paint & Meadow: wind, the footpath, depth, light; scroll, pointer, focus). A look's file is fetched only while that
+  // look is worn and reduced motion is not asked for, and again if the look changes to it.
+  var bjs = (d.currentScript && d.currentScript.src || '').replace(/site\.js[^\/]*$/, 'look-brush.js');
+  function brushJs() {
+    if (reduce || !bjs || r.getAttribute('data-look') !== 'brush' || d.getElementById('look-brush-js')) return;
+    var s = d.createElement('script'); s.id = 'look-brush-js'; s.async = true; s.src = bjs; d.body.appendChild(s);
+  }
+  if (window.MutationObserver) new MutationObserver(brushJs).observe(r, { attributes: true, attributeFilter: ['data-look'] });
   var pjs = (d.currentScript && d.currentScript.src || '').replace(/site\.js[^\/]*$/, 'look-paint.js');
   function paintJs() {
     if (reduce || !pjs || r.getAttribute('data-look') !== 'paint' || d.getElementById('look-paint-js')) return;
@@ -252,7 +258,7 @@
   if (window.MutationObserver) new MutationObserver(paintJs).observe(r, { attributes: true, attributeFilter: ['data-look'] });
 
   // the rest is decoration that moves: built only when motion is on at load
-  if (!moving() || !('IntersectionObserver' in window)) { paintJs(); return; }
+  if (!moving() || !('IntersectionObserver' in window)) { brushJs(); paintJs(); return; }
   r.classList.add('motion');
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (en) {
@@ -567,6 +573,7 @@
     if ('ResizeObserver' in window) new ResizeObserver(relay).observe(mainEl); // late images and fonts move the blocks
     lay(); run();
   }
+  brushJs(); // after the thread is built: look-brush.js redraws it as a brush stroke
   paintJs(); // after the thread is built: look-paint.js repaints it as a footpath
 
 })();
