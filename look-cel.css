@@ -95,7 +95,7 @@ html[data-look="cel"][data-theme="dark"] {
    the two paints, --u the drop colour (what it sits on x #9c8c86). Pressed, it squashes down onto its shadow.
    SPHERE (a round control or data thing): lit paint with the shade paint as a crescent on the lower right, one crisp
    curved edge, on a soft drop shadow. */
-html[data-look="cel"] :where(.lead-k, .card .badge, .lead-go, .group-h, .method .who, .pills span, .btn, .vid-sound, .codelines i) { --l: #ffffff; --s: #9c8c86; --u: var(--c-drop-cloud); --lip: 3px 5px; }
+html[data-look="cel"] :where(.lead-k, .card .badge, .lead-wrap > .badge, .lead-go, .group-h, .method .who, .pills span, .btn, .vid-sound, .codelines i) { --l: #ffffff; --s: #9c8c86; --u: var(--c-drop-cloud); --lip: 3px 5px; }
 html[data-look="cel"] :is(.lead-k, .badge, .lead-go, .group-h, .who, .pills span, .btn, .vid-sound, .codelines i) {
   background: var(--l); color: #18264f; border: 0; outline: 0; text-shadow: none; -webkit-text-stroke: 0;
   box-shadow: var(--lip) 0 0 var(--s), 6px 11px 12px -3px var(--u);
@@ -109,7 +109,7 @@ html[data-look="cel"] :is(.mark, .theme-toggle, .dot, .okmark, .vid-toggle, .th-
   box-shadow: 3px 6px 9px -2px var(--u);
 }
 /* paint pairs (lit / shade) */
-html[data-look="cel"] :is(.card .badge, .btn.primary, .vid-sound, .th-head, .h-indigo .group-h),
+html[data-look="cel"] :is(.card .badge, .lead-wrap > .badge, .btn.primary, .vid-sound, .th-head, .h-indigo .group-h),
 html[data-look="cel"] .g-ball::before { --l: #ffef10; --s: #9c8308; }
 html[data-look="cel"] :is(.brand .mark, .lead-go, .h-amber .group-h) { --l: #f7bf47; --s: #976825; }
 html[data-look="cel"] :is(.method > li.ag .who, .h-teal .group-h, .codelines i) { --l: #52aabd; --s: #325d63; }
@@ -291,7 +291,7 @@ html[data-look="cel"] .lead-go { align-self: flex-start; margin-top: 6px; paddin
 html[data-look="cel"] .lead-go::before,
 html[data-look="cel"] .lead-go::after { content: none; }
 /* "Live demo": a yellow slab; its dot a small red ball */
-html[data-look="cel"] .card .badge { z-index: 3; border-radius: 999px; -webkit-backdrop-filter: none; backdrop-filter: none; font-weight: 800; top: 20px; left: 20px; padding: 4px 11px 5px 8px; --u: rgba(11, 27, 51, .55); }
+html[data-look="cel"] :is(.card .badge, .lead-wrap > .badge) { z-index: 3; border-radius: 999px; -webkit-backdrop-filter: none; backdrop-filter: none; font-weight: 800; top: 20px; left: 20px; padding: 4px 11px 5px 8px; --u: rgba(11, 27, 51, .55); }
 html[data-look="cel"] .dot { width: 10px; height: 10px; box-shadow: 1px 2px 3px -1px rgba(156, 131, 8, .9); }
 
 /* ---------- the project groups: sail-cloth panels; each title a slab in its group's paint; each row a ball ---------- */
