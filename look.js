@@ -1,22 +1,49 @@
-/* Which look the site wears. One site carries all four:
-     "yarn"   yarn and felt     (style.css on its own)
-     "wash"   ink and wash      (style.css, then look-wash.css on top)
-     "brush"  brush and scroll  (style.css, then look-brush.css on top)
-     "cel"    cel and tide      (style.css, then look-cel.css on top)
+/* Which look the site wears. Every look is one row in LOOK_ROWS below; yarn and felt is style.css on its own,
+   every other look is style.css with look-<key>.css on top.
 
-   TO SWITCH THE DEFAULT for every visitor, change the one word on the next line. */
+   TO SWITCH THE DEFAULT for every visitor, change the one word on the next line to a key from LOOK_ROWS. */
 var SITE_LOOK = "yarn";
 
-/* The "Style:" button in the top bar opens a short list of the four looks; picking one switches the page to it.
-   TO TAKE THAT BUTTON AWAY, change true to false on the next line (both looks and ?look= keep working). */
+/* The "Style:" button in the top bar opens a list of every look; picking one switches the page to it.
+   TO TAKE THAT BUTTON AWAY, change true to false on the next line (every look and ?look= keep working). */
 var LOOK_SWITCH = true;
 
-/* To try a look without changing anything, add ?look=wash, ?look=brush, ?look=cel or ?look=yarn to any page address.
-   That choice lasts for that browser tab (so two tabs can show the two looks side by side).
+/* How the "Style:" picker is drawn. "label": plain cream-and-ink pill and list, the same on every look (Nov 19 picker);
+   "swatch": the same button in each look's own colours, the list showing each look's two colours beside its name;
+   "grid": a tile per look with its colours as a strip, two or three across. The last two use only the base tokens
+   (--bg --card --text --sig --on-sig --radius) that every look already sets. */
+var LOOK_PICKER = "swatch";
+
+/* THE LOOKS, one row each. A new look is one row here, plus its look-<key>.css (and img/<key>/, films if it has them).
+     key    one short lowercase word. Never the last word of a page's file name (runner, work, ledger, phone, pipeline, 3d,
+            index, stack, servers, grader, study, engine, mode, trainer, guard, scan): the film names read "-<key>" as a twin.
+     name   shown in the picker.
+     bar    the browser bar's colour in this look: light, dark. null leaves the page's own (yarn).
+     dots   two colours that stand for the look in the picker: its paper and its signature.
+     films  true when every page film has video/film-<page>-<key>.mp4 and img/film-<page>-<key>.jpg; false plays the yarn films.
+   The first row is the plain look: it adds no stylesheet and writes nothing to the films. */
+var LOOK_ROWS = [
+  /* key      name               bar (light, dark)          dots (paper, signature)    films */
+  ["yarn",  "Yarn & Felt",     null,                      ["#fbeedd", "#cf3f68"],    false],
+  ["wash",  "Ink & Wash",      ["#f5f1ea", "#0f1730"],    ["#f5f1ea", "#b84a63"],    true],
+  ["brush", "Brush & Scroll",  ["#efe5cf", "#141a33"],    ["#efe5cf", "#c23b22"],    true],
+  ["cel",   "Cel & Tide",      ["#5078ff", "#101b4d"],    ["#0963e0", "#f2f2f2"],    true],
+  ["paint", "Paint & Meadow",  ["#dcc2a6", "#18373e"],    ["#d9d5b9", "#0275a0"],    true],
+  ["dots",  "Dots & Panels",   ["#f6f0dc", "#272015"],    ["#f6f0dc", "#c8321e"],    true]
+];
+
+/* To try a look without changing anything, add ?look=<key> (?look=wash, ?look=cel, ?look=yarn ...) to any page address.
+   That choice lasts for that browser tab (so two tabs can show two looks side by side).
    A pick from the list is remembered by that browser for later visits. */
 (function () {
-  var LOOKS = ["yarn", "wash", "brush", "cel"], look = SITE_LOOK, m = /[?&]look=(yarn|wash|brush|cel)\b/.exec(location.search), kept = null;
-  var NAMES = { yarn: "Yarn & Felt", wash: "Ink & Wash", brush: "Brush & Scroll", cel: "Cel & Tide" };
+  var LOOKS = [], NAMES = {}, TINT = {}, DOTS = {}, TWINS = {}, PLAIN = LOOK_ROWS[0][0];
+  for (var r0 = 0; r0 < LOOK_ROWS.length; r0++) {
+    var row = LOOK_ROWS[r0], key = row[0];
+    LOOKS.push(key); NAMES[key] = row[1]; DOTS[key] = row[3];
+    if (row[2]) TINT[key] = row[2];
+    if (row[4] && r0 > 0) TWINS[key] = true;
+  }
+  var look = SITE_LOOK, m = new RegExp("[?&]look=(" + LOOKS.join("|") + ")\\b").exec(location.search), kept = null;
   var nav0 = window.performance && performance.getEntriesByType && performance.getEntriesByType("navigation")[0];
   var backward = !!(nav0 && nav0.type === "back_forward");
   try {
@@ -31,8 +58,7 @@ var LOOK_SWITCH = true;
   var BASE = ""; try { BASE = document.currentScript.src.replace(/[^\/]*$/, ""); } catch (e) {}
   /* "Pause motion" (the footer button site.js builds) is remembered here and put on before the first paint */
   try { if (localStorage.getItem("motion") === "paused") root.setAttribute("data-motion", "paused"); } catch (e) {}
-  var TINT = { wash: ["#f5f1ea", "#0f1730"], brush: ["#efe5cf", "#141a33"], cel: ["#5078ff", "#101b4d"] };   // the browser bar's colour: light, dark
-  if (look !== "yarn") {                              // yarn adds no stylesheet: the page is drawn exactly as before
+  if (look !== PLAIN) {                              // yarn adds no stylesheet: the page is drawn exactly as before
     root.setAttribute("data-look", look);
     /* The look's sheet must be in before the first paint, or the page flashes yarn. A browser that knows
        blocking="render" holds the paint for an added <link>; any other gets the old document.write, which also holds it. */
@@ -43,15 +69,15 @@ var LOOK_SWITCH = true;
       head.appendChild(sheet);
     } else document.write('<link rel="stylesheet" href="' + BASE + 'look-' + look + '.css">');
     var metas = document.querySelectorAll('meta[name="theme-color"]');
-    for (var i = 0; i < metas.length; i++) metas[i].content = TINT[look][/dark/.test(metas[i].media) ? 1 : 0];
+    if (TINT[look]) for (var i = 0; i < metas.length; i++) metas[i].content = TINT[look][/dark/.test(metas[i].media) ? 1 : 0];
   }
   if (!document.addEventListener) return;
 
   /* Each page's narrated film has a twin per look: video/film-<name>.mp4 (yarn), video/film-<name>-<look>.mp4 with poster
-     img/film-<name>-<look>.jpg (wash, brush, cel). Same length and soundtrack, so a click on the switch carries the moment over.
+     img/film-<name>-<look>.jpg (wash, brush, cel, paint). Same length and soundtrack, so a click on the switch carries the moment over.
      A twin that is missing falls back to the yarn film. The yarn look writes nothing to the films. Other videos
      (captures, previews) are never touched. */
-  var FILM = /video\/film-([a-z0-9-]+?)(-wash|-brush|-cel)?\.mp4$/, swapped = typeof WeakMap === "function" ? new WeakMap() : null;
+  var FILM = new RegExp("video\\/film-([a-z0-9-]+?)(-" + LOOKS.slice(1).join("|-") + ")?\\.mp4$"), swapped = typeof WeakMap === "function" ? new WeakMap() : null;
   function srcOf(v) { var s = v.querySelector("source[src]"); return s || (v.hasAttribute("src") ? v : null); }
   function nameOf(v) { var e = srcOf(v), m = e && FILM.exec(e.getAttribute("src") || ""); return m ? m[1] : null; }
   function resume(v, s) {                             // put a film back at a moment: time, sound, playing or held
@@ -70,7 +96,7 @@ var LOOK_SWITCH = true;
      (a parsed poster="" is fetched before any script can change it). Without scripts such a film shows no poster. */
   function posterOf(v) { return v.getAttribute("poster") || v.getAttribute("data-poster"); }
   function toLook(v) {
-    if (look === "yarn") { if (!v.hasAttribute("poster") && v.getAttribute("data-poster")) v.setAttribute("poster", v.getAttribute("data-poster")); return; }
+    if (look === PLAIN || !TWINS[look]) { if (!v.hasAttribute("poster") && v.getAttribute("data-poster")) v.setAttribute("poster", v.getAttribute("data-poster")); return; }
     if (!swapped || swapped.has(v)) return;
     var e = srcOf(v), u = e && e.getAttribute("src"), m = u && FILM.exec(u);
     if (!m || m[2]) return;                           // not a page film (or its <source> is not parsed yet: the next pass gets it)
@@ -91,7 +117,7 @@ var LOOK_SWITCH = true;
     }
   });
   if (mo && document.readyState === "loading") mo.observe(root, { childList: true, subtree: true });
-  if (look !== "yarn" && swapped) {
+  if (look !== PLAIN && TWINS[look] && swapped) {
     /* A film of this look that will not load falls back to the yarn film, at the same moment. */
     document.addEventListener("error", function (ev) {
       var t = ev.target, v = t && (t.nodeName === "SOURCE" ? t.parentNode : t), rec = v && v.nodeName === "VIDEO" && swapped.get(v);
@@ -166,9 +192,35 @@ var LOOK_SWITCH = true;
   });
   if (!LOOK_SWITCH) return;
 
-  /* The picker: a button that names the look being worn, and a list of the four. Built from here (no markup in the
+  /* The picker: a button that names the look being worn, and a list of every look. Built from here (no markup in the
      pages), as soon as the top bar's light/dark button is read, so it is in place before the first paint.
-     Plain colours in style.css keep it readable on every look; a look sheet may restyle .look-pick-btn. */
+     "label" is drawn by the plain colours in style.css. "swatch" and "grid" add the small sheet below, which reads only
+     base tokens every look sets, so no look's own stylesheet is touched and each look wears the picker in its colours.
+     --card is painted over --bg because some looks make --card see-through; the highlight is --sig on --on-sig. */
+  var DESIGN = /^(swatch|grid)$/.test(LOOK_PICKER) ? LOOK_PICKER : "label";
+  if (DESIGN !== "label") {
+    var ps = document.createElement("style"), X = ":root:root .look-pick.lp-" + DESIGN;
+    ps.id = "look-pick-style";
+    ps.textContent =
+      X + " { --lp-bg: var(--bg); --lp-card: var(--card); --lp-ink: var(--text); --lp-rim: var(--text); --lp-hi: var(--sig); --lp-on-hi: var(--on-sig); }" +
+      X + " .look-pick-btn, " + X + " .look-menu { background: linear-gradient(var(--lp-card), var(--lp-card)) var(--lp-bg); color: var(--lp-ink); border-color: var(--lp-rim); }" +
+      X + " .look-pick-btn { border-radius: var(--radius); }" +
+      X + " .look-menu { border-radius: min(var(--radius), 14px); max-height: calc(100vh - 96px); overflow: auto; overscroll-behavior: contain; }" +
+      X + " .look-menu li { border-radius: min(var(--radius), 9px); }" +
+      X + " .look-menu li[aria-selected=\"true\"] { font-weight: 800; }" +
+      X + " .lp-dot { flex: none; width: 14px; height: 14px; border-radius: 50%; background: linear-gradient(135deg, var(--d1) 50%, var(--d2) 50%); border: 1.5px solid currentColor; }" +
+      (DESIGN === "grid" ?
+        X + " .look-pick-btn .lp-dot { width: 16px; height: 16px; }" +
+        X + " .look-menu:not([hidden]) { display: grid; grid-template-columns: repeat(var(--lp-cols), 10em); gap: 6px; min-width: 0; padding: 8px; }" +
+        X + " .look-menu li { flex-direction: column; align-items: stretch; gap: 7px; min-height: 0; padding: 8px 8px 10px; white-space: normal; border: 1.5px solid transparent; }" +
+        X + " .look-menu li::before { display: none; }" +
+        X + " .look-menu .lp-dot { width: auto; height: 26px; border-radius: min(var(--radius), 6px); background: linear-gradient(90deg, var(--d1) 50%, var(--d2) 50%); }" +
+        X + " .look-menu li[aria-selected=\"true\"] { border-color: currentColor; }" +
+        X + " .look-menu li[aria-selected=\"true\"] .lp-name::after { content: \" \\2713\"; }" +
+        "@media (max-width: 480px) { " + X + " .look-menu:not([hidden]) { grid-template-columns: repeat(2, calc((100vw - 64px) / 2)); } }" : "");
+    (document.head || document.getElementsByTagName("head")[0]).appendChild(ps);
+  }
+  function dot(k) { return '<span class="lp-dot" aria-hidden="true" style="--d1:' + DOTS[k][0] + ";--d2:" + DOTS[k][1] + '"></span>'; }
   function go(to) {
     var held = null;
     keep(); switching = true;
@@ -188,12 +240,15 @@ var LOOK_SWITCH = true;
     var tt = nav.querySelector(".theme-toggle");
     if (!tt && document.readyState === "loading") return false;
     var w = document.createElement("div"), html = "", id = "look-menu";
-    w.className = "look-pick";
+    w.className = "look-pick" + (DESIGN === "label" ? "" : " lp-" + DESIGN);
+    if (DESIGN === "grid") w.style.setProperty("--lp-cols", LOOKS.length > 6 ? 3 : 2);
     for (var i = 0; i < LOOKS.length; i++) {
-      html += '<li role="option" tabindex="-1" data-look="' + LOOKS[i] + '" aria-selected="' + (LOOKS[i] === look) + '">' + NAMES[LOOKS[i]].replace("&", "&amp;") + "</li>";
+      var nm = NAMES[LOOKS[i]].replace("&", "&amp;");
+      html += '<li role="option" tabindex="-1" data-look="' + LOOKS[i] + '" aria-selected="' + (LOOKS[i] === look) + '">' +
+        (DESIGN === "label" ? nm : dot(LOOKS[i]) + '<span class="lp-name">' + nm + "</span>") + "</li>";
     }
     w.innerHTML = '<button type="button" class="look-pick-btn" aria-haspopup="listbox" aria-expanded="false" aria-controls="' + id + '">' +
-      '<span class="look-pick-k">Style: </span><span class="look-pick-name">' + NAMES[look].replace(/^(\S+)( & .*)$/, '<span class="lp-a">$1</span><span class="lp-b">$2</span>').replace("&", "&amp;") + "</span></button>" +
+      (DESIGN === "grid" ? dot(look) : "") + '<span class="look-pick-k">Style: </span><span class="look-pick-name">' + NAMES[look].replace(/^(\S+)( & .*)$/, '<span class="lp-a">$1</span><span class="lp-b">$2</span>').replace("&", "&amp;") + "</span></button>" +
       '<ul class="look-menu" id="' + id + '" role="listbox" aria-label="Style" hidden>' + html + "</ul>";
     var btn = w.firstChild, menu = w.lastChild, opts = menu.children;
     function open(k) {
@@ -219,8 +274,8 @@ var LOOK_SWITCH = true;
     });
     menu.addEventListener("keydown", function (e) {
       var j = [].indexOf.call(opts, document.activeElement), n = opts.length;
-      if (e.key === "ArrowDown") { e.preventDefault(); opts[(j + 1) % n].focus(); }
-      else if (e.key === "ArrowUp") { e.preventDefault(); opts[(j - 1 + n) % n].focus(); }
+      if (e.key === "ArrowDown" || e.key === "ArrowRight") { e.preventDefault(); opts[(j + 1) % n].focus(); }
+      else if (e.key === "ArrowUp" || e.key === "ArrowLeft") { e.preventDefault(); opts[(j - 1 + n) % n].focus(); }
       else if (e.key === "Home") { e.preventDefault(); opts[0].focus(); }
       else if (e.key === "End") { e.preventDefault(); opts[n - 1].focus(); }
       else if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(opts[j]); }

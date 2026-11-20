@@ -368,7 +368,7 @@ html[data-look="brush"] .lead-go { color: var(--sig-ink); align-self: flex-start
 html[data-look="brush"] .lead-go::after { content: ""; position: absolute; left: 0; right: -10px; bottom: -6px; height: 9px; pointer-events: none; background: var(--sig); mask: var(--b-sweep1) 0 0 / 100% 100% no-repeat; clip-path: inset(0 100% 0 0); }
 html[data-look="brush"] .card:is(:hover, :focus-visible) .lead-go::after { clip-path: inset(0); }
 /* "Live demo": a vermilion seal; its dot is a pale dab of ink */
-html[data-look="brush"] .card .badge { background: var(--seal); color: var(--on-seal); border: 0; border-radius: 0; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; font-weight: 900; letter-spacing: .05em; mask: var(--b-seal) 0 0 / 100% 100% no-repeat; }
+html[data-look="brush"] :is(.card .badge, .lead-wrap > .badge) { background: var(--seal); color: var(--on-seal); border: 0; border-radius: 0; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; font-weight: 900; letter-spacing: .05em; mask: var(--b-seal) 0 0 / 100% 100% no-repeat; }
 html[data-look="brush"] .dot { border-radius: 0; box-shadow: none; background: var(--on-seal); mask: var(--b-dab) 0 0 / 100% 100% no-repeat; }
 
 /* ---------- home: the grouped list. Each group's title rides one broad loaded stroke of its colour, a round seal at its end ---------- */

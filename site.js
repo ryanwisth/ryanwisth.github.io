@@ -245,7 +245,7 @@
   // for the default look, which carries no data-look). One is fetched only while its look is worn and reduced motion
   // is not asked for, and again if the look changes to it. Each script switches itself off when its look is taken off.
   var jsBase = (d.currentScript && d.currentScript.src || '').replace(/site\.js[^\/]*$/, '');
-  var LIVE = { yarn: 1, wash: 1, brush: 1, cel: 1 };
+  var LIVE = { yarn: 1, wash: 1, brush: 1, cel: 1, paint: 1, dots: 1 };
   function lookJs() {
     var k = r.getAttribute('data-look') || 'yarn';
     if (reduce || !jsBase || !LIVE[k] || d.getElementById('look-' + k + '-js')) return;
@@ -569,6 +569,6 @@
     if ('ResizeObserver' in window) new ResizeObserver(relay).observe(mainEl); // late images and fonts move the blocks
     lay(); run();
   }
-  lookJs(); // after the thread is built: look-brush.js redraws it as a brush stroke
+  lookJs(); // after the thread is built: brush, paint and dots redraw it in their own hand
 
 })();
