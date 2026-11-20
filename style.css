@@ -1956,3 +1956,168 @@ footer.site .wrap { align-items: center; }
   }
 }
 /* === end Yarn & Felt liveliness === */
+
+/* === Yarn & Felt material (Nov 20 2026): the cloth itself ===
+   The equivalent of Brush & Scroll's ink-and-paper pass, in textiles. Every rule needs html:not([data-look]) (the
+   default look), so wash, brush and cel are untouched; the moving parts also need .motion.y-live (look-yarn.js, with
+   motion on), and the two script-placed static parts (merit patches, a capture cleared by being centred on a touch
+   screen) need .y-mat, which look-yarn.js keeps while this look is worn, motion on or paused. Items:
+   1 fresh-sewn: a patch that has just been sewn on is puckered at its seam, then pressed flat (script, motion only);
+   2 fibre: loose fibres at the edges of the felt patches, and slubs in the linen's weave;
+   3 embroidered headings: the big headings stand off the cloth like raised satin stitch (shadows only, ink unchanged);
+   4 reverse stitching: the next heading's seam shows faintly through the linen, mirrored, as from the back;
+   5 pinked edges: the case pages' cotton panels are cut with pinking shears;
+   6 nap sheen: light moves across the felt's nap as you scroll; at night a few metallic-thread glints (script, motion);
+   7 merit patches: a small embroidered patch stitched beside each section once it has been read (script);
+   8 woven label: a garment label sewn into the footer, beside the name, carrying RW;
+   9 captures under a linen scrim until hover, keyboard focus, centred on a touch screen, or playing. */
+html:not([data-look]) {
+  --y-hair-t: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='5'%3E%3Cg  fill='none' stroke='%23000' stroke-linecap='round'%3E%3Cpath d='M22.51 5.6Q23.05 3.62 23.05 2.3' stroke-opacity='0.88' stroke-width='0.74'/%3E%3Cpath d='M3.52 5.6Q3.64 3.62 4.06 2.3' stroke-opacity='0.69' stroke-width='0.88'/%3E%3Cpath d='M18.48 5.6Q17.92 3.35 19.39 1.86' stroke-opacity='0.54' stroke-width='0.62'/%3E%3Cpath d='M17.42 5.6Q16.51 3.92 17.83 2.79' stroke-opacity='0.75' stroke-width='0.76'/%3E%3Cpath d='M18.41 5.6Q19.98 3.02 19.94 1.3' stroke-opacity='0.61' stroke-width='0.78'/%3E%3Cpath d='M11.07 5.6Q13.11 4.53 12.28 3.82' stroke-opacity='0.6' stroke-width='0.57'/%3E%3Cpath d='M32.72 5.6Q33.08 3.97 32.98 2.89' stroke-opacity='0.87' stroke-width='0.56'/%3E%3Cpath d='M37.39 5.6Q35.68 3.07 36.81 1.38' stroke-opacity='0.49' stroke-width='0.88'/%3E%3Cpath d='M21.88 5.6Q21.31 3.63 20.73 2.32' stroke-opacity='0.82' stroke-width='0.54'/%3E%3C/g%3E%3C/svg%3E");
+  --y-hair-b: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='5'%3E%3Cg transform='rotate(180 22 2.5)' fill='none' stroke='%23000' stroke-linecap='round'%3E%3Cpath d='M4.08 5.6Q3.83 4.51 4.74 3.78' stroke-opacity='0.61' stroke-width='0.6'/%3E%3Cpath d='M22.53 5.6Q21.87 2.81 24.16 0.95' stroke-opacity='0.8' stroke-width='0.59'/%3E%3Cpath d='M3.79 5.6Q4.56 2.75 5.49 0.85' stroke-opacity='0.82' stroke-width='0.52'/%3E%3Cpath d='M19.9 5.6Q20.26 3.38 22.33 1.9' stroke-opacity='0.87' stroke-width='0.6'/%3E%3Cpath d='M8.39 5.6Q8.18 3.14 6.68 1.49' stroke-opacity='0.64' stroke-width='0.73'/%3E%3Cpath d='M41.63 5.6Q43.85 3.17 43.6 1.55' stroke-opacity='0.77' stroke-width='0.87'/%3E%3Cpath d='M31.18 5.6Q30.76 4.22 30.23 3.3' stroke-opacity='0.9' stroke-width='0.93'/%3E%3Cpath d='M35.63 5.6Q36.4 3.4 34.72 1.94' stroke-opacity='0.55' stroke-width='0.68'/%3E%3Cpath d='M35.3 5.6Q36.94 4.33 36.2 3.48' stroke-opacity='0.84' stroke-width='0.5'/%3E%3C/g%3E%3C/svg%3E");
+  --y-hair-l: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='44'%3E%3Cg transform='translate(0 44) rotate(-90)' fill='none' stroke='%23000' stroke-linecap='round'%3E%3Cpath d='M22.72 5.6Q22.25 2.73 20.35 0.81' stroke-opacity='0.55' stroke-width='0.76'/%3E%3Cpath d='M7.77 5.6Q8.1 2.8 8.46 0.93' stroke-opacity='0.75' stroke-width='0.86'/%3E%3Cpath d='M9.8 5.6Q12.01 3.21 11.93 1.62' stroke-opacity='0.93' stroke-width='0.6'/%3E%3Cpath d='M26.42 5.6Q25.37 3.2 24.47 1.6' stroke-opacity='0.53' stroke-width='0.8'/%3E%3Cpath d='M13.43 5.6Q13.46 3.19 12.5 1.59' stroke-opacity='0.69' stroke-width='0.76'/%3E%3Cpath d='M42.71 5.6Q42.43 3.95 42.01 2.85' stroke-opacity='0.51' stroke-width='0.91'/%3E%3Cpath d='M40.22 5.6Q39.74 4.39 38.83 3.59' stroke-opacity='0.8' stroke-width='0.64'/%3E%3Cpath d='M37.61 5.6Q37.41 4.3 36.2 3.43' stroke-opacity='0.46' stroke-width='0.76'/%3E%3Cpath d='M43.59 5.6Q41.86 2.9 41.34 1.11' stroke-opacity='0.6' stroke-width='0.9'/%3E%3C/g%3E%3C/svg%3E");
+  --y-hair-r: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='44'%3E%3Cg transform='translate(5 0) rotate(90)' fill='none' stroke='%23000' stroke-linecap='round'%3E%3Cpath d='M37.44 5.6Q37.9 3.66 38.12 2.37' stroke-opacity='0.88' stroke-width='0.72'/%3E%3Cpath d='M40.22 5.6Q39.75 3.79 38.01 2.58' stroke-opacity='0.87' stroke-width='0.65'/%3E%3Cpath d='M15.03 5.6Q13.93 2.8 14.56 0.94' stroke-opacity='0.58' stroke-width='0.82'/%3E%3Cpath d='M35.62 5.6Q35.16 4.04 34.45 3.01' stroke-opacity='0.56' stroke-width='0.67'/%3E%3Cpath d='M6.63 5.6Q4.75 3.72 5.65 2.47' stroke-opacity='0.88' stroke-width='0.58'/%3E%3Cpath d='M1.36 5.6Q1.3 3.37 1.26 1.88' stroke-opacity='0.83' stroke-width='0.6'/%3E%3Cpath d='M31.62 5.6Q30.79 3.76 31.89 2.54' stroke-opacity='0.55' stroke-width='0.82'/%3E%3Cpath d='M23.88 5.6Q25.46 4.13 25.76 3.15' stroke-opacity='0.57' stroke-width='0.52'/%3E%3Cpath d='M10.31 5.6Q9.31 4.64 10.21 4' stroke-opacity='0.73' stroke-width='0.56'/%3E%3C/g%3E%3C/svg%3E");
+  --y-linen: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Cg fill='none' stroke-linecap='round'%3E%3Cpath d='M1.5 44.68v11.41M1.5 -51.32v11.41M69.5 24.34v6.34M69.5 -71.66v6.34M45.13 9.5h23.85M-50.87 9.5h23.85M29.5 39.13v23.74M29.5 -56.87v23.74M80.03 17.5h11.02M-15.97 17.5h11.02M30.17 73.5h17.89M-65.83 73.5h17.89M65.5 51.86v7.98M65.5 -44.14v7.98' stroke='%237a4718' stroke-opacity='0.07' stroke-width='1.5'/%3E%3Cpath d='M73.5 21.1v17.22M73.5 -74.9v17.22M41.5 86.94v10.13M41.5 -9.06v10.13M69.35 81.5h21.82M-26.65 81.5h21.82M13.5 61.06v16.4M13.5 -34.94v16.4M1.5 89.47v12.15M1.5 -6.53v12.15M49.5 24.33v22.74M49.5 -71.67v22.74M25.5 51.18v21.42M25.5 -44.82v21.42' stroke='%23fff' stroke-opacity='0.3' stroke-width='1.2'/%3E%3C/g%3E%3C/svg%3E");
+}
+@media (prefers-color-scheme: dark) { html:not([data-look]):not([data-theme="light"]) { --y-linen: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Cg fill='none' stroke-linecap='round'%3E%3Cpath d='M1.5 44.68v11.41M1.5 -51.32v11.41M69.5 24.34v6.34M69.5 -71.66v6.34M45.13 9.5h23.85M-50.87 9.5h23.85M29.5 39.13v23.74M29.5 -56.87v23.74M80.03 17.5h11.02M-15.97 17.5h11.02M30.17 73.5h17.89M-65.83 73.5h17.89M65.5 51.86v7.98M65.5 -44.14v7.98' stroke='%2304061c' stroke-opacity='0.3' stroke-width='1.5'/%3E%3Cpath d='M73.5 21.1v17.22M73.5 -74.9v17.22M41.5 86.94v10.13M41.5 -9.06v10.13M69.35 81.5h21.82M-26.65 81.5h21.82M13.5 61.06v16.4M13.5 -34.94v16.4M1.5 89.47v12.15M1.5 -6.53v12.15M49.5 24.33v22.74M49.5 -71.67v22.74M25.5 51.18v21.42M25.5 -44.82v21.42' stroke='%23aab4ff' stroke-opacity='0.07' stroke-width='1.2'/%3E%3C/g%3E%3C/svg%3E"); } }
+html:not([data-look])[data-theme="dark"] { --y-linen: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Cg fill='none' stroke-linecap='round'%3E%3Cpath d='M1.5 44.68v11.41M1.5 -51.32v11.41M69.5 24.34v6.34M69.5 -71.66v6.34M45.13 9.5h23.85M-50.87 9.5h23.85M29.5 39.13v23.74M29.5 -56.87v23.74M80.03 17.5h11.02M-15.97 17.5h11.02M30.17 73.5h17.89M-65.83 73.5h17.89M65.5 51.86v7.98M65.5 -44.14v7.98' stroke='%2304061c' stroke-opacity='0.3' stroke-width='1.5'/%3E%3Cpath d='M73.5 21.1v17.22M73.5 -74.9v17.22M41.5 86.94v10.13M41.5 -9.06v10.13M69.35 81.5h21.82M-26.65 81.5h21.82M13.5 61.06v16.4M13.5 -34.94v16.4M1.5 89.47v12.15M1.5 -6.53v12.15M49.5 24.33v22.74M49.5 -71.67v22.74M25.5 51.18v21.42M25.5 -44.82v21.42' stroke='%23aab4ff' stroke-opacity='0.07' stroke-width='1.2'/%3E%3C/g%3E%3C/svg%3E"); }
+
+/* 2. fibre: the page's weave shows thick-thin slubs; felt patches shed a few loose fibres past their edges, in the
+   patch's own colour a shade darker (a mask of hair strips on ::before, behind the patch's words) */
+html:not([data-look]) body {
+  background-image: var(--quilt), var(--y-linen), var(--g-cotton);
+  background-size: 144px 144px, 96px 96px, 8px 8px;
+}
+html:not([data-look]) :is(.card, .principle, .band, .band3 > div) { isolation: isolate; }
+html:not([data-look]) :is(.card, .principle, .band, .band3 > div)::before {
+  content: ""; position: absolute; inset: -4px; z-index: -1; pointer-events: none; border-radius: inherit;
+  background-color: inherit; background-image: linear-gradient(var(--shade-2), var(--shade-2));
+  -webkit-mask: var(--y-hair-t) 0 0 / 44px 5px repeat-x, var(--y-hair-b) 9px 100% / 44px 5px repeat-x,
+    var(--y-hair-l) 0 13px / 5px 44px repeat-y, var(--y-hair-r) 100% 0 / 5px 44px repeat-y;
+  mask: var(--y-hair-t) 0 0 / 44px 5px repeat-x, var(--y-hair-b) 9px 100% / 44px 5px repeat-x,
+    var(--y-hair-l) 0 13px / 5px 44px repeat-y, var(--y-hair-r) 100% 0 / 5px 44px repeat-y;
+}
+
+/* 3. embroidered headings: raised satin stitch casts a hair of shade under each letter and catches a hair of light on
+   top; the letters' own colour (and so their contrast) is unchanged, and body text has none */
+html:not([data-look]) :is(.hero h1, .case-head h1, .section-head h2, .prose > h2) {
+  text-shadow: 0 -.6px 0 color-mix(in srgb, var(--card) 55%, transparent), 0 .9px 0 var(--shade-2), 0 2px 2.5px var(--shade-2);
+}
+
+/* 4. reverse stitching: in the gap above a heading, the stitch rows of the seam below it show through the linen,
+   mirrored and soft, as from the back of the cloth (one ink at 6-7 %) */
+html:not([data-look]) .section-head { position: relative; }
+html:not([data-look]) .section-head::before, html:not([data-look]) .prose:has(> h2:first-child)::before {
+  content: ""; position: absolute; pointer-events: none; background: var(--ink); opacity: .065; filter: blur(.45px);
+}
+html:not([data-look]) .section-head::before {
+  top: -28px; left: 34px; width: min(58%, 340px); height: 12px; transform: scaleX(-1) rotate(-1.2deg);
+  -webkit-mask: var(--st) 7px 0 / 14px 3px repeat-x, var(--st) 7px 100% / 14px 3px repeat-x;
+  mask: var(--st) 7px 0 / 14px 3px repeat-x, var(--st) 7px 100% / 14px 3px repeat-x;
+}
+html:not([data-look]) .prose:has(> h2:first-child) { position: relative; }
+html:not([data-look]) .prose:has(> h2:first-child)::before {
+  top: -26px; right: 24px; width: min(52%, 420px); height: 3px;
+  -webkit-mask: var(--st) 6px 0 / 14px 3px repeat-x; mask: var(--st) 6px 0 / 14px 3px repeat-x;
+}
+
+/* 5. pinked edges: the cotton panels of a case page (facts, charts, the repo card, a README) are cut with pinking
+   shears: a ring of small teeth just outside the box, in the panel's cloth, with a hair of shade. The running stitch
+   stays inside; nothing is clipped (a fact keeps its clipping, with 6 px of room for the teeth) */
+html:not([data-look]) :is(.fact, .chart-card, .repo-card, .readme) { isolation: isolate; }
+html:not([data-look]) .fact { overflow: clip; overflow-clip-margin: 6px; }
+html:not([data-look]) :is(.fact, .chart-card, .repo-card, .readme)::before {
+  content: ""; position: absolute; inset: -4px; width: auto; height: auto; z-index: -1; pointer-events: none;
+  border-radius: calc(var(--radius) + 4px);
+  background:
+    conic-gradient(from 135deg at 50% 0, var(--card) 90deg, #0000 0) 0 0 / 9px 4.5px repeat-x,
+    conic-gradient(from -45deg at 50% 100%, var(--card) 90deg, #0000 0) 4px 100% / 9px 4.5px repeat-x,
+    conic-gradient(from 45deg at 0 50%, var(--card) 90deg, #0000 0) 0 0 / 4.5px 9px repeat-y,
+    conic-gradient(from 225deg at 100% 50%, var(--card) 90deg, #0000 0) 100% 4px / 4.5px 9px repeat-y;
+  filter: drop-shadow(0 .8px .5px var(--shade-2));
+}
+
+/* 8. woven label: a garment label sewn into the footer beside the name: fine weave, folded ends stitched down, RW
+   woven in raspberry. The letters are decoration (alt text empty); the footer's words are unchanged */
+html:not([data-look]) footer.site .wrap > span:nth-of-type(2)::before {
+  content: "RW"; content: "RW" / "";
+  display: inline-block; margin: 0 12px 0 2px; padding: 4px 11px 3px; vertical-align: 1px;
+  font: 800 11px/1.2 var(--round); letter-spacing: .14em; color: var(--sig-ink); border-radius: 2px;
+  background:
+    repeating-linear-gradient(var(--sig) 0 2.4px, #0000 0 4.6px) 3.5px 1px / 1.4px calc(100% - 2px) no-repeat,
+    repeating-linear-gradient(var(--sig) 0 2.4px, #0000 0 4.6px) calc(100% - 3.5px) 1px / 1.4px calc(100% - 2px) no-repeat,
+    linear-gradient(var(--line), var(--line)) 0 1.5px / 100% 1px no-repeat,
+    linear-gradient(var(--line), var(--line)) 0 calc(100% - 1.5px) / 100% 1px no-repeat,
+    var(--g-cotton) 0 0 / 4px 4px, var(--card);
+  box-shadow: 0 1px 1.5px var(--shade), 0 3px 5px -2px var(--shade-2);
+  transform: rotate(-2deg);
+}
+
+/* 9. captures under a light linen scrim (the page's own cloth, thin): screenshots, films and card pictures show
+   clear in full colour on hover, keyboard focus, when centred on a touch screen (.y-clear, look-yarn.js), or while
+   playing. Without the script only where a pointer can hover, so a touch screen never keeps a scrim it cannot lift */
+html:not([data-look]) .shot.phone { position: relative; }
+@media (hover: hover) { html:not([data-look]) :is(.shot, .thumb-wrap)::after { content: ""; } }
+html:not([data-look]).y-mat :is(.shot, .thumb-wrap)::after { content: ""; }
+html:not([data-look]) :is(.shot, .thumb-wrap)::after {
+  position: absolute; inset: 0; z-index: 2; pointer-events: none; border-radius: inherit;
+  background: var(--g-cotton) 0 0 / 6px 6px, color-mix(in srgb, var(--bg) 30%, transparent);
+}
+html:not([data-look]) :is(.shot, .thumb-wrap):is(:hover, :focus-within, .y-clear)::after,
+html:not([data-look]) .shot.vid:not(.paused)::after,
+html:not([data-look]) :is(.card:hover, .card:focus-visible, .film:focus-within) .thumb-wrap::after,
+html:not([data-look]) .film:focus-within .shot::after { opacity: 0; }
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-look]) :is(.shot, .thumb-wrap)::after { transition: opacity .7s ease; }
+
+  /* 6. nap sheen: look-yarn.js lays a .y-nap span in each felt patch (fine pointers, wide screens, scroll timelines
+     only: no work on phones); its band of light slides across the felt as the patch crosses the window. Light: a
+     paler stroke of nap beside a darker one, like brushed velvet. Dark: a few metallic-thread glints ride the band */
+  @media (hover: hover) and (pointer: fine) and (min-width: 621px) {
+    @supports (animation-timeline: view()) {
+      html:not([data-look]).motion.y-live .y-nap { position: absolute; inset: 0; z-index: -1; border-radius: inherit; overflow: clip; pointer-events: none; }
+      html:not([data-look]).motion.y-live .y-nap i {
+        position: absolute; inset: 0;
+        background: linear-gradient(104deg, #0000 8%, color-mix(in srgb, var(--shade-2) 45%, #0000) 32%, color-mix(in srgb, var(--card) 34%, #0000) 50%, #0000 80%);
+        animation: y-nap linear both; animation-timeline: view(); animation-range: entry 0% exit 100%;
+      }
+    }
+  }
+  @keyframes y-nap { from { transform: translateX(-72%); } to { transform: translateX(72%); } }
+
+  /* 7. a merit patch is stitched on: dropped on with a little press, its seam running in */
+  html:not([data-look]).motion .y-merit.y-new { animation: y-merit-on .9s var(--spring) both; }
+  html:not([data-look]).motion .y-merit.y-new .ym-st { animation: y-merit-sew .9s ease-out .25s both; }
+  @keyframes y-merit-on { 0% { opacity: 0; scale: 1.35; } 40% { opacity: 1; scale: .94; } 100% { scale: 1; } }
+  @keyframes y-merit-sew { from { stroke-dashoffset: 26; opacity: 0; } 30% { opacity: 1; } to { stroke-dashoffset: 0; } }
+}
+@media (prefers-color-scheme: dark) {
+  @media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) and (min-width: 621px) {
+    html:not([data-look]):not([data-theme="light"]).motion.y-live .y-nap i {
+      background:
+        radial-gradient(circle at 41% 28%, var(--loop-hi) 0 .7px, #0000 1.5px), radial-gradient(circle at 54.5% 71%, var(--loop-hi) 0 .6px, #0000 1.4px),
+        radial-gradient(circle at 47% 47%, var(--yarn-hi) 0 .5px, #0000 1.2px),
+        linear-gradient(104deg, #0000 14%, color-mix(in srgb, var(--yarn-hi) 7%, #0000) 50%, #0000 86%);
+    }
+  }
+}
+@media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) and (min-width: 621px) {
+  html:not([data-look])[data-theme="dark"].motion.y-live .y-nap i {
+    background:
+      radial-gradient(circle at 41% 28%, var(--loop-hi) 0 .7px, #0000 1.5px), radial-gradient(circle at 54.5% 71%, var(--loop-hi) 0 .6px, #0000 1.4px),
+      radial-gradient(circle at 47% 47%, var(--yarn-hi) 0 .5px, #0000 1.2px),
+      linear-gradient(104deg, #0000 14%, color-mix(in srgb, var(--yarn-hi) 7%, #0000) 50%, #0000 86%);
+  }
+}
+
+/* 7. merit patches (look-yarn.js places them, in page coordinates, where they cross no text) */
+html:not([data-look]).y-mat .y-merit {
+  position: absolute; z-index: 4; pointer-events: none; rotate: var(--yr, 0deg);
+  filter: drop-shadow(0 1px .8px var(--shade)) drop-shadow(0 3px 3px var(--shade-2));
+}
+html:not([data-look]).y-mat .y-merit svg { display: block; width: 100%; height: 100%; overflow: visible; }
+html:not([data-look]).y-mat .y-merit .ym-felt { fill: var(--yf); }
+html:not([data-look]).y-mat .y-merit .ym-st { fill: none; stroke: var(--ys); stroke-width: 1.5; stroke-dasharray: 2.3 1.7; stroke-linecap: round; }
+html:not([data-look]).y-mat .y-merit .ym-mk { fill: none; stroke: var(--felt-ink); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+html:not([data-look]).y-mat .y-merit .ym-dot { fill: var(--felt-ink); }
+/* === end Yarn & Felt material === */

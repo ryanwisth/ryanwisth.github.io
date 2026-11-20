@@ -463,6 +463,259 @@
   }
   new MutationObserver(sync).observe(r, { attributes: true, attributeFilter: ['data-look', 'class', 'data-motion'] });
   if (mqReduce.addEventListener) mqReduce.addEventListener('change', sync);
+  W.__yarnAccent = { free: ambientFree, claim: claim }; // the material block below asks before it moves anything
   W.__yarnLiveState = function () { return { live: live, sda: SDA, made: made.length, listeners: offs.length, anims: anims.length, flecks: flecks.length, accent: acc.name }; };
+  sync();
+})();
+
+/* ===== Yarn & Felt material (Nov 20 2026): the cloth itself =====
+   style.css (section "Yarn & Felt material") draws the static parts: fibres, slubbed linen, embroidered headings,
+   reverse stitching, pinked panels, the woven label and the linen scrim over captures. This block adds what needs a
+   script, in two layers:
+   - while the default look is worn (no data-look), motion on or paused: .y-mat on the root, merit patches (7) and a
+     capture cleared by being centred on a touch screen (9);
+   - only while motion is on as well: a fresh-sewn patch pressed flat (1) and the nap sheen spans (6).
+   A look change removes everything; "Pause motion" removes the moving layer. Merit patches are stored in
+   localStorage["rw-yarn-patches:<path>"] (a list of section numbers) and nothing else; no network. */
+(function () {
+  'use strict';
+  var d = document, r = d.documentElement, W = window;
+  if (W.__yarnMat || !d.addEventListener) return;
+  W.__yarnMat = 1;
+  var NS = 'http://www.w3.org/2000/svg';
+  var mqReduce = matchMedia('(prefers-reduced-motion: reduce)');
+  var mqFine = matchMedia('(hover: hover) and (pointer: fine)');
+  var mqSmall = matchMedia('(pointer: coarse), (max-width: 620px)');
+  var SDA = !!(W.CSS && CSS.supports && CSS.supports('animation-timeline: view()'));
+  var FELT = '.card, .principle, .band, .band3 > div', COTTON = '.fact, .chart-card, .repo-card, .readme';
+  var CAPS = '.shot, .thumb-wrap';
+  var mat = false, mov = false, offs = [], moffs = [], made = [], mmade = [], anims = [], timers = [];
+  var KEY = 'rw-yarn-patches:' + location.pathname;
+
+  function wantMat() { return !r.hasAttribute('data-look'); }
+  function wantMov() { return wantMat() && r.classList.contains('motion') && !mqReduce.matches; }
+  function on(list, t, type, fn, opt) { t.addEventListener(type, fn, opt); list.push(function () { t.removeEventListener(type, fn, opt); }); }
+  function later(fn, ms) { var t = setTimeout(fn, ms); timers.push(t); return t; }
+  function drop(e) { if (e && e.parentNode) e.parentNode.removeChild(e); }
+  function free() { return !W.__yarnAccent || !r.classList.contains('y-live') || W.__yarnAccent.free(); }
+  function claim(n, ms) { if (W.__yarnAccent && r.classList.contains('y-live')) W.__yarnAccent.claim(n, ms); }
+  function anim(el, kf, opt) {
+    if (!el || !el.animate) return null;
+    var a; try { a = el.animate(kf, opt); } catch (e) { return null; }
+    anims.push(a); a.onfinish = a.oncancel = function () { var i = anims.indexOf(a); if (i >= 0) anims.splice(i, 1); };
+    return a;
+  }
+  function onScreen(b) { return b.bottom > 0 && b.top < innerHeight; }
+
+  /* ---------- 7. merit patches ----------
+     A section runs from one big heading to the next (the last one to the footer). It counts as read once its heading
+     has been on screen and its end has passed the middle of the window (or the page is scrolled to the bottom). It is
+     kept at once; its patch is stitched on one at a time, and only animated if it is on screen with motion on. */
+  var heads = [], seen = [], got = [], marks = {}, queue = [], qT = 0, chk = 0;
+  function load() { try { var v = JSON.parse(localStorage.getItem(KEY) || '[]'); return Array.isArray(v) ? v.filter(function (n) { return n === (n | 0); }) : []; } catch (e) { return []; } }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(got)); } catch (e) {} }
+  var FELTS = [['--y-yellow', '--s-yellow'], ['--y-blue', '--s-blue'], ['--y-green', '--s-green'], ['--y-pink', '--s-pink']];
+  var SHAPES = [ // [felt outline, stitch line inside it, mark]: no words; one carries the RW monogram
+    ['<circle cx="16" cy="16" r="14"/>', '<circle cx="16" cy="16" r="11.3"/>', '<path class="ym-mk" d="M9 21V11h3.4a2.7 2.7 0 0 1 0 5.4H9M12.2 16.4l2.9 4.6M15.9 11l1.4 10 1.8-6.4 1.8 6.4 1.4-10"/>'],
+    ['<path d="M16 2l12.1 7v14L16 30 3.9 23V9z"/>', '<path d="M16 5.2l9.3 5.4v10.8L16 26.8l-9.3-5.4V10.6z"/>', '<path class="ym-mk" d="M11.5 11.5l9 9M20.5 11.5l-9 9"/>'],
+    ['<path d="M16 2.2l3.9 8.3 9 1.1-6.6 6.2 1.7 8.9L16 22.3l-8 4.4 1.7-8.9-6.6-6.2 9-1.1z"/>', '<path d="M16 6.6l2.6 5.5 6 .8-4.4 4.1 1.1 5.9L16 20l-5.3 2.9 1.1-5.9-4.4-4.1 6-.8z"/>', ''],
+    ['<rect x="5" y="5" width="22" height="22" rx="4" transform="rotate(45 16 16)"/>', '<rect x="8.2" y="8.2" width="15.6" height="15.6" rx="2.6" transform="rotate(45 16 16)"/>', '<circle class="ym-dot" cx="14" cy="14" r="1.3"/><circle class="ym-dot" cx="18" cy="14" r="1.3"/><circle class="ym-dot" cx="14" cy="18" r="1.3"/><circle class="ym-dot" cx="18" cy="18" r="1.3"/>'],
+    ['<path d="M4 4.5h24V16c0 7-5.6 11-12 13.5C9.6 27 4 23 4 16z"/>', '<path d="M7 7.4h18V16c0 5.3-4.2 8.4-9 10.4-4.8-2-9-5.1-9-10.4z"/>', '<path class="ym-mk" d="M16 17.4a1.4 1.4 0 1 1 1.4-1.4 2.8 2.8 0 0 1-2.8 2.8 4.2 4.2 0 0 1-4.2-4.2 5.6 5.6 0 0 1 5.6-5.6"/>']
+  ];
+  function pageHash() { var h = 0, p = location.pathname; for (var i = 0; i < p.length; i++) h = (h * 31 + p.charCodeAt(i)) | 0; return Math.abs(h); }
+  function findHeads() {
+    heads = [].filter.call(d.querySelectorAll('.hero h1, .case-head h1, .section-head h2, .prose > h2'), function (h) { return h.offsetParent || h.getClientRects().length; });
+    seen = heads.map(function () { return false; });
+  }
+  function textRects(top, bottom) { // line boxes of every word in main (and the top bar) between two page heights
+    var out = [], roots = [d.querySelector('main'), d.querySelector('header'), d.querySelector('footer.site')];
+    roots.forEach(function (root) {
+      if (!root) return;
+      var tw = d.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), n, rg = d.createRange();
+      while ((n = tw.nextNode())) {
+        if (!n.nodeValue.trim()) continue;
+        var pe = n.parentElement; if (!pe || pe.closest('.y-merit, [aria-hidden="true"]')) continue;
+        var pb = pe.getBoundingClientRect(); if (pb.bottom + scrollY < top || pb.top + scrollY > bottom) continue;
+        rg.selectNodeContents(n);
+        [].forEach.call(rg.getClientRects(), function (q) { if (q.width > 0.5 && q.height > 0.5) out.push({ l: q.left + scrollX, t: q.top + scrollY, r: q.right + scrollX, b: q.bottom + scrollY }); });
+      }
+    });
+    [].forEach.call(d.querySelectorAll('main a, main button, header a, header button'), function (e) { var q = e.getBoundingClientRect(); if (q.width && q.bottom + scrollY > top && q.top + scrollY < bottom) out.push({ l: q.left + scrollX, t: q.top + scrollY, r: q.right + scrollX, b: q.bottom + scrollY }); });
+    return out;
+  }
+  function hits(a, list, pad) { for (var i = 0; i < list.length; i++) { var q = list[i]; if (a.l < q.r + pad && a.r > q.l - pad && a.t < q.b + pad && a.b > q.t - pad) return true; } return false; }
+  function spot(i, S) { // where patch i fits beside its heading without touching a word; null if nowhere
+    var h = heads[i]; if (!h) return null;
+    var hb = h.getBoundingClientRect(), vw = r.clientWidth, rg = d.createRange(); rg.selectNodeContents(h);
+    var lines = [].filter.call(rg.getClientRects(), function (q) { return q.width > 1; }); if (!lines.length) return null;
+    var L = lines[lines.length - 1], ribbon = getComputedStyle(h).backgroundColor !== 'rgba(0, 0, 0, 0)';
+    var endX = ribbon ? hb.right : L.right, midY = (ribbon ? hb.top + hb.height / 2 : L.top + L.height / 2);
+    var c = [
+      { x: endX + 14, y: midY - S / 2 },                                          // after the last word (or beside the ribbon)
+      { x: hb.right + Math.max(8, (vw - hb.right - S) / 2), y: hb.top + Math.min(hb.height, 60) / 2 - S / 2 }, // the right margin
+      { x: Math.min(L.right, vw - 8) - S, y: (ribbon ? hb.top : L.top) - S - 10 }  // above the end of the title
+    ];
+    var busy = textRects(hb.top + scrollY - S - 60, hb.bottom + scrollY + S + 20), sig = headSig(h);
+    Object.keys(marks).forEach(function (k) { var m = marks[k]; if (m && m.box && +k !== i) busy.push(m.box); });
+    for (var k = 0; k < c.length; k++) {
+      var a = { l: c[k].x + scrollX, t: c[k].y + scrollY }; a.r = a.l + S; a.b = a.t + S;
+      if (c[k].x < 6 || c[k].x + S > vw - 6) continue;
+      if (hits(a, busy, 4)) continue;
+      a.sig = sig; return a;
+    }
+    return null;
+  }
+  function headSig(h) { // where the heading's words are now, in page coordinates
+    var rg = d.createRange(); rg.selectNodeContents(h);
+    return [].map.call(rg.getClientRects(), function (q) { return Math.round(q.left + scrollX) + ',' + Math.round(q.top + scrollY) + ',' + Math.round(q.right + scrollX); }).join(' ');
+  }
+  function verify() { // a heading that has moved since its patch was placed (late layout, a font, a picture): place it again
+    Object.keys(marks).forEach(function (k) {
+      var m = marks[k], i = +k; if (!m || !m.box || !heads[i]) return;
+      if (headSig(heads[i]) === m.box.sig) return;
+      drop(m.el); var j = mmade.indexOf(m.el); if (j >= 0) mmade.splice(j, 1); delete marks[i]; stitch(i, false);
+    });
+  }
+  function stitch(i, animate) {
+    if (marks[i]) return;
+    var S = mqSmall.matches ? 22 : 30, a = spot(i, S);
+    if (!a) { marks[i] = { el: null, box: null }; return; } // no free room: not shown
+    var k = (pageHash() + i * 3) % SHAPES.length, f = FELTS[(pageHash() + i) % FELTS.length], sh = SHAPES[k];
+    var el = d.createElement('span'); el.className = 'y-merit' + (animate ? ' y-new' : ''); el.setAttribute('aria-hidden', 'true');
+    el.style.cssText = 'left:' + a.l.toFixed(1) + 'px;top:' + a.t.toFixed(1) + 'px;width:' + S + 'px;height:' + S + 'px;--yf:var(' + f[0] + ');--ys:var(' + f[1] + ');--yr:' + ((i % 2 ? 1 : -1) * (4 + (i * 7) % 5)) + 'deg';
+    el.innerHTML = '<svg viewBox="0 0 32 32" focusable="false"><g class="ym-felt">' + sh[0] + '</g><g class="ym-st">' + sh[1] + '</g>' + sh[2] + '</svg>';
+    d.body.appendChild(el); mmade.push(el);
+    marks[i] = { el: el, box: a, k: k };
+  }
+  function check() {
+    chk = 0;
+    if (!mat) return;
+    var vh = innerHeight, foot = d.querySelector('footer.site'), bottom = scrollY + vh >= r.scrollHeight - 4;
+    heads.forEach(function (h, i) {
+      if (got.indexOf(i) >= 0) return;
+      var hb = h.getBoundingClientRect(); if (onScreen(hb)) seen[i] = true;
+      var end = heads[i + 1] ? heads[i + 1].getBoundingClientRect().top : foot ? foot.getBoundingClientRect().top : r.scrollHeight - scrollY;
+      if (seen[i] && (end < vh / 2 || bottom)) { got.push(i); save(); queue.push(i); }
+    });
+    if (queue.length && !qT) drain();
+  }
+  function drain() { // one patch at a time; an on-screen one waits while another accent shows
+    qT = 0;
+    if (!mat || !queue.length) return;
+    var i = queue[0], h = heads[i], vis = h && onScreen(h.getBoundingClientRect()), moving = r.classList.contains('motion') && !mqReduce.matches;
+    if (vis && moving && !free()) { qT = later(drain, 400); return; }
+    queue.shift();
+    stitch(i, vis && moving);
+    if (vis && moving && marks[i] && marks[i].el) { claim('merit', 1100); later(function () { if (marks[i] && marks[i].el) marks[i].el.classList.remove('y-new'); }, 1300); }
+    if (queue.length) qT = later(drain, vis ? 700 : 0);
+  }
+  function replace() { // after a resize: lay the kept patches again
+    mmade.forEach(drop); mmade = []; marks = {};
+    findHeads(); got.forEach(function (i) { if (i < heads.length) stitch(i, false); });
+  }
+
+  /* ---------- 9. a capture centred on a touch screen loses its scrim ---------- */
+  var centred = null;
+  function centre() {
+    if (mqFine.matches) return;
+    var vh = innerHeight, best = null, bd = 1e9;
+    [].forEach.call(d.querySelectorAll(CAPS), function (e) {
+      var b = e.getBoundingClientRect(); if (!b.height || !onScreen(b)) return;
+      var dd = Math.abs(b.top + b.height / 2 - vh / 2); if (dd < vh * .22 && dd < bd) { bd = dd; best = e; }
+    });
+    if (best !== centred) { if (centred) centred.classList.remove('y-clear'); if (best) best.classList.add('y-clear'); centred = best; }
+  }
+
+  /* ---------- 1. fresh-sewn: puckered at the seam, then pressed flat ----------
+     When a patch's own entrance ends (site.js: "sewn" for felt pieces, "tile" for a case page's facts), its seam is
+     gathered (a ring of shade inside the edge, the patch a little lifted) and relaxes flat in 1.1 s, as if pressed.
+     The footer's woven label is pressed on the same way when the footer first comes into view. */
+  var pressed = typeof WeakSet === 'function' ? new WeakSet() : null;
+  function press(el, pseudo) {
+    if (!mov || !free() || (pressed && pressed.has(el))) return;
+    if (pressed) pressed.add(el);
+    var cs = getComputedStyle(el, pseudo || null), sh = cs.getPropertyValue('--shadow').trim(), up = cs.getPropertyValue('--shadow-hover').trim(), sd = cs.getPropertyValue('--shade').trim();
+    if (!sh || !up) return;
+    var kf = [
+      { boxShadow: up + ', inset 0 0 7px 2px ' + sd + ', inset 0 0 0 1.5px ' + sd, offset: 0 },
+      { boxShadow: up + ', inset 0 0 5px 1px ' + sd + ', inset 0 0 0 1px ' + sd, offset: .35 },
+      { boxShadow: sh + ', inset 0 0 0 0 transparent, inset 0 0 0 0 transparent', offset: 1 }
+    ];
+    var opt = { duration: 1100, easing: 'cubic-bezier(.25, .7, .2, 1)' };
+    if (pseudo) { opt.pseudoElement = pseudo; kf = [{ transform: 'rotate(-2deg) translateY(-1.5px) scale(1.06)', boxShadow: '0 4px 6px ' + sd, offset: 0 }, { transform: 'rotate(-2deg)', offset: 1 }]; }
+    anim(el, kf, opt);
+  }
+  function onAnimEnd(e) {
+    var n = e.animationName, t = e.target;
+    if ((n === 'sewn' || n === 'tile') && t.matches && t.matches(FELT + ', ' + COTTON)) {
+      var b = t.getBoundingClientRect(); if (onScreen(b)) press(t);
+    }
+  }
+
+  /* ---------- 6. nap sheen spans (fine pointers, wide screens, scroll timelines: no work on phones) ---------- */
+  function napOn() {
+    if (!SDA || !mqFine.matches || mqSmall.matches) return;
+    [].forEach.call(d.querySelectorAll(FELT), function (p) {
+      if (p.querySelector(':scope > .y-nap')) return;
+      var s = d.createElement('span'); s.className = 'y-nap'; s.setAttribute('aria-hidden', 'true'); s.appendChild(d.createElement('i'));
+      p.insertBefore(s, p.querySelector(':scope > .seam')); made.push(s); // before the seam, so :last-child stays the seam
+    });
+  }
+
+  /* ---------- on, off ---------- */
+  var sT = 0, rT = 0, ro = null;
+  function onScroll() {
+    if (!chk) chk = requestAnimationFrame(check);
+    clearTimeout(sT); sT = setTimeout(function () { centre(); verify(); }, 150);
+  }
+  function matStart() {
+    mat = true; r.classList.add('y-mat');
+    findHeads(); got = load().filter(function (i) { return i < heads.length; });
+    got.forEach(function (i) { stitch(i, false); });
+    on(offs, W, 'scroll', onScroll, { passive: true });
+    on(offs, W, 'resize', function () { clearTimeout(rT); rT = setTimeout(function () { replace(); centre(); }, 200); }, { passive: true });
+    if (W.ResizeObserver && d.querySelector('main')) {
+      var last = r.scrollHeight; ro = new ResizeObserver(function () { var hgt = r.scrollHeight; if (hgt !== last) { last = hgt; clearTimeout(rT); rT = setTimeout(replace, 250); } });
+      ro.observe(d.querySelector('main')); offs.push(function () { ro.disconnect(); ro = null; });
+    }
+    check(); centre(); rT = setTimeout(verify, 1200);
+  }
+  function matStop() {
+    mat = false;
+    offs.forEach(function (f) { f(); }); offs = [];
+    clearTimeout(sT); clearTimeout(rT); cancelAnimationFrame(chk); chk = 0; clearTimeout(qT); qT = 0; queue = [];
+    mmade.forEach(drop); mmade = []; marks = {};
+    if (centred) centred.classList.remove('y-clear'); centred = null;
+    [].forEach.call(d.querySelectorAll('.y-clear'), function (e) { e.classList.remove('y-clear'); });
+    r.classList.remove('y-mat');
+  }
+  function movStart() {
+    mov = true;
+    on(moffs, d, 'animationend', onAnimEnd, true);
+    napOn();
+    var foot = d.querySelector('footer.site .wrap > span:nth-of-type(2)');
+    if (foot && 'IntersectionObserver' in W) {
+      var io = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) { io.disconnect(); later(function () { press(foot, '::before'); }, 250); } }); }, { threshold: 1 });
+      io.observe(foot); moffs.push(function () { io.disconnect(); });
+    }
+  }
+  function movStop() {
+    mov = false;
+    moffs.forEach(function (f) { f(); }); moffs = [];
+    timers.forEach(clearTimeout); timers = [];
+    anims.slice().forEach(function (a) { try { a.cancel(); } catch (e) {} }); anims = [];
+    made.forEach(drop); made = [];
+    mmade.forEach(function (e) { e.classList.remove('y-new'); });
+    if (qT) { qT = 0; if (mat) qT = later(drain, 0); } // a waiting patch is stitched at once, finished
+  }
+  function sync() {
+    var m = wantMat(), v = wantMov();
+    if (mov && !v) movStop();
+    if (mat && !m) matStop(); else if (m && !mat) matStart();
+    if (v && !mov) movStart();
+  }
+  new MutationObserver(sync).observe(r, { attributes: true, attributeFilter: ['data-look', 'class'] });
+  if (mqReduce.addEventListener) mqReduce.addEventListener('change', sync);
+  W.__yarnMatState = function () { return { mat: mat, mov: mov, patches: mmade.length, kept: got.slice(), heads: heads.length, naps: made.length, anims: anims.length, listeners: offs.length + moffs.length, key: KEY }; };
   sync();
 })();
