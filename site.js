@@ -241,17 +241,20 @@
     mlabel(); foot.appendChild(mb);
   }
 
-  // Brush & Scroll's moving extras (scroll, pointer, selection, focus) live in look-brush.js beside this file. It is
-  // fetched only while that look is worn and reduced motion is not asked for, and again if the look changes to it.
-  var bjs = (d.currentScript && d.currentScript.src || '').replace(/site\.js[^\/]*$/, 'look-brush.js');
-  function brushJs() {
-    if (reduce || !bjs || r.getAttribute('data-look') !== 'brush' || d.getElementById('look-brush-js')) return;
-    var s = d.createElement('script'); s.id = 'look-brush-js'; s.async = true; s.src = bjs; d.body.appendChild(s);
+  // Each look's moving extras (scroll, pointer, selection, focus) live in look-<name>.js beside this file (look-yarn.js
+  // for the default look, which carries no data-look). One is fetched only while its look is worn and reduced motion
+  // is not asked for, and again if the look changes to it. Each script switches itself off when its look is taken off.
+  var jsBase = (d.currentScript && d.currentScript.src || '').replace(/site\.js[^\/]*$/, '');
+  var LIVE = { yarn: 1, wash: 1, brush: 1, cel: 1 };
+  function lookJs() {
+    var k = r.getAttribute('data-look') || 'yarn';
+    if (reduce || !jsBase || !LIVE[k] || d.getElementById('look-' + k + '-js')) return;
+    var s = d.createElement('script'); s.id = 'look-' + k + '-js'; s.async = true; s.src = jsBase + 'look-' + k + '.js'; d.body.appendChild(s);
   }
-  if (window.MutationObserver) new MutationObserver(brushJs).observe(r, { attributes: true, attributeFilter: ['data-look'] });
+  if (window.MutationObserver) new MutationObserver(lookJs).observe(r, { attributes: true, attributeFilter: ['data-look'] });
 
   // the rest is decoration that moves: built only when motion is on at load
-  if (!moving() || !('IntersectionObserver' in window)) { brushJs(); return; }
+  if (!moving() || !('IntersectionObserver' in window)) { lookJs(); return; }
   r.classList.add('motion');
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (en) {
@@ -566,6 +569,6 @@
     if ('ResizeObserver' in window) new ResizeObserver(relay).observe(mainEl); // late images and fonts move the blocks
     lay(); run();
   }
-  brushJs(); // after the thread is built: look-brush.js redraws it as a brush stroke
+  lookJs(); // after the thread is built: look-brush.js redraws it as a brush stroke
 
 })();
