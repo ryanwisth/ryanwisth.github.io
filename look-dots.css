@@ -1,0 +1,271 @@
+/* Dots & Panels (key dots). Spec: page-films/out/dots/LOOK.md (Ryan's steers at its top win over everything).
+   Started from the option-A stills layer Ryan picked on 2026-11-20 (frozen copy: _tools/dots-options/source-A/).
+   The rules that lead everything (plan 03 heading 3):
+     L the heavy line on the subject (swells 2:1, Claude's value); ruled straight lines for frames and architecture;
+     T every fill is a solid or one even dot tile; doubled tint = a second pass of the screen; paper between the dots;
+     P deep ruled one-point perspective, few kinds of form, many of each;
+     S panels sized to what they hold; held rows of equal panels; arrival by growth in held steps.
+   Exact register: tints run under the black line, never off it. No box shadows, blur, gradients, or radius over 2 px
+   (discs excepted). Text never sits on dots. Dark is the warm black plate, never blue. Device fonts only.
+   Paper, black, yellow, blue: measure.md row 10 (provisional k-means centres). Red: a DESIGN VALUE (#c8321e, printed
+   scarlet), not measured: the measured #a55928 came from yellowed scans and read rust. Pitch, angle, coverage:
+   provisional design values (measure.md pass 3). Dot tiles (--dp-t-*) and art masks are written between art:start and
+   art:end by _tools/dots/dots-art.mjs (step 8); the stills drew them from script (_tools/dots/art/stills-painter.js). */
+
+html[data-look="dots"][data-look] {
+  --dp-paper: #f6f0dc; --dp-ink: #272015; --dp-muted: #4b4233;
+  --dp-red: #c8321e; --dp-yellow: #dfc361; --dp-blue: #618db6;
+  --dp-green: #556c45; --dp-orange: #af260b; --dp-violet: #4c1c15;
+  --dp-plate: var(--dp-paper); --dp-on-plate: var(--dp-ink); --dp-on-plate-2: var(--dp-muted); --dp-gut: transparent;
+  --dp-heavy: 2px; --dp-ruled: 1px;
+  --bg: var(--dp-plate); --bg-soft: var(--dp-paper); --text: var(--dp-ink); --muted: var(--dp-muted); --faint: var(--dp-muted);
+  --line: var(--dp-ink); --card: var(--dp-paper); --ink: var(--dp-ink); --accent: var(--dp-ink); --accent-2: var(--dp-ink);
+  --accent-soft: var(--dp-paper); --mark-ink: var(--dp-ink);
+  --sig: var(--dp-yellow); --sig-ink: var(--dp-ink); --on-sig: var(--dp-ink);
+  --shade: transparent; --shade-2: transparent; --shadow: none; --shadow-hover: none;
+  --y-pink: var(--dp-paper); --y-blue: var(--dp-paper); --y-green: var(--dp-paper); --y-yellow: var(--dp-paper);
+  --s-pink: var(--dp-ink); --s-blue: var(--dp-ink); --s-green: var(--dp-ink); --s-yellow: var(--dp-ink);
+  --felt-ink: var(--dp-ink); --bead: var(--dp-paper); --bead-ink: var(--dp-ink); --stk: transparent; --felt: transparent; --seam: transparent; --sew: transparent;
+  --yarn-hi: var(--dp-ink); --yarn-lo: var(--dp-ink); --dot: transparent; --ging: transparent;
+  --btn: var(--dp-yellow); --btn-rim: transparent; --btn-hole: transparent;
+  --loop: transparent; --loop-hi: transparent; --loop-lo: transparent;
+  --h-indigo: var(--dp-ink); --h-teal: var(--dp-ink); --h-amber: var(--dp-ink); --h-rose: var(--dp-ink); --h-violet: var(--dp-ink); --h-sky: var(--dp-ink); --h-green: var(--dp-ink);
+  --radius: 0px;
+  --display: "Big Caslon", "Hoefler Text", Georgia, serif; --round: var(--display); --label: var(--display);
+  --st: none; --st-v: none; --st-cream: none; --zip-closed: none; --zip-row: none; --zip-pull: none;
+  --g-felt: none; --g-cotton: none; --quilt: none; --strand-sig: none; --strand-pink: none; --strand-yellow: none; --zip-dim: none; --beads: none;
+  --spring: steps(3, end); --pop: steps(3, end);
+  color-scheme: light;
+}
+/* dark: the black plate (measured black), cream panels framed from it by a cream gutter line. Written twice. */
+html[data-look="dots"][data-look][data-theme="dark"] {
+  --dp-plate: #272015; --dp-on-plate: #f6f0dc; --dp-on-plate-2: #e2d9c0; --dp-gut: #f6f0dc; --bg: #272015; color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  html[data-look="dots"][data-look]:not([data-theme="light"]) {
+    --dp-plate: #272015; --dp-on-plate: #f6f0dc; --dp-on-plate-2: #e2d9c0; --dp-gut: #f6f0dc; --bg: #272015; color-scheme: dark;
+  }
+}
+
+/* ---------- page, type ---------- */
+html[data-look="dots"] body { background: var(--dp-plate); color: var(--dp-on-plate); font-family: var(--sans); }
+html[data-look="dots"] :is(.seam, .loop, .thread, .guide) { display: none; }
+html[data-look="dots"] ::selection { background: var(--dp-yellow); color: var(--dp-ink); }
+html[data-look="dots"] :is(a, button, summary, video, [tabindex]):focus-visible { outline: 3px solid var(--dp-ink); outline-offset: 3px; border-radius: 0; }
+html[data-look="dots"][data-theme="dark"] :is(main > *, .section) :is(a, summary):focus-visible { outline-color: var(--dp-paper); }
+html[data-look="dots"] :is(h1, h2, h3, h4, .brand, .group-h, .lead-k, .lead-go, .who, .btn, .badge, .topnav a, .kicker, .back, .fact b, .bigfig b) { font-family: var(--display); }
+html[data-look="dots"] :is(h1, h2, h3, .group-h, .topnav a, .kicker, .who, .lead-k) { text-transform: uppercase; letter-spacing: .06em; font-weight: 700; }
+html[data-look="dots"] h1 { letter-spacing: .03em; }
+html[data-look="dots"] :is(.hero h1 .grad) { background: none; -webkit-text-fill-color: currentColor; color: inherit; }
+html[data-look="dots"] a { color: inherit; }
+html[data-look="dots"] :is(.hero-sub, .hero-mail, footer.site, .prose p, .prose li, .prose dd, figcaption, .note, .pager-contact) a:not(.btn) {
+  text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; text-decoration-color: currentColor; background: none;
+}
+html[data-look="dots"] :is(.card, .band, .film .shot, .more-g, .method > li, .fact, .chart-card, .flow li, .band3 > div, .repo-card, .pager a, .shot, .term, .topbar, footer.site, .case-head, .btn, .badge, .lead-k, .lead-go, .pills span, .who, .back, .kicker)::before,
+html[data-look="dots"] :is(.card, .band, .film .shot, .more-g, .method > li, .fact, .chart-card, .flow li, .band3 > div, .repo-card, .pager a, .shot, .term, .topbar, footer.site, .case-head, .btn, .badge, .lead-k, .lead-go, .pills span, .who, .back, .kicker)::after {
+  content: none;
+}
+html[data-look="dots"] :is(.card, .band, .more-g, .method > li, .fact, .chart-card, .flow li, .band3 > div, .repo-card, .pager a, .shot, .term, .btn, .badge, .lead-k, .lead-go, .pills span, .who, .back, .kicker, .film .shot, .thumb-wrap, .topbar, footer.site, .case-head, .prose, .figure, figcaption) {
+  box-shadow: none; text-shadow: none; border-radius: 0; background-image: none; rotate: none; -webkit-backdrop-filter: none; backdrop-filter: none;
+}
+
+/* ---------- the two frames, as recipes ----------
+   HEAVY panel (top-level containers only): 2 px key line, cream inside, a cream gutter line where it meets the dark plate.
+   RULED part (everything inside): a 1 px straight line, or a plain plate with no line. */
+html[data-look="dots"] :is(.card.lead, .film .shot, .band, .chart-card, .term, .shot:not(.film .shot), footer.site .wrap, .case-head) {
+  border: var(--dp-heavy) solid var(--dp-ink); background-color: var(--dp-paper); color: var(--dp-ink); outline: 3px solid var(--dp-gut); outline-offset: 0;
+}
+html[data-look="dots"] :is(.more-g, .method > li, .fact, .flow li, .band3 > div, .repo-card, .pager a, .brief) {
+  border: var(--dp-ruled) solid var(--dp-ink); background-color: var(--dp-paper); color: var(--dp-ink);
+}
+html[data-look="dots"] :is(.lead-k, .lead-go, .badge, .pills span, .back, .kicker, .brief dt, figcaption, .figcap) {
+  background-color: var(--dp-paper); color: var(--dp-ink); border: var(--dp-ruled) solid var(--dp-ink); border-radius: 0; padding: 2px 8px;
+}
+
+/* ---------- top bar: a plain title band; thin ruled line above, heavy under, a narrow dot strip between (no text on it) ---------- */
+html[data-look="dots"] .topbar { background: var(--dp-paper); color: var(--dp-ink); border-top: 1px solid var(--dp-ink); border-bottom: 3px solid var(--dp-ink); }
+html[data-look="dots"] .topbar::after { content: ""; position: absolute; left: 0; right: 0; bottom: 3px; height: 6px; background: var(--dp-t-blue-light); border-top: 1px solid var(--dp-ink); pointer-events: none; }
+html[data-look="dots"] .topbar .wrap { position: relative; }
+html[data-look="dots"] .brand { color: var(--dp-ink); font-weight: 700; }
+html[data-look="dots"] .brand .mark { background: var(--dp-paper); color: var(--dp-ink); border: 2px solid var(--dp-ink); border-radius: 50%; box-shadow: none; background-image: none; font-family: var(--display); }
+html[data-look="dots"] .brand .mark::before, html[data-look="dots"] .brand .mark::after, html[data-look="dots"] .brand::before { content: none; }
+html[data-look="dots"] .topnav a { color: var(--dp-ink); font-size: 13px; background: none; border: 0; box-shadow: none; text-decoration: none; }
+html[data-look="dots"] .topnav a::before, html[data-look="dots"] .topnav a::after { content: none; }
+html[data-look="dots"] .topnav a:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 5px; }
+html[data-look="dots"] .theme-toggle { border: 2px solid var(--dp-ink); border-radius: 50%; background: var(--dp-t-yellow), var(--dp-paper); color: var(--dp-ink); box-shadow: none; }
+html[data-look="dots"][data-theme="dark"] .theme-toggle { background: var(--dp-t-blue), var(--dp-paper); }
+html[data-look="dots"] .theme-toggle::before, html[data-look="dots"] .theme-toggle::after { content: none; }
+
+/* ---------- home: the hero is a small page of panels (look-dots.js draws them, sized to what each holds) ---------- */
+html[data-look="dots"] .lead-hero { background: none; }
+html[data-look="dots"] .lead-hero::before, html[data-look="dots"] .lead-hero::after { content: none; }
+html[data-look="dots"] .hero-one { position: relative; }
+html[data-look="dots"] .hero h1 { color: var(--dp-ink); background: var(--dp-paper); padding: 6px 10px; margin-left: -10px; display: inline-block; font-size: clamp(30px, 4.2vw, 52px); line-height: 1.08; }
+html[data-look="dots"] .hero-film { margin-top: 84px; }
+html[data-look="dots"] :is(.hero-sub, .hero-mail, .film-cap) { color: var(--dp-on-plate); }
+html[data-look="dots"] .film-script summary { color: var(--dp-on-plate); }
+html[data-look="dots"] .film-script summary::before { content: none; }
+html[data-look="dots"] .dp-art { display: block; pointer-events: none; z-index: 0; }
+
+/* the film: the biggest panel; heavy frame, a cream gutter, a thin inner ruled line */
+html[data-look="dots"] .film .shot { padding: 6px; }
+html[data-look="dots"] .film .shot video { border: 1px solid var(--dp-ink); border-radius: 0; display: block; }
+html[data-look="dots"] :is(.vid-toggle, .vid-sound) { border: 2px solid var(--dp-ink); background: var(--dp-paper); color: var(--dp-ink); border-radius: 50%; box-shadow: none; }
+html[data-look="dots"] .vid-sound { background: var(--dp-yellow); border-radius: 0; }
+
+/* lead cards: heavy panels; a head band in the group's tint (drawn), thumbnail in an inner ruled frame */
+html[data-look="dots"] .card { transform: none; }
+html[data-look="dots"] .card.lead .body { position: relative; padding-top: 54px; }
+html[data-look="dots"] .card .thumb-wrap { border: 1px solid var(--dp-ink); background: var(--dp-paper); margin: 8px; }
+html[data-look="dots"] .card h4 { color: var(--dp-ink); font-weight: 700; }
+html[data-look="dots"] .card p { color: var(--dp-ink); }
+html[data-look="dots"] .lead-role b { color: var(--dp-ink); }
+html[data-look="dots"] .lead-k { display: inline-block; font-size: 12px; }
+html[data-look="dots"] .lead-go { background: var(--dp-yellow); border-width: 2px; }
+html[data-look="dots"] .badge { color: var(--dp-ink); }
+html[data-look="dots"] .badge .dot { background: var(--dp-red); border: 1px solid var(--dp-ink); border-radius: 50%; box-shadow: none; }
+html[data-look="dots"] .card:hover { outline: 2px solid var(--dp-ink); outline-offset: 2px; transform: none; }
+
+/* sections: a heavy rule tapered at its ends over a narrow dot strip closed by a thin ruled line; title on the plate */
+html[data-look="dots"] .section { background: none; }
+html[data-look="dots"] .section::before, html[data-look="dots"] .section::after,
+html[data-look="dots"] .section-head h2::before, html[data-look="dots"] .section-head h2::after { content: none; }
+html[data-look="dots"] .section-head { position: relative; padding-bottom: 22px; }
+html[data-look="dots"] .section-head h2 { color: var(--dp-on-plate); }
+html[data-look="dots"] .section-head::before { content: ""; position: absolute; left: 0; right: 0; bottom: 11px; height: 4px; background: var(--dp-on-plate); clip-path: polygon(0 50%, 1.5% 0, 98.5% 0, 100% 50%, 98.5% 100%, 1.5% 100%); }
+html[data-look="dots"] .section-head::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 8px; background: var(--dp-t-red-light), var(--dp-paper); border: 1px solid var(--dp-ink); outline: 1px solid var(--dp-gut); }
+
+/* grouped list: ruled panels in a held row; each title on a plain plate over a dot band in the group's ink */
+html[data-look="dots"] .more-g { position: relative; padding-top: 0; overflow: hidden; }
+html[data-look="dots"] .more-g::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 30px; background: var(--dp-t, var(--dp-t-blue)); border-bottom: 1px solid var(--dp-ink); }
+html[data-look="dots"] .more-g.h-violet { --dp-t: var(--dp-t-red); } html[data-look="dots"] .more-g.h-amber { --dp-t: var(--dp-t-yellow); }
+html[data-look="dots"] .more-g.h-teal { --dp-t: var(--dp-t-blue-light); }
+html[data-look="dots"] .group-h { position: relative; display: inline-block; margin: 14px 0 6px 12px; background: var(--dp-paper); color: var(--dp-ink); border: 1px solid var(--dp-ink); padding: 3px 10px; font-size: 14px; }
+html[data-look="dots"] .group-h::before, html[data-look="dots"] .group-h::after { content: none; }
+html[data-look="dots"] .more li { border-top: 0; background: none; }
+html[data-look="dots"] .more li + li { border-top: 1px solid var(--dp-ink); }
+html[data-look="dots"] .more li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--dp-red); border: 1px solid var(--dp-ink); box-shadow: none; }
+html[data-look="dots"] .more a b { color: var(--dp-ink); } html[data-look="dots"] .more a span { color: var(--dp-muted); }
+
+/* the three steps: a held row of three equal ruled panels; labels on plain plates; code lines as dot-tint bars */
+html[data-look="dots"] .method > li { background-color: var(--dp-paper); }
+html[data-look="dots"] .method > li::after { content: none; }
+html[data-look="dots"] .method .who { display: inline-block; background: var(--dp-yellow); color: var(--dp-ink); border: 1px solid var(--dp-ink); padding: 2px 8px; font-size: 13px; }
+html[data-look="dots"] .method p { color: var(--dp-ink); }
+html[data-look="dots"] .pills span { font-size: 13px; }
+html[data-look="dots"] .codelines i { background: var(--dp-t-blue), var(--dp-paper); border: 1px solid var(--dp-ink); border-radius: 0; height: 8px; box-shadow: none; }
+html[data-look="dots"] .okmark { background: var(--dp-yellow); border: 1px solid var(--dp-ink); border-radius: 50%; color: var(--dp-ink); box-shadow: none; }
+
+/* closing band: a heavy panel; a frieze of held arches along its foot (drawn), never behind the words */
+html[data-look="dots"] .band { position: relative; padding-bottom: 46px; }
+html[data-look="dots"] .band h2 { color: var(--dp-ink); }
+html[data-look="dots"] .btn { background: var(--dp-paper); color: var(--dp-ink); border: 2px solid var(--dp-ink); border-radius: 0; box-shadow: none; font-weight: 700; }
+html[data-look="dots"] .btn.primary { background: var(--dp-yellow); }
+html[data-look="dots"] .btn:hover { outline: 2px solid var(--dp-ink); outline-offset: 2px; transform: none; }
+html[data-look="dots"] .btn:active { transform: scale(.98); }
+
+/* footer: the last, small panel; a low ruled skyline (drawn) under a heavy rule; text on cream */
+html[data-look="dots"] footer.site { background: none; border: 0; color: var(--dp-ink); }
+html[data-look="dots"] footer.site::before, html[data-look="dots"] footer.site::after { content: none; }
+html[data-look="dots"] footer.site .wrap { position: relative; padding-top: 46px; padding-bottom: 12px; }
+html[data-look="dots"] footer.site .wrap > span { color: var(--dp-ink); background: none; border: 0; }
+html[data-look="dots"] footer.site .motion-toggle { background: var(--dp-paper); color: var(--dp-ink); border: 1px solid var(--dp-ink); border-radius: 0; box-shadow: none; }
+
+/* ---------- case pages ---------- */
+html[data-look="dots"] body.case::before { content: none; }
+html[data-look="dots"] .case-head { position: relative; padding-top: 136px; margin-top: 18px; }
+html[data-look="dots"] .case-head::before, html[data-look="dots"] .case-head::after { content: none; }
+html[data-look="dots"] .case-head h1 { color: var(--dp-ink); }
+html[data-look="dots"] :is(.case-head .lede, .case-head p) { color: var(--dp-ink); }
+html[data-look="dots"] .back { display: inline-block; text-decoration: none; }
+html[data-look="dots"] .kicker { display: inline-block; font-size: 12px; }
+html[data-look="dots"] .chart-card h3 { color: var(--dp-ink); }
+html[data-look="dots"] :is(.chart-card .sub, .bigfig .sub) { color: var(--dp-muted); }
+html[data-look="dots"] .fact { position: relative; padding-top: 32px; }
+html[data-look="dots"] :is(.fact, .bigfig) b { color: var(--dp-ink); font-weight: 700; }
+html[data-look="dots"] .fact span { color: var(--dp-ink); }
+html[data-look="dots"] .prose:not(.case-head) { background: none; border: 0; color: var(--dp-on-plate); }
+html[data-look="dots"] .prose:not(.case-head) :is(p, li, dd, h2, h3, b, strong) { color: var(--dp-on-plate); }
+html[data-look="dots"] .prose h2::before, html[data-look="dots"] .prose h2::after { content: none; }
+html[data-look="dots"] .prose li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--dp-red); border: 1px solid var(--dp-ink); box-shadow: none; }
+html[data-look="dots"] .prose code { background: var(--dp-paper); color: var(--dp-ink); border: 1px solid var(--dp-ink); border-radius: 0; }
+html[data-look="dots"] .brief { padding: 14px; }
+html[data-look="dots"] .brief :is(dd, dt) { color: var(--dp-ink); }
+html[data-look="dots"] .brief dt::before, html[data-look="dots"] .brief dt::after { content: none; }
+html[data-look="dots"] .brief dt { align-self: start; font-family: var(--display); text-transform: uppercase; letter-spacing: .06em; font-size: 12px; }
+html[data-look="dots"] :is(figure, .figure) > figcaption { display: table; margin-top: 8px; }
+html[data-look="dots"] main > details.film-script :is(summary, p) { color: var(--dp-on-plate); }
+html[data-look="dots"] .case-film .shot { padding: 6px; }
+html[data-look="dots"] .ticks li::before { border-radius: 50%; background: var(--dp-blue); border: 1px solid var(--dp-ink); box-shadow: none; }
+html[data-look="dots"] .ticks.ok li::before { background: var(--dp-yellow); }
+/* flow steps: a held row of equal ruled panels; the key step carries a doubled tint band; heavy chevrons in the gutters */
+html[data-look="dots"] .flow li { position: relative; }
+html[data-look="dots"] .flow li b, html[data-look="dots"] .flow li span { color: var(--dp-ink); }
+html[data-look="dots"] .flow li.key { border-width: 2px; padding-top: 22px; }
+html[data-look="dots"] .flow li.key::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 12px; background: var(--dp-t-red), var(--dp-t-red-2), var(--dp-paper); background-blend-mode: multiply; border-bottom: 1px solid var(--dp-ink); counter-increment: none; }
+/* bars: the filled length an even dot tint edged by the key line, a solid cap at its value; ranges a doubled tile; cuts a solid tick */
+html[data-look="dots"] :is(.bars .track, .minis .cell .track) { background: var(--dp-paper); border: 1px solid var(--dp-ink); border-radius: 0; box-shadow: none; }
+html[data-look="dots"] :is(.bars .track i, .minis .cell .track i) { background: var(--dp-t-blue), var(--dp-paper); border: 2px solid var(--dp-ink); border-radius: 0; box-shadow: none; }
+html[data-look="dots"] :is(.bars .track i, .minis .cell .track i)::after { content: ""; position: absolute; right: -2px; top: -2px; bottom: -2px; width: 5px; background: var(--dp-ink); border-radius: 0; }
+html[data-look="dots"] .bars .track i.range { background: var(--dp-t-red), var(--dp-t-red-2), var(--dp-paper); background-blend-mode: multiply; }
+
+html[data-look="dots"] :is(.bars .lab, .bars .val) { color: var(--dp-ink); }
+/* verdicts: arch-topped plates with ruled frames; head bands green overprint (ok), solid yellow (warn), solid red (stop) */
+html[data-look="dots"] .band3 > div { position: relative; padding-top: 22px; border-radius: 0; }
+html[data-look="dots"] .band3 > div b { color: var(--dp-ink); } html[data-look="dots"] .band3 > div :is(span, p) { color: var(--dp-ink); }
+html[data-look="dots"] .band3 > div::before { content: ""; position: absolute; left: -1px; right: -1px; top: -1px; height: 14px; border: 1px solid var(--dp-ink); background: var(--dp-blue); }
+html[data-look="dots"] .band3 > .ok::before { background: var(--dp-yellow); background-image: linear-gradient(var(--dp-blue), var(--dp-blue)); background-blend-mode: multiply; }
+html[data-look="dots"] .band3 > .warn::before { background: var(--dp-yellow); }
+html[data-look="dots"] .band3 > .stop::before { background: var(--dp-red); }
+html[data-look="dots"] .band3 > div b::before { content: none; }
+html[data-look="dots"] .chart-card svg rect { fill: none; stroke: none; }
+/* terminal: a heavy panel holding a solid black plate with cream words; title strip a dot tint with no text on it */
+html[data-look="dots"] .term { background: var(--dp-ink); color: var(--dp-paper); }
+html[data-look="dots"] .term pre, html[data-look="dots"] .term pre * { color: var(--dp-paper); background: none; }
+html[data-look="dots"] .term .ok { color: #c9d8a0; } html[data-look="dots"] .term .bad { color: #f0b48f; } html[data-look="dots"] .term .hl { color: var(--dp-yellow); }
+html[data-look="dots"] .term .dim { color: #cfc6ad; }
+html[data-look="dots"] :is(.shot, .term) .bar { background: var(--dp-t-yellow), var(--dp-paper); border-bottom: 2px solid var(--dp-ink); border-radius: 0; }
+html[data-look="dots"] :is(.shot, .term) .bar i { background: var(--dp-red); border: 1px solid var(--dp-ink); border-radius: 50%; }
+html[data-look="dots"] :is(.shot, .term) .bar i:nth-child(2) { background: var(--dp-yellow); } html[data-look="dots"] :is(.shot, .term) .bar i:nth-child(3) { background: var(--dp-blue); }
+html[data-look="dots"] :is(.shot, .term) .bar em { background: var(--dp-paper); color: var(--dp-ink); padding: 0 6px; border: 1px solid var(--dp-ink); font-style: normal; }
+html[data-look="dots"] :is(.repo-card, .pager a) { color: var(--dp-ink); }
+html[data-look="dots"] :is(.repo-card, .pager a) * { color: var(--dp-ink); }
+
+/* ---------- movement: arrival by growth in held steps (only with motion allowed; stills are taken with reduced motion) ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  html[data-look="dots"].motion .reveal { animation: dp-grow 1.2s steps(3, jump-none) both; transform-origin: 50% 100%; }
+  html[data-look="dots"].motion :is(.bars .track i, .minis .cell .track i) { animation: dp-fill 1.2s steps(4, jump-none) both; transform-origin: 0 50%; }
+}
+@keyframes dp-grow { from { transform: scale(.6); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes dp-fill { from { transform: scaleX(.25); } to { transform: none; } }
+html[data-look="dots"] .brand { background: none; border: 0; box-shadow: none; padding-left: 0; }
+html[data-look="dots"] .brand::after { content: none; }
+/* sweep fixes: yarn stitch outlines, radii, tilts, text strokes */
+html[data-look="dots"] :is(.method > li, .pills span, .flow li, .fact, .band3 > div, .repo-card, .more-g, .brief) { outline: 0; }
+html[data-look="dots"] :is(.group-h, .section-head h2, .skip-link, .term pre, .flow, .back, .kicker) { border-radius: 0; rotate: none; transform: none; }
+html[data-look="dots"] .section-head h2 { background: none; }
+html[data-look="dots"] :is(.fact, .bigfig) b { -webkit-text-stroke: 0; text-shadow: none; }
+html[data-look="dots"] .ticks li::before { rotate: none; transform: none; width: 9px; height: 9px; border-radius: 50%; border-width: 1px; }
+html[data-look="dots"] .flow { background: none; box-shadow: none; border: 0; }
+html[data-look="dots"] .flow li.key::before { border: 0; border-bottom: 1px solid var(--dp-ink); }
+html[data-look="dots"] :is(.bars .track i, .minis .cell .track i)::after { box-shadow: none; }
+html[data-look="dots"] :is(.seam, .loop, .thread, .guide) { display: none !important; }
+/* contrast fixes */
+html[data-look="dots"] .section-head h2::before, html[data-look="dots"] .section-head h2::after { background: none; }
+html[data-look="dots"] div.term.term { background: var(--dp-ink); color: var(--dp-paper); }
+html[data-look="dots"] div.term.term pre { background: var(--dp-ink); }
+html[data-look="dots"] .prose dl.brief :is(dd, dt), html[data-look="dots"] .prose dl.brief :is(dd, dt) * { color: var(--dp-ink); }
+html[data-look="dots"].motion .section-head h2::after, html[data-look="dots"].motion .section-head.in h2::after, html[data-look="dots"] .section-head.in h2::after { content: none; background: none; }
+html[data-look="dots"] .prose .repo-card.repo-card, html[data-look="dots"] .prose .repo-card.repo-card * { color: var(--dp-ink); }
+/* flow steps: the yarn step badge held the first grid column; a small disc keeps it (static, in flow) */
+html[data-look="dots"] ol.flow.flow li::before, html[data-look="dots"] ol.flow.flow li.key::before {
+  content: ""; position: static; width: 12px; height: 12px; border-radius: 50%; background: var(--dp-blue); border: 1px solid var(--dp-ink); box-shadow: none; margin-top: 5px; counter-increment: none; font-size: 0;
+}
+html[data-look="dots"] ol.flow.flow li.key::before { background: var(--dp-red); }
+/* the key step's doubled band: paper laid over the two passes everywhere below a 12 px strip, so no word sits on dots */
+html[data-look="dots"] .flow li.key { background: linear-gradient(var(--dp-paper), var(--dp-paper)) 0 12px / 100% 100% no-repeat, var(--dp-t-red), var(--dp-t-red-2), var(--dp-paper); background-blend-mode: normal, normal, multiply, normal; }
+html[data-look="dots"] details.film-script :is(p, summary), html[data-look="dots"] .film-script p { color: var(--dp-on-plate); }
+html[data-look="dots"] :is(.lead-k, .lead-go) { width: fit-content; max-width: 100%; }
+
+/* art:start (generated by _tools/dots/dots-art.mjs; never edit by hand) */
+/* art:end */

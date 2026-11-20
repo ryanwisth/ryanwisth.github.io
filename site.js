@@ -242,7 +242,7 @@
   }
 
   // Each look's moving extras live in look-<name>.js beside this file (Brush & Scroll: scroll, pointer, selection, focus;
-  // Paint & Meadow: wind, the footpath, depth, light; scroll, pointer, focus). A look's file is fetched only while that
+  // Paint & Meadow: wind, the footpath, depth, light; scroll, pointer, focus; Dots & Panels: growth in held steps). A look's file is fetched only while that
   // look is worn and reduced motion is not asked for, and again if the look changes to it.
   var bjs = (d.currentScript && d.currentScript.src || '').replace(/site\.js[^\/]*$/, 'look-brush.js');
   function brushJs() {
@@ -256,9 +256,15 @@
     var s = d.createElement('script'); s.id = 'look-paint-js'; s.async = true; s.src = pjs; d.body.appendChild(s);
   }
   if (window.MutationObserver) new MutationObserver(paintJs).observe(r, { attributes: true, attributeFilter: ['data-look'] });
+  var djs = (d.currentScript && d.currentScript.src || '').replace(/site\.js[^\/]*$/, 'look-dots.js');
+  function dotsJs() {
+    if (reduce || !djs || r.getAttribute('data-look') !== 'dots' || d.getElementById('look-dots-js')) return;
+    var s = d.createElement('script'); s.id = 'look-dots-js'; s.async = true; s.src = djs; d.body.appendChild(s);
+  }
+  if (window.MutationObserver) new MutationObserver(dotsJs).observe(r, { attributes: true, attributeFilter: ['data-look'] });
 
   // the rest is decoration that moves: built only when motion is on at load
-  if (!moving() || !('IntersectionObserver' in window)) { brushJs(); paintJs(); return; }
+  if (!moving() || !('IntersectionObserver' in window)) { brushJs(); paintJs(); dotsJs(); return; }
   r.classList.add('motion');
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (en) {
@@ -575,5 +581,6 @@
   }
   brushJs(); // after the thread is built: look-brush.js redraws it as a brush stroke
   paintJs(); // after the thread is built: look-paint.js repaints it as a footpath
+  dotsJs(); // after the thread is built: look-dots.js redraws it as a ruled line ahead, the key line behind
 
 })();
