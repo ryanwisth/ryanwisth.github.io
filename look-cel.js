@@ -4,6 +4,8 @@
    only while <html> carries both data-look="cel" and .motion, puts .c-live on the root, and takes away everything it
    added (listeners, elements, classes, properties) the moment either goes: the look picker, "Pause motion", or a
    reduced-motion change. Every rule it drives sits at the end of look-cel.css under html[data-look="cel"].motion.c-live.
+   The material pass (Nov 20 2026) adds two parts that are not motion, collected marks and captures seen through water:
+   they run whenever the look is worn (.c-mat on the root), "Pause motion" included, and go when the look changes.
 
    The look's law (page-films/out/cel/LOOK.md) holds for everything added here: one sun, upper left; a thing's shade is
    its lit paint x #9c8c86; no outline, no stroke, no dark rim (rings are painted bands, masks cut them); no cast
@@ -55,7 +57,7 @@
     psy = sy; pt = t;
     if (!scrolling && dir) { scrolling = true; startMove(); }
     thread(false, dt);
-    if (!SDA) scrub();
+    if (!SDA) { scrub(); sparkScrub(); }
     hero();
     if (dir) boundary(dir);
     clearTimeout(idleT); idleT = setTimeout(rest, 150); // (not later(): one timer a frame would pile up in its list)
@@ -411,14 +413,241 @@
   }
   function focusFollow() { if (focEl && !focRaf) focRaf = requestAnimationFrame(placeFocus); }
 
+  /* ---------- material (Nov 20 2026): sea glints (6, motion), the end card's arrival (8, motion), collected marks (7)
+     and captures seen through water (9). 7 and 9 are not motion: they run whenever the page wears this look (.c-mat),
+     with motion paused too, and are taken away only when the look changes. 1 (arrivals on twos) is CSS only. ---------- */
+
+  /* 6. two strips of glints a side, in the margins only, from the top of the sea (under the island band) to the foot of
+     <main>; their two layers cross-fade with the scroll (a scroll timeline; here once a frame where there is none) */
+  var SP = null;
+  function sparkSetup() {
+    SP = { els: [], top: 0, n: 12, span: 1 };
+    for (var i = 0; i < 4; i++) SP.els.push(mk('i', 'cl-spark' + (i % 2 ? ' cl-b' : ''), d.querySelector('main')));
+    sparkLay();
+  }
+  function seaTop(main) {
+    var mr = main.getBoundingClientRect(), ch = d.querySelector('main .case-head'), ld = d.querySelector('main .leads');
+    if (ch) { var c = getComputedStyle(ch, '::after'), q = ch.getBoundingClientRect(); return q.bottom - mr.top + (parseFloat(c.top) - q.height) + parseFloat(c.height) - (parseFloat(getComputedStyle(ch).getPropertyValue('--ch-fade')) || 520); }
+    if (ld) { var c2 = getComputedStyle(ld, '::after'); return ld.getBoundingClientRect().top - mr.top + parseFloat(c2.top) + parseFloat(c2.height); }
+    return 0;
+  }
+  function sparkLay() {
+    var main = d.querySelector('main'); if (!SP || !main) return;
+    var mr = main.getBoundingClientRect(), L = 1e9, Rr = -1e9;
+    [].forEach.call(main.querySelectorAll('.wrap, .prose, .figure, .facts, .chart-card, .flow, .term, .shot, .band, .card, .more-g, .sum'), function (e) {
+      var q = e.getBoundingClientRect(); if (q.width < 40 || q.height < 4) return; if (q.left < L) L = q.left; if (q.right > Rr) Rr = q.right;
+    });
+    var ml = L - mr.left, mrw = mr.right - Rr, top = Math.max(0, seaTop(main));
+    var smax = Math.max(1, d.documentElement.scrollHeight - innerHeight);
+    SP.n = Math.max(4, Math.round(smax / 700)); SP.span = smax / SP.n;
+    SP.els.forEach(function (e, i) {
+      var left = i < 2, m = left ? ml : mrw, w = Math.min(110, m - 10);
+      if (w < 10) { e.style.display = 'none'; return; }
+      e.style.display = ''; e.style.top = top + 'px'; e.style.bottom = '0px'; e.style.width = w + 'px';
+      e.style.left = (left ? (ml - w) / 2 : mr.width - mrw + (mrw - w) / 2) + 'px';
+      e.style.setProperty('--cl-n', SP.n);
+    });
+    if (!SDA) sparkScrub();
+  }
+  function sparkScrub() {
+    if (!SP) return;
+    var ph = ((W.scrollY || 0) / SP.span) % 1, a = 1 - Math.abs(ph * 2 - 1); // 0 at the start of each span, 1 half way
+    SP.els.forEach(function (e, i) { e.style.opacity = i % 2 ? (1 - a).toFixed(3) : a.toFixed(3); });
+  }
+
+  /* 8. the end card's ball pops in (on twos, CSS) when the footer first comes on screen */
+  var endIO = null;
+  function endSetup() {
+    var f = d.querySelector('footer.site'); if (!f || !W.IntersectionObserver) return;
+    endIO = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) { f.classList.add('cl-endin'); endIO.disconnect(); } }); }, { threshold: .4 });
+    endIO.observe(f); offs.push(function () { if (endIO) endIO.disconnect(); endIO = null; f.classList.remove('cl-endin'); });
+  }
+
+  var mat = false, moffs = [], mmade = [], mraf = 0;
+  function mon(t, type, fn, opt) { t.addEventListener(type, fn, opt); moffs.push(function () { t.removeEventListener(type, fn, opt); }); }
+  function mmk(tag, cls, parent, before) { var e = d.createElement(tag); e.className = cls; e.setAttribute('aria-hidden', 'true'); parent.insertBefore(e, before || null); mmade.push(e); return e; }
+  function mScroll() { if (!mraf) mraf = requestAnimationFrame(mFrame); }
+  function mFrame() { mraf = 0; marksRead(); capLook(); }
+
+  /* 7. collected marks. A section runs from its heading to the next heading (the last one to the footer); it counts as
+     read once its heading has been on screen and its end has passed the middle of the window (the last one: once the
+     footer is in view; or the page is at its foot). Its number is kept at once in localStorage["rw-cel-marks:<path>"] (nothing else is stored; no network) and
+     a buoy ball is set afloat beside the heading: right after the heading, else in the right margin, else the left,
+     wherever no line of text is within 8 px; if no place is free it is not shown. Stamped one at a time; it pops only
+     with motion on and when it is on screen. */
+  var MK = null, KINDS = 5;
+  function marksSetup() {
+    var key = 'rw-cel-marks:' + location.pathname, got = [];
+    try { got = JSON.parse(localStorage.getItem(key) || '[]'); } catch (e) { got = []; }
+    if (!Array.isArray(got)) got = [];
+    var hs = [].slice.call(d.querySelectorAll('main .section-head h2, main .prose > h2'));
+    MK = { key: key, got: got.filter(function (n) { return typeof n === 'number' && n >= 0 && n < hs.length; }), hs: hs, seen: [], els: {}, queue: [] };
+    MK.got.forEach(function (i) { stampMark(i, false); });
+    marksRead();
+  }
+  function marksRead() {
+    if (!MK) return;
+    var vh = innerHeight, foot = d.querySelector('footer.site'), atEnd = (W.scrollY || 0) + vh >= d.documentElement.scrollHeight - 4;
+    for (var i = 0; i < MK.hs.length; i++) {
+      if (MK.got.indexOf(i) >= 0) continue;
+      var q = MK.hs[i].getBoundingClientRect();
+      if (q.bottom > 0 && q.top < vh) MK.seen[i] = 1;
+      if (!MK.seen[i]) continue;
+      var last = i + 1 >= MK.hs.length, end = !last ? MK.hs[i + 1].getBoundingClientRect().top : (foot ? foot.getBoundingClientRect().top : 1e9);
+      if (end < vh * (last ? .85 : .5) || atEnd) earn(i); // the last section ends at the footer: read once the footer is in view
+    }
+  }
+  function earn(i) {
+    MK.got.push(i);
+    try { localStorage.setItem(MK.key, JSON.stringify(MK.got)); } catch (e) {}
+    MK.queue.push(i); if (MK.queue.length === 1) nextStamp();
+  }
+  function nextStamp() {
+    if (!MK || !MK.queue.length) return;
+    if (live && !ambientFree()) { later(nextStamp, 260); return; }
+    var i = MK.queue[0], el = stampMark(i, live), on = el && el.getBoundingClientRect().bottom > 0 && el.getBoundingClientRect().top < innerHeight;
+    if (live && on) claim('mark', 460);
+    MK.queue.shift();
+    if (MK.queue.length) setTimeout(nextStamp, live && on ? 460 : 0);
+  }
+  function textRects(y0, y1) {
+    var out = [], main = d.querySelector('main'), tw = d.createTreeWalker(main, NodeFilter.SHOW_TEXT), n, rg = d.createRange();
+    while ((n = tw.nextNode())) {
+      if (!/\S/.test(n.nodeValue)) continue;
+      var p = n.parentElement; if (!p || p.closest('[aria-hidden="true"], svg, .thread, script, style')) continue;
+      var pr = p.getBoundingClientRect(); if (pr.bottom < y0 || pr.top > y1 || !pr.width) continue;
+      rg.selectNodeContents(n); var rs = rg.getClientRects();
+      for (var k = 0; k < rs.length; k++) if (rs[k].width && rs[k].bottom >= y0 && rs[k].top <= y1) out.push(rs[k]);
+    }
+    return out;
+  }
+  function placeFor(h) {
+    var q = h.getBoundingClientRect(), sz = innerWidth <= 620 ? 11 : 14, pad = 8, y = q.top + q.height / 2;
+    var rg = d.createRange(); rg.selectNodeContents(h); var lr = rg.getClientRects(), last = lr[lr.length - 1] || q;
+    var hasBg = getComputedStyle(h).backgroundColor !== 'rgba(0, 0, 0, 0)';
+    var col = h.closest('.prose, .wrap, section') || h.parentElement, cr = col.getBoundingClientRect();
+    var panel = h.closest('.prose:not(.case-head), .band, .more-g, .card');
+    var cands = [
+      { x: (hasBg ? q.right : last.right) + 12 + sz / 2, y: hasBg ? y : last.top + last.height / 2, kind: panel ? 'panel' : 'water' },
+      { x: (cr.right + innerWidth) / 2, y: y, kind: 'water', need: innerWidth - cr.right },
+      { x: cr.left / 2, y: y, kind: 'water', need: cr.left }
+    ];
+    var rects = textRects(y - 60, y + 60);
+    for (var c = 0; c < cands.length; c++) {
+      var k = cands[c]; if (k.need !== undefined && k.need < sz + 10) continue;
+      var bx0 = k.x - sz / 2 - 6, bx1 = k.x + sz / 2 + 6, by0 = k.y - sz / 2, by1 = k.y + sz / 2 + 4; // the ball, its foam collar
+      if (bx0 < 4 || bx1 > innerWidth - 4) continue;
+      if (k.kind === 'panel' && panel) { var pq = panel.getBoundingClientRect(); if (bx1 > pq.right - 6) continue; }
+      var free = true;
+      for (var r = 0; r < rects.length && free; r++) { var t = rects[r]; if (bx1 + pad > t.left && bx0 - pad < t.right && by1 + pad > t.top && by0 - pad < t.bottom) free = false; }
+      if (free) return k;
+    }
+    return null;
+  }
+  function stampMark(i, animate) {
+    var main = d.querySelector('main'), h = MK.hs[i]; if (!main || !h) return null;
+    var el = MK.els[i] || (MK.els[i] = mmk('i', 'cm-mark cm-k' + (i % KINDS), main));
+    return layMark(i, el, animate);
+  }
+  function layMark(i, el, animate) {
+    var p = placeFor(MK.hs[i]), main = d.querySelector('main');
+    if (!p) { el.style.display = 'none'; return null; }
+    var mr = main.getBoundingClientRect();
+    el.style.display = ''; el.style.left = (p.x - mr.left) + 'px'; el.style.top = (p.y - mr.top) + 'px';
+    el.classList.toggle('cm-on-panel', p.kind === 'panel');
+    el.style.setProperty('--cm-u', p.kind === 'panel' ? 'var(--c-drop-cloud)' : 'var(--c-drop-sea)');
+    if (animate) { el.classList.remove('cm-new'); void el.offsetWidth; el.classList.add('cm-new'); setTimeout(function () { el.classList.remove('cm-new'); }, 600); }
+    return el;
+  }
+  function marksRelay() { if (MK) for (var i in MK.els) layMark(+i, MK.els[i], false); }
+
+  /* 9. captures seen through water: a tinted layer (the sea's blue with the look's net faint in it) over each screenshot,
+     picture and film; clear on hover (anywhere on its panel), keyboard focus inside it, playing, or on a touch screen
+     while it is the capture nearest the middle of the window */
+  var CAPSEL = 'main :is(.shot img, .shot video, .figure > img, .figure .pair > img, .figure > video, .paper img, .card .thumb)';
+  var CAPS = [], looked = null;
+  function capSetup() {
+    CAPS = [];
+    [].forEach.call(d.querySelectorAll(CAPSEL), function (m) {
+      var host = m.parentElement; while (host && getComputedStyle(host).display === 'inline') host = host.parentElement;
+      if (!host) return;
+      if (getComputedStyle(host).position === 'static') host.classList.add('cm-caphost');
+      var w = mmk('span', 'cm-water', host, m.nextSibling);
+      var c = { m: m, host: host, w: w, box: m.closest('.card, .shot, .figure, .paper') || host, hov: 0, foc: 0, look: 0, play: m.tagName === 'VIDEO' && !m.paused ? 1 : 0 };
+      CAPS.push(c);
+    });
+    if (W.ResizeObserver) { var ro = new ResizeObserver(function () { capLay(); }); CAPS.forEach(function (c) { ro.observe(c.m); }); moffs.push(function () { ro.disconnect(); }); }
+    capLay(); capLook();
+  }
+  function capLay() {
+    // layout offsets, not screen rectangles: a card in the middle of its pop is scaled, and its rectangle with it
+    CAPS.forEach(function (c) {
+      var m = c.m, cs = getComputedStyle(m), x = 0, y = 0, e = m;
+      var pl = parseFloat(cs.paddingLeft) || 0, pt = parseFloat(cs.paddingTop) || 0, pr = parseFloat(cs.paddingRight) || 0, pb = parseFloat(cs.paddingBottom) || 0;
+      while (e && e !== c.host) { x += e.offsetLeft; y += e.offsetTop; e = e.offsetParent; }
+      var s = c.w.style, wd = m.clientWidth - pl - pr, ht = m.clientHeight - pt - pb;
+      if (e !== c.host || wd < 40 || ht < 30) { s.display = 'none'; return; }
+      s.display = ''; s.left = (x + m.clientLeft + pl) + 'px'; s.top = (y + m.clientTop + pt) + 'px';
+      s.width = wd + 'px'; s.height = ht + 'px';
+      s.borderRadius = pl ? '12px' : cs.borderRadius;
+      capPaint(c);
+    });
+  }
+  function capPaint(c) { c.w.classList.toggle('cm-clear', !!(c.hov || c.foc || c.look || c.play)); }
+  function capOver(e) {
+    if (e.pointerType && e.pointerType !== 'mouse') return;
+    CAPS.forEach(function (c) { var inside = c.box.contains(e.target); if (inside !== !!c.hov) { c.hov = inside ? 1 : 0; capPaint(c); } });
+  }
+  function capLeave(e) { if (!e.relatedTarget) CAPS.forEach(function (c) { if (c.hov) { c.hov = 0; capPaint(c); } }); }
+  function capFocus() {
+    var a = d.activeElement, kb = a && a !== d.body && a.matches && a.matches(':focus-visible');
+    CAPS.forEach(function (c) { var f = kb && (c.box.contains(a) || a === c.m) ? 1 : 0; if (f !== c.foc) { c.foc = f; capPaint(c); } });
+  }
+  function capPlay(e) { var v = e.target; CAPS.forEach(function (c) { if (c.m === v) { c.play = e.type === 'play' || e.type === 'playing' ? 1 : 0; capPaint(c); } }); }
+  function capLook() {
+    if (mqFine.matches || !CAPS.length) { if (looked) { looked.look = 0; capPaint(looked); looked = null; } return; }
+    var mid = innerHeight / 2, best = null, bd = innerHeight * .2;
+    CAPS.forEach(function (c) { var q = c.m.getBoundingClientRect(); if (!q.height) return; var dd = Math.abs((q.top + q.bottom) / 2 - mid); if (dd < bd) { bd = dd; best = c; } });
+    if (best === looked) return;
+    if (looked) { looked.look = 0; capPaint(looked); }
+    looked = best; if (best) { best.look = 1; capPaint(best); }
+  }
+
+  function mRelay() { capLay(); marksRelay(); }
+  var settleT = 0;
+  function mSettle() { clearTimeout(settleT); settleT = setTimeout(function () { if (mat) mRelay(); }, 250); } // after arrivals finish popping (a heading mid-pop is scaled)
+  function matStart() {
+    mat = true; r.classList.add('c-mat');
+    capSetup(); marksSetup();
+    mon(W, 'scroll', mScroll, { passive: true });
+    mon(W, 'resize', mRelay, { passive: true });
+    mon(W, 'load', mRelay);
+    mon(d, 'load', function (e) { if (e.target && e.target.tagName === 'IMG') mRelay(); }, true);
+    mon(d, 'animationend', function (e) { if (MK && MK.got.length && e.target && e.target.nodeType === 1 && !/(^| )c[lm]-/.test(e.target.className || '')) mSettle(); }, true);
+    mon(d, 'pointerover', capOver, { passive: true });
+    mon(d, 'mouseout', capLeave, { passive: true });
+    mon(d, 'focusin', capFocus); mon(d, 'focusout', function () { setTimeout(capFocus, 0); });
+    ['play', 'playing', 'pause', 'ended'].forEach(function (t) { mon(d, t, capPlay, true); });
+    if (W.ResizeObserver) { var main = d.querySelector('main'); if (main) { var ro = new ResizeObserver(mRelay); ro.observe(main); moffs.push(function () { ro.disconnect(); }); } }
+  }
+  function matStop() {
+    mat = false;
+    moffs.forEach(function (f) { f(); }); moffs = [];
+    cancelAnimationFrame(mraf); mraf = 0; clearTimeout(settleT);
+    mmade.forEach(function (e) { if (e.parentNode) e.parentNode.removeChild(e); }); mmade = [];
+    [].forEach.call(d.querySelectorAll('.cm-caphost'), function (e) { e.classList.remove('cm-caphost'); });
+    r.classList.remove('c-mat');
+    MK = null; CAPS = []; looked = null;
+  }
+
   /* ---------- on, off ---------- */
-  function relay() { if (T) { T.d = null; resample(); } boundsSetup(); if (!SDA) scrub(); if (H) { H.last = -1; hero(); } if (SEL) onSel(); focusFollow(); }
+  function relay() { if (T) { T.d = null; resample(); } boundsSetup(); if (!SDA) scrub(); if (H) { H.last = -1; hero(); } if (SEL) onSel(); focusFollow();  sparkLay(); }
   function start() {
     live = true;
     r.classList.add('c-live');
     sy = psy = W.scrollY || 0;
     if (mqFine.matches) r.classList.add('cl-fine');
-    threadSetup(); scrubSetup(); heroSetup(); boundsSetup(); dotSetup();
+    threadSetup(); scrubSetup(); heroSetup(); boundsSetup(); dotSetup(); sparkSetup(); endSetup();
     on(W, 'scroll', onScroll, { passive: true });
     on(W, 'scroll', focusFollow, { passive: true });
     on(W, 'resize', relay, { passive: true });
@@ -448,14 +677,16 @@
     [].forEach.call(d.querySelectorAll('.cl-float, .cl-tap, .cl-ring, .cl-selhost, .cl-glinthost'), function (e) { e.classList.remove('cl-float', 'cl-tap', 'cl-ring', 'cl-selhost', 'cl-glinthost'); });
     [].forEach.call(d.querySelectorAll('[data-cl-from]'), function (e) { e.removeAttribute('data-cl-from'); });
     r.classList.remove('c-live', 'cl-sjs', 'cl-fine', 'cl-dot-on', 'cl-kbd', 'cl-selon');
-    T = H = DOT = FOC = SEL = null; focEl = null; glinted = null; scrubs = []; bounds = []; puffs = []; lastSplash = null; scrolling = false;
+    T = H = DOT = FOC = SEL = SP = null; focEl = null; glinted = null; scrubs = []; bounds = []; puffs = []; lastSplash = null; scrolling = false;
   }
   function sync() {
-    var w = wanted();
+    var w = wanted(), m = r.getAttribute('data-look') === 'cel';
     if (w && !live) start(); else if (!w && live) stop();
+    if (m && !mat) matStart(); else if (!m && mat) matStop();
+    if (mat && MK && !live && MK.queue.length) { MK.queue.forEach(function (i) { stampMark(i, false); }); MK.queue = []; } // motion went off mid-queue: place the rest still
   }
   new MutationObserver(sync).observe(r, { attributes: true, attributeFilter: ['data-look', 'class', 'data-motion'] });
   if (mqReduce.addEventListener) mqReduce.addEventListener('change', sync);
-  W.__celLiveState = function () { return { live: live, sda: SDA, made: made.length, listeners: offs.length, puffs: puffs.length, acc: acc.name }; }; // read by the checks
+  W.__celLiveState = function () { return { live: live, sda: SDA, made: made.length, listeners: offs.length, puffs: puffs.length, acc: acc.name, mat: mat, marks: MK ? MK.got.slice() : null, caps: CAPS.length, mlisteners: moffs.length }; }; // read by the checks
   sync();
 })();
