@@ -1,10 +1,12 @@
 /* Dots & Panels: the look's own motion layer (like look-paint.js; spec page-films/out/dots/LOOK.md section 7).
    look-dots.css holds what every visitor sees move (arrivals growing in 3 held steps, flow and verdict rows stepping in,
    bars filling in 4 held steps, hover and press). This file adds only what follows the reader:
-   - the thread: ahead of the head the thin ruled line, behind it the heavy key line, the head a small yellow plate;
-     both move in held steps of 16 px along the strand, never in a smooth glide;
+   - the thread: ahead of the head the thin ruled line, behind it the heavy key line (a filled outline that swells 2:1
+     with the pen's direction, 2 px on level runs, 4 px on upright runs), the head a small yellow plate; both move in
+     held steps of 16 px along the strand, never in a smooth glide;
    - held rows (the three steps, the facts) step in left to right, one held step apart, as they enter view;
-   - when scrolling stops, the nearest section title's dot strip doubles its tint for one held step.
+   - when scrolling stops, the nearest section title's dot strip doubles its tint for one held step;
+   - when the footer comes into view, the windows of its skyline switch tint one by one, left to right, then hold.
    site.js fetches it only while data-look="dots" is on and reduced motion is off. It switches itself on only while <html>
    carries data-look="dots" and .motion, and takes away everything it added (elements, classes, properties, listeners,
    observers, timers) the moment either goes: the look picker, "Pause motion", or a reduced-motion change.
@@ -34,15 +36,27 @@
     var heavy = d.createElementNS(NS, 'path'); heavy.setAttribute('class', 'dp-th'); heavy.setAttribute('aria-hidden', 'true');
     svg.appendChild(thin); svg.appendChild(heavy); made.push(thin, heavy);
     var head = d.createElement('i'); head.className = 'dp-th-head'; head.setAttribute('aria-hidden', 'true'); th.appendChild(head); made.push(head);
-    var last = -1, path = '';
+    var last = -1, path = '', pts = [];
+    function sample() { // points every 6 px along the strand, each with the pen's width there
+      pts = []; var L = line.getTotalLength(), s, p, q, dx, dy, m;
+      for (s = 0; s <= L; s += 6) {
+        p = line.getPointAtLength(s); q = line.getPointAtLength(Math.min(L, s + 3)); dx = q.x - p.x; dy = q.y - p.y; m = Math.hypot(dx, dy) || 1;
+        pts.push([p.x, p.y, dx / m, dy / m, (2 + 2 * Math.abs(dy / m)) * Math.min(1, 0.4 + s / 60)]);
+      }
+    }
+    function outline(len) { // the filled key line from the start to len: left edge out, right edge back
+      var a = [], b = [], i, t, h;
+      for (i = 0; i < pts.length && i * 6 <= len; i++) { t = pts[i]; h = t[4] / 2; a.push((t[0] - t[3] * h).toFixed(1) + ' ' + (t[1] + t[2] * h).toFixed(1)); b.push((t[0] + t[3] * h).toFixed(1) + ' ' + (t[1] - t[2] * h).toFixed(1)); }
+      return a.length < 2 ? '' : 'M' + a.join('L') + 'L' + b.reverse().join('L') + 'Z';
+    }
     function place() {
       if (!live) return;
       var dd = line.getAttribute('d') || '';
-      if (dd !== path) { path = dd; heavy.setAttribute('d', dd); thin.setAttribute('d', dd); last = -1; }
+      if (dd !== path) { path = dd; thin.setAttribute('d', dd); sample(); last = -1; }
       var lo = parseFloat(line.style.strokeDasharray) || 0, q = Math.floor(lo / STEP) * STEP;
       if (q === last) return;
       last = q;
-      heavy.style.strokeDasharray = q + ' 99999';
+      heavy.setAttribute('d', path ? outline(q) : '');
       if (!path || q < 2) { head.style.opacity = 0; return; }
       var p = line.getPointAtLength(q);
       head.style.transform = 'translate(' + Math.round(p.x) + 'px,' + Math.round(p.y) + 'px)'; head.style.opacity = 1;
@@ -88,10 +102,30 @@
     }, { passive: true });
   }
 
+  // ---------- footer: the skyline's windows switch tint one by one as it comes into view, then hold ----------
+  function windows() {
+    var f = d.querySelector('footer.site .wrap');
+    if (!f || !('IntersectionObserver' in W)) return;
+    var w = f.clientWidth, sc = Math.max(w / 1080, 1), ox = (1080 * sc - w) / 2, oy = (34 * sc - 34) / 2, n = 18, list = [], i, x, ah, el;
+    for (i = 0; i < n; i++) { // the arches of --dp-a-sky (dots-art.mjs skyline(1080, 34)): 60 px apart, heights from the seed
+      x = (i + 0.5) * 60 * sc - ox; ah = 34 * (0.35 + 0.35 * ((i * 7) % 5) / 4);
+      if (x < 8 || x > w - 8) continue;
+      el = d.createElement('i'); el.className = 'dp-win'; el.setAttribute('aria-hidden', 'true');
+      el.style.left = Math.round(x - 3) + 'px'; el.style.top = Math.round((31.3 - ah + 3) * sc - oy) + 'px';
+      f.appendChild(el); made.push(el); list.push(el);
+    }
+    var io = new IntersectionObserver(function (en) {
+      if (!en[0].isIntersecting) return;
+      io.disconnect(); busy++;
+      list.forEach(function (el, k) { later(function () { el.classList.add('dp-on'); if (k === list.length - 1) busy--; }, 300 * k); });
+    }, { threshold: 0.5 });
+    io.observe(f); obs.push(io);
+  }
+
   function start() {
     if (live) return;
     live = true; busy = 0; mark(r, 'dp-live');
-    try { thread(); rows(); rest(); } catch (e) { stop(); }
+    try { thread(); rows(); rest(); windows(); } catch (e) { stop(); }
   }
   function stop() {
     if (!live) return;
