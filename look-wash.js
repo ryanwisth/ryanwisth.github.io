@@ -47,25 +47,71 @@
   function ambientFree() { return now() > acc.until; }
   function claim(name, ms) { acc.name = name; acc.until = now() + ms; clearFalls(); unglaze(); starOff(); }
 
-  /* ---------- the scroll frame: one rAF per frame while scrolling, nothing at rest ---------- */
+  /* ---------- the one frame loop: one rAF per frame while the page scrolls, the wet washes settle or the brush tip's
+     halo eases back; nothing at rest (fluid pass, Nov 20: the drag spring and the tip halo run in this same loop) ---------- */
   var raf = 0, sy = 0, psy = 0, pt = 0, speed = 0, idleT = 0, scrolling = false;
-  function onScroll() { if (!raf && !d.hidden) raf = requestAnimationFrame(frame); }
+  function kick() { if (!raf && !d.hidden && live) raf = requestAnimationFrame(frame); }
+  function onScroll() { kick(); }
   function frame(t) {
     raf = 0;
     sy = W.scrollY || 0;
-    var dt = Math.max(8, t - (pt || t - 16)), v = Math.abs(sy - psy) / dt;
-    speed = speed * .5 + v * .5;
-    var dir = sy > psy ? 1 : sy < psy ? -1 : 0;
+    var dt = Math.max(8, Math.min(64, t - (pt || t - 16))), moved = sy !== psy, vs = (sy - psy) / dt;
+    if (moved) {
+      speed = speed * .5 + Math.abs(vs) * .5;
+      var dir = sy > psy ? 1 : -1;
+      if (!scrolling) { scrolling = true; startMove(); }
+      thread(false);
+      if (!SDA) scrub();
+      hero();
+      boundary(dir);
+      clearTimeout(idleT); idleT = setTimeout(rest, 150); // (not later(): one timer a frame would pile up in its list)
+    }
     psy = sy; pt = t;
-    if (!scrolling && dir) { scrolling = true; startMove(); }
-    thread(false);
-    if (!SDA) scrub();
-    hero();
-    if (dir) boundary(dir);
-    clearTimeout(idleT); idleT = setTimeout(rest, 150); // (not later(): one timer a frame would pile up in its list)
+    var busy = dragStep(moved ? vs : 0, dt);
+    if (TIP && tipStep()) busy = true;
+    if (busy) kick();
   }
   function rest() { scrolling = false; speed = 0; pt = 0; thread(true); settle(); starKick(); if (SW.due.length) dabSoon(); }
   function startMove() { if (T) T.bloom.classList.remove('w-on'); unglaze(); clearTimeout(dabT); if (acc.name === 'dab') acc.until = 0; } // a dab in progress never holds back the drops
+
+  /* ---------- fluid (Nov 20) 3: the washes are wet, so the scroll drags them ----------
+     The colour under a section, a card, a capture or the band is wet pigment on the sheet: when the page is pulled,
+     the pigment lags behind it a little (further the faster the pull, the big washes more than the small swatches),
+     and when the pull stops it sloshes back with one soft overshoot and settles. Only the ::before washes move
+     (translate, through the non-inherited --w-dy that look-wash.css hands to the pseudo-element); no word moves. It is
+     written only to the washes on screen (an IntersectionObserver keeps that list), in the one frame loop, and stops
+     (every --w-dy taken off again) once the spring is still. */
+  var DRAG = [['.section', 1], ['.band', .7], ['.shot, .term, .paper, .figure, .duo figure, .sum-vis', .6], ['.card .thumb-wrap', .55]];
+  var DR = { x: 0, v: 0, vel: 0, on: false, els: [], vis: [], io: null, last: '' };
+  function dragSetup() {
+    if (!W.IntersectionObserver) return;
+    DR.io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        var i = DR.vis.indexOf(e.target);
+        if (e.isIntersecting && i < 0) DR.vis.push(e.target);
+        else if (!e.isIntersecting && i >= 0) { DR.vis.splice(i, 1); e.target.style.removeProperty('--w-dy'); }
+      });
+    }, { rootMargin: '25% 0px' });
+    DRAG.forEach(function (g) { [].forEach.call(d.querySelectorAll('main ' + g[0].split(', ').join(', main ')), function (el) { if (el.__wdk) return; el.__wdk = g[1]; DR.els.push(el); DR.io.observe(el); }); });
+    r.classList.add('w-drag');
+    offs.push(function () { if (DR.io) DR.io.disconnect(); DR.els.forEach(function (el) { el.style.removeProperty('--w-dy'); delete el.__wdk; }); DR = { x: 0, v: 0, vel: 0, on: false, els: [], vis: [], io: null, last: '' }; });
+  }
+  function dragStep(vs, dt) { // vs: the scroll's speed this frame in px/ms (signed); returns true while the pigment still moves
+    if (!DR.io) return false;
+    DR.vel = DR.vel * .55 + vs * .45;
+    var cap = mqSlow.matches ? 14 : 22, tgt = clamp(DR.vel * 15, -cap, cap), n = Math.max(1, Math.min(4, Math.round(dt / 16.7)));
+    if (Math.abs(vs) > .01) DR.on = true;
+    if (!DR.on) return false;
+    for (var i = 0; i < n; i++) { DR.v += (tgt - DR.x) * .1 - DR.v * .3; DR.x += DR.v; }
+    if (Math.abs(DR.x) < .06 && Math.abs(DR.v) < .03 && Math.abs(tgt) < .06) { // still: take every offset off again
+      DR.x = DR.v = DR.vel = 0; DR.on = false; DR.last = '';
+      DR.vis.forEach(function (el) { el.style.removeProperty('--w-dy'); });
+      return false;
+    }
+    var k = DR.x.toFixed(1);
+    if (k !== DR.last) { DR.last = k; for (var j = 0; j < DR.vis.length; j++) DR.vis[j].style.setProperty('--w-dy', (DR.x * DR.vis[j].__wdk).toFixed(1) + 'px'); }
+    return true;
+  }
 
   /* ---------- 1. the margin line as a wet wash line ----------
      site.js draws the thread (.th-line) to the reading line; here the drawn part is redrawn as a filled ink core whose
@@ -243,18 +289,24 @@
   function onDown(e) {
     var t = e.target && e.target.closest ? e.target : null; if (!t) return;
     down = { x: e.clientX, y: e.clientY, t: now(), type: e.pointerType };
+    lastDown = { x: e.clientX, y: e.clientY, t: now(), el: t };
     if (e.pointerType !== 'mouse') { var c = t.closest('.card'); if (c) c.classList.add('w-wet'); } // 6: on touch the wash bleeds while the finger is down
     var btn = t.closest('.btn.primary, .demo-poster .play'); if (btn) lift(btn, e.clientX, e.clientY);  // 7
   }
   function onUp(e) {
     wetOff();
     var dn = down; down = null;
-    if (!dn || e.pointerType === 'mouse' || Math.hypot(e.clientX - dn.x, e.clientY - dn.y) > 10 || now() - dn.t > 600) return;
+    if (!dn || Math.hypot(e.clientX - dn.x, e.clientY - dn.y) > 10 || now() - dn.t > 600) return;
     var t = e.target && e.target.closest ? e.target : null;
+    if (e.pointerType === 'mouse') { // fluid (Nov 20): a click on bare paper drops ink too (never on a control, never ending a selection)
+      var sel = W.getSelection && W.getSelection();
+      if (e.button === 0 && t && !t.closest(CTRL) && !(sel && !sel.isCollapsed)) waterDrop(e.clientX, e.clientY, t);
+      return;
+    }
     var fig = t && t.closest(FIG), row = t && t.closest('.bars .row');
     if (fig) pool(fig, 1800);                      // 12
     if (row) { row.classList.add('w-tap'); later(function () { row.classList.remove('w-tap'); }, 1800); } // 14
-    waterDrop(e.clientX, e.clientY);               // 9
+    waterDrop(e.clientX, e.clientY, t);            // 9
   }
   function onKeyClick(e) { if (e.detail === 0 && e.target.closest) { var s = e.target.closest('.btn.primary, .demo-poster .play'); if (s) lift(s); } }
   // 7: pressing the ink button blots it: a paler spot where the pigment was lifted, which fades as it dries back
@@ -265,14 +317,16 @@
     p.style.cssText = 'left:' + (q.left + (W.scrollX || 0)).toFixed(1) + 'px;top:' + (q.top + (W.scrollY || 0)).toFixed(1) + 'px;width:' + q.width.toFixed(1) + 'px;height:' + q.height.toFixed(1) + 'px;--w-x:' + x.toFixed(0) + 'px;--w-y:' + y.toFixed(0) + 'px;--w-r:' + Math.max(18, q.height * .9).toFixed(0) + 'px';
     later(function () { drop(p); }, 1300);
   }
-  // 9: a drop of clear water where a finger taps: it pushes the pigment out into a pale bloom with a darker rim
-  var lastTap = null;
-  function waterDrop(x, y) {
-    claim('tap', 900);
+  // 9 (fluid pass, Nov 20: was clear water): a drop of ink where a finger taps, or the mouse clicks bare paper. It lands
+  // dark, blooms out into the damp sheet in the colour of the part of the page it fell on, feathers at its edge (fine
+  // fibres of pigment running out along the paper) and dries to a pale stain with a darker rim, then is gone.
+  var lastTap = null, CTRL = 'a[href], button, input, textarea, select, label, summary, video, [role="button"], [contenteditable], .look-pick, .thread';
+  function waterDrop(x, y, t) {
+    claim('tap', 1000);
     drop(lastTap);
-    var p = lastTap = mk('i', 'w-tapb', d.body);
-    p.style.left = x.toFixed(0) + 'px'; p.style.top = y.toFixed(0) + 'px';
-    later(function () { drop(p); if (lastTap === p) lastTap = null; }, 1000);
+    var p = lastTap = mk('i', 'w-tapb', d.body), h = t && t.closest ? t.closest('.card, .fact, .chart-card, .sum, .section, .band, .prose, .case-head, .hero') : null;
+    p.style.cssText = 'left:' + x.toFixed(0) + 'px;top:' + y.toFixed(0) + 'px;--w-ih:' + hueOf(h) + ';--w-ir:' + ((hash(x.toFixed(0) + 'y' + y.toFixed(0)) % 36) * 10) + 'deg';
+    later(function () { drop(p); if (lastTap === p) lastTap = null; }, 1050);
   }
   // 12: a pooled wash round a big figure's leading number: colour that ran to the edge of a puddle and dried there
   function pool(el, ms) {
@@ -317,7 +371,7 @@
   var TIP = null;
   function tipSetup() {
     if (!mqFine.matches) return;
-    TIP = { el: mk('i', 'w-tip', d.body), x: -99, y: -99, hx: 0, hy: 0, raf: 0, shown: false };
+    TIP = { el: mk('i', 'w-tip', d.body), x: -99, y: -99, hx: 0, hy: 0, shown: false };
     r.classList.add('w-tip-on');
   }
   function tipMove(e) {
@@ -332,14 +386,14 @@
     TIP.el.classList.toggle('w-link', !!link);
     TIP.el.classList.toggle('w-off', !!text);
     if (!TIP.shown) { TIP.shown = true; TIP.el.classList.add('w-on'); }
-    if (!TIP.raf) TIP.raf = requestAnimationFrame(tipHalo);
+    kick();
   }
-  function tipHalo() { // the wet halo eases back under the tip
-    TIP.raf = 0;
+  function tipStep() { // the wet halo eases back under the tip (a step of the one frame loop); true while it moves
+    if (!TIP.hx && !TIP.hy) return false;
     TIP.hx *= .78; TIP.hy *= .78;
     if (Math.abs(TIP.hx) < .3 && Math.abs(TIP.hy) < .3) TIP.hx = TIP.hy = 0;
     TIP.el.style.setProperty('--hx', TIP.hx.toFixed(1) + 'px'); TIP.el.style.setProperty('--hy', TIP.hy.toFixed(1) + 'px');
-    if (TIP.hx || TIP.hy) TIP.raf = requestAnimationFrame(tipHalo);
+    return !!(TIP.hx || TIP.hy);
   }
   function tipLeave(e) { if (TIP && !e.relatedTarget) { TIP.shown = false; TIP.el.classList.remove('w-on'); } }
 
@@ -377,7 +431,7 @@
   }
 
   /* ---------- 13. keyboard focus: a wash ring with a hard dried edge ---------- */
-  var FOC = null, focRaf = 0, focEl = null;
+  var FOC = null, focRaf = 0, focEl = null, focWas = null, focAn = null;
   function onFocusIn(e) {
     var el = e.target; if (!el || el === d || !el.matches) return;
     var vis = false; try { vis = el.matches(':focus-visible'); } catch (er) {}
@@ -387,7 +441,7 @@
     r.classList.add('w-kbd');
     placeFocus();
   }
-  function focusOff() { focEl = null; r.classList.remove('w-kbd'); if (FOC) FOC.classList.remove('w-on'); }
+  function focusOff() { focEl = null; focWas = null; r.classList.remove('w-kbd'); if (FOC) FOC.classList.remove('w-on'); }
   function placeFocus() {
     focRaf = 0;
     if (!focEl || !FOC) return;
@@ -395,7 +449,13 @@
     var q = focEl.getBoundingClientRect(), ar = q.width / Math.max(1, q.height), round = ar > .7 && ar < 1.4 && q.width < 90;
     var pad = round ? 6 : 5;
     FOC.className = 'w-focus w-on' + (round ? ' w-round' : '');
-    FOC.style.cssText = 'left:' + (q.left - pad).toFixed(1) + 'px;top:' + (q.top - pad).toFixed(1) + 'px;width:' + (q.width + 2 * pad).toFixed(1) + 'px;height:' + (q.height + 2 * pad).toFixed(1) + 'px;--w-fc:' + hueOf(focEl);
+    var fc = hueOf(focEl);
+    FOC.style.cssText = 'left:' + (q.left - pad).toFixed(1) + 'px;top:' + (q.top - pad).toFixed(1) + 'px;width:' + (q.width + 2 * pad).toFixed(1) + 'px;height:' + (q.height + 2 * pad).toFixed(1) + 'px;--w-fc:' + fc;
+    if (focEl !== focWas) { // fluid (Nov 20): the ring is laid wet (the colour, spreading a hair wide) and dries to its ink edge
+      focWas = focEl;
+      if (focAn) try { focAn.cancel(); } catch (er) {}
+      focAn = anim(FOC, [{ borderColor: fc, opacity: .35, transform: 'scale(1.06)' }, { borderColor: fc, opacity: 1, transform: 'none', offset: .3 }, { borderColor: getComputedStyle(FOC).borderTopColor }], { duration: 650, easing: 'cubic-bezier(.2, .6, .3, 1)' });
+    }
   }
   function focusFollow() { if (focEl && !focRaf) focRaf = requestAnimationFrame(placeFocus); }
 
@@ -436,6 +496,27 @@
     starKick();
   }
   function starOff() { if (STAR) { drop(STAR); STAR = null; } }
+
+  /* ---------- fluid (Nov 20) 1: leaving the page, ink floods it from where it was touched ----------
+     Just before the browser takes its picture of the page it is leaving (pageswap, cross-document view transitions),
+     a drop of ink in the colour of what was pressed is put where the finger or mouse last went down (the focused
+     thing's middle for a keyboard, the middle of the window otherwise). It carries view-transition-name w-flood, so the
+     next page (look-wash.css) floods the whole window with it from that spot and then lets it drain away over the new
+     page. Not on a reload (the look picker reloads the page), only when the browser runs a view transition. */
+  var lastDown = null;
+  function onSwap(e) {
+    var vt = e.viewTransition, ty = e.activation && e.activation.navigationType;
+    if (!vt || !live || ty === 'reload') return;
+    var vw = innerWidth, vh = innerHeight, x = vw / 2, y = vh * .45, h = null, ae = d.activeElement;
+    if (lastDown && now() - lastDown.t < 5000) { x = lastDown.x; y = lastDown.y; h = lastDown.el; }
+    else if (ae && ae !== d.body && ae.getBoundingClientRect) { var q = ae.getBoundingClientRect(); x = q.left + q.width / 2; y = q.top + q.height / 2; h = ae; }
+    var f = mk('i', 'w-flood', d.body);
+    f.style.cssText = 'left:' + clamp(x, 0, vw).toFixed(0) + 'px;top:' + clamp(y, 0, vh).toFixed(0) + 'px;--w-fh:' + hueOf(h && h.closest ? h.closest('.card, .pager a, .groupnav a, .section, .sum, .prose, .case-head, .hero, footer') || h : null);
+    var gone = function () { drop(f); var i = made.indexOf(f); if (i >= 0) made.splice(i, 1); };
+    try { vt.finished.then(gone, gone); } catch (er) {}
+    later(gone, 2000);
+  }
+  function floodOff() { [].forEach.call(d.querySelectorAll('.w-flood'), drop); } // back from the back-forward cache: no ink left on the page
 
   /* ---------- material (Nov 20) ----------
      1 wet, then dry: a wash newly laid on the page (a section's wash, the swatch under a heading, card or capture, the
@@ -655,6 +736,9 @@
     sy = psy = W.scrollY || 0;
     if (mqFine.matches) r.classList.add('w-fine');
     threadSetup(); scrubSetup(); heroSetup(); boundsSetup(); tipSetup(); wetSetup(); saltSetup(); signSetup();
+    dragSetup(); mk('i', 'w-damp', d.body);
+    on(W, 'pageswap', onSwap);
+    on(W, 'pageshow', floodOff);
     on(W, 'scroll', onScroll, { passive: true });
     on(W, 'scroll', focusFollow, { passive: true });
     on(W, 'resize', relay, { passive: true });
@@ -671,7 +755,7 @@
     on(d, 'focusin', onFocusIn);
     on(d, 'focusout', function () { setTimeout(function () { if (d.activeElement !== focEl) focusOff(); }, 0); });
     on(mqDark, 'change', starKick);
-    on(d, 'visibilitychange', function () { if (d.hidden) { cancelAnimationFrame(raf); raf = 0; clearFalls(); starOff(); clearTimeout(starT); if (TIP) TIP.el.classList.remove('w-on'); } else starKick(); });
+    on(d, 'visibilitychange', function () { if (d.hidden) { cancelAnimationFrame(raf); raf = 0; clearFalls(); starOff(); clearTimeout(starT); if (TIP) TIP.el.classList.remove('w-on'); } else { starKick(); kick(); } });
     starKick();
     if (SW.due.length) dabSoon();
   }
@@ -680,14 +764,14 @@
     offs.forEach(function (f) { f(); }); offs = [];
     timers.forEach(clearTimeout); timers = []; clearTimeout(idleT); clearTimeout(starT);
     cancelAnimationFrame(raf); raf = 0; cancelAnimationFrame(selRaf); selRaf = 0; cancelAnimationFrame(focRaf); focRaf = 0;
-    if (TIP && TIP.raf) cancelAnimationFrame(TIP.raf);
     clearFalls(); clearSel(); unglaze(); starOff(); clearTimeout(dabT); SALTC = null; [].forEach.call(d.querySelectorAll('.wm-new'), function (e) { e.classList.remove('wm-new'); });
     anims.slice().forEach(function (a) { try { a.cancel(); } catch (e) {} }); anims = [];
     made.forEach(drop); made = [];
-    styled.forEach(function (el) { ['--w-p', '--w-cloud-y', '--w-moon-y', '--w-ph', '--w-pw', '--w-cx', '--w-cy', '--w-pc'].forEach(function (k) { el.style.removeProperty(k); }); }); styled = [];
+    styled.forEach(function (el) { ['--w-p', '--w-cloud-y', '--w-moon-y', '--w-ph', '--w-pw', '--w-cx', '--w-cy', '--w-pc', '--w-dy'].forEach(function (k) { el.style.removeProperty(k); }); }); styled = [];
     [].forEach.call(d.querySelectorAll('.w-glaze, .w-wet, .w-tap, .w-pool, .w-selhost'), function (e) { e.classList.remove('w-glaze', 'w-wet', 'w-tap', 'w-pool', 'w-selhost'); });
     [].forEach.call(d.querySelectorAll('[data-w-from]'), function (e) { e.removeAttribute('data-w-from'); });
-    r.classList.remove('w-live', 'w-sjs', 'w-fine', 'w-tip-on', 'w-kbd', 'w-th-on');
+    r.classList.remove('w-live', 'w-sjs', 'w-fine', 'w-tip-on', 'w-kbd', 'w-th-on', 'w-drag');
+    floodOff(); lastDown = null; focWas = null; focAn = null;
     T = H = TIP = FOC = SEL = null; focEl = null; glazed = null; scrubs = []; bounds = []; falls = []; lastTap = null; scrolling = false;
   }
   var theme0 = r.getAttribute('data-theme');
@@ -700,6 +784,6 @@
   }
   new MutationObserver(sync).observe(r, { attributes: true, attributeFilter: ['data-look', 'class', 'data-motion', 'data-theme'] });
   if (mqReduce.addEventListener) mqReduce.addEventListener('change', sync);
-  W.__washMotionState = function () { return { live: live, sda: SDA, made: made.length, listeners: offs.length, anims: anims.length, falls: falls.length, star: !!STAR, lastStar: lastStar, mat: matOn, swatches: SW.got.slice(), swatchEls: matMade.length, due: SW.due.length, wets: wetN, salt: !!SALTC }; }; // read by the checks
+  W.__washMotionState = function () { return { live: live, sda: SDA, made: made.length, listeners: offs.length, anims: anims.length, falls: falls.length, star: !!STAR, lastStar: lastStar, mat: matOn, swatches: SW.got.slice(), swatchEls: matMade.length, due: SW.due.length, wets: wetN, salt: !!SALTC, drag: { on: DR.on, x: +DR.x.toFixed(2), els: DR.els.length, vis: DR.vis.length }, loop: !!raf }; }; // read by the checks
   sync();
 })();
