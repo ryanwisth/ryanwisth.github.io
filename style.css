@@ -1796,3 +1796,163 @@ footer.site .wrap { align-items: center; }
 .case-part .brief, .case-part .lede { margin-top: 0; }
 .sum.sum-method { margin-top: 26px; }
 .prose + .figure { margin-top: 28px; }
+
+/* === Yarn & Felt liveliness (Nov 20 2026): the parts look-yarn.js drives ===
+   look-yarn.js is fetched only in this look (no data-look) and never under reduced motion; it puts .y-live on the root
+   while the look is worn with motion on, and takes it off (with everything it added) on a look change or "Pause motion".
+   Every rule here needs html:not([data-look]).motion.y-live, so the other looks and the look without the script are
+   untouched. Items: 1 the strand's tension and slack loop; 2 seams sewn in by the scroll; 3 the opening's layers;
+   4 a stray fibre or felt fleck past the margin; 5 the settle tug; 6 a patch puffs; 7 a press sinks and dimples the
+   cloth; 8 a link's running stitch from the side the pointer came in; 9 a pin-prick on tap; 10 the needle cursor;
+   11 selection on a strip of felt; 12 yarn wound round a big figure; 13 a running stitch round the focus ring;
+   14 beads threaded on by the scroll and a value tag; 15 the guardrails (in the script, and the phone rule at the end). */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes y-sew-in { from { clip-path: inset(-8px 100% -8px 0); } to { clip-path: inset(-8px -2px -8px 0); } }
+  @keyframes y-bead-on { from { clip-path: inset(-10px 100% -10px -2px); } to { clip-path: inset(-10px -14px -10px -2px); } }
+  @keyframes y-tag-on { 0% { rotate: -12deg; scale: .7; } 55% { rotate: 5deg; scale: 1.08; } 80% { rotate: -1.5deg; scale: .98; } 100% { rotate: 0deg; scale: 1; } }
+  @keyframes y-dimple { 0% { opacity: 0; scale: .9; } 16% { opacity: 1; scale: .97; } 100% { opacity: 0; scale: 1.05; } }
+  @keyframes y-pin { 0% { opacity: 0; scale: .4; } 18% { opacity: 1; scale: 1.08; } 42% { scale: .95; } 100% { opacity: 0; scale: 1; } }
+  @keyframes y-focus-sew { from { --sew: 0deg; } to { --sew: 360deg; } }
+
+  /* 1. the margin strand: thinner as a fast scroll pulls it taut (--y-t), springing back when it slackens */
+  html:not([data-look]).motion.y-live .thread .th-line { stroke-width: calc(7px - 2.6px * var(--y-t, 0)); transition: stroke-width .32s cubic-bezier(.3, 1.6, .5, 1); }
+  html:not([data-look]).motion.y-live .thread path.y-edge,
+  html:not([data-look]).motion.y-live .thread path.y-sh { stroke-width: calc(8.5px - 2.6px * var(--y-t, 0)); transition: stroke-width .32s cubic-bezier(.3, 1.6, .5, 1); }
+  /* the slack loop that hangs from the button when the scroll rests */
+  html:not([data-look]).motion.y-live .y-slack { position: absolute; left: 0; top: 0; width: 1px; height: 1px; overflow: visible; pointer-events: none; transform-origin: 0 0; opacity: 0; }
+  html:not([data-look]).motion.y-live .y-slack.y-on { opacity: 1; }
+  html:not([data-look]).motion.y-live .y-slack path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  html:not([data-look]).motion.y-live .y-sl-sh { stroke: var(--shade); stroke-width: 6.5; translate: 0 2px; }
+  html:not([data-look]).motion.y-live .y-sl-edge { stroke: var(--yarn-lo); stroke-width: 6.5; }
+  html:not([data-look]).motion.y-live .y-sl-yarn { stroke: var(--sig); stroke-width: 5; }
+
+  /* 2. seams sewn in by the scroll: the ribbon titles' stitch rows, the group labels' stitch lines and the case
+     headings' running stitch sew in left to right as they rise to the middle, and unpick when scrolled back */
+  html:not([data-look]).motion.y-live main :is(.section-head h2, .group-h, .prose > h2)::after { transform-origin: 0 50%; }
+  @supports (animation-timeline: view()) {
+    html:not([data-look]).motion.y-live main :is(.section-head h2, .group-h, .prose > h2) { view-timeline-name: --y-seam; }
+    html:not([data-look]).motion.y-live main :is(.section-head h2, .group-h, .prose > h2)::after {
+      animation: y-sew-in linear both; animation-timeline: --y-seam; animation-range: entry 100% cover 50%;
+    }
+  }
+  html:not([data-look]).motion.y-live.y-sjs main :is(.section-head h2, .group-h, .prose > h2)::after { clip-path: inset(-8px calc((1 - var(--y-p, 1)) * 100%) -8px 0); }
+
+  /* 3. the opening's layers: the film's felt patch rises a little faster than the cloth and lifts off it; the
+     headline's yarn slides along its own length */
+  html:not([data-look]).motion.y-live .lead-hero .hero-film { translate: 0 var(--y-film-y, 0px); }
+  html:not([data-look]).motion.y-live .lead-hero .hero-film .shot {
+    box-shadow: 0 calc(1px + 1.5px * var(--y-lift, 0)) calc(1.5px + 2px * var(--y-lift, 0)) var(--shade),
+      0 calc(6px + 12px * var(--y-lift, 0)) calc(12px + 16px * var(--y-lift, 0)) calc(-4px - 6px * var(--y-lift, 0)) var(--shade);
+  }
+  html:not([data-look]).motion.y-live .lead-hero h1 .grad { background-position: var(--y-str, 0px) 100%; }
+
+  /* 4. a stray felt fleck, or a curl of raspberry fibre, drifting past the margin */
+  html:not([data-look]).motion.y-live .y-fleck {
+    position: fixed; top: 0; z-index: 5; width: 9px; height: 7px; pointer-events: none; opacity: 0;
+    border-radius: 46% 54% 40% 60% / 55% 45% 55% 45%; background: var(--g-felt) var(--y-felt, var(--y-pink)); box-shadow: 0 1px 1px var(--shade);
+  }
+  html:not([data-look]).motion.y-live .y-fleck.y-fibre { width: 18px; height: 10px; border-radius: 50%; background: none; box-shadow: none; border-top: 1.8px solid var(--sig); }
+
+  /* 6. a patch puffs (hover with a mouse, finger down on touch) and its blanket stitch draws tighter */
+  html:not([data-look]).motion.y-live .card:not(.reveal) { transition: transform .45s var(--spring), box-shadow .3s ease, scale .45s var(--spring); }
+  html:not([data-look]).motion.y-live .card > .seam { transition: scale .4s var(--spring); }
+  html:not([data-look]).motion.y-live .card > .seam .sm-tick { transition: stroke-width .3s ease; }
+  html:not([data-look]).motion.y-live .pager a { transition: transform .35s var(--spring), box-shadow .25s ease, scale .4s var(--spring); }
+  html:not([data-look]).motion.y-live .card.y-puff, html:not([data-look]).motion.y-live.y-fine .card:hover { scale: 1.012; box-shadow: var(--shadow-hover), inset 0 -10px 14px -12px var(--shade); }
+  html:not([data-look]).motion.y-live :is(.card.y-puff, .y-fine .card:hover) > .seam { scale: .986; }
+  html:not([data-look]).motion.y-live :is(.card.y-puff, .y-fine .card:hover) > .seam .sm-tick { stroke-width: 7.8; }
+  html:not([data-look]).motion.y-live .pager a.y-puff { scale: 1.02; }
+
+  /* 7. a press: the patch sinks into the cloth, its yarn loop is pulled taut, and the cloth keeps a dimple a moment */
+  html:not([data-look]).motion.y-live :is(.btn, .groupnav a, .pager a, .theme-toggle, .demo-poster .play, .vid-sound, .vid-toggle).y-sink { scale: .95; translate: 0 1.5px; transition: scale .12s ease-out, translate .12s ease-out; }
+  html:not([data-look]).motion.y-live :is(.btn, .groupnav a, .pager a).y-sink > .loop { scale: .97; transition: scale .12s ease-out; }
+  html:not([data-look]).motion.y-live .y-dimple {
+    position: absolute; z-index: 0; pointer-events: none; border-radius: 999px;
+    background: radial-gradient(closest-side, transparent 58%, var(--shade-2) 74%, var(--shade) 86%, transparent 100%);
+    animation: y-dimple 1.1s ease-out both;
+  }
+
+  /* 8. a link's running stitch, sewn in from the side the pointer came in; the plain underline gives way to it */
+  html:not([data-look]).motion.y-live.y-fine :is(.hero-sub, footer.site, .prose, .lede, .hero-mail, .case-part) a {
+    background-image: repeating-linear-gradient(90deg, var(--sig) 0 6px, transparent 6px 10px); background-repeat: no-repeat;
+    background-size: 0% 2.5px; background-position-x: 0; background-position-y: 100%;
+    transition: background-size .5s cubic-bezier(.3, .6, .3, 1), text-decoration-color .3s ease;
+  }
+  html:not([data-look]).motion.y-live.y-fine :is(.hero-mail, footer.site) a { background-position-y: calc(50% + .78em); }
+  html:not([data-look]).motion.y-live.y-fine :is(.hero-sub, footer.site, .prose, .lede, .hero-mail, .case-part) a[data-y-from="r"] { background-position-x: 100%; }
+  html:not([data-look]).motion.y-live.y-fine :is(.hero-sub, footer.site, .prose, .lede, .hero-mail, .case-part) a:hover { background-size: 100% 2.5px; text-decoration-color: transparent; }
+
+  /* 9. a pin-prick where a finger taps: a tiny hole, the linen puckered round it, relaxing */
+  html:not([data-look]).motion.y-live .y-pin {
+    position: fixed; z-index: 6; width: 36px; height: 36px; margin: -18px 0 0 -18px; pointer-events: none; border-radius: 50%;
+    background: radial-gradient(circle, var(--ink) 0 1.6px, transparent 2.3px), repeating-conic-gradient(var(--shade) 0 5deg, transparent 5deg 22.5deg);
+    -webkit-mask: radial-gradient(circle, #000 0 26%, rgba(0, 0, 0, .55) 52%, transparent 72%); mask: radial-gradient(circle, #000 0 26%, rgba(0, 0, 0, .55) 52%, transparent 72%);
+    animation: y-pin .75s ease-out both;
+  }
+
+  /* 10. the needle: its point is the hit point; a short raspberry thread trails from its eye when it moves fast */
+  html:not([data-look]).motion.y-live.y-needle-on :not(input, textarea, select, [contenteditable], [contenteditable] *) { cursor: none !important; }
+  html:not([data-look]).motion.y-live .y-needle { position: fixed; left: 0; top: 0; z-index: 2147483000; width: 0; height: 0; pointer-events: none; opacity: 0; visibility: hidden; transition: opacity .15s ease, visibility 0s .15s; filter: drop-shadow(0 0 .6px var(--bg)) drop-shadow(0 1px 1px var(--shade)); }
+  html:not([data-look]).motion.y-live .y-needle.y-on { opacity: 1; visibility: visible; transition: opacity .15s ease; }
+  html:not([data-look]).motion.y-live .y-needle.y-on.y-off { opacity: 0; visibility: hidden; transition: opacity .15s ease, visibility 0s .15s; }
+  html:not([data-look]).motion.y-live .y-needle b {
+    position: absolute; left: -1.7px; top: 0; width: 3.4px; height: 21px; transform-origin: 1.7px 0; rotate: -35deg; border-radius: 0 0 2px 2px;
+    background: linear-gradient(90deg, var(--muted), var(--ink) 55%); clip-path: polygon(50% 0, 100% 36%, 100% 100%, 0 100%, 0 36%);
+  }
+  html:not([data-look]).motion.y-live .y-needle b::after { content: ""; position: absolute; left: 1px; top: 14px; width: 1.4px; height: 4.6px; border-radius: 1px; background: var(--bg); }
+  html:not([data-look]).motion.y-live .y-needle.y-link b { background: linear-gradient(90deg, var(--sig-ink), var(--sig) 55%); }
+  html:not([data-look]).motion.y-live .y-needle::after {
+    content: ""; position: absolute; left: 9.2px; top: 13.2px; width: var(--tl, 0px); height: 2px; margin-top: -1px; border-radius: 1px;
+    background: var(--sig); transform-origin: 0 50%; rotate: var(--ta, 0deg);
+  }
+
+  /* 11. a selection in body text sits on a strip of yellow felt, blanket-stitched along both long edges; the native
+     highlight there is nearly clear so the strip shows (copying is untouched) */
+  html:not([data-look]).motion.y-live .y-selhost { isolation: isolate; }
+  html:not([data-look]).motion.y-live .y-sel { position: absolute; left: 0; top: 0; width: 0; height: 0; z-index: -1; pointer-events: none; }
+  html:not([data-look]).motion.y-live .y-sel i {
+    position: absolute; border-radius: 3px; box-shadow: 0 1px 1.5px var(--shade-2);
+    background:
+      linear-gradient(var(--s-yellow), var(--s-yellow)) 0 0 / 100% 1.4px no-repeat,
+      linear-gradient(var(--s-yellow), var(--s-yellow)) 0 100% / 100% 1.4px no-repeat,
+      repeating-linear-gradient(90deg, var(--s-yellow) 0 1.6px, transparent 1.6px 7px) 0 0 / 100% 4.5px no-repeat,
+      repeating-linear-gradient(90deg, var(--s-yellow) 0 1.6px, transparent 1.6px 7px) 0 100% / 100% 4.5px no-repeat,
+      var(--g-felt) var(--y-yellow);
+  }
+  html:not([data-look]).motion.y-live .y-selhost::selection, html:not([data-look]).motion.y-live .y-selhost ::selection { background: color-mix(in srgb, var(--y-yellow) 14%, transparent); color: var(--text); }
+
+  /* 12. a loop of yarn wound round the leading number of a big figure */
+  html:not([data-look]).motion.y-live .y-wraphost { position: relative; }
+  html:not([data-look]).motion.y-live .y-wrap { position: absolute; overflow: visible; pointer-events: none; z-index: 1; opacity: 0; transition: opacity .3s ease; }
+  html:not([data-look]).motion.y-live .y-wrap path { fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1 1; stroke-dashoffset: 1; transition: stroke-dashoffset .6s cubic-bezier(.3, .6, .3, 1); }
+  html:not([data-look]).motion.y-live .y-wr-edge { stroke: var(--yarn-lo); stroke-width: 5.4; }
+  html:not([data-look]).motion.y-live .y-wr-yarn { stroke: var(--sig); stroke-width: 3.8; }
+  html:not([data-look]).motion.y-live .y-wound > .y-wrap { opacity: 1; }
+  html:not([data-look]).motion.y-live .y-wound > .y-wrap path { stroke-dashoffset: 0; }
+
+  /* 13. keyboard focus: the 3 px ink ring stays; a raspberry running stitch is sewn round it */
+  html:not([data-look]).motion.y-live .y-focus { position: fixed; z-index: 2147482000; pointer-events: none; opacity: 0; box-sizing: border-box; border: 2.5px dashed var(--sig); }
+  html:not([data-look]).motion.y-live .y-focus.y-on {
+    opacity: 1; -webkit-mask: conic-gradient(from -45deg, #000 var(--sew), transparent 0); mask: conic-gradient(from -45deg, #000 var(--sew), transparent 0);
+    animation: y-focus-sew .5s ease-in-out both;
+  }
+
+  /* 14. chart beads are threaded onto their string by the scroll (both ways), and a hovered or tapped row shows its
+     value on a little felt tag */
+  @supports (animation-timeline: view()) {
+    html:not([data-look]).motion.y-live :is(.bars .row, .minis tr) { view-timeline-name: --y-bar; }
+    html:not([data-look]).motion.y-live :is(.bars, .minis) .track i { transition: none; animation: y-bead-on linear both; animation-timeline: --y-bar; animation-range: entry 100% cover 40%; }
+  }
+  html:not([data-look]).motion.y-live.y-sjs :is(.bars, .minis) .track i { transition: none; clip-path: inset(-10px calc((1 - var(--y-p, 1)) * (100% + 14px) - 14px) -10px -2px); }
+  html:not([data-look]).motion.y-live .bars .row.y-tag .val {
+    background: var(--y-yellow); color: var(--felt-ink); border-radius: 5px; transform-origin: 0 50%;
+    box-shadow: 0 0 0 4px var(--y-yellow), 0 2px 4px 4px var(--shade-2); outline: 1.5px dashed var(--s-yellow); outline-offset: 1.5px;
+    animation: y-tag-on .5s var(--spring) both;
+  }
+
+  /* 15. phones: the one constant motion (a terminal's blinking caret) runs slower */
+  @media (pointer: coarse), (max-width: 620px) {
+    html:not([data-look]).motion.y-live .in .term pre::after { animation-duration: 1.7s; }
+  }
+}
+/* === end Yarn & Felt liveliness === */
