@@ -78,18 +78,22 @@
     if (FP) FP.th.classList.remove('pm-moving');
     clearTimeout(windT); windT = setTimeout(function () { r.classList.remove('pm-windy'); }, 900); // 8. the grass comes to rest
     later(settle, 220);
+    placeFocus(); // a picture that loaded during the scroll can move the focused control after the last scroll event
   }
 
   /* ---------- 3. depth, 5. cloud shadows, 6. leaf light: all read from scroll position, so they stop when it stops ---------- */
-  var hero = null, cloudOn = false, sections = [], shades = [], leads = null;
+  var hero = null, cloudOn = false, sections = [], shades = [], leads = null, chead = null;
+  var BANDS = 'main > .section, main > .sum-method, main > .prose:has(> .pager)'; // every hill band (home's sections; a case page's "how" and closing block)
   function depthSetup() {
-    hero = d.querySelector('.lead-hero');
-    cloudOn = !!hero && getComputedStyle(hero, '::after').content !== 'none';
+    hero = d.querySelector('.lead-hero') || d.querySelector('main > .case-head'); // a case page: the sky behind its title
+    cloudOn = !!hero && hero.classList.contains('lead-hero') && getComputedStyle(hero, '::after').content !== 'none';
     leads = d.querySelector('.lead-hero .leads');
-    sections = [].slice.call(d.querySelectorAll('main > .section'));
+    chead = leads ? null : d.querySelector('main > .case-head');
+    try { sections = [].slice.call(d.querySelectorAll(BANDS)); } catch (e) { sections = [].slice.call(d.querySelectorAll('main > .section, main > .sum-method')); }
     sections.forEach(function (s) { shades.push(mk('i', 'pm-layer pm-shade', s)); });
     if (leads) shades.push(mk('i', 'pm-layer pm-shade pm-band', leads));
-    if (leads && !night()) [].forEach.call(leads.querySelectorAll('.card.lead'), function (c) { mk('i', 'pm-layer pm-dapple', c, c.firstChild); });
+    if (chead) shades.push(mk('i', 'pm-layer pm-shade pm-band pm-band-c', chead));
+    if (!night()) [].forEach.call(d.querySelectorAll('.leads .card.lead, main > .case-head + .sum .fact'), function (c) { mk('i', 'pm-layer pm-dapple', c, c.firstChild); });
   }
   function depth() {
     var vh = W.innerHeight;
@@ -106,7 +110,8 @@
       prop(s, '--pm-hy', clamp((b.top - vh * .5) * -.05, -16, 16).toFixed(1) + 'px'); // the hill sits back: it moves a little slower
     });
     shades.forEach(function (e) { prop(e, '--pm-shx', (sy * .14).toFixed(1) + 'px'); });
-    if (leads) { prop(leads, '--pm-lx', (Math.sin(sy / 90) * 9 + sy * .03).toFixed(1) + 'px'); prop(leads, '--pm-ly', (Math.cos(sy / 70) * 6).toFixed(1) + 'px'); }
+    var lh = leads || (chead && chead.nextElementSibling);
+    if (lh) { prop(lh, '--pm-lx', (Math.sin(sy / 90) * 9 + sy * .03).toFixed(1) + 'px'); prop(lh, '--pm-ly', (Math.cos(sy / 70) * 6).toFixed(1) + 'px'); }
   }
 
   /* ---------- 2. the footpath paints itself ----------
@@ -133,7 +138,10 @@
     offs.push(function () { mo.disconnect(); });
     path();
   }
-  function meadowTop() { // where the meadow begins, in the thread's coordinates: the band's ground on the home page, else the top
+  function meadowTop() { // where the meadow begins, in the thread's coordinates: the band's ground (home, or under a case title), else the top
+    if (!leads && chead) { var cb = chead.getBoundingClientRect(), cbh = parseFloat(getComputedStyle(r).getPropertyValue('--pm-bh')) || 0;
+      if (!cbh) { var t0 = d.createElement('i'); t0.style.cssText = 'position:absolute;height:var(--pm-bh)'; d.body.appendChild(t0); cbh = t0.offsetHeight; d.body.removeChild(t0); }
+      return cb.bottom - FP.th.getBoundingClientRect().top + cbh * .5; }
     if (!leads) return 0;
     var bh = parseFloat(getComputedStyle(leads).paddingTop) / .8 || 0;
     return leads.getBoundingClientRect().top - FP.th.getBoundingClientRect().top + bh * .5;
@@ -145,18 +153,27 @@
     var n = Math.floor(L / STEP), P = [], i, p, y0 = meadowTop(), small = W.innerWidth <= 620, sh = small ? 0 : -7, ws = small ? .62 : 1; FP.y0 = y0; // a narrow screen: a slimmer path, not shifted toward the edge
     for (i = 0; i <= n; i++) { p = FP.line.getPointAtLength(i * STEP); P.push(p.x + sh, p.y); } // a little further from the boards' edge
     FP.P = P;
-    var Lft = [], Rgt = [], EL = [], ER = [], wornD = '', ga = '', gb = '', started = -1, tuftAt = 0;
+    var Lft = [], Rgt = [], EL = [], ER = [], wornD = '', ga = '', gb = '', started = -1, tuftAt = 0, bodyD = '', edgeD = '', cut = false;
+    var tb = FP.th.getBoundingClientRect(), keep = [];
+    [].forEach.call(d.querySelectorAll('.section-head h2, .prose > h2'), function (h) { // where the path must stop: short of the heading and its board
+      var hb = h.getBoundingClientRect(), bd = h.closest('.prose:not(.case-head)'), left = Math.min(hb.left, bd ? bd.getBoundingClientRect().left : hb.left);
+      keep.push({ x: left - tb.left - 12, t: hb.top - tb.top - 8, b: hb.bottom - tb.top + 8 });
+    });
+    function blocked(x, y) { for (var q = 0; q < keep.length; q++) if (x > keep[q].x && y > keep[q].t && y < keep[q].b) return true; return false; }
+    function flush() { if (Lft.length > 1) { bodyD += 'M' + Lft.join('L') + 'L' + Rgt.reverse().join('L') + 'Z'; edgeD += 'M' + EL.join('L') + 'L' + ER.reverse().join('L') + 'Z'; } Lft = []; Rgt = []; EL = []; ER = []; }
     for (i = 0; i <= n; i++) {
       var a = Math.max(0, i - 1), b = Math.min(n, i + 1), dx = P[2 * b] - P[2 * a], dy = P[2 * b + 1] - P[2 * a + 1], l = Math.hypot(dx, dy) || 1, nx = -dy / l, ny = dx / l;
       var x = P[2 * i], y = P[2 * i + 1];
       if (y < y0 - 2) continue;
+      if (blocked(x, y)) { if (!cut) { flush(); cut = true; } continue; }
+      if (cut) { cut = false; wornD += 'M' + (x - nx * .8).toFixed(1) + ' ' + (y - ny * .8).toFixed(1); }
       if (started < 0) started = i;
       var ramp = clamp((i - started) / 10, 0, 1), w = (3.4 + 1.6 * noise(i * STEP / 70) + .5 * (rnd(i) - .5)) * ramp * ws, we = w + 1.6 + .6 * rnd(i + 7);
       Lft.push((x + nx * w).toFixed(1) + ' ' + (y + ny * w).toFixed(1)); Rgt.push((x - nx * w * .9).toFixed(1) + ' ' + (y - ny * w * .9).toFixed(1));
       EL.push((x + nx * we).toFixed(1) + ' ' + (y + ny * we + .8).toFixed(1)); ER.push((x - nx * (w * .9 - .6)).toFixed(1) + ' ' + (y - ny * (w * .9 - .6) + .8).toFixed(1));
       wornD += (wornD ? 'L' : 'M') + (x - nx * .8).toFixed(1) + ' ' + (y - ny * .8).toFixed(1);
       // grass tufts along both edges, every 18 to 40 px, alternating sides; a few blades each, leaning out from the path
-      if (i * STEP >= tuftAt && ramp === 1) {
+      if (i * STEP >= tuftAt && ramp === 1 && !blocked(x - 20, y) && !blocked(x + 20, y)) {
         var side = rnd(i * 3) < .5 ? 1 : -1, off = (w + 1.2) * side, bx = x + nx * off, by = y + ny * off, nb = 3 + Math.floor(rnd(i + 2) * 3), j;
         for (j = 0; j < nb; j++) {
           var h = (6 + 8 * rnd(i * 5 + j)) * ws, lean = side * (.25 + .5 * rnd(i * 9 + j)), ox = bx + side * j * 1.6, tip = (ox + lean * h).toFixed(1) + ' ' + (by - h).toFixed(1);
@@ -166,9 +183,10 @@
         tuftAt = i * STEP + 18 + 22 * rnd(i + 11);
       }
     }
-    if (!Lft.length) return;
-    FP.body.setAttribute('d', 'M' + Lft.join('L') + 'L' + Rgt.reverse().join('L') + 'Z');
-    FP.edge.setAttribute('d', 'M' + EL.join('L') + 'L' + ER.reverse().join('L') + 'Z');
+    flush();
+    if (!bodyD) return;
+    FP.body.setAttribute('d', bodyD);
+    FP.edge.setAttribute('d', edgeD);
     FP.worn.setAttribute('d', wornD); FP.g1.setAttribute('d', ga); FP.g2.setAttribute('d', gb);
   }
   function path() {
@@ -208,12 +226,12 @@
   function settle() {
     if (!live || scrolling || landed || !ambientFree() || flying.length) return;
     var vh = W.innerHeight, best = null, bd = 1e9;
-    [].forEach.call(d.querySelectorAll('.section-head h2'), function (h) {
+    [].forEach.call(d.querySelectorAll('.section-head h2, .prose > h2'), function (h) {
       var b = h.getBoundingClientRect(); if (b.bottom < 70 || b.top > vh - 60) return;
       var dd = Math.abs((b.top + b.bottom) / 2 - vh * .45); if (dd < bd) { bd = dd; best = h; }
     });
     if (!best) return;
-    if (getComputedStyle(best).position === 'static') best.style.position = 'relative';
+    if (getComputedStyle(best).position === 'static') { best.style.position = 'relative'; prop(best, '--pm-pos', '1'); }
     var e = mk('i', (night() ? 'pm-seed' : 'pm-leaf') + ' pm-land', best); landed = e;
     // beside the end of the heading's last line (never over its words)
     var rg = d.createRange(); rg.selectNodeContents(best); var rs = rg.getClientRects(), hb = best.getBoundingClientRect(), last = rs[rs.length - 1];
@@ -234,7 +252,7 @@
   }
   function onOver(e) {
     var c = e.target.closest && e.target.closest('.leads .card.lead'); if (c && !c.classList.contains('pm-sun')) c.classList.add('pm-sun');
-    var a = e.target.closest && e.target.closest('.hero-sub a, .hero-mail a, footer.site a:not(.btn), .topnav a'); // 12. stroke from the side the pointer came in
+    var a = e.target.closest && e.target.closest('.hero-sub a, .hero-mail a, footer.site a:not(.btn), .topnav a, .prose p a:not(.btn), .prose li a:not(.btn), .prose dd a:not(.btn), .pager-contact a, figcaption a'); // 12. stroke from the side the pointer came in
     if (a && !(e.relatedTarget && a.contains(e.relatedTarget))) { var b = a.getBoundingClientRect(); a.setAttribute('data-pm-from', e.clientX > b.left + b.width / 2 ? 'r' : 'l'); }
   }
   function onOut(e) {
@@ -251,7 +269,7 @@
   function onUp(e) {
     if (!down || Math.hypot(e.clientX - down.x, e.clientY - down.y) > 8 || now() - down.t > 600) { down = null; return; }
     down = null;
-    if (!e.target.closest || e.target.closest('a, button, input, select, textarea, summary, video, label, p, h1, h2, h3, h4, li, b, span, .card, .band, .more-g, .shot, .method, .topbar, details')) return;
+    if (!e.target.closest || e.target.closest('a, button, input, select, textarea, summary, video, label, p, h1, h2, h3, h4, li, b, span, .card, .band, .more-g, .shot, .method, .topbar, details, .prose:not(.case-head), .fact, .chart-card, .flow, .term, .paper, .figure img, .legend, dl, figcaption, svg')) return;
     puff(e.pageX, e.pageY);
   }
   function puff(x, y) {
@@ -268,7 +286,7 @@
   /* ---------- 11. a leading figure: a warm glint runs under it once, when it first comes into view ---------- */
   var gio = null;
   function glintSetup() {
-    var figs = d.querySelectorAll('.fact b, .figure .big, .stat b'); if (!figs.length || !W.IntersectionObserver) return;
+    var figs = d.querySelectorAll('.fact b, .bigfig > b, .figure .big, .stat b'); if (!figs.length || !W.IntersectionObserver) return;
     gio = new IntersectionObserver(function (en) { en.forEach(function (x) { if (x.isIntersecting) { x.target.classList.add('pm-glint'); gio.unobserve(x.target); } }); }, { threshold: .9 });
     [].forEach.call(figs, function (f) { gio.observe(f); });
     offs.push(function () { gio.disconnect(); gio = null; });
@@ -310,7 +328,7 @@
     var pts = [[x, y], [x - 46, y], [x + 46, y], [x, y - 40], [x, y + 40]];
     for (var i = 0; i < pts.length; i++) {
       var el = d.elementFromPoint(pts[i][0], pts[i][1]);
-      if (!el || (el.closest && el.closest('a, button, p, h1, h2, h3, h4, li, b, span, .card, .band, .more-g, .shot, .method, .topbar, details, video, img, .film'))) return false;
+      if (!el || (el.closest && el.closest('a, button, p, h1, h2, h3, h4, li, b, span, .card, .band, .more-g, .shot, .method, .topbar, details, video, img, .film, .prose:not(.case-head), .fact, .chart-card, .flow, .term, .paper, .legend, dl, figcaption, svg, .case-head'))) return false;
     }
     return true;
   }
@@ -365,11 +383,12 @@
     cancelAnimationFrame(raf); raf = 0; dirtyScroll = dirtyPtr = false;
     clearFlying(); if (landed) { drop(landed); landed = null; }
     made.forEach(drop); made = [];
-    styled.forEach(function (el) { ['--pm-sy', '--pm-cx', '--pm-cy', '--pm-hy', '--pm-shx', '--pm-lx', '--pm-ly'].forEach(function (k) { el.style.removeProperty(k); }); }); styled = [];
+    styled.forEach(function (el) { if (el.style.getPropertyValue('--pm-pos')) el.style.removeProperty('position');
+      ['--pm-sy', '--pm-cx', '--pm-cy', '--pm-hy', '--pm-shx', '--pm-lx', '--pm-ly', '--pm-pos'].forEach(function (k) { el.style.removeProperty(k); }); }); styled = [];
     [].forEach.call(d.querySelectorAll('.pm-sun, .pm-glint, .pm-moving'), function (e) { e.classList.remove('pm-sun', 'pm-glint', 'pm-moving'); });
     [].forEach.call(d.querySelectorAll('[data-pm-from]'), function (e) { e.removeAttribute('data-pm-from'); });
     r.classList.remove('pm-live', 'pm-windy');
-    FP = FOC = null; focEl = null; hero = leads = null; sections = []; shades = []; bounds = []; ST = []; FLY = []; scrolling = false;
+    FP = FOC = null; focEl = null; hero = leads = chead = null; sections = []; shades = []; bounds = []; ST = []; FLY = []; scrolling = false;
   }
   var theme0 = r.getAttribute('data-theme');
   function sync() {

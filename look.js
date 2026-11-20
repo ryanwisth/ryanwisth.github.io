@@ -28,7 +28,7 @@ var LOOK_ROWS = [
   ["wash",  "Ink & Wash",      ["#f5f1ea", "#0f1730"],    ["#f5f1ea", "#b84a63"],    true],
   ["brush", "Brush & Scroll",  ["#efe5cf", "#141a33"],    ["#efe5cf", "#c23b22"],    true],
   ["cel",   "Cel & Tide",      ["#5078ff", "#101b4d"],    ["#0963e0", "#f2f2f2"],    true],
-  ["paint", "Paint & Meadow",  ["#dcc2a6", "#18373e"],    ["#d9d5b9", "#0275a0"],    false]
+  ["paint", "Paint & Meadow",  ["#dcc2a6", "#18373e"],    ["#d9d5b9", "#0275a0"],    true]
 ];
 
 /* To try a look without changing anything, add ?look=<key> (?look=wash, ?look=cel, ?look=yarn ...) to any page address.
@@ -73,7 +73,7 @@ var LOOK_ROWS = [
   if (!document.addEventListener) return;
 
   /* Each page's narrated film has a twin per look: video/film-<name>.mp4 (yarn), video/film-<name>-<look>.mp4 with poster
-     img/film-<name>-<look>.jpg (wash, brush, cel). Same length and soundtrack, so a click on the switch carries the moment over.
+     img/film-<name>-<look>.jpg (wash, brush, cel, paint). Same length and soundtrack, so a click on the switch carries the moment over.
      A twin that is missing falls back to the yarn film. The yarn look writes nothing to the films. Other videos
      (captures, previews) are never touched. */
   var FILM = new RegExp("video\\/film-([a-z0-9-]+?)(-" + LOOKS.slice(1).join("|-") + ")?\\.mp4$"), swapped = typeof WeakMap === "function" ? new WeakMap() : null;

@@ -340,17 +340,18 @@ html[data-look="paint"] footer.site .motion-toggle { padding: 6px 14px 7px; font
 @keyframes pm-gust-n { 0%, 58% { background-position-y: 0; } 59.5% { background-position-y: -74px; } 62% { background-position-y: -148px; } 71% { background-position-y: -74px; } 73%, 100% { background-position-y: 0; } }
 @keyframes pm-in { from { opacity: 0; } to { opacity: 1; } }
 /* The yarn look's entrances squash, tilt and bounce. The later @keyframes of a name wins, so here they are redefined in
-   this look's manner: a plain fade, no overshoot, no squash. */
-@keyframes rise { from { opacity: 0; } to { opacity: 1; } }
-@keyframes tile { from { opacity: 0; } to { opacity: 1; } }
-@keyframes pop { from { opacity: 0; } to { opacity: 1; } }
-@keyframes sewn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes sew { from { opacity: 0; } to { opacity: 1; } }
-@keyframes popin { from { opacity: 0; } to { opacity: 1; } }
-@keyframes sewon { from { opacity: 0; } to { opacity: 1; } }
-@keyframes okpop { from { opacity: 0; } to { opacity: 1; } }
-@keyframes dotfill { from { opacity: 0; } to { opacity: 1; } }
-@keyframes chip { from { opacity: 0; } to { opacity: 1; } }
+   this look's manner: no overshoot, no squash, and no fade on words (roll-out fix, Nov 19: a heading or tag caught half
+   faded read as washed out, so words hold full contrast from the first frame; only pictures fade in). */
+@keyframes rise { from { opacity: 1; } to { opacity: 1; } }
+@keyframes tile { from { opacity: 1; } to { opacity: 1; } }
+@keyframes pop { from { opacity: 1; } to { opacity: 1; } }
+@keyframes sewn { from { opacity: 1; } to { opacity: 1; } }
+@keyframes sew { from { opacity: 1; } to { opacity: 1; } }
+@keyframes popin { from { opacity: 1; } to { opacity: 1; } }
+@keyframes sewon { from { opacity: 1; } to { opacity: 1; } }
+@keyframes okpop { from { opacity: 1; } to { opacity: 1; } }
+@keyframes dotfill { from { opacity: 1; } to { opacity: 1; } }
+@keyframes chip { from { opacity: 1; } to { opacity: 1; } }
 @keyframes squash { from { opacity: 1; } to { opacity: 1; } }
 @keyframes sway { from { opacity: 1; } to { opacity: 1; } }
 @keyframes sway2 { from { opacity: 1; } to { opacity: 1; } }
@@ -360,15 +361,13 @@ html[data-look="paint"] footer.site .motion-toggle { padding: 6px 14px 7px; font
 @keyframes ripple { from { opacity: 0; } to { opacity: 0; } }
 @keyframes litring { from { opacity: 1; } to { opacity: 1; } }
 @keyframes tighten { from { opacity: 1; } to { opacity: 1; } }
-@keyframes grow { from { opacity: 0; } to { opacity: 1; } }
+@keyframes grow { from { opacity: 1; } to { opacity: 1; } }
 @media (prefers-reduced-motion: no-preference) {
   html[data-look="paint"].motion .leads::after { animation: pm-gust 7s steps(1, end) infinite; }
-  html[data-look="paint"].motion .reveal { opacity: 0; transform: none; transition: opacity .7s ease; transition-delay: var(--d, 0ms); }
+  html[data-look="paint"].motion .reveal { opacity: 1; transform: none; transition: none; }
   html[data-look="paint"].motion .reveal.in { opacity: 1; transform: none; }
-  html[data-look="paint"].motion .reveal :is(.shot img, .shot video),
-  html[data-look="paint"].motion .reveal > img { scale: 1; transition: none; }
-  html[data-look="paint"].motion .hero h1 { animation: pm-in .6s ease .05s both; }
-  html[data-look="paint"].motion .hero-sub { animation: pm-in .6s ease .2s both; }
+  html[data-look="paint"].motion .reveal :is(img, video) { scale: 1; opacity: 0; transition: opacity .6s ease; transition-delay: var(--d, 0ms); }
+  html[data-look="paint"].motion .reveal.in :is(img, video) { opacity: 1; }
   html[data-look="paint"].motion .th-head { animation: none; }
 }
 @media (prefers-reduced-motion: no-preference) and (max-width: 620px) {
@@ -379,15 +378,17 @@ html[data-look="paint"] footer.site .motion-toggle { padding: 6px 14px 7px; font
    4. The day passes down the page: the top of the page is late morning (the hero's sky), the ground warms toward golden late
    afternoon by the footer (whose sky is the evening band). A wash on the page ground and a warmth on each hill band; boards
    keep their own colour, so no words change. Night stays the measured moonlit night, all the way down.
-   1. Wind: each hill band has a fringe of grass along its foot (the same three drawings as the hero band's front). */
+   1. Wind: each hill band has a fringe of grass along its foot (the same three drawings as the hero band's front).
+   Night hills (roll-out fix): the night plate sat only a little darker than the ground, so by night each hill is deepened
+   and its own marks pulled apart (brightness, contrast), keeping its blue-green hue. */
 html[data-look="paint"] { --pm-day-wash: linear-gradient(to bottom, rgba(244, 214, 150, 0) 0, rgba(244, 214, 150, 0) 1100px, rgba(240, 196, 120, .12) 72%, rgba(236, 182, 104, .2) 100%); --pm-day: 0; }
 html[data-look="paint"] .section { --pm-day: .45; }
 html[data-look="paint"] .section ~ .section { --pm-day: .8; }
 html[data-look="paint"][data-theme="dark"] { --pm-day-wash: none; }
-html[data-look="paint"][data-theme="dark"] .section::before { filter: none; }
+html[data-look="paint"][data-theme="dark"] .section::before { filter: contrast(1.32) brightness(1.4) saturate(1.1); }
 @media (prefers-color-scheme: dark) {
   html[data-look="paint"]:not([data-theme="light"]) { --pm-day-wash: none; }
-  html[data-look="paint"]:not([data-theme="light"]) .section::before { filter: none; }
+  html[data-look="paint"]:not([data-theme="light"]) .section::before { filter: contrast(1.32) brightness(1.4) saturate(1.1); }
 }
 html[data-look="paint"] .section::after {
   content: ""; position: absolute; z-index: -1; left: calc(50% - 50vw); width: 100vw; top: 70px; height: 110px; pointer-events: none;
@@ -523,3 +524,338 @@ html[data-look="paint"][data-theme="dark"] .thread path.pm-fp-g2 { fill: #436560
 html[data-look="paint"][data-theme="dark"] .pm-part { color: #2e4a46; }
 @media (prefers-color-scheme: dark) { html[data-look="paint"]:not([data-theme="light"]) .pm-part { color: #2e4a46; } }
 .pm-stars.f { z-index: 0; }
+
+/* ================= the case pages (roll-out, Nov 19) =================
+   Everything below is for parts the fifteen case pages (and the 404) have and home does not, by class, so it holds on every
+   page. The same painted world as home: the top of each page is the sky, the opening words straight on it in cream; under
+   them the horizon band (far trees, the big tree mass, the path and fence, meadow fading into the page ground), and the
+   summary's facts and chart stand in its meadow as boards. "How it was built" and the closing block each open with a hill
+   band, as home's sections do. Every block of words is a painted board; data things and controls are drawn. */
+html[data-look="paint"] {
+  --pm-tk-warm: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 2.6c9.8.2 17.5 7.6 17.4 17.6-.1 9.6-7.8 17.4-17.5 17.2C10.2 37.3 2.5 29.7 2.6 20 2.7 10 10.3 2.4 20 2.6z' fill='%23eab07e'/%3E%3Cpath d='M8 9C3 15 3 27 11 33c6 4 15 5 22-1-9 3-21 1-25-23z' fill='%23d8955f'/%3E%3Cpath d='M20 2.6c9.8.2 17.5 7.6 17.4 17.6-.1 9.6-7.8 17.4-17.5 17.2C10.2 37.3 2.5 29.7 2.6 20 2.7 10 10.3 2.4 20 2.6z' fill='none' stroke='%238a5232' stroke-width='2.2'/%3E%3C/svg%3E");
+  --pm-v-bar: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1.8c5.8.1 10.3 4.5 10.2 10.3-.1 5.6-4.6 10.2-10.3 10.1C6.2 22.1 1.7 17.6 1.8 12 1.9 6.1 6.3 1.7 12 1.8z' fill='%23e8c981'/%3E%3Cpath d='M12 1.8c5.8.1 10.3 4.5 10.2 10.3-.1 5.6-4.6 10.2-10.3 10.1C6.2 22.1 1.7 17.6 1.8 12 1.9 6.1 6.3 1.7 12 1.8z' fill='none' stroke='%238a6a2c' stroke-width='1.6'/%3E%3Cpath d='M6.6 12.2h10.8' fill='none' stroke='%231b3b2e' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E");
+  --pm-v-x: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1.8c5.8.1 10.3 4.5 10.2 10.3-.1 5.6-4.6 10.2-10.3 10.1C6.2 22.1 1.7 17.6 1.8 12 1.9 6.1 6.3 1.7 12 1.8z' fill='%23daad91'/%3E%3Cpath d='M12 1.8c5.8.1 10.3 4.5 10.2 10.3-.1 5.6-4.6 10.2-10.3 10.1C6.2 22.1 1.7 17.6 1.8 12 1.9 6.1 6.3 1.7 12 1.8z' fill='none' stroke='%237b4a36' stroke-width='1.6'/%3E%3Cpath d='M8 8l8 8M16 8l-8 8' fill='none' stroke='%231b3b2e' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E");
+  --pm-ring0: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.6c5.3.1 9.5 4.1 9.4 9.5-.1 5.1-4.2 9.4-9.5 9.3C6.7 21.3 2.6 17.2 2.7 12 2.8 6.6 6.8 2.5 12 2.6z' fill='%23f5edde' stroke='%23735a44' stroke-width='1.6'/%3E%3C/svg%3E");
+  --pm-stake: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 26'%3E%3Cpath d='M1.4 3.2 4 .9l2.7 2.3.3 22H1.2z' fill='%23b88a64'/%3E%3Cpath d='M4 .9l2.7 2.3.3 22H4.2z' fill='%23946546'/%3E%3Cpath d='M1.4 3.2 4 .9l2.7 2.3.3 22H1.2z' fill='none' stroke='%235e3d28' stroke-width='1.1' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --pm-d-red: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M6 1.1c2.8.1 4.9 2.2 4.9 4.9 0 2.7-2.2 4.9-5 4.9C3.2 10.9 1 8.8 1.1 6 1.2 3.2 3.3 1 6 1.1z' fill='%23dd8f6c' stroke='%237b4a36' stroke-width='1.1'/%3E%3C/svg%3E");
+  --pm-d-gold: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M6 1.1c2.8.1 4.9 2.2 4.9 4.9 0 2.7-2.2 4.9-5 4.9C3.2 10.9 1 8.8 1.1 6 1.2 3.2 3.3 1 6 1.1z' fill='%23e8c981' stroke='%238a6a2c' stroke-width='1.1'/%3E%3C/svg%3E");
+  --pm-d-leaf: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M6 1.1c2.8.1 4.9 2.2 4.9 4.9 0 2.7-2.2 4.9-5 4.9C3.2 10.9 1 8.8 1.1 6 1.2 3.2 3.3 1 6 1.1z' fill='%239bb37e' stroke='%23546b40' stroke-width='1.1'/%3E%3C/svg%3E");
+  --pm-term-board: url("img/paint/board-night.webp");
+  /* data light (H4): a track is sunlit up to its value and in coloured shade beyond (4.5:1 between them) */
+  --pm-sun: #c4d77a; --pm-shd: #3d5f55; --pm-range: #e6d6a0; --pm-base: #daad91;
+  --pm-t-ink: #f3ede2; --pm-t-cmd: #b5cf8a; --pm-t-ok: #a9d18e; --pm-t-bad: #f0a48a; --pm-t-dim: #bfd6d6; --pm-t-hl: #eacf91;
+}
+html[data-look="paint"][data-theme="dark"] { --pm-sun: #a8c4b4; --pm-shd: #10282a; --pm-range: #6f8a80; --pm-base: #9d8a78; }
+@media (prefers-color-scheme: dark) {
+  html[data-look="paint"]:not([data-theme="light"]) { --pm-sun: #a8c4b4; --pm-shd: #10282a; --pm-range: #6f8a80; --pm-base: #9d8a78; }
+}
+
+/* the reading progress line: a thin strip of sunlit grass with its shade line beneath (over 3:1 between them) */
+html[data-look="paint"] body.case::before { background: linear-gradient(#c4d77a 0 4px, #3d5f55 4px) !important; height: 6px !important; border-radius: 0 2px 2px 0; box-shadow: none; }
+
+/* the head: the sky from the top bar down into the horizon band; the back link a drawn button, the kicker a drawn leaf tag,
+   the title in cream straight on the calm deep sky (as home's opening words) */
+html[data-look="paint"] .case-head { position: relative; padding-top: 50px; padding-bottom: 30px; color: var(--pm-cream); background: none; border: 0; box-shadow: none; }
+html[data-look="paint"] .case-head::before {
+  content: ""; position: absolute; z-index: -2; left: calc(50% - 50vw); width: 100vw; top: -70px; bottom: calc(var(--pm-bh) * -.5); height: auto; right: auto; inset-inline-end: auto;
+  pointer-events: none; border: 0; border-radius: 0; opacity: 1; filter: none; transform: none; box-shadow: none;
+  background: var(--pm-sky) center var(--pm-sy, 0px) / var(--pm-bw) auto no-repeat, var(--pm-sky-c);
+}
+@media (max-width: 620px) { html[data-look="paint"] .case-head::before { background: var(--pm-sky-n) center var(--pm-sy, 0px) / 100% auto no-repeat, var(--pm-sky-c); } }
+html[data-look="paint"] .case-head::after {
+  content: ""; position: absolute; z-index: -1; left: calc(50% - 50vw); width: 100vw; top: 100%; height: calc(var(--pm-bh) + 200px); pointer-events: none;
+  border: 0; border-radius: 0; opacity: 1; transform: none; filter: none; box-shadow: none;
+  background: var(--pm-band) center top / var(--pm-bw) auto no-repeat, var(--pm-ground-m) 0 0 / 900px 900px repeat, var(--pm-ground) 0 0 / 1600px 1600px repeat, var(--pm-ground-c);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 calc(var(--pm-bh) * .2), #000 calc(100% - 160px), transparent);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 calc(var(--pm-bh) * .2), #000 calc(100% - 160px), transparent);
+}
+@media (max-width: 620px) { html[data-look="paint"] .case-head::after { background: var(--pm-band-n) center top / 100% auto no-repeat, var(--pm-ground-m) 0 0 / 900px 900px repeat, var(--pm-ground) 0 0 / 1600px 1600px repeat, var(--pm-ground-c); } }
+html[data-look="paint"] .case-head + .sum { position: relative; margin-top: calc(var(--pm-bh) * .76); }
+html[data-look="paint"] main:not(:has(> .sum)) > .case-head { margin-bottom: calc(var(--pm-bh) * .9); }
+/* the wind in the grass along the front of the band (the same three drawings as home's) */
+html[data-look="paint"] .case-head + .sum::before {
+  content: ""; position: absolute; z-index: -1; left: calc(50% - 50vw); width: 100vw; top: calc(var(--pm-bh) * .04 - 96px); height: 110px; pointer-events: none;
+  background: var(--pm-gust) 0 0 / 1600px 330px repeat-x; border: 0; border-radius: 0; opacity: 1; transform: none; filter: none; box-shadow: none;
+}
+@media (max-width: 620px) { html[data-look="paint"] .case-head + .sum::before { height: 74px; top: calc(var(--pm-bh) * .04 - 64px); background-size: 1077px 222px; } }
+html[data-look="paint"] .case-head h1 { color: var(--pm-cream); text-shadow: none; -webkit-text-stroke: 0; font-family: var(--display); font-weight: 700; letter-spacing: 0; }
+html[data-look="paint"] .case-head .lede { color: var(--pm-cream); }
+html[data-look="paint"] .kicker, html[data-look="paint"] .back {
+  --t: var(--pm-t-leaf); display: inline-flex; width: fit-content; border: 0 solid transparent; border-radius: 0; outline: 0; box-shadow: none; text-shadow: none; background: none;
+  color: var(--pm-tag-ink); font-family: var(--display); font-weight: 700; letter-spacing: .02em; border-image: var(--t) 40 fill / 13px stretch;
+}
+html[data-look="paint"] .kicker { padding: 5px 14px 6px; font-size: 14px; margin-bottom: 16px; }
+html[data-look="paint"] .kicker::before, html[data-look="paint"] .kicker::after,
+html[data-look="paint"] .back::before, html[data-look="paint"] .back::after { content: none; }
+html[data-look="paint"] .back { --t: var(--pm-t-cream); padding: 7px 16px 8px; margin: 0 0 18px; transition: transform .18s var(--pop); }
+html[data-look="paint"] .case-head .kicker { display: flex; }
+html[data-look="paint"] .back:is(:hover, :focus-visible) { color: var(--pm-tag-ink); transform: translateY(-2px); }
+html[data-look="paint"] .back:active { transform: translateY(1px); }
+
+/* the summary, the brief, the body: every block of words a painted board (the recipe at the top of this file) */
+html[data-look="paint"] :is(.fact, .chart-card, .prose:not(.case-head), .flow li, .band3 > div, .repo-card, .pager a, .shot:not(.film .shot), .split .legend, :is(figure, .figure) > figcaption, .figure > .figcap) {
+  border: 0 solid transparent; border-radius: 0; outline: 0; box-shadow: none; color: var(--pm-ink);
+  background: var(--pm-board-c); background-clip: padding-box;
+  border-image: var(--pm-board) 56 fill / 28px / 6px 6px 8px 10px stretch;
+}
+html[data-look="paint"] :is(.fact, .chart-card, .band3 > div, .repo-card, .pager a, .shot, .split .legend, .term, .paper)::before,
+html[data-look="paint"] :is(.fact, .chart-card, .flow, .band3 > div, .repo-card, .pager a, .shot, .split .legend, .term, .paper)::after { content: none; }
+html[data-look="paint"] .prose:not(.case-head, :has(> .pager))::after { content: none; }
+/* a board inside a board (the code link, the pager) is a smaller board: narrower edge, the same paint */
+html[data-look="paint"] :is(.repo-card, .pager a, .band3 > div, .split .legend, :is(figure, .figure) > figcaption, .figure > .figcap) { border-image-width: 18px; border-image-outset: 4px 4px 6px 7px; }
+/* a board that takes focus keeps the sunlit ring (the board recipe above clears outlines and outranks the general focus rule) */
+html[data-look="paint"] :is(.fact, .chart-card, .prose:not(.case-head), .flow li, .band3 > div, .repo-card, .pager a, .shot:not(.film .shot), .back, .kicker):focus-visible { outline: 3px solid var(--pm-under); outline-offset: 4px; }
+html[data-look="paint"] .sum .facts { gap: 18px; }
+html[data-look="paint"] .fact { position: relative; overflow: visible; padding: 18px 22px 20px; }
+html[data-look="paint"] :is(.fact, .bigfig) b { width: fit-content; color: var(--pm-ink); font-family: var(--display); font-weight: 700; -webkit-text-stroke: 0; paint-order: normal; text-shadow: none; background: none; }
+html[data-look="paint"] .fact span { color: var(--pm-muted); }
+html[data-look="paint"] .chart-card { padding: 24px 26px; }
+html[data-look="paint"] .chart-card h3 { color: var(--pm-ink); font-family: var(--display); font-weight: 700; }
+html[data-look="paint"] :is(.chart-card .sub, .bigfig .sub) { color: var(--pm-muted); }
+html[data-look="paint"] .prose:not(.case-head) { position: relative; padding: clamp(24px, 4vw, 38px) clamp(24px, 4vw, 44px); }
+html[data-look="paint"] .prose:not(.case-head) + .prose { margin-top: 40px; }
+html[data-look="paint"] .prose:not(.case-head) > h2:first-child { margin-top: 0; }
+html[data-look="paint"] .prose :is(p, li) { color: var(--pm-ink); }
+html[data-look="paint"] .prose li b { color: var(--pm-ink); }
+html[data-look="paint"] .note { color: var(--pm-muted); }
+html[data-look="paint"] :is(.case-head, .case-part) .lede { color: var(--pm-ink); }
+html[data-look="paint"] .case-head .lede { color: var(--pm-cream); }
+/* the brief's labels: drawn leaf tags */
+html[data-look="paint"] .brief dt {
+  --t: var(--pm-t-leaf); justify-self: start; align-self: start; width: fit-content; padding: 2px 12px 3px; margin-top: 1px; border: 0 solid transparent; border-radius: 0;
+  color: var(--pm-tag-ink); font-family: var(--display); font-weight: 700; letter-spacing: .04em; background: none; box-shadow: none; border-image: var(--t) 40 fill / 11px stretch;
+}
+html[data-look="paint"] .brief dt::before, html[data-look="paint"] .brief dt::after { content: none; }
+html[data-look="paint"] .brief dd { color: var(--pm-ink); }
+/* titles in the body: the heading serif in deep shade; the letter mark a drawn round token (the footpath stops at it) */
+html[data-look="paint"] .prose h2 { color: var(--pm-ink); font-family: var(--display); font-weight: 700; rotate: none; background: none; box-shadow: none; }
+html[data-look="paint"] .prose h2::before {
+  width: 34px; height: 34px; border: 0; border-radius: 50%; box-shadow: none; transform: none; rotate: none; color: #1b3b2e; font: 700 14px/1 var(--display);
+  background: var(--pm-token) center / 100% 100% no-repeat; outline: 0;
+}
+html[data-look="paint"] .prose h2::after { content: none; }
+/* bullets: drawn seed dots */
+html[data-look="paint"] .prose li::before { width: 10px; height: 10px; top: .5em; left: 2px; border: 0; border-radius: 0; rotate: none; transform: none; box-shadow: none; background: var(--pm-seed) center / 100% 100% no-repeat; }
+/* links in running text: a short drawn underline in the warm accent */
+html[data-look="paint"] :is(.prose p, .prose li, .prose dd, .pager-contact, figcaption, .note) a:not(.btn) {
+  color: inherit; font-weight: 600; text-decoration: underline; text-decoration-color: var(--pm-under); text-decoration-thickness: 2px; text-underline-offset: 4px; background: none;
+}
+html[data-look="paint"] .prose code { background: none; color: inherit; }
+/* captions: a small board under the figure */
+html[data-look="paint"] :is(figure, .figure) > figcaption, html[data-look="paint"] .figure > .figcap {
+  width: fit-content; max-width: 100%; box-sizing: border-box; margin: 22px auto 0; padding: 8px 18px 9px; color: var(--pm-ink);
+}
+html[data-look="paint"] .sum-vis > figcaption { margin: 18px 0 0; }
+html[data-look="paint"] main > details.film-script, html[data-look="paint"] main > details.film-script :is(summary, p) { color: var(--pm-ink); }
+
+/* the case film: the same board mount as home's */
+html[data-look="paint"] .case-film .shot { padding: 16px; overflow: visible; border: 0 solid transparent; border-radius: 0; outline: 0; box-shadow: none; background: var(--pm-board-c); background-clip: padding-box; border-image: var(--pm-board) 56 fill / 28px / 6px 6px 8px 10px stretch; }
+html[data-look="paint"] .case-film .shot video { position: relative; z-index: 0; border-radius: 2px; display: block; border: 0; box-shadow: none; outline: 0; }
+
+/* steps: stepping-stone boards on the ground; each number a drawn token (the key steps in sun: a warm token, a warmer board) */
+html[data-look="paint"] .flow { border: 0; outline: 0; border-radius: 0; background: none; box-shadow: none; padding: 10px 6px; gap: 22px 30px; }
+html[data-look="paint"] .flow li { padding: 18px 18px 18px; }
+html[data-look="paint"] .flow li.key { filter: sepia(.14) saturate(1.12) brightness(1.03); }
+html[data-look="paint"] .flow li b { color: var(--pm-ink); font-family: var(--display); }
+html[data-look="paint"] .flow li span { color: var(--pm-muted); }
+html[data-look="paint"] .flow li::before {
+  width: 30px; height: 30px; border: 0; outline: 0; border-radius: 50%; box-shadow: none; rotate: none; transform: none; color: #1b3b2e; font: 700 14px/1 var(--display);
+  background: var(--pm-token) center / 100% 100% no-repeat; display: inline-grid; place-items: center;
+}
+html[data-look="paint"] .flow li.key::before { background: var(--pm-tk-warm) center / 100% 100% no-repeat; color: #1b3b2e; border: 0; }
+html[data-look="paint"] .flow li::after { content: ""; clip-path: none; transform: translateY(-50%); background: var(--pm-arrow) center / 100% 100% no-repeat; width: 16px; height: 16px; right: -24px; border: 0; box-shadow: none; border-radius: 0; }
+html[data-look="paint"] .flow.c5 li::after { right: -21px; }
+
+/* frames for captures, pictures and the paper sheet: a painted board mount; the window bar a band of the mount with three
+   drawn dots; the paper keeps its white ground inside a board ring */
+html[data-look="paint"] .shot:not(.film .shot) { padding: 10px; overflow: hidden; }
+html[data-look="paint"] .shot.vid:not(.film .shot) { overflow: visible; }
+html[data-look="paint"] :is(.shot > img, .shot > video, .shot > a, .shot .demo-frame, .paper img, .shot.vid video, .demo-poster img) { border: 0; outline: 0; border-radius: 2px; box-shadow: none; }
+html[data-look="paint"] :is(.shot, .term) .bar { border: 0; background: none; padding: 2px 6px 9px; box-shadow: none; }
+html[data-look="paint"] :is(.shot, .term) .bar i { width: 11px; height: 11px; border: 0; outline: 0; border-radius: 50%; box-shadow: none; background: var(--pm-d-red) center / 100% 100% no-repeat; }
+html[data-look="paint"] :is(.shot, .term) .bar i:nth-child(2) { background-image: var(--pm-d-gold); }
+html[data-look="paint"] :is(.shot, .term) .bar i:nth-child(3) { background-image: var(--pm-d-leaf); }
+html[data-look="paint"] .shot .bar em { color: var(--pm-muted); }
+html[data-look="paint"] :is(.figure > img, .figure .pair > img, .duo img) {
+  border: 0 solid transparent; border-radius: 0; outline: 0; box-shadow: none; padding: 10px; box-sizing: border-box;
+  background: var(--pm-board-c); border-image: var(--pm-board) 56 fill / 28px / 6px 6px 8px 10px stretch;
+}
+html[data-look="paint"] .paper { border: 0 solid transparent; border-radius: 0; outline: 0; box-shadow: none; border-image: var(--pm-board) 56 / 24px / 18px 18px 20px 22px stretch; }
+html[data-look="paint"] .shot.phone { border-radius: 0; }
+
+/* the terminal: a board in deep shade (deep blue-green), written in sunlit cream; highlight sunlit leaf, errors earth red */
+html[data-look="paint"] .term {
+  border: 0 solid transparent; border-radius: 0; outline: 0; box-shadow: none; padding: 10px 6px 4px; color: var(--pm-t-ink);
+  background: #1f3e44; background-clip: padding-box; border-image: var(--pm-term-board) 56 fill / 28px / 6px 6px 8px 10px stretch;
+}
+html[data-look="paint"] .term pre { color: var(--pm-t-ink); background: none; border: 0; border-radius: 0; outline: 0; }
+html[data-look="paint"] .term .bar em { color: var(--pm-t-dim); }
+html[data-look="paint"] .term .cmd { color: var(--pm-t-ink); }
+html[data-look="paint"] .term .cmd::before { color: var(--pm-t-cmd); }
+html[data-look="paint"] .term .ok { color: var(--pm-t-ok); }
+html[data-look="paint"] .term .bad { color: var(--pm-t-bad); }
+html[data-look="paint"] .term .dim { color: var(--pm-t-dim); }
+html[data-look="paint"] .term .hl { color: var(--pm-t-hl); }
+html[data-look="paint"] .term pre::after { color: var(--pm-t-cmd); }
+html[data-look="paint"] .term pre:focus-visible { outline: 3px solid var(--pm-t-hl); outline-offset: -3px; }
+
+/* bars (H4, the light rule for data): each track sunlit up to its value and in coloured shade beyond; a drawn stake ends
+   each bar (the second cue); a cut is a stake; a range a flat lighter band with drawn end ticks; a base bar in earth */
+html[data-look="paint"] :is(.bars .track, .minis .cell .track) { border: 0; outline: 0; border-radius: 0; background: var(--pm-shd); background-image: none; box-shadow: none; overflow: visible; }
+html[data-look="paint"] :is(.bars .track i, .minis .cell .track i) { border: 0; outline: 0; border-radius: 0; opacity: 1; filter: none; box-shadow: none; background: var(--pm-sun); }
+html[data-look="paint"] :is(.bars .track i, .minis .cell .track i)::after {
+  content: ""; position: absolute; right: -4px; top: -6px; bottom: -6px; width: 8px; border: 0; border-radius: 0; box-shadow: none; transform: none; opacity: 1;
+  background: var(--pm-stake) center / 100% 100% no-repeat;
+}
+html[data-look="paint"] .bars .track i.base { background: var(--pm-base); }
+html[data-look="paint"] .bars .track i.range { opacity: 1; background: linear-gradient(90deg, #5e3d28 0 2px, var(--pm-range) 2px calc(100% - 2px), #5e3d28 calc(100% - 2px)); }
+html[data-look="paint"] .bars .track i.range::after { content: none; }
+html[data-look="paint"] .bars .track i.cut { background: var(--pm-sun); }
+html[data-look="paint"] .bars .row:hover .track i { filter: none; }
+html[data-look="paint"] :is(.bars .lab, .bars .val, .minis .cell span, .minis td) { color: var(--pm-ink); }
+html[data-look="paint"] :is(.bars .lab small, .minis th) { color: var(--pm-muted); }
+html[data-look="paint"] .bars .val { font-family: var(--display); font-weight: 700; }
+/* the small table: rows alternate sunlit and shaded bands */
+html[data-look="paint"] .minis td { border: 0; }
+html[data-look="paint"] .minis tbody tr:nth-child(odd) td { background: #e9dcc6; }
+html[data-look="paint"][data-theme="dark"] .minis tbody tr:nth-child(odd) td { background: #18363c; }
+@media (prefers-color-scheme: dark) { html[data-look="paint"]:not([data-theme="light"]) .minis tbody tr:nth-child(odd) td { background: #18363c; } }
+html[data-look="paint"] .minis td:first-child { padding-left: 8px; }
+
+/* the three verdicts: three small boards; each marker a drawn token with its own shape (tick, bar, cross), so colour is
+   never the only signal */
+html[data-look="paint"] .band3 { gap: 14px; }
+html[data-look="paint"] .band3 > div, html[data-look="paint"] .band3 > div:is(:first-child, :last-child) { padding: 14px 16px; color: var(--pm-muted); }
+html[data-look="paint"] .band3 > div b { color: var(--pm-ink); display: flex; align-items: center; gap: 8px; font-family: var(--display); }
+html[data-look="paint"] .band3 > div b::before { content: ""; flex: none; width: 20px; height: 20px; border: 0; border-radius: 0; box-shadow: none; background: var(--pm-tick) center / 100% 100% no-repeat; }
+html[data-look="paint"] .band3 > .warn b::before { background-image: var(--pm-v-bar); }
+html[data-look="paint"] .band3 > .stop b::before { background-image: var(--pm-v-x); }
+
+/* tick lists in the method boards: seed dots; on the "I tested" list a drawn leaf tick, an empty drawn ring for "not" */
+html[data-look="paint"] .ticks li { color: var(--pm-ink); }
+html[data-look="paint"] :is(.ticks li, .ticks.ok li, .ticks.ok li.no)::before {
+  width: 11px; height: 11px; top: .45em; left: 2px; border: 0; outline: 0; rotate: none; transform: none; border-radius: 0; box-shadow: none;
+  background: var(--pm-seed) center / 100% 100% no-repeat;
+}
+html[data-look="paint"] .ticks.ok li::before { width: 16px; height: 16px; top: .22em; left: 0; background-image: var(--pm-tick); }
+html[data-look="paint"] .ticks.ok li.no::before { background-image: var(--pm-ring0); }
+html[data-look="paint"] .ticks.ok li.no { color: var(--pm-muted); }
+
+/* the big figure and its dot grid: marked dots drawn in sun (fill and line), the rest an outline in shade */
+html[data-look="paint"] .g-dots i { border: 0; outline: 0; box-shadow: none; background: radial-gradient(circle, transparent 0 46%, #6f8a6c 50% 70%, transparent 74%); }
+html[data-look="paint"] .g-dots i.x { background: radial-gradient(circle, #e4a271 0 50%, #8a5232 54% 72%, transparent 76%); box-shadow: none; }
+html[data-look="paint"][data-theme="dark"] .g-dots i { background: radial-gradient(circle, transparent 0 46%, #7f9c98 50% 70%, transparent 74%); }
+@media (prefers-color-scheme: dark) { html[data-look="paint"]:not([data-theme="light"]) .g-dots i { background: radial-gradient(circle, transparent 0 46%, #7f9c98 50% 70%, transparent 74%); } }
+/* legend keys keep their picture's colour (inline), as small drawn swatches on a board */
+html[data-look="paint"] .legend li { color: var(--pm-ink); }
+html[data-look="paint"] .split .legend { margin: 0; padding: 14px 18px; }
+html[data-look="paint"] .legend i { border: 0 !important; outline: 0; border-radius: 3px; width: 16px; height: 16px; box-shadow: none; }
+/* paired pictures: their taglines on drawn sky tags */
+html[data-look="paint"] .duo .tagline {
+  --t: var(--pm-t-sky); width: fit-content; padding: 4px 12px 5px; border: 0 solid transparent; border-radius: 0; color: var(--pm-tag-ink); font-family: var(--display); font-weight: 700;
+  background: none; box-shadow: none; border-image: var(--t) 40 fill / 12px stretch;
+}
+/* the line chart: the area under the line a painted hillside (sunlit top, shade below); the line and points drawn; faint shade grid */
+html[data-look="paint"] .linechart .grid { stroke: rgba(61, 95, 85, .28); }
+html[data-look="paint"] .linechart .axis { fill: var(--pm-muted); }
+html[data-look="paint"] .linechart .val { fill: var(--pm-ink); font-family: var(--display); font-weight: 700; }
+html[data-look="paint"] .linechart .ln1 { stroke: #4d6b38; stroke-width: 3.5; }
+html[data-look="paint"] .linechart .area { fill: #7f9a55; opacity: 1; }
+html[data-look="paint"].motion .in .linechart .area { opacity: 1; }
+html[data-look="paint"] .linechart .b2 { fill: #c4d77a; opacity: 1; }
+html[data-look="paint"] .linechart .pt { fill: #e8c981; stroke: #5e4a22; stroke-width: 2.4; }
+html[data-look="paint"][data-theme="dark"] .linechart .ln1 { stroke: #c4dad6; }
+html[data-look="paint"][data-theme="dark"] .linechart .area { fill: #3f6a63; }
+@media (prefers-color-scheme: dark) {
+  html[data-look="paint"]:not([data-theme="light"]) .linechart .ln1 { stroke: #c4dad6; }
+  html[data-look="paint"]:not([data-theme="light"]) .linechart .area { fill: #3f6a63; }
+}
+/* the demo poster: its play button a drawn warm tag */
+html[data-look="paint"] .demo-poster .play {
+  --t: var(--pm-t-warm); color: var(--pm-tag-ink); border: 0 solid transparent; border-radius: 0; outline: 0; box-shadow: none; font-family: var(--display); font-weight: 700;
+  -webkit-backdrop-filter: none; backdrop-filter: none; background: none; border-image: var(--t) 40 fill / 13px stretch;
+}
+html[data-look="paint"] .demo-poster:hover .play { background: none; scale: 1.04; }
+html[data-look="paint"] .demo-poster .play::before, html[data-look="paint"] .demo-poster .play::after { content: none; }
+
+/* the code link and the pager: smaller boards; the pager's arrows are drawn earth chevrons */
+html[data-look="paint"] .repo-card { padding: 22px 26px; }
+html[data-look="paint"] .repo-card p { color: var(--pm-muted); }
+html[data-look="paint"] .repo-card p b { color: var(--pm-ink); }
+html[data-look="paint"] .pager { padding: 0; gap: 22px; }
+html[data-look="paint"] .pager a { padding: 16px 20px; color: var(--pm-ink); transition: transform .18s var(--pop); }
+html[data-look="paint"] .pager a:is(:hover, :focus-visible) { transform: translateY(-2px); border-color: transparent; }
+html[data-look="paint"] .pager a:active { transform: translateY(1px); }
+html[data-look="paint"] .pager small { color: var(--pm-muted); font-family: var(--display); font-weight: 700; }
+html[data-look="paint"] .pager-contact a { color: var(--pm-ink); }
+
+/* hill bands: "How it was built" and the closing block open with a low painted hill, as home's sections do */
+html[data-look="paint"] .sum-method { position: relative; padding-top: 196px; margin-top: 10px; --pm-day: .45; }
+html[data-look="paint"] .prose:has(> .pager) { margin-top: 220px; --pm-day: .8; }
+html[data-look="paint"] :is(.sum-method, .prose:has(> .pager))::before {
+  content: ""; position: absolute; z-index: -1; left: calc(50% - 50vw); width: 100vw; top: 0; height: 188px; pointer-events: none; right: auto;
+  background: var(--pm-hill) center top / max(100vw, 1600px) 188px no-repeat; border: 0; border-radius: 0; opacity: 1; transform: none; box-shadow: none;
+  -webkit-mask-image: linear-gradient(#000 62%, transparent); mask-image: linear-gradient(#000 62%, transparent);
+  translate: 0 var(--pm-hy, 0px); filter: sepia(calc(var(--pm-day) * .16)) saturate(calc(1 + var(--pm-day) * .14));
+}
+html[data-look="paint"] .prose:has(> .pager)::before { top: -206px; }
+html[data-look="paint"] :is(.sum-method, .prose:has(> .pager))::after {
+  content: ""; position: absolute; z-index: -1; left: calc(50% - 50vw); width: 100vw; top: 70px; height: 110px; pointer-events: none; right: auto;
+  background: var(--pm-gust) 0 0 / 1600px 330px repeat-x; border: 0; border-radius: 0; opacity: 1; transform: none; filter: none; box-shadow: none;
+  translate: 0 var(--pm-hy, 0px);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 24%, transparent 36%, transparent 64%, #000 76%, #000 94%, transparent), linear-gradient(#000 64%, transparent 98%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 24%, transparent 36%, transparent 64%, #000 76%, #000 94%, transparent), linear-gradient(#000 64%, transparent 98%);
+  mask-composite: intersect;
+}
+html[data-look="paint"] .prose:has(> .pager)::after { top: -136px; }
+html[data-look="paint"] .prose:has(> .pager) > .pm-shade { top: -206px; }
+@media (max-width: 620px) {
+  html[data-look="paint"] :is(.sum-method, .prose:has(> .pager))::after { top: 114px; height: 74px; background-size: 1077px 222px; }
+  html[data-look="paint"] .prose:has(> .pager)::after { top: -92px; }
+}
+html[data-look="paint"][data-theme="dark"] :is(.sum-method, .prose:has(> .pager))::before { filter: contrast(1.32) brightness(1.4) saturate(1.1); }
+@media (prefers-color-scheme: dark) { html[data-look="paint"]:not([data-theme="light"]) :is(.sum-method, .prose:has(> .pager))::before { filter: contrast(1.32) brightness(1.4) saturate(1.1); } }
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-look="paint"].motion .case-head + .sum::before { animation: pm-gust 7s steps(1, end) infinite; }
+  html[data-look="paint"].motion .sum-method::after { animation: pm-gust 7s steps(1, end) .9s infinite; }
+  html[data-look="paint"].motion .prose:has(> .pager)::after { animation: pm-gust 7s steps(1, end) 1.8s infinite; }
+  html[data-look="paint"].motion.pm-windy .case-head + .sum::before,
+  html[data-look="paint"].motion.pm-windy .sum-method::after,
+  html[data-look="paint"].motion.pm-windy .prose:has(> .pager)::after { animation-duration: 2.6s; }
+}
+@media (prefers-reduced-motion: no-preference) and (max-width: 620px) {
+  html[data-look="paint"].motion .case-head + .sum::before,
+  html[data-look="paint"].motion .sum-method::after,
+  html[data-look="paint"].motion .prose:has(> .pager)::after { animation-name: pm-gust-n; }
+}
+
+@media (max-width: 620px) {
+  html[data-look="paint"] .case-head { padding-top: 34px; }
+  html[data-look="paint"] .prose:not(.case-head) { margin-inline: 12px; padding: 24px 20px; }
+  html[data-look="paint"] .flow li::after { display: none; }
+  html[data-look="paint"] .fact { padding: 16px 20px 18px; }
+  html[data-look="paint"] .chart-card { padding: 20px 20px; }
+}
+/* the lively layer on case pages (look-paint.js): cloud shadows over the meadow under the title; leaf light on the facts
+   that stand in it (by day, on the edge ring only); a leaf that lands by a body title */
+html[data-look="paint"] .pm-shade.pm-band-c { top: calc(100% + var(--pm-bh) * .5); }
+html[data-look="paint"].pm-live .case-head + .sum .fact { isolation: isolate; }
+html[data-look="paint"] .prose > h2 .pm-land { position: absolute; margin-left: 0; }
+html[data-look="paint"].pm-live :is(.prose p, .prose li, .prose dd, .pager-contact, figcaption) a:not(.btn) {
+  background: var(--pm-stroke) left 100% / 0% 7px no-repeat; padding-bottom: 3px; transition: background-size .45s cubic-bezier(.3, .7, .3, 1);
+}
+html[data-look="paint"].pm-live :is(.prose p, .prose li, .prose dd, .pager-contact, figcaption) a:not(.btn)[data-pm-from="r"] { background-position: right 100%; }
+html[data-look="paint"].pm-live :is(.prose p, .prose li, .prose dd, .pager-contact, figcaption) a:not(.btn):hover { background-size: 100% 7px; text-decoration-color: transparent; }
+/* a body title's token waits a little smaller until the footpath reaches it, then stands full size (never faded, never turned) */
+@media (prefers-reduced-motion: no-preference) {
+  html[data-look="paint"].motion .th-live .prose > h2::before { transition: transform .5s var(--pop); opacity: 1; }
+  html[data-look="paint"].motion .th-live .prose > h2:not(.th-on)::before { opacity: 1; transform: scale(.82); }
+}
+html[data-look="paint"] .linechart .y-ply { display: none; }
+/* the dot grid holds still (the yarn drops each dot in and pops the marked ones with an overshoot; here the dots are simply
+   there, and the marked ones carry the figure by colour and line) */
+@media (prefers-reduced-motion: no-preference) {
+  html[data-look="paint"].motion .in .g-dots i, html[data-look="paint"].motion .in .g-dots i.x, html[data-look="paint"].motion .in .g-box i { animation: none; }
+}
