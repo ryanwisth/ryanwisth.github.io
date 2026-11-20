@@ -146,16 +146,17 @@
     .concat(['hero-floor', 'hero-tall', 'hero-small', 'band-cols', 'band-floor', 'frieze', 'sky', 'fact', 'stair', 'v-ok'].map(function (k) { return '--dp-a-' + k; }));
   var SIZES = { m: .78, 1: 1.22, 2: 1.45 }, HOLD = 132, TICK = 66;
   function fluid() {
-    var cs = getComputedStyle(r), css = '', k, i, v;
-    for (k in SIZES) {
-      css += 'html[data-look="dots"] .dp-z' + k + ' {';
-      for (i = 0; i < VARS.length; i++) {
-        v = cs.getPropertyValue(VARS[i]).trim();
-        if (v.indexOf('<circle') < 0) continue;
-        css += VARS[i] + ':' + v.replace(/(<circle\b[^>]*?\br=')([\d.]+)'/g, function (m, a, n) { return a + (parseFloat(n) * SIZES[k]).toFixed(2) + "'"; }) + ';';
-      }
-      css += '}\n';
+    // each size is held once on <html> as its own --dp-zN-* variable (so the sheet sweep knows them as this look's own);
+    // a sized panel points its tints at them, and the data inside it (bars, charts) points back at the originals
+    var cs = getComputedStyle(r), root = '', css = '', keep = '', k, i, v, name;
+    for (i = 0; i < VARS.length; i++) {
+      v = cs.getPropertyValue(VARS[i]).trim(); if (v.indexOf('<circle') < 0) continue;
+      name = VARS[i].slice(5); keep += VARS[i] + ':var(--dp-o-' + name + ');'; root += '--dp-o-' + name + ':var(' + VARS[i] + ');';
+      for (k in SIZES) root += '--dp-z' + k + '-' + name + ':' + v.replace(/(<circle\b[^>]*?\br=')([\d.]+)'/g, function (m, a, n) { return a + (parseFloat(n) * SIZES[k]).toFixed(2) + "'"; }) + ';';
     }
+    for (k in SIZES) css += 'html[data-look="dots"] .dp-z' + k + ' {' + VARS.map(function (x) { return root.indexOf('--dp-z' + k + '-' + x.slice(5) + ':') < 0 ? '' : x + ':var(--dp-z' + k + '-' + x.slice(5) + ');'; }).join('') + '}\n';
+    css = 'html[data-look="dots"][data-look] {' + root + '}\n' + css +
+      'html[data-look="dots"] :is(.dp-z1, .dp-z2, .dp-zm) :is(.track, .bars, .minis, .linechart, .legend, .chart-card) {' + keep + '}\n';
     var st = d.createElement('style'); st.id = 'dp-fluid-sizes'; st.textContent = css; d.head.appendChild(st); made.push(st);
 
     var cv = d.createElement('canvas'); cv.className = 'dp-fx'; cv.setAttribute('aria-hidden', 'true'); d.body.appendChild(cv); made.push(cv);
