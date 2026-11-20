@@ -4,6 +4,9 @@
    carries both data-look="brush" and .motion, and takes away everything it added (listeners, elements, classes,
    properties) the moment either goes: the look picker, "Pause motion", or a reduced-motion change.
    Every visual it adds is ink, vermilion or the look's existing tokens; nothing it adds takes a tap or a click.
+   Ink and paper pass (Nov 19): a second, smaller part (.b-ink) runs whenever the look is worn, motion on or paused:
+   collector's seals (kept in localStorage under rw-brush-seals:<path>, nothing else, no network) and, on touch
+   screens, the capture centred in the window shown in colour. It is taken away the moment the look changes.
 
    Rules it keeps (the "guardrails"):
    - one moving accent on screen at a time: ambient ones (falling petals, the settle coat) wait while one the reader
@@ -55,6 +58,7 @@
     if (!SDA) scrub();
     hero();
     if (dir) boundary(dir);
+    wetScroll(dir);
     clearTimeout(idleT); idleT = setTimeout(rest, 150); // (not later(): one timer a frame would pile up in its list)
   }
   function rest() { scrolling = false; speed = 0; pt = 0; thread(true); settle(); }
@@ -216,7 +220,7 @@
     if (best === coated) return;
     if (coated) coated.classList.remove('b-coat');
     coated = best;
-    if (best) best.classList.add('b-coat');
+    if (best) { best.classList.add('b-coat'); wet(best, best.matches('.prose > h2') ? '::after' : '::before', 120); }
   }
 
   /* ---------- 6, 7, 9, 12, 14: presses and taps ---------- */
@@ -384,14 +388,206 @@
   }
   function focusFollow() { if (focEl && !focRaf) focRaf = requestAnimationFrame(placeFocus); }
 
+  /* ---------- ink and paper (Nov 19) ----------
+     1 wet, then dry: anything newly painted (an outline or colour block coming in, a section stroke or heading stroke
+       being painted by the scroll, the settle coat) starts darker with a sheen sliding over it and dries to matte in
+       about a second (Web Animations on the pseudo-element; filter and a background sheen only). Motion only.
+     6 mica: two thin columns in the margins whose glints cross-fade with the scroll (a scroll timeline on opacity;
+       light paper only). Motion only.
+     7 collector's seals and 9 captures centred on touch screens are not motion: they run while the look is worn
+       (.b-ink), with motion on or paused. */
+  var wets = [], wio = null, wetScrub = [];
+  function wetFilter() { return getComputedStyle(r).getPropertyValue('--b-wet').trim() || 'brightness(.75)'; }
+  function wet(el, ps, delay, noSheen) {
+    if (!el || !el.animate) return null;
+    var f = wetFilter(), sh = noSheen ? null : getComputedStyle(r).getPropertyValue('--b-sheen').trim(), a;
+    var k0 = { filter: f, offset: 0 }, k1 = { filter: f, offset: .25 }, k2 = { filter: 'none', offset: 1 };
+    if (sh) { k0.backgroundImage = k1.backgroundImage = k2.backgroundImage = sh; k0.backgroundSize = k1.backgroundSize = k2.backgroundSize = '260% 100%';
+      k0.backgroundPosition = '100% 0'; k1.backgroundPosition = '80% 0'; k2.backgroundPosition = '0% 0'; k0.backgroundRepeat = k1.backgroundRepeat = k2.backgroundRepeat = 'no-repeat'; }
+    try { a = el.animate([k0, k1, k2], { duration: 1150, delay: delay || 0, easing: 'ease-out', pseudoElement: ps }); } catch (e) { return null; }
+    wets.push(a); a.onfinish = a.oncancel = function () { var i = wets.indexOf(a); if (i >= 0) wets.splice(i, 1); };
+    return a;
+  }
+  var OUTL = '.card, .band, .method > li, .film .shot, .fact, .chart-card, .repo-card, .band3 > div, .pager a, .term, .paper, .shot';
+  function wetSetup() {
+    if (!W.IntersectionObserver) return;
+    wio = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var el = e.target; wio.unobserve(el);
+        if (el.matches('.section-head h2, .case-head h1')) { wet(el, '::after', 150); return; }
+        if (el.matches('.section, .prose > h2')) return; // painted by the scroll: wetted in wetScroll()
+        var dv = getComputedStyle(el).getPropertyValue('--d').trim(), dd = (parseFloat(dv) || 0) / (/ms$/.test(dv) ? 1000 : 1); // --d is written in s or ms
+        wet(el, '::after', dd * 1000);
+        if (!el.matches('.shot, .film .shot, .flow li')) wet(el, '::before', dd * 1000 + 420);
+      });
+    }, { threshold: .12 });
+    [].forEach.call(d.querySelectorAll(OUTL + ', .section-head h2, .case-head h1'), function (el) { wio.observe(el); });
+    offs.push(function () { if (wio) wio.disconnect(); wio = null; });
+    wetScrub = [].slice.call(d.querySelectorAll('main .section, main .prose > h2'));
+  }
+  // a stroke being painted by the scroll stays wet while it is painted and dries a second after
+  function wetScroll(dir) {
+    if (dir <= 0) return;
+    var vh = innerHeight, t = now();
+    for (var i = 0; i < wetScrub.length; i++) {
+      var el = wetScrub[i], top = el.getBoundingClientRect().top;
+      if (top > vh || top < vh * .45) continue;
+      if (el.__bw && t - el.__bwt < 220) continue;
+      if (el.__bw && el.__bw.playState === 'running') el.__bw.currentTime = 0;
+      else el.__bw = wet(el, el.matches('.section') ? '::before' : '::after', 0);
+      el.__bwt = t;
+    }
+  }
+  // 6: mica glints in the margins, light paper only
+  var MICA = null;
+  function micaSetup() {
+    micaOff();
+    if (!SDA || getComputedStyle(r).getPropertyValue('--b-mica-a').indexOf('url') < 0) return;
+    MICA = [mk('i', 'b-mica b-l', d.body), mk('i', 'b-mica b-r', d.body)];
+    micaSize();
+  }
+  function micaSize() {
+    if (!MICA) return;
+    var cw = r.clientWidth, w = Math.max(12, Math.round((cw - 1032) / 2 - 12)), h = Math.max(d.body.scrollHeight, r.scrollHeight);
+    MICA[0].style.cssText = 'left:0;width:' + w + 'px;height:' + h + 'px';
+    MICA[1].style.cssText = 'left:' + (cw - w) + 'px;width:' + w + 'px;height:' + h + 'px';
+  }
+  function micaOff() { if (MICA) { MICA.forEach(function (m) { drop(m); var i = made.indexOf(m); if (i >= 0) made.splice(i, 1); }); MICA = null; } }
+
+  /* ---------- 7. collector's seals: a section read to its end gets a seal in its margin ----------
+     A section runs from its heading to the next heading (the last to the footer). It counts as read once its heading
+     has been on screen and the reader has scrolled until its end is above the middle of the window. Earned seals are
+     kept in localStorage under rw-brush-seals:<page path> as a list of section numbers, nothing else; no network. */
+  var SK = 'rw-brush-seals:' + location.pathname, inkOn = false, inkOffs = [], inkMade = [], inkRaf = 0;
+  var SEAL = { a: [], seen: [], got: [], el: [], due: [] };
+  function sealsLoad() { try { var v = JSON.parse(localStorage.getItem(SK) || '[]'); return Array.isArray(v) ? v.filter(function (n) { return n === (n | 0) && n >= 0 && n < 99; }) : []; } catch (e) { return []; } }
+  function sealsSave() { try { localStorage.setItem(SK, JSON.stringify(SEAL.got.slice().sort(function (a, b) { return a - b; }))); } catch (e) {} }
+  function hash(s) { var h = 7; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 9973; return h; }
+  function sealSetup() {
+    SEAL.a = [].slice.call(d.querySelectorAll('main .hero h1, main .case-head h1, main .section-head h2, main .prose > h2'));
+    SEAL.seen = SEAL.a.map(function () { return false; }); SEAL.el = []; SEAL.due = [];
+    SEAL.got = sealsLoad().filter(function (n) { return n < SEAL.a.length; });
+    SEAL.got.forEach(function (n) { stampSeal(n, false); });
+    sealCheck();
+  }
+  function textRects(box) { // the line boxes of every piece of text near a box (page coordinates)
+    var out = [], tw = d.createTreeWalker(d.body, NodeFilter.SHOW_TEXT), n, rg = d.createRange(), sx = W.scrollX || 0, sy2 = W.scrollY || 0;
+    while ((n = tw.nextNode())) {
+      if (!/\S/.test(n.nodeValue)) continue;
+      var pe = n.parentElement; if (!pe || pe.closest('.b-cseal, script, style, [hidden]')) continue;
+      var pq = pe.getBoundingClientRect();
+      if (pq.bottom + sy2 < box.t - 40 || pq.top + sy2 > box.b + 40 || !pq.width) continue;
+      rg.selectNodeContents(n);
+      var rs = rg.getClientRects();
+      for (var i = 0; i < rs.length; i++) if (rs[i].width && rs[i].height) out.push({ l: rs[i].left + sx, r: rs[i].right + sx, t: rs[i].top + sy2, b: rs[i].bottom + sy2 });
+    }
+    return out;
+  }
+  function free(c, rects) { for (var i = 0; i < rects.length; i++) { var q = rects[i]; if (c.l < q.r + 4 && c.r > q.l - 4 && c.t < q.b + 2 && c.b > q.t - 2) return false; } return true; }
+  function sealPlace(n, el) {
+    var a = SEAL.a[n]; if (!a) return;
+    var cw = r.clientWidth, sx = W.scrollX || 0, sy2 = W.scrollY || 0, s = cw >= 900 ? 34 : 24;
+    var q = a.getBoundingClientRect(), wrap = (a.closest('.wrap, .prose') || a.parentElement).getBoundingClientRect();
+    var rg = d.createRange(); rg.selectNodeContents(a); var ls = [].filter.call(rg.getClientRects(), function (x) { return x.width > 0; });
+    var first = ls[0] || q, last = ls[ls.length - 1] || q;
+    var fy = first.top + sy2 + (first.height - s) / 2, cands = [
+      { l: wrap.right + sx + 12, t: fy },                                   // the right margin, level with the title
+      { l: q.left + sx - s - 22, t: fy },                                   // the left margin
+      { l: last.right + sx + 14, t: last.top + sy2 + (last.height - s) / 2, max: wrap.right + sx - 6 }, // after the title's last word
+      { l: last.right + sx + 14, t: last.bottom + sy2 - s, max: wrap.right + sx - 6 }, // the same, sitting on the line (clear of the line above)
+      { l: q.left + sx, t: q.top + sy2 - s - 8 },                           // above the title
+      { l: wrap.right + sx - s - 18, t: q.top + sy2 - s - 8 }               // above the title, at the right
+    ];
+    var rects = textRects({ t: q.top + sy2 - s - 20, b: q.bottom + sy2 + s + 20 }), pick = null;
+    for (var i = 0; i < cands.length && !pick; i++) {
+      var c = cands[i]; c.r = c.l + s; c.b = c.t + s;
+      if (c.l < 4 || c.r > cw - 4 || (c.max && c.r > c.max)) continue;
+      if (free(c, rects)) pick = c;
+    }
+    if (!pick) { el.style.display = 'none'; return; }
+    el.style.display = '';
+    el.style.left = pick.l.toFixed(1) + 'px'; el.style.top = pick.t.toFixed(1) + 'px'; el.style.setProperty('--s', s + 'px');
+  }
+  function stampSeal(n, fresh) {
+    if (SEAL.el[n]) return;
+    var h = hash(location.pathname) + n * 7, el = d.createElement('i');
+    el.className = 'b-cseal b-v' + (h % 5);
+    el.setAttribute('aria-hidden', 'true'); el.setAttribute('data-n', n);
+    el.style.setProperty('--rot', ((h * 13) % 15 - 7) + 'deg');
+    d.body.appendChild(el); inkMade.push(el); SEAL.el[n] = el;
+    sealPlace(n, el);
+    var q = el.getBoundingClientRect(); // stamped (and the accent claimed) only where it can be seen; off screen it is simply there
+    if (fresh && live && q.bottom > 0 && q.top < innerHeight && el.style.display !== 'none') {
+      el.classList.add('b-new'); claim('seal', 1300); setTimeout(function () { el.classList.remove('b-new'); }, 1400);
+    }
+  }
+  function sealCheck() {
+    inkRaf = 0;
+    var vh = innerHeight, mid = vh * .5, foot = d.querySelector('footer.site'), A = SEAL.a;
+    for (var i = 0; i < A.length; i++) {
+      var top = A[i].getBoundingClientRect().top;
+      if (top >= 0 && top < vh) SEAL.seen[i] = true;
+      if (!SEAL.seen[i] || SEAL.got.indexOf(i) >= 0) continue;
+      var end = i + 1 < A.length ? A[i + 1].getBoundingClientRect().top : (foot ? foot.getBoundingClientRect().top : 1e9);
+      if (end < (i + 1 < A.length ? mid : vh * .9)) { SEAL.got.push(i); sealsSave(); SEAL.due.push(i); } // kept at once
+    }
+    // stamped one at a time: one moving accent on the screen (a seal waits while another accent shows)
+    if (SEAL.due.length) { if (!live || ambientFree()) stampSeal(SEAL.due.shift(), true); if (SEAL.due.length) setTimeout(inkKick, 200); }
+    lookCheck();
+  }
+  function inkKick() { if (!inkRaf && !d.hidden) inkRaf = requestAnimationFrame(sealCheck); }
+  function sealRelay() { SEAL.el.forEach(function (el, n) { if (el) sealPlace(n, el); }); micaSize(); }
+
+  /* ---------- 9. captures: on touch screens the one centred in the window (or playing) is in colour ---------- */
+  var CAP = '.shot, .demo-poster, .card .thumb-wrap', looked = null;
+  function lookCheck() {
+    if (mqFine.matches) return;
+    var vh = innerHeight, best = null, bd = vh * .2, cs = d.querySelectorAll(CAP);
+    for (var i = 0; i < cs.length; i++) {
+      var q = cs[i].getBoundingClientRect(); if (q.bottom < 0 || q.top > vh) continue;
+      var dd = Math.abs((q.top + q.bottom) / 2 - vh / 2); if (dd < bd) { bd = dd; best = cs[i]; }
+    }
+    if (best === looked) return;
+    if (looked) looked.classList.remove('b-look');
+    looked = best; if (best) best.classList.add('b-look');
+  }
+  function onPlay(e) { var c = e.target && e.target.closest && e.target.closest(CAP); if (c) c.classList.toggle('b-play', e.type === 'play'); }
+  // 8: the colophon seal stamps when the footer first comes into view (motion only; it is simply there otherwise)
+  var fio = null;
+  function colophonSetup() {
+    var f = d.querySelector('footer.site'); if (!f || !W.IntersectionObserver) return;
+    fio = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { f.classList.add('b-stamped'); fio.disconnect(); } }, { threshold: .5 });
+    fio.observe(f); offs.push(function () { if (fio) fio.disconnect(); fio = null; f.classList.remove('b-stamped'); });
+  }
+  function inkStart() {
+    inkOn = true;
+    r.classList.add('b-ink'); if (!mqFine.matches) r.classList.add('b-touch');
+    sealSetup();
+    var on2 = function (t, type, fn, opt) { t.addEventListener(type, fn, opt); inkOffs.push(function () { t.removeEventListener(type, fn, opt); }); };
+    on2(W, 'scroll', inkKick, { passive: true });
+    on2(W, 'resize', sealRelay, { passive: true });
+    on2(W, 'load', sealRelay);
+    on2(d, 'play', onPlay, true); on2(d, 'pause', onPlay, true); on2(d, 'ended', onPlay, true);
+    if (W.ResizeObserver) { var ro = new ResizeObserver(function () { sealRelay(); }); ro.observe(d.body); inkOffs.push(function () { ro.disconnect(); }); }
+  }
+  function inkStop() {
+    inkOn = false;
+    inkOffs.forEach(function (f) { f(); }); inkOffs = [];
+    cancelAnimationFrame(inkRaf); inkRaf = 0;
+    inkMade.forEach(drop); inkMade = []; SEAL = { a: [], seen: [], got: [], el: [], due: [] };
+    [].forEach.call(d.querySelectorAll('.b-look, .b-play'), function (e) { e.classList.remove('b-look', 'b-play'); }); looked = null;
+    r.classList.remove('b-ink', 'b-touch');
+  }
+
   /* ---------- on, off ---------- */
-  function relay() { if (T) { T.d = null; resample(); thread(true); } boundsSetup(); if (!SDA) scrubSetup(); if (H) { H.last = -1; hero(); } if (SEL) onSel(); focusFollow(); }
+  function relay() { if (T) { T.d = null; resample(); thread(true); } boundsSetup(); if (!SDA) scrubSetup(); if (H) { H.last = -1; hero(); } if (SEL) onSel(); focusFollow(); micaSize(); }
   function start() {
     live = true;
     r.classList.add('b-live');
     sy = psy = W.scrollY || 0;
     if (mqFine.matches) r.classList.add('b-fine');
-    threadSetup(); scrubSetup(); heroSetup(); boundsSetup(); tipSetup();
+    threadSetup(); scrubSetup(); heroSetup(); boundsSetup(); tipSetup(); wetSetup(); micaSetup(); colophonSetup();
     on(W, 'scroll', onScroll, { passive: true });
     on(W, 'scroll', focusFollow, { passive: true });
     on(W, 'resize', relay, { passive: true });
@@ -407,7 +603,7 @@
     on(d, 'selectionchange', onSel);
     on(d, 'focusin', onFocusIn);
     on(d, 'focusout', function () { setTimeout(function () { if (d.activeElement !== focEl) focusOff(); }, 0); });
-    on(mqDark, 'change', sceneNoSun);
+    on(mqDark, 'change', function () { sceneNoSun(); micaSetup(); });
     on(d, 'visibilitychange', function () { if (d.hidden) { cancelAnimationFrame(raf); raf = 0; clearPetals(); if (TIP) TIP.el.classList.remove('b-on'); } });
   }
   function stop() {
@@ -417,22 +613,24 @@
     cancelAnimationFrame(raf); raf = 0;
     if (TIP && TIP.raf) cancelAnimationFrame(TIP.raf);
     clearPetals(); clearSel();
+    wets.slice().forEach(function (a) { a.cancel(); }); wets = []; wetScrub.forEach(function (el) { el.__bw = null; }); wetScrub = []; MICA = null;
     made.forEach(drop); made = [];
     styled.forEach(function (el) { ['--b-p', '--b-sun-y', '--b-mist-y', '--b-hill-y', '--b-scene-x', '--b-es', '--b-sx', '--b-cx', '--b-cy'].forEach(function (k) { el.style.removeProperty(k); }); }); styled = [];
     [].forEach.call(d.querySelectorAll('.b-coat, .b-soak, .b-tap, .b-enso, .b-selhost'), function (e) { e.classList.remove('b-coat', 'b-soak', 'b-tap', 'b-enso', 'b-selhost'); });
     [].forEach.call(d.querySelectorAll('[data-b-from]'), function (e) { e.removeAttribute('data-b-from'); });
     r.classList.remove('b-live', 'b-sjs', 'b-fine', 'b-tip-on', 'b-kbd', 'b-sun-out');
-    T = H = TIP = FOC = SEL = null; focEl = null; coated = null; scrubs = []; bounds = []; petals = []; lastDrop = null; scrolling = false;
+    T = H = TIP = FOC = SEL = null; [].forEach.call(d.querySelectorAll('.b-cseal.b-new'), function (e) { e.classList.remove('b-new'); }); focEl = null; coated = null; scrubs = []; bounds = []; petals = []; lastDrop = null; scrolling = false;
   }
   var theme0 = r.getAttribute('data-theme');
   function sync() {
-    var w = wanted(), th = r.getAttribute('data-theme');
+    var w = wanted(), th = r.getAttribute('data-theme'), k = r.getAttribute('data-look') === 'brush';
+    if (k && !inkOn) inkStart(); else if (!k && inkOn) { if (live) stop(); inkStop(); }
     if (w && !live) start(); else if (!w && live) stop();
-    else if (live && th !== theme0) sceneNoSun(); // a light/dark switch: the scene picture changed
+    else if (live && th !== theme0) { sceneNoSun(); micaSetup(); } // a light/dark switch: the scene picture changed, mica only on light paper
     theme0 = th;
   }
   new MutationObserver(sync).observe(r, { attributes: true, attributeFilter: ['data-look', 'class', 'data-motion', 'data-theme'] });
   if (mqReduce.addEventListener) mqReduce.addEventListener('change', sync);
-  W.__brushMotionState = function () { return { live: live, sda: SDA, made: made.length, listeners: offs.length }; }; // read by the checks
+  W.__brushMotionState = function () { return { live: live, sda: SDA, made: made.length, listeners: offs.length, ink: inkOn, inkListeners: inkOffs.length, seals: SEAL.got.slice(), sealEls: inkMade.length, wets: wets.length, mica: !!MICA }; }; // read by the checks
   sync();
 })();
