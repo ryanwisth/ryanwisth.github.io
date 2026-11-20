@@ -241,8 +241,17 @@
     mlabel(); foot.appendChild(mb);
   }
 
+  // Brush & Scroll's moving extras (scroll, pointer, selection, focus) live in look-brush.js beside this file. It is
+  // fetched only while that look is worn and reduced motion is not asked for, and again if the look changes to it.
+  var bjs = (d.currentScript && d.currentScript.src || '').replace(/site\.js[^\/]*$/, 'look-brush.js');
+  function brushJs() {
+    if (reduce || !bjs || r.getAttribute('data-look') !== 'brush' || d.getElementById('look-brush-js')) return;
+    var s = d.createElement('script'); s.id = 'look-brush-js'; s.async = true; s.src = bjs; d.body.appendChild(s);
+  }
+  if (window.MutationObserver) new MutationObserver(brushJs).observe(r, { attributes: true, attributeFilter: ['data-look'] });
+
   // the rest is decoration that moves: built only when motion is on at load
-  if (!moving() || !('IntersectionObserver' in window)) return;
+  if (!moving() || !('IntersectionObserver' in window)) { brushJs(); return; }
   r.classList.add('motion');
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (en) {
@@ -557,5 +566,6 @@
     if ('ResizeObserver' in window) new ResizeObserver(relay).observe(mainEl); // late images and fonts move the blocks
     lay(); run();
   }
+  brushJs(); // after the thread is built: look-brush.js redraws it as a brush stroke
 
 })();
