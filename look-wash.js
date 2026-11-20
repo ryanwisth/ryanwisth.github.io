@@ -64,8 +64,8 @@
     if (dir) boundary(dir);
     clearTimeout(idleT); idleT = setTimeout(rest, 150); // (not later(): one timer a frame would pile up in its list)
   }
-  function rest() { scrolling = false; speed = 0; pt = 0; thread(true); settle(); starKick(); }
-  function startMove() { if (T) T.bloom.classList.remove('w-on'); unglaze(); }
+  function rest() { scrolling = false; speed = 0; pt = 0; thread(true); settle(); starKick(); if (SW.due.length) dabSoon(); }
+  function startMove() { if (T) T.bloom.classList.remove('w-on'); unglaze(); clearTimeout(dabT); if (acc.name === 'dab') acc.until = 0; } // a dab in progress never holds back the drops
 
   /* ---------- 1. the margin line as a wet wash line ----------
      site.js draws the thread (.th-line) to the reading line; here the drawn part is redrawn as a filled ink core whose
@@ -437,14 +437,224 @@
   }
   function starOff() { if (STAR) { drop(STAR); STAR = null; } }
 
+  /* ---------- material (Nov 20) ----------
+     1 wet, then dry: a wash newly laid on the page (a section's wash, the swatch under a heading, card or capture, the
+       band, the cloud) arrives darker and glossy, a sheen of water sliding off it, and dries paler; its dried rim forms
+       as it dries (the rimmed mask comes in at about two thirds of the drying). Web Animations on the pseudo-element:
+       the filter is added on top of whatever the page already sets, so hover states keep working. Motion only.
+     6 the salt stars and the sky's grains catch the light as the page scrolls: two margin columns whose highlight
+       layers cross-fade on a scroll timeline (opacity only). Motion only, wide windows only.
+     8 the signature is written in when the footer arrives. Motion only.
+     7 swatches and 9 captures centred on touch screens are not motion: they run while the look is worn (.wm-*), with
+       motion on or paused. */
+  var WETS = [['.section', '::before', 0, 1400], ['.section-head h2', '::before', 150, 1250], ['.card .thumb-wrap', '::before', 0, 1150], ['.shot, .term, .paper', '::before', 0, 1150],
+    ['.sum-vis, .figure, .duo figure', '::before', 0, 1150], ['.band', '::before', 0, 1150], ['.bigfig b', '::before', 0, 1000], ['.prose > h2', '::before', 0, 1000]];
+  var wio = null, wetN = 0;
+  function rootVar(k) { return getComputedStyle(r).getPropertyValue(k).trim(); }
+  function wet(el, ps, delay, dur) {
+    var cs = getComputedStyle(el, ps); if (!cs || cs.content === 'none' || cs.display === 'none') return;
+    var f = rootVar('--w-wet') || 'brightness(.82)', sh = rootVar('--w-sheen');
+    anim(el, [{ filter: f }, { filter: f, offset: .3 }, { filter: 'brightness(1)' }], { duration: dur, delay: delay, easing: 'ease-out', pseudoElement: ps, composite: 'add' });
+    // the sheen of standing water slides off, and until it is dry the rim has not formed (the plain mask, not the rimmed one)
+    var bi = cs.backgroundImage, k0 = {}, k1 = {}, k2 = {}, mi = cs.maskImage || cs.webkitMaskImage || '', ok = 0;
+    if (sh && bi && bi !== 'none') {
+      var n = bi.split(/,(?![^(]*\))/).length; // (only the layer count matters: sizes and positions are repeated per layer)
+      k0.backgroundImage = k1.backgroundImage = k2.backgroundImage = sh + ', ' + bi;
+      k0.backgroundSize = k1.backgroundSize = k2.backgroundSize = '260% 100%, ' + cs.backgroundSize;
+      k0.backgroundPosition = '100% 0, ' + cs.backgroundPosition; k1.backgroundPosition = '78% 0, ' + cs.backgroundPosition; k2.backgroundPosition = '0% 0, ' + cs.backgroundPosition;
+      k0.backgroundRepeat = k1.backgroundRepeat = k2.backgroundRepeat = 'no-repeat, ' + cs.backgroundRepeat; ok = n;
+    }
+    [['--wash-ar', '--wash-a'], ['--wash-br', '--wash-b'], ['--wash-dr', '--wash-d']].forEach(function (p) {
+      var a = rootVar(p[0]), b = rootVar(p[1]); if (a && b && mi.indexOf(a) >= 0) { k0.maskImage = k1.maskImage = mi.replace(a, b); k2.maskImage = mi; ok = 1; }
+    });
+    if (!ok) return;
+    k1.offset = .3; wetN++;
+    anim(el, [k0, k1, k2], { duration: dur, delay: delay, easing: 'ease-out', pseudoElement: ps });
+  }
+  function wetSetup() {
+    if (!W.IntersectionObserver) return;
+    var map = [];
+    wio = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        wio.unobserve(e.target);
+        for (var i = 0; i < map.length; i++) if (map[i][0] === e.target) { wet(e.target, map[i][1], map[i][2], map[i][3]); break; }
+      });
+    }, { threshold: .12 });
+    WETS.forEach(function (w) { [].forEach.call(d.querySelectorAll('main ' + w[0].split(', ').join(', main ')), function (el) { map.push([el, w[1], w[2], w[3]]); wio.observe(el); }); });
+    // the cloud at the head of the page dries as it blooms
+    var c = d.querySelector('main .hero-one, main .case-part:has(> .lede)'); if (c) wet(c, '::before', 500, 2600);
+    offs.push(function () { if (wio) wio.disconnect(); wio = null; });
+  }
+  // 6: the catch of the light in the margins (wide windows, browsers with scroll timelines)
+  var SALTC = null;
+  function saltSetup() {
+    saltOff();
+    if (!SDA || r.clientWidth < 1160) return;
+    SALTC = [mk('i', 'w-salt w-l', d.body), mk('i', 'w-salt w-r', d.body)];
+    saltSize();
+  }
+  function saltSize() {
+    if (!SALTC) return;
+    var cw = r.clientWidth, w = Math.round((cw - 1032) / 2 - 18), h = Math.max(d.body.scrollHeight, r.scrollHeight);
+    if (cw < 1160) { saltOff(); return; }
+    SALTC[0].style.cssText = 'left:0;width:' + w + 'px;height:' + h + 'px';
+    SALTC[1].style.cssText = 'left:' + (cw - w) + 'px;width:' + w + 'px;height:' + h + 'px';
+  }
+  function saltOff() { if (SALTC) { SALTC.forEach(function (m) { drop(m); var i = made.indexOf(m); if (i >= 0) made.splice(i, 1); }); SALTC = null; } }
+  // 8: the signature is written when the footer comes into view
+  var sio = null;
+  function signSetup() {
+    var f = d.querySelector('footer.site'); if (!f || !W.IntersectionObserver) return;
+    sio = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { f.classList.add('w-signed'); sio.disconnect(); } }, { threshold: .5 });
+    sio.observe(f); offs.push(function () { if (sio) sio.disconnect(); sio = null; f.classList.remove('w-signed'); });
+  }
+
+  /* ---------- 7. swatches: a section read to its end gets a painter's test swatch of its colour in the margin ----------
+     A section runs from its heading to the next heading (the last to the footer). It counts as read once its heading
+     has been on screen and the reader has scrolled until its end is above the middle of the window (the last one: near
+     the foot of the window). Kept at once in localStorage under rw-wash-swatches:<page path> as a list of section
+     numbers, nothing else; no network. With motion on, a new swatch is dabbed in only while the page rests, after the
+     settle glaze, and only if it is on screen (one moving accent at a time); otherwise it is simply there. */
+  var SWK = 'rw-wash-swatches:' + location.pathname, matOn = false, matOffs = [], matMade = [], matRaf = 0;
+  var SW = { a: [], seen: [], got: [], el: [], due: [] }, dabT = 0;
+  var HUES = ['--w-red', '--w-green', '--w-blue', '--w-gold', '--w-violet', '--w-pink'];
+  function swLoad() { try { var v = JSON.parse(localStorage.getItem(SWK) || '[]'); return Array.isArray(v) ? v.filter(function (n) { return n === (n | 0) && n >= 0 && n < 99; }) : []; } catch (e) { return []; } }
+  function swSave() { try { localStorage.setItem(SWK, JSON.stringify(SW.got.slice().sort(function (a, b) { return a - b; }))); } catch (e) {} }
+  function hash(s) { var h = 7; for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 9973; return h; }
+  function hueToken(el) { // the look's own colour token for this part of the page, so a light/dark switch recolours it
+    var v = (getComputedStyle(el).getPropertyValue('--hue') || '').trim().toLowerCase();
+    for (var i = 0; i < HUES.length; i++) if (rootVar(HUES[i]).toLowerCase() === v) return 'var(' + HUES[i] + ')';
+    return 'var(--w-blue)';
+  }
+  function swSetup() {
+    SW.a = [].slice.call(d.querySelectorAll('main .hero h1, main .case-head h1, main .section-head h2, main .prose > h2'));
+    SW.seen = SW.a.map(function () { return false; }); SW.el = []; SW.due = [];
+    SW.got = swLoad().filter(function (n) { return n < SW.a.length; });
+    SW.got.forEach(function (n) { swStamp(n, false); });
+    swCheck();
+  }
+  function textRects(box) { // the line boxes of every piece of text near a box (page coordinates)
+    var out = [], tw = d.createTreeWalker(d.body, NodeFilter.SHOW_TEXT), n, rg = d.createRange(), sx = W.scrollX || 0, sy2 = W.scrollY || 0;
+    while ((n = tw.nextNode())) {
+      if (!/\S/.test(n.nodeValue)) continue;
+      var pe = n.parentElement; if (!pe || pe.closest('script, style, [hidden], .wm-sw')) continue;
+      var pq = pe.getBoundingClientRect();
+      if (pq.bottom + sy2 < box.t - 40 || pq.top + sy2 > box.b + 40 || !pq.width) continue;
+      rg.selectNodeContents(n);
+      var rs = rg.getClientRects();
+      for (var i = 0; i < rs.length; i++) if (rs[i].width && rs[i].height) out.push({ l: rs[i].left + sx, r: rs[i].right + sx, t: rs[i].top + sy2, b: rs[i].bottom + sy2 });
+    }
+    return out;
+  }
+  function free(c, rects) { for (var i = 0; i < rects.length; i++) { var q = rects[i]; if (c.l < q.r + 4 && c.r > q.l - 4 && c.t < q.b + 2 && c.b > q.t - 2) return false; } return true; }
+  function swPlace(n, el) {
+    var a = SW.a[n]; if (!a) return;
+    var cw = r.clientWidth, sx = W.scrollX || 0, sy2 = W.scrollY || 0, big = cw >= 900, w = big ? 40 : 30, h = big ? 27 : 20;
+    var q = a.getBoundingClientRect(), wrap = (a.closest('.wrap, .prose') || a.parentElement).getBoundingClientRect();
+    var rg = d.createRange(); rg.selectNodeContents(a); var ls = [].filter.call(rg.getClientRects(), function (x) { return x.width > 0; });
+    var first = ls[0] || q, last = ls[ls.length - 1] || q;
+    var fy = first.top + sy2 + (first.height - h) / 2, cands = [
+      { l: wrap.right + sx + 14, t: fy },                                   // the right margin, level with the title
+      { l: q.left + sx - w - 22, t: fy },                                   // the left margin
+      { l: last.right + sx + 14, t: last.top + sy2 + (last.height - h) / 2, max: wrap.right + sx - 6 }, // after the title's last word
+      { l: last.right + sx + 14, t: last.bottom + sy2 - h, max: wrap.right + sx - 6 }, // the same, sitting on the line
+      { l: q.left + sx, t: q.top + sy2 - h - 8 },                           // above the title
+      { l: wrap.right + sx - w - 18, t: q.top + sy2 - h - 8 }               // above the title, at the right
+    ];
+    var rects = textRects({ t: q.top + sy2 - h - 20, b: q.bottom + sy2 + h + 20 }), pick = null;
+    for (var i = 0; i < cands.length && !pick; i++) {
+      var c = cands[i]; c.r = c.l + w; c.b = c.t + h;
+      if (c.l < 4 || c.r > cw - 4 || (c.max && c.r > c.max)) continue;
+      if (free(c, rects)) pick = c;
+    }
+    if (!pick) { el.style.display = 'none'; return; }
+    el.style.display = '';
+    el.style.left = pick.l.toFixed(1) + 'px'; el.style.top = pick.t.toFixed(1) + 'px';
+    el.style.setProperty('--sw-w', w + 'px'); el.style.setProperty('--sw-h', h + 'px');
+  }
+  function swStamp(n, fresh) {
+    if (SW.el[n]) return;
+    var h = hash(location.pathname) + n * 7, el = d.createElement('i');
+    el.className = 'wm-sw wm-v' + (h % 3);
+    el.setAttribute('aria-hidden', 'true'); el.setAttribute('data-n', n);
+    el.style.setProperty('--sw-c', hueToken(SW.a[n]));
+    d.body.appendChild(el); matMade.push(el); SW.el[n] = el;
+    swPlace(n, el);
+    if (fresh) { el.classList.add('wm-new'); setTimeout(function () { el.classList.remove('wm-new'); }, 1400); }
+  }
+  function onScreen(n) { var a = SW.a[n]; if (!a) return false; var q = a.getBoundingClientRect(); return q.bottom > -30 && q.top < innerHeight + 30; }
+  function swCheck() {
+    matRaf = 0;
+    var vh = innerHeight, mid = vh * .5, foot = d.querySelector('footer.site'), A = SW.a;
+    for (var i = 0; i < A.length; i++) {
+      var top = A[i].getBoundingClientRect().top;
+      if (top >= 0 && top < vh) SW.seen[i] = true;
+      if (!SW.seen[i] || SW.got.indexOf(i) >= 0) continue;
+      var end = i + 1 < A.length ? A[i + 1].getBoundingClientRect().top : (foot ? foot.getBoundingClientRect().top : 1e9);
+      if (end < (i + 1 < A.length ? mid : vh * .9)) { SW.got.push(i); swSave(); SW.due.push(i); } // kept at once
+    }
+    // without motion (or off screen) a swatch is simply there; with motion an on-screen one waits for the page to rest
+    for (var j = SW.due.length - 1; j >= 0; j--) if (!live || !onScreen(SW.due[j])) swStamp(SW.due.splice(j, 1)[0], false);
+    if (SW.due.length && live && !scrolling) dabSoon();
+    lookCheck();
+  }
+  function dabSoon() { clearTimeout(dabT); dabT = setTimeout(dab, 1500); } // after the settle glaze has deepened
+  function dab() {
+    if (!SW.due.length) return;
+    if (!live) { while (SW.due.length) swStamp(SW.due.shift(), false); return; }
+    if (scrolling) return; // the next rest tries again
+    if (!ambientFree()) { dabSoon(); return; }
+    var n = SW.due.shift();
+    if (!onScreen(n)) swStamp(n, false);
+    else { acc.name = 'dab'; acc.until = Math.max(acc.until, now() + 1300); swStamp(n, true); }
+    if (SW.due.length) dabSoon();
+  }
+  function matKick() { if (!matRaf && !d.hidden) matRaf = requestAnimationFrame(swCheck); }
+  function matRelay() { SW.el.forEach(function (el, n) { if (el) swPlace(n, el); }); saltSize(); }
+
+  /* ---------- 9. captures: on touch screens the one centred in the window (or playing) comes up clear ---------- */
+  var CAP = '.shot, .demo-poster, .card .thumb-wrap', looked = null;
+  function lookCheck() {
+    if (mqFine.matches) return;
+    var vh = innerHeight, best = null, bd = vh * .2, cs = d.querySelectorAll(CAP);
+    for (var i = 0; i < cs.length; i++) {
+      var q = cs[i].getBoundingClientRect(); if (q.bottom < 0 || q.top > vh) continue;
+      var dd = Math.abs((q.top + q.bottom) / 2 - vh / 2); if (dd < bd) { bd = dd; best = cs[i]; }
+    }
+    if (best === looked) return;
+    if (looked) looked.classList.remove('wm-look');
+    looked = best; if (best) best.classList.add('wm-look');
+  }
+  function onPlay(e) { var c = e.target && e.target.closest && e.target.closest(CAP); if (c) c.classList.toggle('wm-play', e.type === 'play'); }
+  function matStart() {
+    matOn = true;
+    if (!mqFine.matches) r.classList.add('wm-touch');
+    swSetup();
+    var on2 = function (t, type, fn, opt) { t.addEventListener(type, fn, opt); matOffs.push(function () { t.removeEventListener(type, fn, opt); }); };
+    on2(W, 'scroll', matKick, { passive: true });
+    on2(W, 'resize', matRelay, { passive: true });
+    on2(W, 'load', matRelay);
+    on2(d, 'play', onPlay, true); on2(d, 'pause', onPlay, true); on2(d, 'ended', onPlay, true);
+    if (W.ResizeObserver) { var ro = new ResizeObserver(function () { matRelay(); }); ro.observe(d.body); matOffs.push(function () { ro.disconnect(); }); }
+  }
+  function matStop() {
+    matOn = false;
+    matOffs.forEach(function (f) { f(); }); matOffs = [];
+    cancelAnimationFrame(matRaf); matRaf = 0; clearTimeout(dabT);
+    matMade.forEach(drop); matMade = []; SW = { a: [], seen: [], got: [], el: [], due: [] };
+    [].forEach.call(d.querySelectorAll('.wm-look, .wm-play'), function (e) { e.classList.remove('wm-look', 'wm-play'); }); looked = null;
+    r.classList.remove('wm-touch');
+  }
+
   /* ---------- on, off ---------- */
-  function relay() { if (T) { T.d = null; resample(); thread(true); } boundsSetup(); if (!SDA) scrubSetup(); if (H) { H.last = -1; hero(); } if (SEL) onSel(); focusFollow(); }
+  function relay() { if (T) { T.d = null; resample(); thread(true); } boundsSetup(); if (!SDA) scrubSetup(); if (H) { H.last = -1; hero(); } if (SEL) onSel(); focusFollow(); saltSize(); }
   function start() {
     live = true;
     r.classList.add('w-live');
     sy = psy = W.scrollY || 0;
     if (mqFine.matches) r.classList.add('w-fine');
-    threadSetup(); scrubSetup(); heroSetup(); boundsSetup(); tipSetup();
+    threadSetup(); scrubSetup(); heroSetup(); boundsSetup(); tipSetup(); wetSetup(); saltSetup(); signSetup();
     on(W, 'scroll', onScroll, { passive: true });
     on(W, 'scroll', focusFollow, { passive: true });
     on(W, 'resize', relay, { passive: true });
@@ -463,6 +673,7 @@
     on(mqDark, 'change', starKick);
     on(d, 'visibilitychange', function () { if (d.hidden) { cancelAnimationFrame(raf); raf = 0; clearFalls(); starOff(); clearTimeout(starT); if (TIP) TIP.el.classList.remove('w-on'); } else starKick(); });
     starKick();
+    if (SW.due.length) dabSoon();
   }
   function stop() {
     live = false;
@@ -470,7 +681,7 @@
     timers.forEach(clearTimeout); timers = []; clearTimeout(idleT); clearTimeout(starT);
     cancelAnimationFrame(raf); raf = 0; cancelAnimationFrame(selRaf); selRaf = 0; cancelAnimationFrame(focRaf); focRaf = 0;
     if (TIP && TIP.raf) cancelAnimationFrame(TIP.raf);
-    clearFalls(); clearSel(); unglaze(); starOff();
+    clearFalls(); clearSel(); unglaze(); starOff(); clearTimeout(dabT); SALTC = null; [].forEach.call(d.querySelectorAll('.wm-new'), function (e) { e.classList.remove('wm-new'); });
     anims.slice().forEach(function (a) { try { a.cancel(); } catch (e) {} }); anims = [];
     made.forEach(drop); made = [];
     styled.forEach(function (el) { ['--w-p', '--w-cloud-y', '--w-moon-y', '--w-ph', '--w-pw', '--w-cx', '--w-cy', '--w-pc'].forEach(function (k) { el.style.removeProperty(k); }); }); styled = [];
@@ -481,13 +692,14 @@
   }
   var theme0 = r.getAttribute('data-theme');
   function sync() {
-    var w = wanted(), th = r.getAttribute('data-theme');
-    if (w && !live) start(); else if (!w && live) stop();
+    var w = wanted(), th = r.getAttribute('data-theme'), k = r.getAttribute('data-look') === 'wash';
+    if (k && !matOn) matStart(); else if (!k && matOn) { if (live) stop(); matStop(); }
+    if (w && !live) start(); else if (!w && live) { stop(); if (SW.due.length) dab(); } // paused: any swatch still waiting is simply placed
     else if (live && th !== theme0) { starOff(); starKick(); } // a light/dark switch: the night sky comes or goes
     theme0 = th;
   }
   new MutationObserver(sync).observe(r, { attributes: true, attributeFilter: ['data-look', 'class', 'data-motion', 'data-theme'] });
   if (mqReduce.addEventListener) mqReduce.addEventListener('change', sync);
-  W.__washMotionState = function () { return { live: live, sda: SDA, made: made.length, listeners: offs.length, anims: anims.length, falls: falls.length, star: !!STAR, lastStar: lastStar }; }; // read by the checks
+  W.__washMotionState = function () { return { live: live, sda: SDA, made: made.length, listeners: offs.length, anims: anims.length, falls: falls.length, star: !!STAR, lastStar: lastStar, mat: matOn, swatches: SW.got.slice(), swatchEls: matMade.length, due: SW.due.length, wets: wetN, salt: !!SALTC }; }; // read by the checks
   sync();
 })();
