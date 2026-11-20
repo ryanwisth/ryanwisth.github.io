@@ -798,7 +798,7 @@
     var f = lastT ? clamp((t - lastT) / 16.667, 0.25, 3) : 1; lastT = t;
     var y = W.scrollY || 0, v = (y - sy) / f; sy = y;
     var dv = v - sv; sv = v;
-    var cap = mqSmall.matches ? 4 : 6, busy = Math.abs(v) > 0.05;
+    var small = mqSmall.matches, cap = small ? 4 : 6, xcap = small ? 0 : 3, busy = Math.abs(v) > 0.05; // phones: no sideways swing (the margin strand is 18 px away)
     for (var k = 0; k < items.length; k++) {
       var it = items[k]; if (!it.vis) continue;
       // fabric trails the way the page is moving, by its weight, and swings a hair sideways when the scroll changes
@@ -806,7 +806,7 @@
       it.vx += clamp(-dv * 0.05 * it.wt * it.side, -0.6, 0.6) * f;
       var ay = -0.05 * (it.y - target) - 0.11 * it.vy, ax = -0.035 * it.x - 0.09 * it.vx;
       it.vy += ay * f; it.vx += ax * f;
-      it.y = clamp(it.y + it.vy * f, -cap - 1, cap + 2); it.x = clamp(it.x + it.vx * f, -3, 3);
+      it.y = clamp(it.y + it.vy * f, -cap - 1, cap + 2); it.x = clamp(it.x + it.vx * f, -xcap, xcap); if (!xcap) it.vx = 0;
       var still = Math.abs(it.y - it.hold) < 0.04 && Math.abs(it.vy) < 0.02 && Math.abs(it.x) < 0.04 && Math.abs(it.vx) < 0.02;
       if (still && !it.hold) {
         it.y = it.vy = it.x = it.vx = 0;
