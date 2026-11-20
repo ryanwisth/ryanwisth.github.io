@@ -370,7 +370,7 @@
     r.classList.toggle('cl-selon', lines.length > 0);
   }
 
-  /* ---------- 13. keyboard focus: a painted ring (lit yellow, its shade lower right), not an outline ---------- */
+  /* ---------- 13. keyboard focus: a painted ring (a lit yellow slab ring with its shade lip), not an outline ---------- */
   var FOC = null, focRaf = 0, focEl = null;
   function onFocusIn(e) {
     var el = e.target; if (!el || el === d || !el.matches) return;
@@ -393,12 +393,15 @@
     var w = q.width + 2 * (pad + bw), h = q.height + 2 * (pad + bw), ro = Math.min(rad ? rad + pad + bw : 9, w / 2, h / 2), ri = Math.max(0, ro - bw);
     FOC.className = 'cl-focus cl-on';
     FOC.style.cssText = 'left:' + (q.left - pad - bw).toFixed(1) + 'px;top:' + (q.top - pad - bw).toFixed(1) + 'px;width:' + w.toFixed(1) + 'px;height:' + h.toFixed(1) + 'px';
-    // a filled band between two rounded rectangles (even-odd), painted lit yellow with its shade across the diagonal
+    // a ring shaped like a flat slab: its top face a filled band between two rounded rectangles (even-odd) in lit
+    // yellow all the way round, and the same band in the shade paint slid 2 px right and 3 px down behind it (the lip,
+    // as on every slab here); yellow is on every side, so the ring is never weaker than the old yellow outline
     var key = w.toFixed(0) + 'x' + h.toFixed(0) + 'r' + ro.toFixed(0);
     if (FOC.__k !== key) {
       FOC.__k = key;
-      FOC.innerHTML = '<svg viewBox="0 0 ' + w.toFixed(1) + ' ' + h.toFixed(1) + '" focusable="false"><defs><linearGradient id="cl-fg" x1="0" y1="0" x2="1" y2="1"><stop offset=".5" stop-color="#ffef10"/><stop offset=".5" stop-color="#9c8308"/></linearGradient></defs>' +
-        '<path fill="url(#cl-fg)" fill-rule="evenodd" d="' + rr(0, 0, w, h, ro) + rr(bw, bw, w - 2 * bw, h - 2 * bw, ri) + '"/></svg>';
+      var band = rr(0, 0, w, h, ro) + rr(bw, bw, w - 2 * bw, h - 2 * bw, ri);
+      FOC.innerHTML = '<svg viewBox="0 0 ' + w.toFixed(1) + ' ' + h.toFixed(1) + '" focusable="false">' +
+        '<path class="cl-fs" fill="#9c8308" fill-rule="evenodd" transform="translate(2 3)" d="' + band + '"/><path class="cl-fl" fill="#ffef10" fill-rule="evenodd" d="' + band + '"/></svg>';
     }
   }
   function rr(x, y, w, h, k) {

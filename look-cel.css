@@ -967,7 +967,7 @@ html[data-look="cel"][data-theme="dark"] { --cl-foam-sh: #717080; --cl-sheen: rg
     animation: cl-pop .42s var(--pop) both;
   }
 
-  /* 13. keyboard focus: a painted ring (a filled shape, yellow lit upper left and its shade lower right) replaces the
+  /* 13. keyboard focus: a painted ring (a filled yellow band with its shade lip slid down right, like every slab) replaces the
      3 px outline while it shows */
   html[data-look="cel"].motion.c-live.cl-kbd :focus-visible { outline-color: transparent !important; }
   html[data-look="cel"].motion.c-live .cl-focus { position: fixed; z-index: 2147482000; pointer-events: none; display: none; }
@@ -994,6 +994,6 @@ html[data-look="cel"][data-theme="dark"] { --cl-foam-sh: #717080; --cl-sheen: rg
     html[data-look="cel"].motion.c-live .case-head::after { animation-duration: 6.6s; }
     html[data-look="cel"].motion.c-live .hero-one::after { animation-duration: 13s; }
     html[data-look="cel"].motion.c-live .dot { animation-duration: 2.4s; }
-    html[data-look="cel"].motion.c-live :is(.card, .pager a).cl-float { animation-duration: .42s, 4.6s; }
+    html[data-look="cel"].motion.c-live :is(.card:not(.reveal), .pager a).cl-float { animation-duration: .42s, 4.6s; }
   }
 }
