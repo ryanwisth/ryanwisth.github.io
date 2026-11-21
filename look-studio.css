@@ -519,3 +519,4 @@ html[data-look="studio"]:not(#_) .demo-poster .play { width: 72px; height: 72px;
 html[data-look="studio"]:not(#_) table td, html[data-look="studio"]:not(#_) table th { border-style: solid; border-color: var(--sd-line); }
 html[data-look="studio"]:not(#_) table { color: var(--sd-text2); }
 html[data-look="studio"]:not(#_) table th { color: var(--sd-text); }
+html[data-look="studio"]:not(#_) .facts.proof .fact b .fit { font-size: inherit; }

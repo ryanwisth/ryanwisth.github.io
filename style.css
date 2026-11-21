@@ -2587,7 +2587,8 @@ html:not([data-look]) .film-script > summary::before {
 .facts.proof { grid-template-columns: repeat(5, minmax(0, 1fr)); margin: 28px 0 0; }
 .facts.proof .fact b { white-space: nowrap; }
 .facts.proof .fact b small { font-size: .62em; }
-@media (max-width: 960px) { .facts.proof { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.facts.proof .fact b .fit { font-size: .74em; } /* the one two-number stat fits its chip in every look */
+@media (max-width: 1099px) { .facts.proof { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 620px) { .facts.proof { grid-template-columns: 1fr 1fr; } .facts.proof .fact { display: block; } .facts.proof .fact b { font-size: 24px; } }
 /* the look picker is its own small control after the nav (look.js), so the nav keeps the right-hand room it had */
 .topbar .wrap > .topnav { margin-left: auto; }
