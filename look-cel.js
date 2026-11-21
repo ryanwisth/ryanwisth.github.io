@@ -642,19 +642,27 @@
   }
 
   /* ---------- fluid (Nov 20 2026): the whole page moves like water ----------
-     One requestAnimationFrame loop (the scroll frame above runs inside it while it is going) drives: the swell every
-     soft panel rides (a bob of 1.6 px and a tilt that moves its edges at most 1.2 px, phase travelling across the
-     page), the push of the scroll on the panels (a damped spring; lower panels feel it a few frames later), a panel
-     surfacing as it comes up from below, a panel dipping toward the side pointed at and rocking when pressed, the sea's
-     light lagging the scroll, and the foam rings and wakes on the water (.cf-wake canvas, under the panels). The loop
-     runs only while a panel is on screen or something on the water is still moving, never while the tab is hidden.
+     One requestAnimationFrame loop (the scroll frame above runs inside it while it is going) drives: the push of the
+     scroll on the panels (a damped spring; lower panels feel it a few frames later), a panel surfacing as it comes up
+     from below, a panel dipping as the pointer comes on and lifting as it leaves, sloshing with the pointer and rocking
+     when pressed, the sea's light lagging the scroll, and the foam rings and wakes on the water (.cf-wake canvas, under
+     the panels). The loop runs only while something is moving and sleeps at rest (polish, Nov 20). The swell every
+     soft panel rides at rest (2 px, phase travelling across the page) is held in whole pixels and stepped by a timer
+     on a 0.4 s beat, so resting words are crisp and no frame loop runs; the sea's sideways drift is CSS. Never runs
+     while the tab is hidden.
      Layout is read when the loop is set up and on resize (relay), never inside it. */
   var FL = null;
+  /* polish (Nov 20 2026): one set of motion tokens for everything below. One spring for every push, dip and rock;
+     the swell is held in whole pixels and changes only on a beat (cel animation's held drawings), so the words on a
+     panel at rest are never on a half pixel and the loop can sleep (the beat is a timer, not a frame loop). */
+  var FLK = { K: 110, C: 6.6, push: .007, pushMax: 10, yMax: 16, amp: 2, period: 6.4, beat: 400, ringMs: 820, ring2Ms: 760, wakeMs: 900,
+    press: 70, rock: 9, dipIn: 14, dipOut: -10, slosh: .12, seaLag: .33 };   // a spring under .3 px / .02 deg snaps to rest
   var PAN = 'main :is(.card, .more-g, .method > li, .fact, .chart-card, .repo-card, .pager a, .band3 > div, .band)';
   function flSetup() {
     var main = d.querySelector('main'); if (!main) return;
     FL = { ps: [], vis: 0, raf: 0, pt: 0, py: W.scrollY || 0, vs: 0, hist: [], hi: 0, dirty: false, wake: [], rings: [], drawn: false,
-      foam: '#ffffff', seaTop: 0, st: -1, A: 1344, B: 588, dpr: Math.min(2, W.devicePixelRatio || 1), io: null, hover: null, lastW: null };
+      foam: '#ffffff', seaTop: 0, st: -1, A: 1344, B: 588, dpr: Math.min(2, W.devicePixelRatio || 1), io: null, hover: null, lastW: null,
+      tick: 0, calm: false, lagA: '', lagB: '' };
     for (var i = 0; i < 12; i++) FL.hist.push(0);
     r.classList.add('cf-on');
     FL.sea = mk('i', 'cf-sea', main); FL.sa = mk('b', '', FL.sea); FL.sb = mk('b', '', FL.sea);
@@ -664,7 +672,7 @@
       el.classList.add('cf-p');
       var c = mk('i', 'cf-caus', el, el.firstChild), ci = mk('i', '', c);
       ci.style.setProperty('--cf-cd', (-(n * 13.7) % 70).toFixed(1) + 's');
-      FL.ps.push({ el: el, cx: 0, cy: 0, w: 1, h: 1, ph: 0, tA: 0, tM: 0, y: 0, v: 0, r: 0, rv: 0, tr: 0, ty: 0, on: false, still: 0, last: '' });
+      FL.ps.push({ el: el, cx: 0, cy: 0, w: 1, h: 1, ph: 0, tA: 0, tM: 0, y: 0, v: 0, r: 0, rv: 0, tr: 0, ty: 0, on: false, still: 0, last: '', rest: true });
     });
     if (W.IntersectionObserver) {
       FL.io = new IntersectionObserver(function (es) {
@@ -674,9 +682,9 @@
             p.on = true; FL.vis++;
             // surfacing: a panel coming up from below while the page scrolls down rises out of the water, one overshoot
             if (e.boundingClientRect.top > innerHeight * .5 && FL.vs > 120) { p.y = 14; p.v = 0; }
-          } else if (!e.isIntersecting && p.on) { p.on = false; FL.vis--; p.el.style.transform = ''; p.last = ''; p.y = p.v = p.r = p.rv = 0; } // off screen: at rest when it comes back
+          } else if (!e.isIntersecting && p.on) { p.on = false; FL.vis--; p.el.style.transform = ''; p.last = ''; p.y = p.v = p.r = p.rv = 0; p.rest = true; } // off screen: at rest when it comes back
         });
-        flKick();
+        flKick(); flBeat();
       }, { rootMargin: '40px 0px' });
       FL.ps.forEach(function (p) { FL.io.observe(p.el); });
       var io = FL.io; offs.push(function () { io.disconnect(); });
@@ -688,9 +696,43 @@
     on(d, 'pointerout', flOut, { passive: true });
     on(d, 'click', flKeyClick, true);
     on(d, 'focusin', flFocus);
-    on(d, 'focusout', function (e) { var el = e.target && e.target.closest ? e.target.closest('.cf-p') : null, p = el && FL ? flFind(el) : null; if (p && !(e.relatedTarget && el.contains(e.relatedTarget))) p.still = 0; });
-    on(d, 'visibilitychange', function () { if (d.hidden) { cancelAnimationFrame(FL.raf); FL.raf = 0; } else flKick(); });
-    flKick();
+    on(d, 'focusout', function (e) { var el = e.target && e.target.closest ? e.target.closest('.cf-p') : null, p = el && FL ? flFind(el) : null; if (p && !(e.relatedTarget && el.contains(e.relatedTarget))) { p.still = 0; flBeat(true); } });
+    on(d, 'visibilitychange', function () { if (d.hidden) { cancelAnimationFrame(FL.raf); FL.raf = 0; clearTimeout(FL.tick); FL.tick = 0; FL.rings = []; FL.wake = []; } else { FL.py = W.scrollY || 0; flKick(); flBeat(); } });
+    // back/forward cache: the page is put away at rest and comes back at rest (no half-way springs, no queued rings)
+    on(W, 'pagehide', flReset); on(W, 'pageshow', function (e) { if (e.persisted) { flReset(); flLay(); } });
+    // the theme changes the foam paint; a narrated film playing calms the water round it (it holds its swell)
+    var mo = new MutationObserver(function () { if (FL) { flFoam(); flKick(); } }); mo.observe(r, { attributes: true, attributeFilter: ['data-theme'] }); offs.push(function () { mo.disconnect(); });
+    on(d, 'play', flFilm, true); on(d, 'pause', flFilm, true); on(d, 'ended', flFilm, true);
+    flKick(); flBeat();
+  }
+  function flFilm() {
+    if (!FL) return;
+    var v = d.querySelectorAll('video[data-sound]'), calm = false;
+    for (var i = 0; i < v.length; i++) if (!v[i].paused && !v[i].ended) calm = true;
+    FL.calm = calm; r.classList.toggle('cf-calm', calm); flBeat(true);
+  }
+  function flReset() {
+    if (!FL) return;
+    FL.rings = []; FL.wake = []; FL.lastW = null; FL.vs = 0; FL.py = W.scrollY || 0; FL.pt = 0;
+    for (var i = 0; i < 12; i++) FL.hist[i] = 0;
+    FL.ps.forEach(function (p) { p.y = p.v = p.r = p.rv = p.tr = p.ty = 0; p.rest = true; });
+    flBeat(true); flKick();
+  }
+  // the swell, in whole pixels, at the beat (time held between beats); 0 when held still, calmed, or in a capture window
+  function flSwell(p, tq) { return p.still || FL.calm || innerHeight > 3000 ? 0 : Math.round(FLK.amp * Math.sin(tq * 6.2832 / FLK.period + p.ph)) || 0; }
+  function flTq(t) { return Math.floor(t / FLK.beat) * FLK.beat / 1000; }
+  function flRestTf(p, tq) { var s = flSwell(p, tq); return s ? 'translate3d(0,' + s + 'px,0)' : ''; }
+  // the beat: while a panel is on screen, a timer (not a frame loop) moves resting panels to their next held step
+  function flBeat(force) {
+    if (!FL) return;
+    if (force) { clearTimeout(FL.tick); FL.tick = 0; }
+    if (FL.tick || d.hidden) return;
+    var t = now(), tq = flTq(t);
+    if (!FL.raf) for (var i = 0; i < FL.ps.length; i++) {
+      var p = FL.ps[i]; if (!p.on || !p.rest) continue;
+      var tf = flRestTf(p, tq); if (tf !== p.last) { p.el.style.transform = tf; p.last = tf; }
+    }
+    if (FL.vis > 0) FL.tick = setTimeout(function () { FL && (FL.tick = 0); flBeat(); }, FLK.beat - (t % FLK.beat) + 4);
   }
   function flFind(el) { for (var i = 0; i < FL.ps.length; i++) if (FL.ps[i].el === el) return FL.ps[i]; return null; }
   function flLay() {
@@ -715,38 +757,42 @@
   function flKick() { if (FL && !FL.raf && !d.hidden) { FL.pt = 0; FL.raf = requestAnimationFrame(flFrame); } }
   function flFrame(t) {
     FL.raf = 0;
-    var y = W.scrollY || 0;
+    var y = W.scrollY || 0, ih = innerHeight;
     if (FL.dirty) { FL.dirty = false; frame(t); }
     var dt = clamp((t - (FL.pt || t - 16)) / 1000, .008, .05); FL.pt = t;
-    var vel = (y - FL.py) / dt; FL.py = y;
-    FL.vs = FL.vs * .72 + vel * .28;
+    // a jump (an anchor, a restored scroll, End without smooth scrolling) is not a push: the water does not slosh
+    var vel = Math.abs(y - FL.py) > ih * .9 ? 0 : (y - FL.py) / dt; FL.py = y;
+    FL.vs = FL.vs * .72 + vel * .28; if (Math.abs(FL.vs) < .5) FL.vs = 0;
     FL.hi = (FL.hi + 1) % 12; FL.hist[FL.hi] = FL.vs;
-    var time = t / 1000, ih = innerHeight, moving = Math.abs(FL.vs) > 4, K = 110, C = 6.6, busy = false;
+    var tq = flTq(t), moving = FL.vs !== 0, busy = false, cap = ih > 3000;
     for (var i = 0; i < FL.ps.length; i++) {
       var p = FL.ps[i]; if (!p.on) continue;
       var k = Math.round(clamp((p.cy - y) / ih, 0, 1) * 8), vd = FL.hist[(FL.hi - k + 12) % 12];
-      var tgt = clamp(vd * .007, -10, 10) + p.ty;
-      p.v += (K * (tgt - p.y) - C * p.v) * dt; p.y += p.v * dt;
-      p.rv += (K * (p.tr - p.r) - C * p.rv) * dt; p.r += p.rv * dt;
-      if (Math.abs(p.y) > 16) { p.y = clamp(p.y, -16, 16); p.v *= .5; }
-      if (Math.abs(p.v) > .5 || Math.abs(p.y - tgt) > .05 || Math.abs(p.rv) > .05) busy = true;
-      if (ih > 3000) { p.y = p.v = p.r = p.rv = 0; }  // a full-page capture window (a screenshot tool): everything at rest
-      var hold = p.still || ih > 3000 ? 0 : 1, s = time * 1.12 + p.ph;   // the swell: one roll every 5.6 s
-      var Y = p.y + 1.6 * Math.sin(s) * hold, R = p.r + p.y * .03 + p.tA * Math.sin(s + 1.2) * hold;
-      var tf = 'translate3d(0,' + Y.toFixed(2) + 'px,0) rotate(' + R.toFixed(3) + 'deg)';
+      var tgt = clamp(vd * FLK.push, -FLK.pushMax, FLK.pushMax) + p.ty;
+      p.v += (FLK.K * (tgt - p.y) - FLK.C * p.v) * dt; p.y += p.v * dt;
+      p.rv += (FLK.K * (p.tr - p.r) - FLK.C * p.rv) * dt; p.r += p.rv * dt;
+      if (Math.abs(p.y) > FLK.yMax) { p.y = clamp(p.y, -FLK.yMax, FLK.yMax); p.v *= .5; }
+      if (cap) { p.y = p.v = p.r = p.rv = 0; }  // a full-page capture window (a screenshot tool): everything at rest
+      var tf;
+      if (Math.abs(tgt) < .05 && p.tr === 0 && Math.abs(p.v) < 2 && Math.abs(p.y) < .3 && Math.abs(p.rv) < .3 && Math.abs(p.r) < .02) {
+        p.y = p.v = p.r = p.rv = 0; p.rest = true; tf = flRestTf(p, tq);   // settled: whole pixels, no turn, words crisp
+      } else {
+        p.rest = false; busy = true;
+        var Y = p.y + flSwell(p, tq), R = p.r + p.y * .03;
+        tf = 'translate3d(0,' + Y.toFixed(2) + 'px,0) rotate(' + R.toFixed(3) + 'deg)';
+      }
       if (tf !== p.last) { p.el.style.transform = tf; p.last = tf; }
     }
-    // the sea's light: two layers drifting (one down-right, one down-left, slowly) and lagging the scroll (a third of
-    // its speed), each wrapped inside its own tile; cut off above the top of the sea
-    var st = Math.max(0, Math.round(FL.seaTop - y)), seaOn = st < ih;
-    if (seaOn) {
-      var ax = (time * 9) % FL.A, ay = (time * 9 + y * .33) % FL.A, bx = FL.B - (time * 7) % FL.B, by = (time * 6 + y * .33) % FL.B;
-      FL.sa.style.transform = 'translate3d(' + ax.toFixed(1) + 'px,' + ay.toFixed(1) + 'px,0)';
-      FL.sb.style.transform = 'translate3d(' + bx.toFixed(1) + 'px,' + by.toFixed(1) + 'px,0)';
-    }
+    // the sea's light: each layer drifts sideways by itself (CSS) and lags the scroll here (a third of its speed), wrapped
+    // inside its own tile; cut off above the top of the sea. Written only when the scroll has changed.
+    var st = Math.max(0, Math.round(FL.seaTop - y));
+    var la = '0 ' + ((y * FLK.seaLag) % FL.A).toFixed(1) + 'px', lb = '0 ' + ((y * FLK.seaLag) % FL.B).toFixed(1) + 'px';
+    if (la !== FL.lagA) { FL.sa.style.translate = la; FL.lagA = la; }
+    if (lb !== FL.lagB) { FL.sb.style.translate = lb; FL.lagB = lb; }
     if (st !== FL.st) { FL.sea.style.setProperty('--cf-st', Math.min(st, ih + 2) + 'px'); FL.st = st; }
     var water = flDraw(t, y);
-    if (FL.vis > 0 || seaOn || water || busy || moving) FL.raf = requestAnimationFrame(flFrame);
+    if (water || busy || moving || FL.dirty) FL.raf = requestAnimationFrame(flFrame);
+    else flBeat(true);   // at rest: the loop sleeps, the beat carries the swell
   }
   // the water: foam rings from taps and clicks, a wake behind a moving pointer or finger. Filled shapes, one paint.
   function flDraw(t, y) {
@@ -764,7 +810,7 @@
       return true;
     });
     FL.wake = FL.wake.filter(function (w) {
-      var a = (t - w.t0) / 900; if (a >= 1) return false; alive = true;
+      var a = (t - w.t0) / FLK.wakeMs; if (a >= 1) return false; alive = true;
       var sp = 3 + a * 26, rad = 1.2 + (1 - a) * 3.6, bx = w.x - w.dx * a * 10, by = w.y - y - w.dy * a * 10;
       c.beginPath(); c.ellipse(bx - w.dy * sp, by + w.dx * sp, rad * 1.5, rad, Math.atan2(w.dy, w.dx), 0, 6.2832);
       c.ellipse(bx + w.dy * sp, by - w.dx * sp, rad * 1.5, rad, Math.atan2(w.dy, w.dx), 0, 6.2832); c.fill();
@@ -775,8 +821,8 @@
   }
   function flRing(x, y, big) { // x, y in page coordinates
     var n = now();
-    FL.rings.push({ x: x, y: y, t0: n, dur: 820, r0: 4, max: big ? 150 : 90, th: 4.2 });
-    FL.rings.push({ x: x, y: y, t0: n + 140, dur: 760, r0: 2, max: big ? 96 : 56, th: 3 });
+    FL.rings.push({ x: x, y: y, t0: n, dur: FLK.ringMs, r0: 4, max: big ? 150 : 90, th: 4.2 });
+    FL.rings.push({ x: x, y: y, t0: n + 140, dur: FLK.ring2Ms, r0: 2, max: big ? 96 : 56, th: 3 });
     if (FL.rings.length > 12) FL.rings.splice(0, FL.rings.length - 12);
     flKick();
   }
@@ -791,27 +837,28 @@
     }
     FL.lastW = { cx: cx, py: cy + y, t: n };
   }
+  // a mouse over a panel: it takes the weight as the pointer comes on (a dip), lifts as it leaves (the same spring, the
+  // other way), and sloshes with the pointer's sideways speed; it always settles flat, so nothing stays turned
   function flMove(e) {
     flWake(e.clientX, e.clientY);
     if (e.pointerType !== 'mouse') return;
     var el = e.target && e.target.closest ? e.target.closest('.cf-p') : null, p = el ? flFind(el) : null;
-    if (FL.hover && FL.hover !== p) { FL.hover.tr = 0; FL.hover.ty = 0; }
-    FL.hover = p;
-    if (p && !p.still) { var rel = clamp((e.clientX - (p.cx)) / (p.w / 2), -1, 1); p.tr = rel * p.tM; flKick(); }
+    if (FL.hover !== p) { if (FL.hover && !FL.hover.still) FL.hover.v += FLK.dipOut; if (p && !p.still) p.v += FLK.dipIn; FL.hover = p; flKick(); }
+    if (p && !p.still && e.movementX) { p.rv += clamp(e.movementX, -30, 30) * FLK.slosh * p.tM; flKick(); }
   }
-  function flOut(e) { if (FL.hover && (!e.relatedTarget || !FL.hover.el.contains(e.relatedTarget))) { FL.hover.tr = 0; FL.hover.ty = 0; FL.hover = null; flKick(); } }
+  function flOut(e) { if (FL.hover && (!e.relatedTarget || !FL.hover.el.contains(e.relatedTarget))) { if (!FL.hover.still) FL.hover.v += FLK.dipOut; FL.hover = null; flKick(); } }
   function flTouch(e) { var q = e.touches && e.touches[0]; if (q) flWake(q.clientX, q.clientY); }
-  function flPress(p, side, kick) { if (!p) return; p.v += kick; p.rv += side * 9; flKick(); }
+  function flPress(p, side, kick) { if (!p) return; p.v += kick; p.rv += side * FLK.rock; flKick(); }
   function flDown(e) {
     flFoam();
     var y = W.scrollY || 0, el = e.target && e.target.closest ? e.target.closest('.cf-p') : null, p = el ? flFind(el) : null;
     flRing(e.clientX, e.clientY + y, !p);
-    if (p) flPress(p, clamp((e.clientX - p.cx) / (p.w / 2), -1, 1), 70);
+    if (p) flPress(p, clamp((e.clientX - p.cx) / (p.w / 2), -1, 1), FLK.press);
   }
   function flKeyClick(e) {
     if (e.detail !== 0 || !e.target.closest) return;
     var el = e.target.closest('.cf-p'), p = el ? flFind(el) : null; if (!p) return;
-    flPress(p, 0, 70); flRing(p.cx, p.cy, true);
+    flPress(p, 0, FLK.press); flRing(p.cx, p.cy, true);
   }
   function flFocus(e) {
     var t = e.target; FL.ps.forEach(function (p) { p.still = 0; });
@@ -819,13 +866,13 @@
     if (!vis || !t.closest) return;
     var el = t.closest('.cf-p'), p = el ? flFind(el) : null; if (!p) return;
     p.still = 1; p.tr = 0; p.ty = 0;           // held still on the water so the painted focus ring stays on it
-    flFoam(); flRing(p.cx, p.cy, true);
+    flFoam(); flRing(p.cx, p.cy, true); flBeat(true);
   }
   function flStop() {
     if (!FL) return;
-    cancelAnimationFrame(FL.raf);
+    cancelAnimationFrame(FL.raf); clearTimeout(FL.tick);
     FL.ps.forEach(function (p) { p.el.style.transform = ''; p.el.classList.remove('cf-p'); });
-    r.classList.remove('cf-on');
+    r.classList.remove('cf-on', 'cf-calm');
     FL = null;
   }
 

@@ -1265,3 +1265,95 @@ html[data-look="cel"][data-motion="paused"]::view-transition-new(*) { animation:
   }
 }
 /* fluid-cel:end */
+
+/* ---------- polish (Nov 20 2026): every moment finished ----------
+   Ryan's word: "the highest level of polish in every sense every nuance". The motion tokens of this look, used below
+   and by look-cel.js (FLK): --cf-tide the page change, --cf-wave its ease; --cf-land a named thing landing with one
+   small overshoot (gentler than --pop, which is for things popping in); --pop for arrivals and toggles.
+   1 page change backward: the tide goes out. The new page comes down from the top of the window under a scalloped
+     edge, the old page sinks away under a swell edge, the same foam band between them; a reload has no tide.
+   2 the named title that flies between a card and its page head: no soft crossfade (a cel thing changes drawing in
+     one frame, a third of the way), and it lands with one small overshoot. The top bar is the same on both pages: it holds,
+     no fade at all.
+   3 the sea's light drifts sideways by itself (a current; CSS, on the compositor); look-cel.js only adds the scroll's lag.
+   4 a narrated film playing calms the water: the light stops drifting and the panels hold their swell.
+   5 the caustic light comes up in three held steps when the script arrives, never as a pop.
+   6 "Read the script": a white slab (a control) with a sea-blue prism that turns as it opens; the script is a cloud
+     panel that pops open. Static paint, so it holds with reduced motion too; only its movement needs motion. */
+html[data-look="cel"] { --cf-tide: .56s; --cf-wave: cubic-bezier(.5, .05, .3, 1); --cf-land: cubic-bezier(.3, 1.25, .5, 1); }
+@keyframes cf-ebb-new {
+  from { -webkit-mask-position: left 0px top 0px, left 0 top calc(-100vh - 64px); mask-position: left 0px top 0px, left 0 top calc(-100vh - 64px); }
+  to { -webkit-mask-position: left 180px top calc(100vh + 64px), left 0 top 64px; mask-position: left 180px top calc(100vh + 64px), left 0 top 64px; }
+}
+@keyframes cf-ebb-old {
+  from { -webkit-mask-position: left 0px top 20px, left 0 top 60px; mask-position: left 0px top 20px, left 0 top 60px; }
+  to { -webkit-mask-position: left -120px top calc(100vh + 84px), left 0 top calc(100vh + 124px); mask-position: left -120px top calc(100vh + 84px), left 0 top calc(100vh + 124px); translate: 0 18px; }
+}
+/* the cut comes a third of the way in, when the landing title is about half way along its path */
+@keyframes cf-cut-out { 0%, 32% { opacity: 1; } 32.2%, 100% { opacity: 0; } }
+@keyframes cf-cut-in { 0%, 32% { opacity: 0; } 32.2%, 100% { opacity: 1; } }
+@keyframes cf-light-up { from { opacity: 0; } }
+@keyframes cf-sea-r { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(var(--cf-a), 0, 0); } }
+@keyframes cf-sea-l { from { transform: translate3d(var(--cf-b), 0, 0); } to { transform: translate3d(0, 0, 0); } }
+@media (prefers-reduced-motion: no-preference) {
+  html[data-look="cel"]:not([data-motion="paused"]):active-view-transition-type(back)::view-transition-new(root) {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 40'%3E%3Cpath d='M0 0V16A20 20 0 0 0 30 26A20 20 0 0 0 60 16A20 20 0 0 0 90 26A20 20 0 0 0 120 16V0Z'/%3E%3C/svg%3E"), linear-gradient(#000, #000);
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 40'%3E%3Cpath d='M0 0V16A20 20 0 0 0 30 26A20 20 0 0 0 60 16A20 20 0 0 0 90 26A20 20 0 0 0 120 16V0Z'/%3E%3C/svg%3E"), linear-gradient(#000, #000);
+    animation-name: cf-ebb-new;
+  }
+  html[data-look="cel"]:not([data-motion="paused"]):active-view-transition-type(back)::view-transition-old(root) {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 40'%3E%3Cpath d='M0 40H160V28C130 18 110 18 80 28C50 38 30 38 0 28Z'/%3E%3C/svg%3E"), linear-gradient(#000, #000);
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 40'%3E%3Cpath d='M0 40H160V28C130 18 110 18 80 28C50 38 30 38 0 28Z'/%3E%3C/svg%3E"), linear-gradient(#000, #000);
+    animation-name: cf-ebb-old;
+  }
+  /* the top bar: the same on both pages, so it simply holds (no fade, no flicker) */
+  html[data-look="cel"]:not([data-motion="paused"])::view-transition-group(cel-top),
+  html[data-look="cel"]:not([data-motion="paused"])::view-transition-new(cel-top) { animation: none; }
+  html[data-look="cel"]:not([data-motion="paused"])::view-transition-old(cel-top) { animation: none; opacity: 0; }
+  /* the flying title: one cut half way, then it lands */
+  html[data-look="cel"]:not([data-motion="paused"]) [style*="view-transition-name: t-"] { view-transition-class: cel-t; }
+  html[data-look="cel"]:not([data-motion="paused"])::view-transition-group(*.cel-t) { animation-duration: .5s; animation-timing-function: var(--cf-land); }
+  html[data-look="cel"]:not([data-motion="paused"])::view-transition-image-pair(*.cel-t) { isolation: auto; }
+  /* each drawing keeps its own size (never stretched to the other's, which blurs and spills over the card text) */
+  html[data-look="cel"]:not([data-motion="paused"])::view-transition-old(*.cel-t),
+  html[data-look="cel"]:not([data-motion="paused"])::view-transition-new(*.cel-t) { inline-size: auto; block-size: auto; }
+  html[data-look="cel"]:not([data-motion="paused"])::view-transition-old(*.cel-t) { mix-blend-mode: normal; animation: cf-cut-out .5s linear both; }
+  html[data-look="cel"]:not([data-motion="paused"])::view-transition-new(*.cel-t) { mix-blend-mode: normal; animation: cf-cut-in .5s linear both; }
+  /* a reload is not a journey: no tide */
+  html[data-look="cel"]:active-view-transition-type(reload)::view-transition-group(*),
+  html[data-look="cel"]:active-view-transition-type(reload)::view-transition-old(*),
+  html[data-look="cel"]:active-view-transition-type(reload)::view-transition-new(*) { animation: none; }
+
+  /* the sea's light: its own sideways drift (one layer right, one left; durations = its tile / 9 and / 7 px a second) */
+  html[data-look="cel"].motion.c-live.cf-on .cf-sea > b { animation: cf-sea-r 149s linear infinite; }
+  html[data-look="cel"].motion.c-live.cf-on .cf-sea > b + b { animation: cf-sea-l 84s linear infinite; }
+  @media (max-width: 620px) {
+    html[data-look="cel"].motion.c-live.cf-on .cf-sea > b { animation-duration: 100s; }
+    html[data-look="cel"].motion.c-live.cf-on .cf-sea > b + b { animation-duration: 56s; }
+  }
+  /* the light comes up in three held steps */
+  html[data-look="cel"].motion.c-live.cf-on :is(.cf-caus, .cf-sea) { animation: cf-light-up .45s steps(3, jump-start) both; }
+  /* a narrated film playing: the water calms round it */
+  html[data-look="cel"].motion.c-live.cf-on.cf-calm :is(.cf-caus > i, .cf-sea > b) { animation-play-state: paused; }
+
+  /* "Read the script" turning and opening */
+  html[data-look="cel"].motion .film-script > summary::before { transition: rotate .32s var(--pop); }
+  html[data-look="cel"].motion .film-script[open] > p { animation: c-pop .42s var(--pop) both; transform-origin: 0 0; }
+}
+html[data-look="cel"] .film-script > summary {
+  --l: #ffffff; --s: #9c8c86; --u: var(--c-drop-sea); --lip: 3px 5px;
+  width: fit-content; padding: 5px 16px 6px 13px; border-radius: 999px; color: #18264f; font-weight: 750; text-decoration: none;
+  background: var(--l); box-shadow: var(--lip) 0 0 var(--s), 6px 11px 12px -3px var(--u); transition: translate .08s, scale .08s, box-shadow .08s;
+}
+html[data-look="cel"] .film-script > summary:is(:hover, :focus-visible) { color: #18264f; translate: 0 -2px; }
+html[data-look="cel"] .film-script > summary:active { translate: 3px 5px; scale: 1.02 .94; box-shadow: 0 0 0 var(--s), 2px 4px 6px -3px var(--u); }
+html[data-look="cel"] .film-script > summary::before { width: 8px; height: 10px; border: 0; background: #0963e0; clip-path: polygon(0 0, 100% 50%, 0 100%); }
+/* (painted on its panel open or shut: a contrast reader that walks the shut text then finds it on its panel too) */
+html[data-look="cel"] .film-script > p { margin-top: 12px; padding: 14px 18px 15px; border-radius: 18px; background: var(--c-panel); color: var(--c-text); box-shadow: 6px 11px 12px -3px var(--c-drop-sea); }
+/* the skip link: a white slab (a control) on the sky, popping in when it takes focus; the look's yellow ring round it */
+html[data-look="cel"] .skip-link { --s: #9c8c86; border-radius: 999px; padding: 10px 18px 11px; background: #ffffff; color: #18264f; font-family: var(--display); font-weight: 750;
+  box-shadow: 3px 5px 0 0 var(--s), 6px 11px 12px -3px var(--c-drop-sky); }
+@media (prefers-reduced-motion: no-preference) {
+  html[data-look="cel"].motion .skip-link:focus { animation: c-pop .36s var(--pop) both; }
+}
+/* polish-cel:end */
