@@ -11,7 +11,16 @@
    carries data-look="dots" and .motion, and takes away everything it added (elements, classes, properties, listeners,
    observers, timers) the moment either goes: the look picker, "Pause motion", or a reduced-motion change.
    Guardrails: one moving accent at a time; decoration only (aria-hidden, no clicks, no layout change, never under words);
-   at most one requestAnimationFrame per frame; nothing while the tab is hidden. No people anywhere. */
+   at most one requestAnimationFrame per frame; nothing while the tab is hidden. No people anywhere.
+   Fluid pass (Nov 20, _tools/fluid/BRIEF.md): comic timing is the fluid. Every panel's dot tints exist in three more
+   sizes (every dot's radius x .78, 1.22, 1.45; the centres never move, so the tints stay in register and no tile ever
+   moves on scroll). A panel steps between sizes in held drawings (132 ms): at rest a slow wave of growth runs down the
+   screen every few seconds; scrolling grows the dots by scroll speed and, when it stops, they settle in damped held steps
+   (down past rest, then home); the panel under the pointer, a pressed one and the one holding keyboard focus grow one or
+   two sizes. One canvas the size of the viewport (pointer-events none) draws, in held drawings of 66 ms: speed lines in
+   the side gutters on a fast scroll, a burst of dots and ruled rays where a finger or button presses, and a short dot
+   wake behind a mouse moving over bare ground (never over words). One requestAnimationFrame loop runs only while
+   something is moving; nothing runs while the tab is hidden. */
 (function () {
   'use strict';
   var d = document, r = d.documentElement, W = window;
@@ -37,16 +46,19 @@
     svg.appendChild(thin); svg.appendChild(heavy); made.push(thin, heavy);
     var head = d.createElement('i'); head.className = 'dp-th-head'; head.setAttribute('aria-hidden', 'true'); th.appendChild(head); made.push(head);
     var last = -1, path = '', pts = [];
-    function sample() { // points every 6 px along the strand, each with the pen's width there
-      pts = []; var L = line.getTotalLength(), s, p, q, dx, dy, m;
-      for (s = 0; s <= L; s += 6) {
-        p = line.getPointAtLength(s); q = line.getPointAtLength(Math.min(L, s + 3)); dx = q.x - p.x; dy = q.y - p.y; m = Math.hypot(dx, dy) || 1;
-        pts.push([p.x, p.y, dx / m, dy / m, (2 + 2 * Math.abs(dy / m)) * Math.min(1, 0.4 + s / 60)]);
+    function sample() { // points every 8 px along the strand, each with the pen's width there (one length lookup per point;
+      // the direction comes from the next point, so a long page's strand re-samples in a third of the time)
+      pts = []; var L = line.getTotalLength(), s, p, raw = [], i, dx, dy, m, q;
+      for (s = 0; s <= L; s += 8) { p = line.getPointAtLength(s); raw.push([p.x, p.y, s]); }
+      for (i = 0; i < raw.length; i++) {
+        p = raw[i]; q = raw[Math.min(raw.length - 1, i + 1)]; if (q === p && i) { q = p; p = raw[i - 1]; }
+        dx = q[0] - p[0]; dy = q[1] - p[1]; m = Math.hypot(dx, dy) || 1;
+        pts.push([raw[i][0], raw[i][1], dx / m, dy / m, (2 + 2 * Math.abs(dy / m)) * Math.min(1, 0.4 + raw[i][2] / 60)]);
       }
     }
     function outline(len) { // the filled key line from the start to len: left edge out, right edge back
       var a = [], b = [], i, t, h;
-      for (i = 0; i < pts.length && i * 6 <= len; i++) { t = pts[i]; h = t[4] / 2; a.push((t[0] - t[3] * h).toFixed(1) + ' ' + (t[1] + t[2] * h).toFixed(1)); b.push((t[0] + t[3] * h).toFixed(1) + ' ' + (t[1] - t[2] * h).toFixed(1)); }
+      for (i = 0; i < pts.length && i * 8 <= len; i++) { t = pts[i]; h = t[4] / 2; a.push((t[0] - t[3] * h).toFixed(1) + ' ' + (t[1] + t[2] * h).toFixed(1)); b.push((t[0] + t[3] * h).toFixed(1) + ' ' + (t[1] - t[2] * h).toFixed(1)); }
       return a.length < 2 ? '' : 'M' + a.join('L') + 'L' + b.reverse().join('L') + 'Z';
     }
     function place() {
@@ -117,15 +129,175 @@
     var io = new IntersectionObserver(function (en) {
       if (!en[0].isIntersecting) return;
       io.disconnect(); busy++;
-      list.forEach(function (el, k) { later(function () { el.classList.add('dp-on'); if (k === list.length - 1) busy--; }, 300 * k); });
+      list.forEach(function (el, k) { later(function () { el.classList.add('dp-on'); if (k === list.length - 1) { busy--; blink(); } }, 300 * k); });
     }, { threshold: 0.5 });
     io.observe(f); obs.push(io);
+    var seen = false, io2 = new IntersectionObserver(function (en) { seen = en[0].isIntersecting; }); io2.observe(f); obs.push(io2);
+    function blink() { // then, while the footer is in view, one window at a time switches its tint (a wait: the frame holds)
+      later(function () { if (!live) return; if (seen && !d.hidden && list.length) list[Math.floor(Math.random() * list.length)].classList.toggle('dp-on'); blink(); }, 2600);
+    }
+  }
+
+
+  // ---------- fluid pass: dot sizes on panels, speed lines, tap bursts, pointer wake ----------
+  // the panels whose dot tints breathe (data panels are left out: a bar's tint never changes)
+  var PANELS = '.topbar, .hero-film, .case-head, .bigfig, .card, .principle, .band, .section-head, .group-h, .fact, .method > li, .flow li, .band3 > div, .film, .figure, .repo-card, .pager a, .more-g, footer.site';
+  var VARS = ['red-light', 'red', 'red-2', 'yellow-light', 'yellow', 'yellow-2', 'blue-light', 'blue', 'blue-2'].map(function (k) { return '--dp-t-' + k; })
+    .concat(['hero-floor', 'hero-tall', 'hero-small', 'band-cols', 'band-floor', 'frieze', 'sky', 'fact', 'stair', 'v-ok'].map(function (k) { return '--dp-a-' + k; }));
+  var SIZES = { m: .78, 1: 1.22, 2: 1.45 }, HOLD = 132, TICK = 66;
+  function fluid() {
+    // each size is held once on <html> as its own --dp-zN-* variable (so the sheet sweep knows them as this look's own);
+    // a sized panel points its tints at them, and the data inside it (bars, charts) points back at the originals
+    var cs = getComputedStyle(r), root = '', css = '', keep = '', k, i, v, name;
+    for (i = 0; i < VARS.length; i++) {
+      v = cs.getPropertyValue(VARS[i]).trim(); if (v.indexOf('<circle') < 0) continue;
+      name = VARS[i].slice(5); keep += VARS[i] + ':var(--dp-o-' + name + ');'; root += '--dp-o-' + name + ':var(' + VARS[i] + ');';
+      for (k in SIZES) root += '--dp-z' + k + '-' + name + ':' + v.replace(/(<circle\b[^>]*?\br=')([\d.]+)'/g, function (m, a, n) { return a + (parseFloat(n) * SIZES[k]).toFixed(2) + "'"; }) + ';';
+    }
+    for (k in SIZES) css += 'html[data-look="dots"] .dp-z' + k + ' {' + VARS.map(function (x) { return root.indexOf('--dp-z' + k + '-' + x.slice(5) + ':') < 0 ? '' : x + ':var(--dp-z' + k + '-' + x.slice(5) + ');'; }).join('') + '}\n';
+    css = 'html[data-look="dots"][data-look] {' + root + '}\n' + css +
+      'html[data-look="dots"] :is(.dp-z1, .dp-z2, .dp-zm) :is(.track, .bars, .minis, .linechart, .legend, .chart-card) {' + keep + '}\n';
+    var st = d.createElement('style'); st.id = 'dp-fluid-sizes'; st.textContent = css; d.head.appendChild(st); made.push(st);
+
+    var cv = d.createElement('canvas'); cv.className = 'dp-fx'; cv.setAttribute('aria-hidden', 'true'); d.body.appendChild(cv); made.push(cv);
+    var g = cv.getContext('2d'), thr = false, dpr = 1, vw = 0, vh = 0, gut = 16, ink = '#272015', dot = '#c8321e';
+    var panels = [], top = [], bot = [], lvl = [], bump = [], hov = -1, foc = -1;
+    var sy = scrollY, cur = 0, vel = 0, lastY = scrollY, lastT = 0, scrollAt = -1e9, peak = 0, settleAt = -1, wave = -1e9;
+    var bursts = [], wake = [], lines = 0, lastTick = 0, lastHold = 0, drawn = false, looping = 0, wx = -99, wy = -99;
+
+    function measure() { // layout reads happen here only (start, resize, body size change), never inside the loop
+      vw = innerWidth; vh = innerHeight; dpr = Math.min(2, W.devicePixelRatio || 1);
+      cv.width = Math.round(vw * dpr); cv.height = Math.round(vh * dpr); drawn = true;
+      var c = getComputedStyle(r); ink = c.getPropertyValue('--dp-line-c').trim() || ink;
+      dot = r.getAttribute('data-theme') === 'dark' || (!r.getAttribute('data-theme') && matchMedia('(prefers-color-scheme: dark)').matches) ? (c.getPropertyValue('--dp-yellow').trim() || '#dfc361') : (c.getPropertyValue('--dp-red').trim() || dot);
+      for (var n0 = 0; n0 < panels.length; n0++) setLvl(n0, 0);
+      var all = [].slice.call(d.querySelectorAll(PANELS)), left = vw;
+      panels = all.filter(function (el) { return !all.some(function (o) { return o !== el && el.contains(o); }); }); // innermost only, so no panel inherits another's size
+      top = []; bot = []; lvl = []; bump = []; hov = foc = -1;
+      panels.forEach(function (el, n) { // layout boxes (offsets), so a panel still growing in on arrival reads at its full size
+        var y = 0, x = 0, e = el; while (e) { y += e.offsetTop; x += e.offsetLeft; e = e.offsetParent; }
+        top[n] = y; bot[n] = y + el.offsetHeight; lvl[n] = 0; bump[n] = null;
+        if (el.offsetWidth > vw * .6 && x >= 0 && el.closest('main')) left = Math.min(left, x);
+      });
+      gut = Math.max(10, Math.min(140, left - 5)); thr = !!d.querySelector('main > .thread'); // the thread owns the left gutter
+    }
+    function setLvl(n, z) {
+      if (lvl[n] === z) return;
+      var el = panels[n];
+      if (lvl[n]) el.classList.remove('dp-z' + (lvl[n] < 0 ? 'm' : lvl[n]));
+      if (z) el.classList.add('dp-z' + (z < 0 ? 'm' : z));
+      lvl[n] = z;
+    }
+    function which(t) { if (!t || !t.closest) return -1; var p = t.closest(PANELS); while (p && panels.indexOf(p) < 0) p = p.parentElement && p.parentElement.closest(PANELS); return p ? panels.indexOf(p) : -1; }
+    function kick() { if (!looping && live && !d.hidden) looping = requestAnimationFrame(loop); }
+
+    function target(n, now, scrolling) { // the size a panel wants this held drawing: the largest ask wins, a dip only if nothing grows
+      var z = 0, dip = false, q, s;
+      if (scrolling) z = cur;
+      else if (settleAt >= 0) { s = Math.floor((now - settleAt) / HOLD); q = (peak > 1 ? [2, 1, 0, -1, -1, 0] : [1, 0, -1, 0])[s]; if (q > 0) z = q; else if (q < 0) dip = true; }
+      // the rest wave: runs down the screen, a dip, then two held drawings grown
+      s = Math.floor((now - wave - Math.max(0, (top[n] - sy) / vh) * 900) / HOLD);
+      if (s >= 0 && s < 4) { q = [-1, 1, 1, 0][s]; if (q > 0) z = Math.max(z, q); else if (q < 0) dip = true; }
+      if (bump[n]) { s = Math.floor((now - bump[n]) / HOLD); q = [2, 2, 1][s]; if (q) z = Math.max(z, q); else bump[n] = null; }
+      if (n === hov || n === foc) z = Math.max(z, 1);
+      return z || (dip ? -1 : 0);
+    }
+    function loop(now) {
+      looping = 0;
+      if (!live || d.hidden) return;
+      var more = false, scrolling = now - scrollAt < 140, n, inView, z, i, b, s;
+      if (!scrolling && peak && settleAt < 0) settleAt = now;
+      if (settleAt >= 0 && now - settleAt > 6 * HOLD) { settleAt = -1; peak = 0; }
+      if (now - lastHold >= HOLD) {
+        lastHold = now;
+        for (n = 0; n < panels.length; n++) {
+          inView = bot[n] > sy - 40 && top[n] < sy + vh + 40;
+          z = inView ? target(n, now, scrolling) : 0;
+          setLvl(n, z); if (z) more = true;
+        }
+      } else more = true;
+      if (scrolling || settleAt >= 0 || now - wave < 900 + 4 * HOLD + HOLD) more = true;
+      if (now - lastTick >= TICK) { // the overlay, in held drawings
+        lastTick = now;
+        lines = scrolling && vel > 1.6 ? Math.min(9, 3 + Math.round((vel - 1.6) * 3)) : Math.max(0, lines - 3);
+        if (drawn) { g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, cv.width, cv.height); drawn = false; }
+        g.setTransform(dpr, 0, 0, dpr, 0, 0);
+        if (lines) { // speed lines: ruled strokes in the side gutters only, new ones every drawing
+          g.fillStyle = ink;
+          for (i = 0; i < lines * 2; i++) {
+            var side = thr ? 1 : i % 2, x = 2 + Math.random() * (gut - 4), len = 30 + Math.random() * (40 + vel * 40), y0 = Math.random() * vh;
+            if (side) x = vw - x;
+            g.fillRect(Math.round(x), Math.round(y0), Math.random() < .3 ? 2.5 : 1.25, Math.round(len));
+          }
+          drawn = more = true;
+        }
+        bursts = bursts.filter(function (o) { return now - o.t < 4 * TICK; });
+        bursts.forEach(function (o) {
+          s = Math.min(3, Math.floor((now - o.t) / TICK)); var R = [16, 28, 40, 50][s], big = [3.4, 3.1, 2.6, 1.8][s], ring, rr, m, j, a, x, y;
+          g.fillStyle = dot; g.beginPath();
+          for (ring = 0; ring < 3; ring++) { // three rings of dots, largest at the front, smaller behind it
+            rr = R - ring * 7; if (rr < 6) break; m = Math.max(6, Math.round(6.2832 * rr / 7.5)); a = big * (1 - ring * .3);
+            for (j = 0; j < m; j++) { x = o.x + Math.cos(j * 6.2832 / m + ring * .4) * rr; y = o.y + Math.sin(j * 6.2832 / m + ring * .4) * rr; g.moveTo(x + a, y); g.arc(x, y, a, 0, 6.2832); }
+          }
+          g.fill();
+          if (s < 2) { g.strokeStyle = ink; g.lineWidth = 2.5 - s; g.beginPath(); for (i = 0; i < 8; i++) { a = i * .7854 + .39; g.moveTo(o.x + Math.cos(a) * (R + 4), o.y + Math.sin(a) * (R + 4)); g.lineTo(o.x + Math.cos(a) * (R + 14 - s * 4), o.y + Math.sin(a) * (R + 14 - s * 4)); } g.stroke(); }
+          drawn = more = true;
+        });
+        wake = wake.filter(function (o) { return now - o.t < 3 * TICK; });
+        if (wake.length) {
+          g.fillStyle = dot; g.beginPath();
+          wake.forEach(function (o) { var a = [3.2, 2.3, 1.3][Math.floor((now - o.t) / TICK)] || 0; if (a) { g.moveTo(o.x + a, o.y); g.arc(o.x, o.y, a, 0, 6.2832); } });
+          g.fill(); drawn = more = true;
+        }
+      } else if (bursts.length || wake.length || lines) more = true;
+      if (more) kick();
+    }
+
+    on(W, 'scroll', function () {
+      var t = performance.now(), y = scrollY, dt = Math.max(8, t - lastT);
+      vel = lastT ? vel * .6 + .4 * Math.min(8, Math.abs(y - lastY) / dt) : 0; lastY = y; lastT = t; sy = y; scrollAt = t;
+      var p = vel > 2.2 ? 2 : vel > .5 ? 1 : 0; cur = p; if (p > peak) peak = p;
+      if (peak) settleAt = -1;
+      kick();
+    }, { passive: true });
+    on(W, 'pointerdown', function (e) {
+      bursts.push({ x: e.clientX, y: e.clientY, t: performance.now() }); if (bursts.length > 4) bursts.shift();
+      var n = which(e.target); if (n >= 0) bump[n] = performance.now();
+      kick();
+    }, { passive: true });
+    on(W, 'pointermove', function (e) {
+      if (e.pointerType !== 'mouse') return;
+      var n = which(e.target); if (n !== hov) { hov = n; kick(); }
+      var t = e.target, bare = t === d.body || t === r || (t.closest && !t.closest('a, button, summary, p, h1, h2, h3, h4, li, dd, dt, figcaption, pre, code, img, video, svg, canvas, label, input, blockquote, table') &&
+        ![].some.call(t.childNodes, function (c) { return c.nodeType === 3 && c.nodeValue.trim(); }));
+      if (!bare || Math.hypot(e.clientX - wx, e.clientY - wy) < 16) return;
+      wx = e.clientX; wy = e.clientY;
+      wake.push({ x: Math.round(wx / 8) * 8, y: Math.round(wy / 8) * 8, t: performance.now() }); if (wake.length > 12) wake.shift();
+      kick();
+    }, { passive: true });
+    on(d, 'mouseout', function (e) { if (!e.relatedTarget && hov >= 0) { hov = -1; kick(); } });
+    var tm = new MutationObserver(remeasure); tm.observe(r, { attributes: true, attributeFilter: ['data-theme'] }); obs.push(tm);
+    on(d, 'focusin', function (e) { foc = which(e.target); kick(); });
+    on(d, 'focusout', function () { foc = -1; kick(); });
+    on(d, 'keydown', function (e) { // a key press on a control throws the same burst from its middle
+      if ((e.key !== 'Enter' && e.key !== ' ') || !e.target.matches || !e.target.matches('a, button, summary')) return;
+      var b = e.target.getBoundingClientRect(); bursts.push({ x: b.left + b.width / 2, y: b.top + b.height / 2, t: performance.now() });
+      var n = which(e.target); if (n >= 0) bump[n] = performance.now(); kick();
+    });
+    var mt = 0; function remeasure() { clearTimeout(mt); mt = later(function () { if (live) { measure(); kick(); } }, 150); }
+    on(W, 'resize', remeasure); on(W, 'load', remeasure);
+    if ('ResizeObserver' in W) { var ro = new ResizeObserver(remeasure); ro.observe(d.body); obs.push(ro); }
+    on(d, 'visibilitychange', function () { if (!d.hidden) kick(); });
+    // the rest wave: every 5.2 s while the page sits still and nothing else moves (one moving accent at a time)
+    (function every() { later(function () { if (live && !d.hidden && !busy && performance.now() - scrollAt > 1500) { wave = performance.now(); kick(); } every(); }, 5200); })();
+    offs.push(function () { if (looping) cancelAnimationFrame(looping); looping = 0; clearTimeout(mt); for (var n = 0; n < panels.length; n++) setLvl(n, 0); });
+    measure(); wave = performance.now() + 1400; kick();
   }
 
   function start() {
     if (live) return;
     live = true; busy = 0; mark(r, 'dp-live');
-    try { thread(); rows(); rest(); windows(); } catch (e) { stop(); }
+    try { thread(); rows(); rest(); windows(); fluid(); } catch (e) { stop(); }
   }
   function stop() {
     if (!live) return;

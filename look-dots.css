@@ -505,6 +505,67 @@ html[data-look="dots"] .linechart .area { opacity: 1; }
 }
 @keyframes dp-fam { 0% { background-image: var(--dp-a-band-floor); } 100% { background-image: var(--dp-a-hero-floor); } }
 
+/* fluid-dots:start (fluid pass, Nov 20: _tools/fluid/BRIEF.md; comic timing is the fluid, every move in held drawings) */
+/* the three dot sizes look-dots.js makes from the tints above (every dot's radius x .78, 1.22, 1.45; centres unchanged):
+   declared here as this look's own variables, filled in by the script while it runs; "none" until then */
+html[data-look="dots"][data-look] { --dp-zm-t-red-light: none; --dp-zm-t-red: none; --dp-zm-t-red-2: none; --dp-zm-t-yellow-light: none; --dp-zm-t-yellow: none; --dp-zm-t-yellow-2: none; --dp-zm-t-blue-light: none; --dp-zm-t-blue: none; --dp-zm-t-blue-2: none; --dp-zm-a-hero-floor: none; --dp-zm-a-hero-tall: none; --dp-zm-a-hero-small: none; --dp-zm-a-band-cols: none; --dp-zm-a-band-floor: none; --dp-zm-a-frieze: none; --dp-zm-a-sky: none; --dp-zm-a-fact: none; --dp-zm-a-stair: none; --dp-zm-a-v-ok: none; --dp-z1-t-red-light: none; --dp-z1-t-red: none; --dp-z1-t-red-2: none; --dp-z1-t-yellow-light: none; --dp-z1-t-yellow: none; --dp-z1-t-yellow-2: none; --dp-z1-t-blue-light: none; --dp-z1-t-blue: none; --dp-z1-t-blue-2: none; --dp-z1-a-hero-floor: none; --dp-z1-a-hero-tall: none; --dp-z1-a-hero-small: none; --dp-z1-a-band-cols: none; --dp-z1-a-band-floor: none; --dp-z1-a-frieze: none; --dp-z1-a-sky: none; --dp-z1-a-fact: none; --dp-z1-a-stair: none; --dp-z1-a-v-ok: none; --dp-z2-t-red-light: none; --dp-z2-t-red: none; --dp-z2-t-red-2: none; --dp-z2-t-yellow-light: none; --dp-z2-t-yellow: none; --dp-z2-t-yellow-2: none; --dp-z2-t-blue-light: none; --dp-z2-t-blue: none; --dp-z2-t-blue-2: none; --dp-z2-a-hero-floor: none; --dp-z2-a-hero-tall: none; --dp-z2-a-hero-small: none; --dp-z2-a-band-cols: none; --dp-z2-a-band-floor: none; --dp-z2-a-frieze: none; --dp-z2-a-sky: none; --dp-z2-a-fact: none; --dp-z2-a-stair: none; --dp-z2-a-v-ok: none; }
+/* look-dots.js: the overlay for speed lines, tap bursts and the pointer's dot wake (viewport-sized, never in the way) */
+html[data-look="dots"] .dp-fx { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 40; pointer-events: none; }
+/* page to page: a dot iris. The new page opens through a round iris at the reading point while every dot of a screen-fixed
+   grid grows until they merge, in 5 held drawings (480 ms); the old page holds still under it; the top bar stays put. */
+@property --dp-iris { syntax: '<length>'; inherits: false; initial-value: 0px; }
+@property --dp-dotr { syntax: '<length>'; inherits: false; initial-value: 0px; }
+html[data-look="dots"] .topbar { view-transition-name: dp-bar; }
+@media (prefers-reduced-motion: no-preference) {
+  html[data-look="dots"]:not([data-motion="paused"])::view-transition-old(root) { animation: dp-vt-hold .48s step-end both; }
+  html[data-look="dots"]:not([data-motion="paused"])::view-transition-new(root) {
+    animation: dp-vt-iris .48s both;
+    -webkit-mask-image: radial-gradient(circle at 50% 40%, #000 var(--dp-iris), transparent calc(var(--dp-iris) + .5px)), radial-gradient(circle at 50% 50%, #000 var(--dp-dotr), transparent calc(var(--dp-dotr) + .5px));
+    mask-image: radial-gradient(circle at 50% 40%, #000 var(--dp-iris), transparent calc(var(--dp-iris) + .5px)), radial-gradient(circle at 50% 50%, #000 var(--dp-dotr), transparent calc(var(--dp-dotr) + .5px));
+    -webkit-mask-size: 100% 100%, 14px 14px; mask-size: 100% 100%, 14px 14px;
+    -webkit-mask-repeat: no-repeat, repeat; mask-repeat: no-repeat, repeat;
+    -webkit-mask-composite: source-over; mask-composite: add;
+  }
+}
+/* the shared pictures that travel from a card to the case page move as panels do: their size and place in 4 held drawings */
+html[data-look="dots"]::view-transition-group(*), html[data-look="dots"]::view-transition-old(*), html[data-look="dots"]::view-transition-new(*) { animation-duration: .48s; animation-timing-function: steps(4, jump-none); }
+html[data-look="dots"]::view-transition-group(dp-bar), html[data-look="dots"]::view-transition-old(dp-bar), html[data-look="dots"]::view-transition-new(dp-bar) { animation: none; }
+html[data-look="dots"]::view-transition-old(dp-bar) { display: none; }
+/* paused or reduced motion: an instant swap, nothing travels */
+html[data-look="dots"][data-motion="paused"]::view-transition-group(*), html[data-look="dots"][data-motion="paused"]::view-transition-old(*), html[data-look="dots"][data-motion="paused"]::view-transition-new(*) { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  html[data-look="dots"]::view-transition-group(*), html[data-look="dots"]::view-transition-old(*), html[data-look="dots"]::view-transition-new(*) { animation: none; }
+}
+@keyframes dp-vt-hold { from { opacity: 1; } to { opacity: 1; } }
+@keyframes dp-vt-iris {
+  0% { --dp-iris: 0px; --dp-dotr: 1px; animation-timing-function: step-end; }
+  20% { --dp-iris: 7vmax; --dp-dotr: 2.5px; animation-timing-function: step-end; }
+  40% { --dp-iris: 20vmax; --dp-dotr: 4.5px; animation-timing-function: step-end; }
+  60% { --dp-iris: 38vmax; --dp-dotr: 6.5px; animation-timing-function: step-end; }
+  80% { --dp-iris: 64vmax; --dp-dotr: 9px; animation-timing-function: step-end; }
+  100% { --dp-iris: 160vmax; --dp-dotr: 12px; }
+}
+/* arrivals and held rows: the panel snaps in, 4 held drawings (60 %, 84 %, one held drawing 3.5 % past full, full).
+   Inside <main>, which clips sideways, so the past-full drawing never widens the page. Bars never overshoot (data). */
+@keyframes dp-grow {
+  0% { transform: scale(.6); opacity: 0; animation-timing-function: step-end; }
+  25% { transform: scale(.84); opacity: .7; animation-timing-function: step-end; }
+  50% { transform: scale(1.035); opacity: 1; animation-timing-function: step-end; }
+  75%, 100% { transform: none; opacity: 1; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  /* keyboard focus: the frame snaps onto the part in 3 held drawings (wide, tight, home) */
+  html[data-look="dots"].motion:not([data-motion="paused"]) :is(a, button, summary, video, [tabindex]):focus-visible { animation: dp-focus .27s both; }
+  /* pressed: the part steps in and its key line doubles for the press */
+  html[data-look="dots"][data-look].motion :is(.btn, .card.lead, .pager a, .repo-card, .more-g, .theme-toggle):active { outline: 2px solid var(--dp-hov); outline-offset: -4px; }
+}
+@keyframes dp-focus {
+  0% { outline-offset: 11px; animation-timing-function: step-end; }
+  33% { outline-offset: 0px; animation-timing-function: step-end; }
+  66%, 100% { outline-offset: 3px; }
+}
+/* fluid-dots:end */
+
 /* art:start (generated by _tools/dots/dots-art.mjs; never edit by hand) */
 html[data-look="dots"][data-look] {
   --dp-t-red-light: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='21' height='21'><g fill='%23c8321e'><circle cx='0' cy='0' r='1.57'/><circle cx='0' cy='21' r='1.57'/><circle cx='21' cy='0' r='1.57'/><circle cx='21' cy='21' r='1.57'/><circle cx='1.24' cy='4.94' r='1.57'/><circle cx='22.24' cy='4.94' r='1.57'/><circle cx='2.47' cy='9.88' r='1.57'/><circle cx='3.71' cy='14.82' r='1.57'/><circle cx='4.94' cy='-1.24' r='1.57'/><circle cx='4.94' cy='19.76' r='1.57'/><circle cx='6.18' cy='3.71' r='1.57'/><circle cx='7.41' cy='8.65' r='1.57'/><circle cx='8.65' cy='13.59' r='1.57'/><circle cx='9.88' cy='18.53' r='1.57'/><circle cx='11.12' cy='2.47' r='1.57'/><circle cx='12.35' cy='7.41' r='1.57'/><circle cx='13.59' cy='12.35' r='1.57'/><circle cx='14.82' cy='17.29' r='1.57'/><circle cx='16.06' cy='1.24' r='1.57'/><circle cx='16.06' cy='22.24' r='1.57'/><circle cx='17.29' cy='6.18' r='1.57'/><circle cx='18.53' cy='11.12' r='1.57'/><circle cx='-1.24' cy='16.06' r='1.57'/><circle cx='19.76' cy='16.06' r='1.57'/></g></svg>");
