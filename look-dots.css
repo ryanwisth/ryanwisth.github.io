@@ -27,6 +27,9 @@ html[data-look="dots"][data-look] {
   --st: none; --st-v: none; --st-cream: none; --zip-closed: none; --zip-row: none; --zip-pull: none;
   --g-felt: none; --g-cotton: none; --quilt: none; --strand-sig: none; --strand-pink: none; --strand-yellow: none; --zip-dim: none; --beads: none;
   --spring: steps(3, end); --pop: steps(3, end);
+  /* the timing vocabulary (look-dots.js reads the same two): a mark (burst, focus frame, hover frame) holds each drawing
+     one tick; a panel (arrival, size step, page change) one hold; data (bars, the line chart) one data beat */
+  --dp-tick: 66ms; --dp-hold: 132ms; --dp-data: 198ms;
   color-scheme: light;
 }
 /* dark: the black plate (measured black), cream panels framed from it by a cream gutter line. Written twice. */
@@ -83,7 +86,7 @@ html[data-look="dots"] .brand .mark { background: var(--dp-paper); color: var(--
 html[data-look="dots"] .brand .mark::before, html[data-look="dots"] .brand .mark::after, html[data-look="dots"] .brand::before { content: none; }
 html[data-look="dots"] .topnav a { color: var(--dp-ink); font-size: 13px; background: none; border: 0; box-shadow: none; text-decoration: none; }
 html[data-look="dots"] .topnav a::before, html[data-look="dots"] .topnav a::after { content: none; }
-html[data-look="dots"] .topnav a:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 5px; }
+@media (hover: hover) { html[data-look="dots"] .topnav a:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 5px; } }
 html[data-look="dots"] .theme-toggle { border: 2px solid var(--dp-ink); border-radius: 50%; background: var(--dp-t-yellow), var(--dp-paper); color: var(--dp-ink); box-shadow: none; }
 html[data-look="dots"][data-theme="dark"] .theme-toggle { background: var(--dp-t-blue), var(--dp-paper); }
 html[data-look="dots"] .theme-toggle::before, html[data-look="dots"] .theme-toggle::after { content: none; }
@@ -116,7 +119,7 @@ html[data-look="dots"] .lead-k { display: inline-block; font-size: 12px; }
 html[data-look="dots"] .lead-go { background: var(--dp-yellow); border-width: 2px; }
 html[data-look="dots"] .badge { color: var(--dp-ink); }
 html[data-look="dots"] .badge .dot { background: var(--dp-red); border: 1px solid var(--dp-ink); border-radius: 50%; box-shadow: none; }
-html[data-look="dots"] .card:hover { outline: 2px solid var(--dp-ink); outline-offset: 2px; transform: none; }
+html[data-look="dots"] .card:hover { transform: none; }
 
 /* sections: a heavy rule tapered at its ends over a narrow dot strip closed by a thin ruled line; title on the plate */
 html[data-look="dots"] .section { background: none; }
@@ -134,9 +137,12 @@ html[data-look="dots"] .more-g.h-violet { --dp-t: var(--dp-t-red); } html[data-l
 html[data-look="dots"] .more-g.h-teal { --dp-t: var(--dp-t-blue-light); }
 html[data-look="dots"] .group-h { position: relative; display: inline-block; margin: 14px 0 6px 12px; background: var(--dp-paper); color: var(--dp-ink); border: 1px solid var(--dp-ink); padding: 3px 10px; font-size: 14px; }
 html[data-look="dots"] .group-h::before, html[data-look="dots"] .group-h::after { content: none; }
+/* the base gives the heading a 150 px felt tile on phones; here it is a small label plate at every width */
+html[data-look="dots"] .more-g .group-h { min-height: 0; }
 html[data-look="dots"] .more li { border-top: 0; background: none; }
 html[data-look="dots"] .more li + li { border-top: 1px solid var(--dp-ink); }
-html[data-look="dots"] .more li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--dp-red); border: 1px solid var(--dp-ink); box-shadow: none; }
+html[data-look="dots"] .more li { position: relative; padding-left: 17px; }
+html[data-look="dots"] .more li::before { content: ""; position: absolute; left: 2px; top: 18px; width: 7px; height: 7px; border-radius: 50%; background: var(--dp-red); border: 1px solid var(--dp-ink); box-shadow: none; } /* the disc beside the title (it sat on a line of its own) */
 html[data-look="dots"] .more a b { color: var(--dp-ink); } html[data-look="dots"] .more a span { color: var(--dp-muted); }
 
 /* the three steps: a held row of three equal ruled panels; labels on plain plates; code lines as dot-tint bars */
@@ -153,7 +159,7 @@ html[data-look="dots"] .band { position: relative; padding-bottom: 46px; }
 html[data-look="dots"] .band h2 { color: var(--dp-ink); }
 html[data-look="dots"] .btn { background: var(--dp-paper); color: var(--dp-ink); border: 2px solid var(--dp-ink); border-radius: 0; box-shadow: none; font-weight: 700; }
 html[data-look="dots"] .btn.primary { background: var(--dp-yellow); }
-html[data-look="dots"] .btn:hover { outline: 2px solid var(--dp-ink); outline-offset: 2px; transform: none; }
+html[data-look="dots"] .btn:hover { transform: none; }
 html[data-look="dots"] .btn:active { transform: scale(.98); }
 
 /* footer: the last, small panel; a low ruled skyline (drawn) under a heavy rule; text on cream */
@@ -267,8 +273,8 @@ html[data-look="dots"][data-look] :is(.btn, .vid-sound, .lead-go, .repo-card, fo
 html[data-look="dots"][data-look] :is(.brand .mark, .vid-toggle) { border: 0; background: var(--dp-k-ring) center / 100% 100% no-repeat, var(--dp-paper); }
 html[data-look="dots"][data-look] .theme-toggle { border: 0; background: var(--dp-k-ring) center / 100% 100% no-repeat, var(--dp-t-yellow), var(--dp-paper); }
 html[data-look="dots"][data-look][data-theme="dark"] .theme-toggle { background: var(--dp-k-ring) center / 100% 100% no-repeat, var(--dp-t-blue), var(--dp-paper); }
-html[data-look="dots"][data-look] .theme-toggle:hover { background: var(--dp-k-ring) center / 100% 100% no-repeat, var(--dp-t-yellow-2), var(--dp-t-yellow), var(--dp-paper); }
-html[data-look="dots"][data-look][data-theme="dark"] .theme-toggle:hover { background: var(--dp-k-ring) center / 100% 100% no-repeat, var(--dp-t-blue-2), var(--dp-t-blue), var(--dp-paper); }
+@media (hover: hover) { html[data-look="dots"][data-look] .theme-toggle:hover { background: var(--dp-k-ring) center / 100% 100% no-repeat, var(--dp-t-yellow-2), var(--dp-t-yellow), var(--dp-paper); } }
+@media (hover: hover) { html[data-look="dots"][data-look][data-theme="dark"] .theme-toggle:hover { background: var(--dp-k-ring) center / 100% 100% no-repeat, var(--dp-t-blue-2), var(--dp-t-blue), var(--dp-paper); } }
 @media (prefers-color-scheme: dark) {
   html[data-look="dots"][data-look]:not([data-theme="light"]) .theme-toggle { background: var(--dp-k-ring) center / 100% 100% no-repeat, var(--dp-t-blue), var(--dp-paper); }
 }
@@ -326,7 +332,7 @@ html[data-look="dots"] .dp-th-head { position: absolute; pointer-events: none; }
 html[data-look="dots"].dp-thl .thread :is(.th-line, .th-head) { visibility: hidden; }
 /* look-dots.js: a held row about to step in, and the nearest section's tint doubled for one held step */
 html[data-look="dots"].dp-live .dp-wait > * { opacity: 0; }
-html[data-look="dots"].dp-live .dp-row > * { animation: dp-grow .6s steps(3, jump-none) calc(var(--dp-i, 0) * .3s) both; }
+html[data-look="dots"].dp-live .dp-row > * { animation: dp-grow calc(var(--dp-hold) * 4) calc(var(--dp-i, 0) * var(--dp-hold) * 2) both; }
 html[data-look="dots"][data-look] .section-head.dp-dbl::after { background: var(--dp-t-red-light), var(--dp-t-red-2), var(--dp-paper); background-blend-mode: normal, multiply, normal; }
 
 /* ---------- movement (only with motion allowed; reduced motion: nothing moves, every layer in its finished place) ---------- */
@@ -335,7 +341,7 @@ html[data-look="dots"][data-look] .section-head.dp-dbl::after { background: var(
      view and drops .reveal at 1.8 s, after these end) */
   html[data-look="dots"].motion .reveal { transition: none; }
   html[data-look="dots"].motion .reveal:not(.in) { opacity: 0; transform: scale(.6); }
-  html[data-look="dots"].motion .reveal.in { opacity: 1; transform: none; animation: dp-grow .9s steps(3, jump-none) var(--d, 0ms) both; transform-origin: 50% 100%; }
+  html[data-look="dots"].motion .reveal.in { opacity: 1; transform: none; animation: dp-grow calc(var(--dp-hold) * 4) var(--d, 0ms) both; transform-origin: 50% 100%; }
   html[data-look="dots"].motion .reveal :is(.shot img, .shot video), html[data-look="dots"].motion .reveal > img { scale: 1; transition: none; }
   /* held rows: the row's frame holds; its equal panels step in left to right, one held step apart */
   html[data-look="dots"].motion .reveal.in:has(.flow, .band3) { animation: none; }
@@ -343,29 +349,32 @@ html[data-look="dots"][data-look] .section-head.dp-dbl::after { background: var(
   html[data-look="dots"].motion .reveal:not(.in) :is(.flow li, .band3 > div) { opacity: 0; }
   html[data-look="dots"].motion .band3 > div:nth-child(2) { --dp-i: 1; }
   html[data-look="dots"].motion .band3 > div:nth-child(3) { --dp-i: 2; }
-  html[data-look="dots"].motion .in :is(.flow li, .band3 > div) { animation: dp-grow .6s steps(3, jump-none) calc(var(--dp-i, var(--i, 0)) * .3s) both; }
+  html[data-look="dots"].motion .in :is(.flow li, .band3 > div) { animation: dp-grow calc(var(--dp-hold) * 4) calc(var(--dp-i, var(--i, 0)) * var(--dp-hold) * 2) both; }
   /* bars and meters fill to their value in 4 held steps */
   html[data-look="dots"].motion .track i { clip-path: none; transition: none; }
-  html[data-look="dots"].motion .in :is(.bars .track i, .minis .cell .track i) { animation: dp-fill .8s steps(4, jump-none) .3s both; transform-origin: 0 50%; }
+  html[data-look="dots"].motion .in :is(.bars .track i, .minis .cell .track i) { animation: dp-fill calc(var(--dp-data) * 4) steps(4, jump-none) calc(var(--dp-hold) * 2) both; transform-origin: 0 50%; }
   /* hover: the frame grows 2 px in 2 held steps (an outline, so the page never widens); pressed: the part steps in 2 % */
-  html[data-look="dots"][data-look] :is(.card.lead, .btn, .repo-card, .pager a, .more-g) { transition: outline-offset .2s steps(2, end), outline-width .2s steps(2, end); }
+  html[data-look="dots"][data-look] :is(.card.lead, .btn, .repo-card, .pager a, .more-g) { transition: outline-offset calc(var(--dp-tick) * 2) steps(2, end), outline-width calc(var(--dp-tick) * 2) steps(2, end); }
   html[data-look="dots"][data-look] :is(.btn, .card.lead, .theme-toggle, .vid-toggle, .vid-sound, .pager a):active { transform: scale(.98); }
-  html[data-look="dots"].motion .term .ln { translate: none; transition: opacity .6s steps(3, jump-none); }
+  html[data-look="dots"].motion .term .ln { translate: none; transition: opacity calc(var(--dp-hold) * 3) steps(3, jump-none); }
   html[data-look="dots"].motion .section-head h2::after { transition: none; }
 }
-html[data-look="dots"][data-look] :is(.card.lead, .btn, .repo-card, .pager a, .more-g):hover { outline: 2px solid var(--dp-hov); outline-offset: 2px; transform: none; }
+html[data-look="dots"][data-look] :is(.card.lead, .btn, .repo-card, .pager a, .more-g):hover { transform: none; }
+/* hover only where a pointer can hover (a phone tap never leaves a frame stuck on) */
+@media (hover: hover) { html[data-look="dots"][data-look] :is(.card, .card.lead, .btn, .repo-card, .pager a, .more-g):hover { outline: 2px solid var(--dp-hov); outline-offset: 2px; } }
 @keyframes dp-grow { 0% { transform: scale(.6); opacity: 0; } 100% { transform: none; opacity: 1; } }
 @keyframes dp-fill { 0% { transform: scaleX(.25); } 100% { transform: none; } }
 /* the base's keyframes, redefined by name in this look's manner (the later @keyframes of a name wins; this sheet loads
-   only while the look is on): entrances grow in 3 held steps with no overshoot; the floats, bounces and sheens hold still */
-@keyframes rise { 0% { opacity: 0; transform: scale(.6); animation-timing-function: steps(3, jump-none); } 100% { opacity: 1; transform: none; } }
-@keyframes tile { 0% { opacity: 0; transform: scale(.6); animation-timing-function: steps(3, jump-none); } 100% { opacity: 1; transform: none; } }
-@keyframes pop { 0% { opacity: 0; transform: scale(.6); animation-timing-function: steps(3, jump-none); } 100% { opacity: 1; transform: none; } }
-@keyframes popin { 0% { opacity: 0; transform: scale(.6); animation-timing-function: steps(3, jump-none); } 100% { opacity: 1; transform: none; } }
-@keyframes sewn { 0% { opacity: 0; transform: scale(.6); animation-timing-function: steps(3, jump-none); } 100% { opacity: 1; transform: none; } }
-@keyframes sewon { 0% { opacity: 0; transform: scale(.6); animation-timing-function: steps(3, jump-none); } 100% { opacity: 1; transform: none; } }
+   only while the look is on): entrances in 3 held drawings (gone, small, full; printed ink is never see-through, so no
+   half-opacity drawing) with no overshoot; the floats, bounces and sheens hold still */
+@keyframes rise { 0% { opacity: 0; transform: scale(.84); animation-timing-function: step-end; } 34% { opacity: 1; transform: scale(.84); animation-timing-function: step-end; } 67%, 100% { opacity: 1; transform: none; } }
+@keyframes tile { 0% { opacity: 0; transform: scale(.84); animation-timing-function: step-end; } 34% { opacity: 1; transform: scale(.84); animation-timing-function: step-end; } 67%, 100% { opacity: 1; transform: none; } }
+@keyframes pop { 0% { opacity: 0; transform: scale(.84); animation-timing-function: step-end; } 34% { opacity: 1; transform: scale(.84); animation-timing-function: step-end; } 67%, 100% { opacity: 1; transform: none; } }
+@keyframes popin { 0% { opacity: 0; transform: scale(.84); animation-timing-function: step-end; } 34% { opacity: 1; transform: scale(.84); animation-timing-function: step-end; } 67%, 100% { opacity: 1; transform: none; } }
+@keyframes sewn { 0% { opacity: 0; transform: scale(.84); animation-timing-function: step-end; } 34% { opacity: 1; transform: scale(.84); animation-timing-function: step-end; } 67%, 100% { opacity: 1; transform: none; } }
+@keyframes sewon { 0% { opacity: 0; transform: scale(.84); animation-timing-function: step-end; } 34% { opacity: 1; transform: scale(.84); animation-timing-function: step-end; } 67%, 100% { opacity: 1; transform: none; } }
 @keyframes okpop { 0% { transform: scale(.6); animation-timing-function: steps(3, jump-none); } 100% { transform: none; } }
-@keyframes dotfill { 0% { opacity: 0; transform: scale(.6); animation-timing-function: steps(3, jump-none); } 100% { opacity: 1; transform: none; } }
+@keyframes dotfill { 0% { opacity: 0; transform: scale(.84); animation-timing-function: step-end; } 34% { opacity: 1; transform: scale(.84); animation-timing-function: step-end; } 67%, 100% { opacity: 1; transform: none; } }
 @keyframes railfill { 0% { transform: scaleY(.25); animation-timing-function: steps(4, jump-none); } 100% { transform: none; } }
 @keyframes sew { from { opacity: 1; } to { opacity: 1; } }
 @keyframes chip { from { opacity: 1; } to { opacity: 1; } }
@@ -407,13 +416,13 @@ html[data-look="dots"][data-look] .prose h2::after { content: ""; flex: 1; heigh
 /* buttons: a tint foot under the words, inside the key line; on hover the tint doubles (a second pass at 45 degrees) */
 html[data-look="dots"][data-look] .btn { position: relative; }
 html[data-look="dots"][data-look] .btn::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 5px; background: var(--dp-t-red-light); border-top: 1px solid var(--dp-ink); pointer-events: none; }
-html[data-look="dots"][data-look] .btn:hover::after { background: var(--dp-t-red), var(--dp-t-red-2); background-blend-mode: multiply; }
+@media (hover: hover) { html[data-look="dots"][data-look] .btn:hover::after { background: var(--dp-t-red), var(--dp-t-red-2); background-blend-mode: multiply; } }
 /* hover doubles the tint of drawn head bands */
-html[data-look="dots"][data-look] .card.lead:hover .body::before { background: var(--dp-t-blue-2), var(--dp-a-band-cols) 0 0 / 100% 100% no-repeat; background-blend-mode: multiply; }
-html[data-look="dots"][data-look] .card.lead.h-violet:hover .body::before { background: var(--dp-t-red-2), var(--dp-a-band-floor) 0 0 / 100% 100% no-repeat; background-blend-mode: multiply; }
-html[data-look="dots"][data-look] .more-g:hover::before { background: var(--dp-t2, var(--dp-t-blue-2)), var(--dp-t, var(--dp-t-blue)); background-blend-mode: multiply; }
+@media (hover: hover) { html[data-look="dots"][data-look] .card.lead:hover .body::before { background: var(--dp-t-blue-2), var(--dp-a-band-cols) 0 0 / 100% 100% no-repeat; background-blend-mode: multiply; } }
+@media (hover: hover) { html[data-look="dots"][data-look] .card.lead.h-violet:hover .body::before { background: var(--dp-t-red-2), var(--dp-a-band-floor) 0 0 / 100% 100% no-repeat; background-blend-mode: multiply; } }
+@media (hover: hover) { html[data-look="dots"][data-look] .more-g:hover::before { background: var(--dp-t2, var(--dp-t-blue-2)), var(--dp-t, var(--dp-t-blue)); background-blend-mode: multiply; } }
 html[data-look="dots"] .more-g.h-violet { --dp-t2: var(--dp-t-red-2); } html[data-look="dots"] .more-g.h-amber { --dp-t2: var(--dp-t-yellow-2); }
-html[data-look="dots"][data-look] :is(.repo-card, .pager a):hover::before { background: var(--dp-t-blue-2), var(--dp-a-fact) 0 0 / 100% 100% no-repeat; background-blend-mode: multiply; }
+@media (hover: hover) { html[data-look="dots"][data-look] :is(.repo-card, .pager a):hover::before { background: var(--dp-t-blue-2), var(--dp-a-fact) 0 0 / 100% 100% no-repeat; background-blend-mode: multiply; } }
 /* pager: ruled panels with the tiled-floor head band; the arrows as heavy swelling chevrons at the outer edge */
 html[data-look="dots"][data-look] .pager a { position: relative; padding-top: 34px; }
 html[data-look="dots"][data-look] .pager a::before { content: ""; position: absolute; left: 0; right: 0; top: 0; bottom: auto; width: auto; height: 22px; background: var(--dp-a-fact) 0 0 / 100% 100% no-repeat; pointer-events: none; }
@@ -469,7 +478,8 @@ html[data-look="dots"][data-look] .legend i::after { content: ""; position: abso
 
 /* demo: the play plate is a solid yellow plate with the thin key line and a black triangle; it grows 2 px on hover in held steps */
 html[data-look="dots"][data-look] .demo-poster .play { background: var(--dp-yellow); color: var(--dp-ink); border: 3px solid var(--dp-ink); border-image: var(--dp-k-thin) 3 / 3px stretch; border-radius: 0; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; font-family: var(--display); text-transform: uppercase; letter-spacing: .06em; }
-html[data-look="dots"][data-look] .demo-poster:hover .play { scale: 1; background: var(--dp-yellow); outline: 2px solid var(--dp-ink); outline-offset: 2px; }
+html[data-look="dots"][data-look] .demo-poster:hover .play { scale: 1; background: var(--dp-yellow); }
+@media (hover: hover) { html[data-look="dots"][data-look] .demo-poster:hover .play { outline: 2px solid var(--dp-ink); outline-offset: 2px; } }
 html[data-look="dots"][data-look] .demo-poster:hover img { filter: none; scale: 1; }
 html[data-look="dots"][data-look] .demo-poster img { transition: none; }
 
@@ -487,21 +497,21 @@ html[data-look="dots"] .dp-win.dp-on { background: var(--dp-yellow); }
 html[data-look="dots"] .linechart .area { opacity: 1; }
 @media (prefers-reduced-motion: no-preference) {
   /* the hero changes tint family once, on load (the red floor gives way to the yellow one), then holds */
-  html[data-look="dots"][data-look].motion .hero-film::before { animation: dp-fam 1.2s steps(1, end) .3s both; }
+  html[data-look="dots"][data-look].motion .hero-film::before { animation: dp-fam calc(var(--dp-hold) * 9) steps(1, end) calc(var(--dp-hold) * 2) both; }
   /* the line chart grows in 4 held steps; its points, values and tint arrive in held steps after it */
-  html[data-look="dots"].motion .linechart .ln1 { transition: stroke-dashoffset 1.2s steps(4, jump-none) .3s; }
+  html[data-look="dots"].motion .linechart .ln1 { transition: stroke-dashoffset calc(var(--dp-data) * 6) steps(6, jump-none) calc(var(--dp-hold) * 2); }
   html[data-look="dots"].motion .linechart :is(.pt, .val, .area) { transition-timing-function: steps(2, jump-none); }
   html[data-look="dots"].motion .linechart .area { opacity: 0; }
   html[data-look="dots"].motion .in .linechart .area { opacity: 1; }
-  html[data-look="dots"].motion .legend li { translate: none; transition: opacity .4s steps(2, jump-none); transition-delay: calc(var(--i, 0) * 300ms + 300ms); }
+  html[data-look="dots"].motion .legend li { translate: none; transition: opacity calc(var(--dp-hold) * 2) steps(2, jump-none); transition-delay: calc((var(--i, 0) + 1) * var(--dp-hold) * 2); }
   /* the pair: a held row of two equal panes stepping in left to right */
   html[data-look="dots"].motion .reveal:not(.in) .duo figure { opacity: 0; }
-  html[data-look="dots"].motion .in .duo figure { animation: dp-grow .6s steps(3, jump-none) calc(var(--dp-i, 0) * .3s) both; }
+  html[data-look="dots"].motion .in .duo figure { animation: dp-grow calc(var(--dp-hold) * 4) calc(var(--dp-i, 0) * var(--dp-hold) * 2) both; }
   html[data-look="dots"].motion .duo figure:nth-child(2) { --dp-i: 1; }
   /* each initial stands at 60 % until the thread reaches its heading, then grows to full size in 3 held steps */
-  html[data-look="dots"][data-look].motion .th-live .prose > h2::before { transition: transform .45s steps(3, jump-none); }
+  html[data-look="dots"][data-look].motion .th-live .prose > h2::before { transition: transform calc(var(--dp-hold) * 3) steps(3, jump-none); }
   html[data-look="dots"][data-look].motion .th-live .prose > h2:not(.th-on)::before { opacity: 1; transform: scale(.6); }
-  html[data-look="dots"][data-look] .demo-poster .play { transition: outline-offset .2s steps(2, end), outline-width .2s steps(2, end); }
+  html[data-look="dots"][data-look] .demo-poster .play { transition: outline-offset calc(var(--dp-tick) * 2) steps(2, end), outline-width calc(var(--dp-tick) * 2) steps(2, end); }
 }
 @keyframes dp-fam { 0% { background-image: var(--dp-a-band-floor); } 100% { background-image: var(--dp-a-hero-floor); } }
 
@@ -509,61 +519,113 @@ html[data-look="dots"] .linechart .area { opacity: 1; }
 /* the three dot sizes look-dots.js makes from the tints above (every dot's radius x .78, 1.22, 1.45; centres unchanged):
    declared here as this look's own variables, filled in by the script while it runs; "none" until then */
 html[data-look="dots"][data-look] { --dp-zm-t-red-light: none; --dp-zm-t-red: none; --dp-zm-t-red-2: none; --dp-zm-t-yellow-light: none; --dp-zm-t-yellow: none; --dp-zm-t-yellow-2: none; --dp-zm-t-blue-light: none; --dp-zm-t-blue: none; --dp-zm-t-blue-2: none; --dp-zm-a-hero-floor: none; --dp-zm-a-hero-tall: none; --dp-zm-a-hero-small: none; --dp-zm-a-band-cols: none; --dp-zm-a-band-floor: none; --dp-zm-a-frieze: none; --dp-zm-a-sky: none; --dp-zm-a-fact: none; --dp-zm-a-stair: none; --dp-zm-a-v-ok: none; --dp-z1-t-red-light: none; --dp-z1-t-red: none; --dp-z1-t-red-2: none; --dp-z1-t-yellow-light: none; --dp-z1-t-yellow: none; --dp-z1-t-yellow-2: none; --dp-z1-t-blue-light: none; --dp-z1-t-blue: none; --dp-z1-t-blue-2: none; --dp-z1-a-hero-floor: none; --dp-z1-a-hero-tall: none; --dp-z1-a-hero-small: none; --dp-z1-a-band-cols: none; --dp-z1-a-band-floor: none; --dp-z1-a-frieze: none; --dp-z1-a-sky: none; --dp-z1-a-fact: none; --dp-z1-a-stair: none; --dp-z1-a-v-ok: none; --dp-z2-t-red-light: none; --dp-z2-t-red: none; --dp-z2-t-red-2: none; --dp-z2-t-yellow-light: none; --dp-z2-t-yellow: none; --dp-z2-t-yellow-2: none; --dp-z2-t-blue-light: none; --dp-z2-t-blue: none; --dp-z2-t-blue-2: none; --dp-z2-a-hero-floor: none; --dp-z2-a-hero-tall: none; --dp-z2-a-hero-small: none; --dp-z2-a-band-cols: none; --dp-z2-a-band-floor: none; --dp-z2-a-frieze: none; --dp-z2-a-sky: none; --dp-z2-a-fact: none; --dp-z2-a-stair: none; --dp-z2-a-v-ok: none; }
-/* look-dots.js: the overlay for speed lines, tap bursts and the pointer's dot wake (viewport-sized, never in the way) */
-html[data-look="dots"] .dp-fx { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 40; pointer-events: none; }
-/* page to page: a dot iris. The new page opens through a round iris at the reading point while every dot of a screen-fixed
-   grid grows until they merge, in 5 held drawings (480 ms); the old page holds still under it; the top bar stays put. */
+/* look-dots.js: the overlay for speed lines, tap bursts and the pointer's dot wake (viewport-sized, never in the way);
+   under the top bar (z 10) and its look list, over the page */
+html[data-look="dots"] .dp-fx { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 9; pointer-events: none; }
+/* page to page: a dot iris. Forward, the new page opens through a round iris at the reading point while every dot of a
+   screen-fixed grid grows until they merge, in 4 held drawings (one hold each); the old page holds still under it.
+   Back plays the mirror: the page being left closes through the same iris and dots, onto the page returned to.
+   A reload has no page change to show (instant). The top bar stays put throughout. */
 @property --dp-iris { syntax: '<length>'; inherits: false; initial-value: 0px; }
 @property --dp-dotr { syntax: '<length>'; inherits: false; initial-value: 0px; }
 html[data-look="dots"] .topbar { view-transition-name: dp-bar; }
 @media (prefers-reduced-motion: no-preference) {
-  html[data-look="dots"]:not([data-motion="paused"])::view-transition-old(root) { animation: dp-vt-hold .48s step-end both; }
-  html[data-look="dots"]:not([data-motion="paused"])::view-transition-new(root) {
-    animation: dp-vt-iris .48s both;
+  html[data-look="dots"]:not([data-motion="paused"])::view-transition-old(root) { animation: dp-vt-hold calc(var(--dp-hold) * 4) step-end both; }
+  html[data-look="dots"]:not([data-motion="paused"])::view-transition-new(root),
+  html[data-look="dots"]:not([data-motion="paused"]):active-view-transition-type(back)::view-transition-old(root) {
+    animation: dp-vt-iris calc(var(--dp-hold) * 4) both;
     -webkit-mask-image: radial-gradient(circle at 50% 40%, #000 var(--dp-iris), transparent calc(var(--dp-iris) + .5px)), radial-gradient(circle at 50% 50%, #000 var(--dp-dotr), transparent calc(var(--dp-dotr) + .5px));
     mask-image: radial-gradient(circle at 50% 40%, #000 var(--dp-iris), transparent calc(var(--dp-iris) + .5px)), radial-gradient(circle at 50% 50%, #000 var(--dp-dotr), transparent calc(var(--dp-dotr) + .5px));
     -webkit-mask-size: 100% 100%, 14px 14px; mask-size: 100% 100%, 14px 14px;
     -webkit-mask-repeat: no-repeat, repeat; mask-repeat: no-repeat, repeat;
     -webkit-mask-composite: source-over; mask-composite: add;
   }
+  /* back: the page being left sits on top and closes; the page returned to holds still under it */
+  html[data-look="dots"]:not([data-motion="paused"]):active-view-transition-type(back)::view-transition-old(root) { z-index: 1; animation-name: dp-vt-close; }
+  html[data-look="dots"]:not([data-motion="paused"]):active-view-transition-type(back)::view-transition-new(root) { animation: dp-vt-hold calc(var(--dp-hold) * 4) step-end both; -webkit-mask-image: none; mask-image: none; }
 }
-/* the shared pictures that travel from a card to the case page move as panels do: their size and place in 4 held drawings */
-html[data-look="dots"]::view-transition-group(*), html[data-look="dots"]::view-transition-old(*), html[data-look="dots"]::view-transition-new(*) { animation-duration: .48s; animation-timing-function: steps(4, jump-none); }
+/* named parts (card titles to page titles, shared pictures) move as panels do: size and place in 4 held drawings, and
+   the old drawing is swapped for the new one on the middle drawing (a cut, never a see-through double) */
+html[data-look="dots"]::view-transition-group(*) { animation-duration: calc(var(--dp-hold) * 4); animation-timing-function: steps(4, jump-none); }
+html[data-look="dots"]::view-transition-old(*) { animation: dp-vt-out calc(var(--dp-hold) * 4) both; mix-blend-mode: normal; }
+html[data-look="dots"]::view-transition-new(*) { animation: dp-vt-in calc(var(--dp-hold) * 4) both; mix-blend-mode: normal; }
+/* a title with no partner on the other page leaves on the first drawing, or arrives on the last one with its page */
+html[data-look="dots"]::view-transition-old(*):only-child { animation-name: dp-vt-gone; }
+html[data-look="dots"]::view-transition-new(*):only-child { animation-name: dp-vt-late; }
+/* back: the page returned to lies underneath, so its titles are there from the start; the closing page's title cuts out midway */
+html[data-look="dots"]:active-view-transition-type(back)::view-transition-new(*):only-child { animation-name: dp-vt-hold; }
+html[data-look="dots"]:active-view-transition-type(back)::view-transition-old(*):only-child { animation-name: dp-vt-out; }
 html[data-look="dots"]::view-transition-group(dp-bar), html[data-look="dots"]::view-transition-old(dp-bar), html[data-look="dots"]::view-transition-new(dp-bar) { animation: none; }
 html[data-look="dots"]::view-transition-old(dp-bar) { display: none; }
-/* paused or reduced motion: an instant swap, nothing travels */
-html[data-look="dots"][data-motion="paused"]::view-transition-group(*), html[data-look="dots"][data-motion="paused"]::view-transition-old(*), html[data-look="dots"][data-motion="paused"]::view-transition-new(*) { animation: none; }
+/* paused, reduced motion or a reload: an instant swap, nothing travels */
+html[data-look="dots"][data-motion="paused"]::view-transition-group(*), html[data-look="dots"][data-motion="paused"]::view-transition-old(*), html[data-look="dots"][data-motion="paused"]::view-transition-new(*),
+html[data-look="dots"]:active-view-transition-type(reload)::view-transition-group(*), html[data-look="dots"]:active-view-transition-type(reload)::view-transition-old(*), html[data-look="dots"]:active-view-transition-type(reload)::view-transition-new(*) { animation: none; }
+html[data-look="dots"]:active-view-transition-type(reload)::view-transition-old(root), html[data-look="dots"]:active-view-transition-type(reload)::view-transition-new(root) { animation: none; -webkit-mask-image: none; mask-image: none; }
 @media (prefers-reduced-motion: reduce) {
   html[data-look="dots"]::view-transition-group(*), html[data-look="dots"]::view-transition-old(*), html[data-look="dots"]::view-transition-new(*) { animation: none; }
 }
 @keyframes dp-vt-hold { from { opacity: 1; } to { opacity: 1; } }
+@keyframes dp-vt-out { 0% { opacity: 1; animation-timing-function: step-end; } 50%, 100% { opacity: 0; } }
+@keyframes dp-vt-in { 0% { opacity: 0; animation-timing-function: step-end; } 50%, 100% { opacity: 1; } }
+@keyframes dp-vt-gone { 0% { opacity: 1; animation-timing-function: step-end; } 25%, 100% { opacity: 0; } }
+@keyframes dp-vt-late { 0% { opacity: 0; animation-timing-function: step-end; } 75%, 100% { opacity: 1; } }
 @keyframes dp-vt-iris {
-  0% { --dp-iris: 0px; --dp-dotr: 1px; animation-timing-function: step-end; }
-  20% { --dp-iris: 7vmax; --dp-dotr: 2.5px; animation-timing-function: step-end; }
-  40% { --dp-iris: 20vmax; --dp-dotr: 4.5px; animation-timing-function: step-end; }
-  60% { --dp-iris: 38vmax; --dp-dotr: 6.5px; animation-timing-function: step-end; }
-  80% { --dp-iris: 64vmax; --dp-dotr: 9px; animation-timing-function: step-end; }
+  0% { --dp-iris: 0px; --dp-dotr: 1.5px; animation-timing-function: step-end; }
+  25% { --dp-iris: 12vmax; --dp-dotr: 3.5px; animation-timing-function: step-end; }
+  50% { --dp-iris: 30vmax; --dp-dotr: 6px; animation-timing-function: step-end; }
+  75% { --dp-iris: 60vmax; --dp-dotr: 9px; animation-timing-function: step-end; }
   100% { --dp-iris: 160vmax; --dp-dotr: 12px; }
 }
-/* arrivals and held rows: the panel snaps in, 4 held drawings (60 %, 84 %, one held drawing 3.5 % past full, full).
+@keyframes dp-vt-close {
+  0% { --dp-iris: 60vmax; --dp-dotr: 12px; animation-timing-function: step-end; }
+  25% { --dp-iris: 30vmax; --dp-dotr: 9px; animation-timing-function: step-end; }
+  50% { --dp-iris: 12vmax; --dp-dotr: 6px; animation-timing-function: step-end; }
+  75% { --dp-iris: 0px; --dp-dotr: 3.5px; animation-timing-function: step-end; }
+  100% { --dp-iris: 0px; --dp-dotr: 0px; }
+}
+/* arrivals and held rows: the panel snaps in, 4 held drawings (gone, 84 %, one held drawing 3.5 % past full, full; never
+   see-through).
    Inside <main>, which clips sideways, so the past-full drawing never widens the page. Bars never overshoot (data). */
 @keyframes dp-grow {
   0% { transform: scale(.6); opacity: 0; animation-timing-function: step-end; }
-  25% { transform: scale(.84); opacity: .7; animation-timing-function: step-end; }
+  25% { transform: scale(.84); opacity: 1; animation-timing-function: step-end; }
   50% { transform: scale(1.035); opacity: 1; animation-timing-function: step-end; }
   75%, 100% { transform: none; opacity: 1; }
 }
 @media (prefers-reduced-motion: no-preference) {
   /* keyboard focus: the frame snaps onto the part in 3 held drawings (wide, tight, home) */
-  html[data-look="dots"].motion:not([data-motion="paused"]) :is(a, button, summary, video, [tabindex]):focus-visible { animation: dp-focus .27s both; }
-  /* pressed: the part steps in and its key line doubles for the press */
-  html[data-look="dots"][data-look].motion :is(.btn, .card.lead, .pager a, .repo-card, .more-g, .theme-toggle):active { outline: 2px solid var(--dp-hov); outline-offset: -4px; }
+  html[data-look="dots"].motion:not([data-motion="paused"]) :is(a, button, summary, video, [tabindex]):focus-visible { animation: dp-focus calc(var(--dp-tick) * 3) both; }
+  /* a details panel opens like a panel growing down the page: 3 held drawings, the words never scaled */
+  html[data-look="dots"].motion details[open] > :not(summary) { animation: dp-open calc(var(--dp-hold) * 3) both; }
+  /* the look list drops open in 2 held drawings */
+  html[data-look="dots"].motion .look-menu:not([hidden]) { animation: dp-open calc(var(--dp-tick) * 3) both; }
 }
+/* the case page's head steps in on the same hold as everything else (the base gives it .7 s eased) */
+@media (prefers-reduced-motion: no-preference) {
+  html[data-look="dots"][data-look] :is(.case-head .kicker, .case-head h1, .case-head .lede, .case-part .lede, .case-head .facts, .case-head .back, .sum, .hero .method, .case-head .fact) { animation-duration: calc(var(--dp-hold) * 3); animation-timing-function: linear; }
+}
+/* parts that arrive during a fling (look-dots.js marks them) are simply there, at rest */
+html[data-look="dots"][data-look].motion .reveal.dp-seen, html[data-look="dots"][data-look].motion .dp-seen :is(.flow li, .band3 > div, .duo figure, .track i) { opacity: 1; transform: none; animation: none; }
+/* pressed: the key line doubles for the press (instant, so it also answers with motion paused or reduced) */
+html[data-look="dots"][data-look] :is(.btn, .card.lead, .pager a, .repo-card, .more-g, .theme-toggle):active { outline: 2px solid var(--dp-hov); outline-offset: -4px; }
 @keyframes dp-focus {
   0% { outline-offset: 11px; animation-timing-function: step-end; }
   33% { outline-offset: 0px; animation-timing-function: step-end; }
   66%, 100% { outline-offset: 3px; }
 }
+@keyframes dp-open {
+  0% { clip-path: inset(0 0 67% 0); animation-timing-function: step-end; }
+  33% { clip-path: inset(0 0 33% 0); animation-timing-function: step-end; }
+  66%, 100% { clip-path: none; }
+}
+/* the look list, the skip link and the selection in the look's own inks: a cream plate, the ink line, square corners,
+   no shadow; the picked row on the yellow plate */
+html[data-look="dots"][data-look] .look-pick { --lp-bg: var(--dp-paper); --lp-ink: var(--dp-ink); --lp-rim: var(--dp-ink); --lp-hi: var(--dp-yellow); --lp-on-hi: var(--dp-ink); }
+html[data-look="dots"][data-look] .look-pick-btn { border-radius: 0; }
+html[data-look="dots"][data-look] .look-menu { border-radius: 0; box-shadow: none; outline: 3px solid var(--dp-gut); }
+html[data-look="dots"][data-look] .look-menu li { border-radius: 0; }
+html[data-look="dots"][data-look] .skip-link { background: var(--dp-yellow); color: var(--dp-ink); border: 2px solid var(--dp-ink); border-radius: 0; font-family: var(--display); }
+html[data-look="dots"][data-look] .skip-link:focus-visible { outline: 3px solid var(--dp-ink); outline-offset: 3px; }
 /* fluid-dots:end */
 
 /* art:start (generated by _tools/dots/dots-art.mjs; never edit by hand) */
