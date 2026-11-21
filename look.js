@@ -2,7 +2,7 @@
    every other look is style.css with look-<key>.css on top.
 
    TO SWITCH THE DEFAULT for every visitor, change the one word on the next line to a key from LOOK_ROWS. */
-var SITE_LOOK = "yarn";
+var SITE_LOOK = "studio";
 
 /* The "Style:" button in the top bar opens a list of every look; picking one switches the page to it.
    TO TAKE THAT BUTTON AWAY, change true to false on the next line (every look and ?look= keep working). */
@@ -29,7 +29,10 @@ var LOOK_ROWS = [
   ["brush", "Brush & Scroll",  ["#efe5cf", "#141a33"],    ["#efe5cf", "#c23b22"],    true],
   ["cel",   "Cel & Tide",      ["#5078ff", "#101b4d"],    ["#0963e0", "#f2f2f2"],    true],
   ["paint", "Paint & Meadow",  ["#dcc2a6", "#18373e"],    ["#d9d5b9", "#0275a0"],    true],
-  ["dots",  "Dots & Panels",   ["#f6f0dc", "#272015"],    ["#f6f0dc", "#c8321e"],    true]
+  ["dots",  "Dots & Panels",   ["#f6f0dc", "#272015"],    ["#f6f0dc", "#c8321e"],    true],
+  /* studio: films false until video/film-<page>-studio.mp4 + img/film-<page>-studio.jpg are copied in from
+     _tools/studio-films/out/ (all 16 pages); then flip the last value to true. Dark only: the same colour both ways. */
+  ["studio", "Studio",         ["#08090c", "#08090c"],    ["#08090c", "#8b7bff"],    false]
 ];
 
 /* To try a look without changing anything, add ?look=<key> (?look=wash, ?look=cel, ?look=yarn ...) to any page address.
@@ -247,9 +250,11 @@ var LOOK_ROWS = [
     } catch (e) {}
     location.reload();
   }
+  /* Studio pass (Nov 21 2026): the picker is its own small control at the right end of the top bar, after the nav
+     (no longer one of the nav's links); it is still built once the nav's light/dark button is read. */
   function add() {
     var nav = document.querySelector(".topnav");
-    if (!nav || nav.querySelector(".look-pick")) return !!nav;
+    if (!nav || nav.parentNode.querySelector(".look-pick")) return !!nav;
     var tt = nav.querySelector(".theme-toggle");
     if (!tt && document.readyState === "loading") return false;
     var w = document.createElement("div"), html = "", id = "look-menu";
@@ -298,7 +303,7 @@ var LOOK_ROWS = [
     menu.addEventListener("click", function (e) { pick(e.target.closest ? e.target.closest("li") : e.target); });
     document.addEventListener("pointerdown", function (e) { if (!w.contains(e.target)) close(false); }, true);
     w.addEventListener("focusout", function (e) { if (e.relatedTarget && !w.contains(e.relatedTarget)) close(false); });
-    if (tt && tt.nextSibling) nav.insertBefore(w, tt.nextSibling); else if (tt) nav.appendChild(w); else nav.appendChild(w);
+    nav.parentNode.insertBefore(w, nav.nextSibling);
     var f = null;
     try { f = sessionStorage.getItem("look-focus"); sessionStorage.removeItem("look-focus"); } catch (e) {}
     if (f) { try { btn.focus({ preventScroll: true }); } catch (e) { btn.focus(); } }
