@@ -20,7 +20,11 @@
    two sizes. One canvas the size of the viewport (pointer-events none) draws, in held drawings of 66 ms: speed lines in
    the side gutters on a fast scroll, a burst of dots and ruled rays where a finger or button presses, and a short dot
    wake behind a mouse moving over bare ground (never over words). One requestAnimationFrame loop runs only while
-   something is moving; nothing runs while the tab is hidden. */
+   something is moving; nothing runs while the tab is hidden.
+   Polish pass (Nov 20, _tools/fluid/POLISH-BRIEF.md): the hold and tick come from the sheet's --dp-hold / --dp-tick; when
+   only held size steps are pending the loop naps a hold between drawings instead of asking for every frame; a page put
+   away (Back/Forward cache) or a hidden tab comes back at rest; a mouse press on words starts a selection, not a burst;
+   while a film plays in view the rest wave calms (half as often, never on the film's own panel). */
 (function () {
   'use strict';
   var d = document, r = d.documentElement, W = window;
@@ -28,7 +32,8 @@
   W.__dotsMotion = 1;
   var NS = 'http://www.w3.org/2000/svg', STEP = 16;
   var mqReduce = matchMedia('(prefers-reduced-motion: reduce)');
-  var live = false, offs = [], made = [], marked = [], timers = [], obs = [], frame = 0, busy = 0;
+  var live = false, offs = [], made = [], marked = [], timers = [], obs = [], frame = 0, busy = 0, fastAt = -1e9;
+  function fast() { return performance.now() - fastAt < 220; } // a fling: what arrives now is shown at rest, never left blank behind it
 
   function wanted() { return r.getAttribute('data-look') === 'dots' && r.classList.contains('motion') && !mqReduce.matches; }
   function on(t, type, fn, opt) { t.addEventListener(type, fn, opt); offs.push(function () { t.removeEventListener(type, fn, opt); }); }
@@ -86,7 +91,7 @@
       en.forEach(function (e) {
         if (!e.isIntersecting) return;
         var row = e.target; io.unobserve(row);
-        row.classList.remove('dp-wait'); mark(row, 'dp-row'); busy++;
+        row.classList.remove('dp-wait'); if (fast()) return; mark(row, 'dp-row'); busy++;
         later(function () { row.classList.remove('dp-row'); busy--; }, 1500);
       });
     }, { rootMargin: '0px 0px -7% 0px', threshold: 0.06 });
@@ -144,11 +149,13 @@
   var PANELS = '.topbar, .hero-film, .case-head, .bigfig, .card, .principle, .band, .section-head, .group-h, .fact, .method > li, .flow li, .band3 > div, .film, .figure, .repo-card, .pager a, .more-g, footer.site';
   var VARS = ['red-light', 'red', 'red-2', 'yellow-light', 'yellow', 'yellow-2', 'blue-light', 'blue', 'blue-2'].map(function (k) { return '--dp-t-' + k; })
     .concat(['hero-floor', 'hero-tall', 'hero-small', 'band-cols', 'band-floor', 'frieze', 'sky', 'fact', 'stair', 'v-ok'].map(function (k) { return '--dp-a-' + k; }));
-  var SIZES = { m: .78, 1: 1.22, 2: 1.45 }, HOLD = 132, TICK = 66;
+  var SIZES = { m: .78, 1: 1.22, 2: 1.45 }, HOLD = 132, TICK = 66; // read again from the sheet's tokens on start
+  function ms(v, f) { v = parseFloat(v); return v > 0 ? v : f; }
   function fluid() {
     // each size is held once on <html> as its own --dp-zN-* variable (so the sheet sweep knows them as this look's own);
     // a sized panel points its tints at them, and the data inside it (bars, charts) points back at the originals
     var cs = getComputedStyle(r), root = '', css = '', keep = '', k, i, v, name;
+    HOLD = ms(cs.getPropertyValue('--dp-hold'), 132); TICK = ms(cs.getPropertyValue('--dp-tick'), 66);
     for (i = 0; i < VARS.length; i++) {
       v = cs.getPropertyValue(VARS[i]).trim(); if (v.indexOf('<circle') < 0) continue;
       name = VARS[i].slice(5); keep += VARS[i] + ':var(--dp-o-' + name + ');'; root += '--dp-o-' + name + ':var(' + VARS[i] + ');';
@@ -163,7 +170,8 @@
     var g = cv.getContext('2d'), thr = false, dpr = 1, vw = 0, vh = 0, gut = 16, ink = '#272015', dot = '#c8321e';
     var panels = [], top = [], bot = [], lvl = [], bump = [], hov = -1, foc = -1;
     var sy = scrollY, cur = 0, vel = 0, lastY = scrollY, lastT = 0, scrollAt = -1e9, peak = 0, settleAt = -1, wave = -1e9;
-    var bursts = [], wake = [], lines = 0, lastTick = 0, lastHold = 0, drawn = false, looping = 0, wx = -99, wy = -99;
+    var bursts = [], wake = [], lines = 0, lastTick = 0, lastHold = 0, drawn = false, looping = 0, nap = 0, wx = -99, wy = -99;
+    var films = [].slice.call(d.querySelectorAll('video')), filmPanel = -1;
 
     function measure() { // layout reads happen here only (start, resize, body size change), never inside the loop
       vw = innerWidth; vh = innerHeight; dpr = Math.min(2, W.devicePixelRatio || 1);
@@ -189,7 +197,7 @@
       lvl[n] = z;
     }
     function which(t) { if (!t || !t.closest) return -1; var p = t.closest(PANELS); while (p && panels.indexOf(p) < 0) p = p.parentElement && p.parentElement.closest(PANELS); return p ? panels.indexOf(p) : -1; }
-    function kick() { if (!looping && live && !d.hidden) looping = requestAnimationFrame(loop); }
+    function kick() { if (!looping && live && !d.hidden) { clearTimeout(nap); looping = requestAnimationFrame(loop); } }
 
     function target(n, now, scrolling) { // the size a panel wants this held drawing: the largest ask wins, a dip only if nothing grows
       var z = 0, dip = false, q, s;
@@ -197,7 +205,7 @@
       else if (settleAt >= 0) { s = Math.floor((now - settleAt) / HOLD); q = (peak > 1 ? [2, 1, 0, -1, -1, 0] : [1, 0, -1, 0])[s]; if (q > 0) z = q; else if (q < 0) dip = true; }
       // the rest wave: runs down the screen, a dip, then two held drawings grown
       s = Math.floor((now - wave - Math.max(0, (top[n] - sy) / vh) * 900) / HOLD);
-      if (s >= 0 && s < 4) { q = [-1, 1, 1, 0][s]; if (q > 0) z = Math.max(z, q); else if (q < 0) dip = true; }
+      if (s >= 0 && s < 4 && n !== filmPanel) { q = [-1, 1, 1, 0][s]; if (q > 0) z = Math.max(z, q); else if (q < 0) dip = true; }
       if (bump[n]) { s = Math.floor((now - bump[n]) / HOLD); q = [2, 2, 1][s]; if (q) z = Math.max(z, q); else bump[n] = null; }
       if (n === hov || n === foc) z = Math.max(z, 1);
       return z || (dip ? -1 : 0);
@@ -227,7 +235,7 @@
           for (i = 0; i < lines * 2; i++) {
             var side = thr ? 1 : i % 2, x = 2 + Math.random() * (gut - 4), len = 30 + Math.random() * (40 + vel * 40), y0 = Math.random() * vh;
             if (side) x = vw - x;
-            g.fillRect(Math.round(x), Math.round(y0), Math.random() < .3 ? 2.5 : 1.25, Math.round(len));
+            g.fillRect(Math.round(x), Math.round(y0), Math.random() < .3 ? 2 : 1, Math.round(len)); // whole pixels: hairlines stay hairlines
           }
           drawn = more = true;
         }
@@ -250,17 +258,23 @@
           g.fill(); drawn = more = true;
         }
       } else if (bursts.length || wake.length || lines) more = true;
-      if (more) kick();
+      if (!more) return;
+      // only held size steps pending: nap until the next drawing is due instead of asking for every frame
+      if (scrolling || bursts.length || wake.length || lines || drawn) kick();
+      else { clearTimeout(nap); nap = setTimeout(kick, Math.max(4, HOLD - (now - lastHold))); }
     }
 
     on(W, 'scroll', function () {
       var t = performance.now(), y = scrollY, dt = Math.max(8, t - lastT);
       vel = lastT ? vel * .6 + .4 * Math.min(8, Math.abs(y - lastY) / dt) : 0; lastY = y; lastT = t; sy = y; scrollAt = t;
-      var p = vel > 2.2 ? 2 : vel > .5 ? 1 : 0; cur = p; if (p > peak) peak = p;
+      var p = vel > 2.2 ? 2 : vel > .5 ? 1 : 0; cur = p; if (p > peak) peak = p; if (p > 1) fastAt = t;
       if (peak) settleAt = -1;
       kick();
     }, { passive: true });
     on(W, 'pointerdown', function (e) {
+      if (e.button > 0) return;
+      // a mouse pressed on words is starting a selection: no burst over them (a finger, a control or bare ground still bursts)
+      var tx = e.target; if (e.pointerType === 'mouse' && tx.closest && !tx.closest('a, button, summary, label, input, video, .card, .pager a, .repo-card') && tx.closest('p, li, dd, dt, h1, h2, h3, h4, pre, code, figcaption, blockquote, td, th')) { var n0 = which(tx); if (n0 >= 0) { bump[n0] = performance.now(); kick(); } return; }
       bursts.push({ x: e.clientX, y: e.clientY, t: performance.now() }); if (bursts.length > 4) bursts.shift();
       var n = which(e.target); if (n >= 0) bump[n] = performance.now();
       kick();
@@ -276,6 +290,12 @@
       kick();
     }, { passive: true });
     on(d, 'mouseout', function (e) { if (!e.relatedTarget && hov >= 0) { hov = -1; kick(); } });
+    // parts arriving during a fling land at rest (no snap-in), so the page never reads blank behind a fast scroll
+    if ('IntersectionObserver' in W) {
+      var fio = new IntersectionObserver(function (en) { en.forEach(function (e) { if (!e.isIntersecting) return; fio.unobserve(e.target); if (fast() && !e.target.classList.contains('in')) mark(e.target, 'dp-seen'); }); }, { rootMargin: '60% 0px 60% 0px' });
+      [].forEach.call(d.querySelectorAll('.reveal:not(.in)'), function (el) { if (el.getBoundingClientRect().top > innerHeight * 1.6) fio.observe(el); });
+      obs.push(fio);
+    }
     var tm = new MutationObserver(remeasure); tm.observe(r, { attributes: true, attributeFilter: ['data-theme'] }); obs.push(tm);
     on(d, 'focusin', function (e) { foc = which(e.target); kick(); });
     on(d, 'focusout', function () { foc = -1; kick(); });
@@ -287,10 +307,26 @@
     var mt = 0; function remeasure() { clearTimeout(mt); mt = later(function () { if (live) { measure(); kick(); } }, 150); }
     on(W, 'resize', remeasure); on(W, 'load', remeasure);
     if ('ResizeObserver' in W) { var ro = new ResizeObserver(remeasure); ro.observe(d.body); obs.push(ro); }
-    on(d, 'visibilitychange', function () { if (!d.hidden) kick(); });
+    on(d, 'visibilitychange', function () { if (d.hidden) calm(); else { sy = lastY = scrollY; kick(); } });
     // the rest wave: every 5.2 s while the page sits still and nothing else moves (one moving accent at a time)
-    (function every() { later(function () { if (live && !d.hidden && !busy && performance.now() - scrollAt > 1500) { wave = performance.now(); kick(); } every(); }, 5200); })();
-    offs.push(function () { if (looping) cancelAnimationFrame(looping); looping = 0; clearTimeout(mt); for (var n = 0; n < panels.length; n++) setLvl(n, 0); });
+    // while a film plays in view the wave calms: every other turn, and never on the film's own panel
+    var turn = 0;
+    function filmOn() {
+      filmPanel = -1;
+      for (var i = 0; i < films.length; i++) { var v = films[i], b; if (v.paused || v.ended) continue; b = v.getBoundingClientRect(); if (b.bottom > 0 && b.top < innerHeight) { filmPanel = which(v); return true; } }
+      return false;
+    }
+    (function every() { later(function () { turn++; if (live && !d.hidden && !busy && performance.now() - scrollAt > 1500 && (!filmOn() || turn % 2)) { wave = performance.now(); kick(); } every(); }, 5200); })();
+    // put away (Back/Forward cache) or hidden: come back at rest, with nothing half drawn and no queued effects
+    function calm() {
+      bursts = []; wake = []; lines = 0; vel = 0; cur = 0; peak = 0; settleAt = -1; lastT = 0; hov = foc = -1; wave = -1e9;
+      for (var n = 0; n < panels.length; n++) { bump[n] = null; setLvl(n, 0); }
+      if (looping) cancelAnimationFrame(looping); looping = 0; clearTimeout(nap);
+      g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, cv.width, cv.height); drawn = false;
+    }
+    on(W, 'pagehide', calm);
+    on(W, 'pageshow', function (e) { if (e.persisted && live) { sy = lastY = scrollY; scrollAt = -1e9; remeasure(); } });
+    offs.push(function () { if (looping) cancelAnimationFrame(looping); looping = 0; clearTimeout(mt); clearTimeout(nap); for (var n = 0; n < panels.length; n++) setLvl(n, 0); });
     measure(); wave = performance.now() + 1400; kick();
   }
 
