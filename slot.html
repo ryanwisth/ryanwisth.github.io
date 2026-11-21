@@ -144,7 +144,7 @@
     <ul>
       <li><b>Only handheld-to-handheld radio counts.</b> A test that went through the home router could find a fault, but never counted as a pass. The trade-off I accepted: slower testing, because the handhelds drop off the home network for every linked test.</li>
       <li><b>The host always leads.</b> Whatever the two games agree between themselves, the host&rsquo;s console keeps the link&rsquo;s pace. That removed the 1-in-4 failed trades between different emulators.</li>
-      <li><b>Wait a little, never rewind.</b> Each handheld waits a few frames for the others, set from a measured round trip (4 frames on a close link), instead of guessing ahead and rewinding when it guessed wrong.</li>
+      <li><b>Wait a little, never rewind.</b> Each handheld waits a few frames for the others, set from a measured round trip (4 frames on a close link; a frame is a sixtieth of a second), instead of guessing ahead and rewinding when it guessed wrong.</li>
       <li><b>Fixed on the handhelds, not just on the Mac.</b> A failure seen on the handhelds was fixed, rebuilt and tested again there. A pass on the Mac alone never closed it.</li>
     </ul>
   </div>
