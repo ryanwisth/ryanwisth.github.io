@@ -28,6 +28,38 @@
     if (t && t !== r.dataset.theme) { r.dataset.theme = t; barTint(); }
   });
 
+  // "On this page": a case page's sections as a short list (studio pass, Nov 21 2026). Built on every case page, shown
+  // only by a look that asks for it: style.css hides .case-toc, look-studio.css shows it beside the text on wide screens.
+  // It appears once the wide summary at the top has scrolled away (.case-toc.on), and marks the section being read (a.on).
+  (function () {
+    var main = d.getElementById('main'), hs = [].slice.call(d.querySelectorAll('main > .prose > h2'));
+    if (!d.body || !d.body.classList.contains('case') || !main || hs.length < 2) return;
+    var nav = d.createElement('nav'), head = d.createElement('p'), links = [];
+    nav.className = 'case-toc'; nav.setAttribute('aria-label', 'On this page');
+    head.textContent = 'On this page'; nav.appendChild(head);
+    hs.forEach(function (h, i) {
+      if (!h.id) h.id = 's-' + ((h.textContent || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || i);
+      var a = d.createElement('a'); a.href = '#' + h.id; a.textContent = h.textContent; nav.appendChild(a); links.push(a);
+    });
+    var repo = d.querySelector('main .repo-card a[href^="https://github.com/"]');
+    if (repo) { var g = d.createElement('a'); g.href = repo.href; g.className = 'toc-gh'; g.textContent = 'Code on GitHub'; nav.appendChild(g); }
+    main.appendChild(nav);
+    var gate = hs[0].parentNode.previousElementSibling, raf = 0;
+    function mark() {
+      raf = 0;
+      if (getComputedStyle(nav).display === 'none') return;
+      nav.classList.toggle('on', !gate || gate.getBoundingClientRect().bottom < 96);
+      var cur = 0; for (var i = 0; i < hs.length; i++) if (hs[i].getBoundingClientRect().top < innerHeight * 0.45) cur = i;
+      links.forEach(function (a, i) { a.classList.toggle('cur', i === cur); if (i === cur) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+    }
+    function go() {                                   // after load (the look's sheet is in by then); a hidden list costs one style read
+      addEventListener('scroll', function () { if (!raf) raf = requestAnimationFrame(mark); }, { passive: true });
+      addEventListener('resize', function () { if (!raf) raf = requestAnimationFrame(mark); });
+      mark();
+    }
+    if (d.readyState === 'complete') go(); else addEventListener('load', go);
+  })();
+
   // the 3D demo loads in place on larger screens; on phones the link opens it full screen
   d.querySelectorAll('.demo-poster').forEach(function (a) {
     a.addEventListener('click', function (e) {
@@ -245,7 +277,7 @@
   // for the default look, which carries no data-look). One is fetched only while its look is worn and reduced motion
   // is not asked for, and again if the look changes to it. Each script switches itself off when its look is taken off.
   var jsBase = (d.currentScript && d.currentScript.src || '').replace(/site\.js[^\/]*$/, '');
-  var LIVE = { yarn: 1, wash: 1, brush: 1, cel: 1, paint: 1, dots: 1 };
+  var LIVE = { yarn: 1, wash: 1, brush: 1, cel: 1, paint: 1, dots: 1, studio: 1 };
   function lookJs() {
     var k = r.getAttribute('data-look') || 'yarn';
     if (reduce || !jsBase || !LIVE[k] || d.getElementById('look-' + k + '-js')) return;
@@ -266,12 +298,28 @@
       setTimeout(function () { t.classList.remove('reveal'); t.style.removeProperty('--d'); }, 1800);
     });
   }, { rootMargin: '0px 0px -7% 0px', threshold: 0.06 });
-  d.querySelectorAll('.section-head, .group-h, .card, .principle, .band, .figure, .film, .repo-card, .pager').forEach(function (el) {
+  // Reveal only adds, it never hides by default (studio pass, Nov 21 2026): a part is put in its hidden starting
+  // state only when it is on the first screen, or when the reader scrolls it near (a band below the screen), so a page
+  // that is never scrolled (a crawler, a full-page capture, print) shows everything.
+  var arm = function (el) {
     el.classList.add('reveal');
     if (el.matches('.card, .principle')) {
       el.style.setProperty('--d', ([].indexOf.call(el.parentNode.children, el) % 4) * 110 + 'ms');
     }
     io.observe(el);
+  };
+  var near = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) { if (en.isIntersecting) { near.unobserve(en.target); arm(en.target); } });
+  }, { rootMargin: '0px 0px 10% 0px' });
+  d.querySelectorAll('.section-head, .group-h, .card, .principle, .band, .figure, .film, .repo-card, .pager').forEach(function (el) {
+    if (el.getBoundingClientRect().top < innerHeight) arm(el); else near.observe(el);
+  });
+  // pictures and fonts that arrive late push parts down: one armed on the first screen that is now below it waits again
+  addEventListener('load', function () {
+    d.querySelectorAll('.reveal:not(.in)').forEach(function (el) {
+      if (el.getBoundingClientRect().top < innerHeight * 1.1) return;
+      io.unobserve(el); el.classList.remove('reveal'); el.style.removeProperty('--d'); near.observe(el);
+    });
   });
   d.querySelectorAll('.flow li').forEach(function (li) {
     li.style.setProperty('--i', [].indexOf.call(li.parentNode.children, li));
