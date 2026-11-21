@@ -1574,7 +1574,7 @@ html[data-look="cel"]:root:root .term {
 }
 html[data-look="cel"] :not(pre) > code {
   padding: .04em .45em .1em; border-radius: .7em .55em .75em .5em; color: var(--c-text); background: var(--im-pebble);
-  box-shadow: var(--sun-lip-s) 0 var(--im-pebble-sh); font-size: .92em;
+  box-shadow: var(--sun-lip-s) 0 var(--im-pebble-sh); font-size: .92em; margin-right: .18em;
 }
 
 /* C12. the table: a bamboo grid; its header row a palm-wood plank */
