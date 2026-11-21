@@ -921,3 +921,327 @@ html[data-look="wash"] .pager a:is(:hover, :active) { background-color: color-mi
   html[data-look="wash"] .pager a:hover:not(:active) { background-color: var(--sheet); border-color: var(--rule-soft); }
   html[data-look="wash"] .demo-poster:hover:not(:focus-visible) .play { background: var(--bg); }
 }
+
+/* immerse:start */
+/* immerse art (written by _tools/fluid/wash-immerse/art.py) */
+html[data-look="wash"] {
+  --w-i-hair: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 6' preserveAspectRatio='none'%3E%3Cpath d='M0 3.1C40 2.4 120 2.1 200 2.2C270 2.3 340 2.6 400 3C340 3.5 270 3.7 200 3.8C120 3.9 40 3.7 0 3.1Z'/%3E%3C/svg%3E");
+  --w-i-hair2: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 6' preserveAspectRatio='none'%3E%3Cpath d='M0 3.1C40 2.3 120 2 200 2.1C270 2.2 340 2.6 400 3C340 3.5 270 3.8 200 3.9C120 4 40 3.8 0 3.1Z'/%3E%3C/svg%3E");
+  --w-i-vhair: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 6 400' preserveAspectRatio='none'%3E%3Cpath d='M3.1 0C2.4 40 2.1 120 2.2 200C2.3 270 2.6 340 3 400C3.5 340 3.7 270 3.8 200C3.9 120 3.7 40 3.1 0Z'/%3E%3C/svg%3E");
+  --w-i-enso: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cdefs%3E%3Cfilter id='d' x='-10%25' y='-10%25' width='120%25' height='120%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' seed='4'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='1.6'/%3E%3C/filter%3E%3C/defs%3E%3Cg filter='url(%23d)' fill='none' stroke-linecap='round'%3E%3Cpath d='M24 4.6A15.6 15.6 0 1 0 34.6 14' stroke='black' stroke-width='2.6'/%3E%3Cpath d='M34.6 14C35.4 16.4 35.6 18 35.4 20' stroke='black' stroke-opacity='.55' stroke-width='1.4'/%3E%3C/g%3E%3C/svg%3E");
+  --w-i-dot: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cdefs%3E%3Cfilter id='b' x='-30%25' y='-30%25' width='160%25' height='160%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='2' seed='9'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='2.2'/%3E%3C/filter%3E%3CradialGradient id='g'%3E%3Cstop offset='.42' stop-opacity='1'/%3E%3Cstop offset='.62' stop-opacity='.42'/%3E%3Cstop offset='1' stop-opacity='0'/%3E%3C/radialGradient%3E%3C/defs%3E%3Cg filter='url(%23b)'%3E%3Ccircle cx='10' cy='10' r='9' fill='url(%23g)'/%3E%3Ccircle cx='10' cy='10' r='3.6'/%3E%3C/g%3E%3C/svg%3E");
+  --w-i-dry: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 8' preserveAspectRatio='none'%3E%3Cg fill='black'%3E%3Cpath d='M0 4.2C60 3.2 150 3 300 3.6L300 4.6C150 5 60 5.4 0 5Z' fill-opacity='.9'/%3E%3Cpath d='M4 2.6C70 2 160 2 260 2.4L260 3C160 2.8 70 3 4 3.3Z' fill-opacity='.5'/%3E%3Cpath d='M12 6C90 5.8 170 5.8 290 5.6L290 6.3C170 6.5 90 6.7 12 6.7Z' fill-opacity='.45'/%3E%3C/g%3E%3C/svg%3E");
+  --w-i-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 14'%3E%3Cg fill='none' stroke='black' stroke-linecap='round'%3E%3Cpath d='M2 7.6C18 6.6 36 6.8 54 7' stroke-width='1.8'/%3E%3Cpath d='M46 2.2C49.6 4.4 52.4 6 55 7.2C52 8.4 49 10 46.4 12' stroke-width='1.6'/%3E%3C/g%3E%3C/svg%3E");
+  --w-i-band: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 60' preserveAspectRatio='none'%3E%3Cdefs%3E%3Cfilter id='w' x='-5%25' y='-30%25' width='110%25' height='160%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .09' numOctaves='3' seed='12'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='14'/%3E%3CfeGaussianBlur stdDeviation='2.2'/%3E%3C/filter%3E%3ClinearGradient id='h'%3E%3Cstop offset='0' stop-opacity='0'/%3E%3Cstop offset='.18' stop-opacity='.8'/%3E%3Cstop offset='.6' stop-opacity='1'/%3E%3Cstop offset='.9' stop-opacity='.7'/%3E%3Cstop offset='1' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath filter='url(%23w)' fill='url(%23h)' d='M10 18C300 10 700 12 1190 20L1190 44C800 50 400 50 10 42Z'/%3E%3C/svg%3E");
+}
+html[data-look="wash"] {
+  --w-i-deckle-l: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 640' preserveAspectRatio='none'%3E%3Cdefs%3E%3Cfilter id='t' x='-20%25' y='0' width='140%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.18 .035' numOctaves='3' seed='7'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='9'/%3E%3CfeGaussianBlur stdDeviation='.6'/%3E%3C/filter%3E%3ClinearGradient id='f'%3E%3Cstop offset='0' stop-opacity='1'/%3E%3Cstop offset='1' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg%3E%3Cpath filter='url(%23t)' fill='%23d9cfbe' fill-opacity='0.55' d='M0 -20H13C16 60 10 140 14 220C17 300 11 380 15 460C18 540 12 600 13 660H0Z'/%3E%3Cpath filter='url(%23t)' fill='%23d9cfbe' fill-opacity='0.24750000000000003' d='M0 -20H20C24 80 17 170 22 260C26 350 18 450 23 540C26 600 21 640 22 660H0Z'/%3E%3Cg fill='none' stroke='%237a6a52' stroke-opacity='0.168' stroke-linecap='round' stroke-width='.7'%3E%3Cpath d='M6 70C16 74 26 70 36 78'/%3E%3Cpath d='M8 250C18 246 25 252 33 248'/%3E%3Cpath d='M5 410C15 418 22 414 31 420'/%3E%3Cpath d='M7 560C17 556 24 562 30 558'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  --w-i-deckle-r: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 640' preserveAspectRatio='none'%3E%3Cdefs%3E%3Cfilter id='t' x='-20%25' y='0' width='140%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.18 .035' numOctaves='3' seed='7'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='9'/%3E%3CfeGaussianBlur stdDeviation='.6'/%3E%3C/filter%3E%3ClinearGradient id='f'%3E%3Cstop offset='0' stop-opacity='1'/%3E%3Cstop offset='1' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg transform='translate(40 0) scale(-1 1)'%3E%3Cpath filter='url(%23t)' fill='%23d9cfbe' fill-opacity='0.55' d='M0 -20H13C16 60 10 140 14 220C17 300 11 380 15 460C18 540 12 600 13 660H0Z'/%3E%3Cpath filter='url(%23t)' fill='%23d9cfbe' fill-opacity='0.24750000000000003' d='M0 -20H20C24 80 17 170 22 260C26 350 18 450 23 540C26 600 21 640 22 660H0Z'/%3E%3Cg fill='none' stroke='%237a6a52' stroke-opacity='0.168' stroke-linecap='round' stroke-width='.7'%3E%3Cpath d='M6 70C16 74 26 70 36 78'/%3E%3Cpath d='M8 250C18 246 25 252 33 248'/%3E%3Cpath d='M5 410C15 418 22 414 31 420'/%3E%3Cpath d='M7 560C17 556 24 562 30 558'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  --w-i-dry-l: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 8' preserveAspectRatio='none'%3E%3Cg fill='%232b3040' fill-opacity='0.62'%3E%3Cpath d='M0 4.2C60 3.2 150 3 300 3.6L300 4.6C150 5 60 5.4 0 5Z' fill-opacity='.9'/%3E%3Cpath d='M4 2.6C70 2 160 2 260 2.4L260 3C160 2.8 70 3 4 3.3Z' fill-opacity='.5'/%3E%3Cpath d='M12 6C90 5.8 170 5.8 290 5.6L290 6.3C170 6.5 90 6.7 12 6.7Z' fill-opacity='.45'/%3E%3C/g%3E%3C/svg%3E");
+  --w-i-dry-h: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 8' preserveAspectRatio='none'%3E%3Cg fill='%232b3040' fill-opacity='1'%3E%3Cpath d='M0 4.2C60 3.2 150 3 300 3.6L300 4.6C150 5 60 5.4 0 5Z' fill-opacity='.9'/%3E%3Cpath d='M4 2.6C70 2 160 2 260 2.4L260 3C160 2.8 70 3 4 3.3Z' fill-opacity='.5'/%3E%3Cpath d='M12 6C90 5.8 170 5.8 290 5.6L290 6.3C170 6.5 90 6.7 12 6.7Z' fill-opacity='.45'/%3E%3C/g%3E%3C/svg%3E");
+  --w-i-dry-v: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 8' preserveAspectRatio='none'%3E%3Cg fill='%236c4f8a' fill-opacity='0.8'%3E%3Cpath d='M0 4.2C60 3.2 150 3 300 3.6L300 4.6C150 5 60 5.4 0 5Z' fill-opacity='.9'/%3E%3Cpath d='M4 2.6C70 2 160 2 260 2.4L260 3C160 2.8 70 3 4 3.3Z' fill-opacity='.5'/%3E%3Cpath d='M12 6C90 5.8 170 5.8 290 5.6L290 6.3C170 6.5 90 6.7 12 6.7Z' fill-opacity='.45'/%3E%3C/g%3E%3C/svg%3E");
+  --w-i-fibre: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='520'%3E%3Cg fill='none' stroke='%237a6a52' stroke-opacity='0.07' stroke-linecap='round'%3E%3Cpath d='M20 40C80 30 140 46 210 36' stroke-width='0.6'/%3E%3Cpath d='M300 90C340 120 390 118 450 140' stroke-width='0.8999999999999999'/%3E%3Cpath d='M60 220C110 210 150 240 200 232' stroke-width='1.2'/%3E%3Cpath d='M330 300C380 290 420 310 500 296' stroke-width='0.6'/%3E%3Cpath d='M120 380C170 400 230 392 260 420' stroke-width='0.8999999999999999'/%3E%3Cpath d='M400 460C430 440 470 450 510 430' stroke-width='1.2'/%3E%3Cpath d='M10 470C50 480 90 470 130 486' stroke-width='0.6'/%3E%3Cpath d='M240 150C260 180 300 190 330 214' stroke-width='0.8999999999999999'/%3E%3C/g%3E%3C/svg%3E");
+}
+@media (prefers-color-scheme: dark) { html[data-look="wash"]:not([data-theme="light"]) {
+  --w-i-deckle-l: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 640' preserveAspectRatio='none'%3E%3Cdefs%3E%3Cfilter id='t' x='-20%25' y='0' width='140%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.18 .035' numOctaves='3' seed='7'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='9'/%3E%3CfeGaussianBlur stdDeviation='.6'/%3E%3C/filter%3E%3ClinearGradient id='f'%3E%3Cstop offset='0' stop-opacity='1'/%3E%3Cstop offset='1' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg%3E%3Cpath filter='url(%23t)' fill='%23060b1c' fill-opacity='0.6' d='M0 -20H13C16 60 10 140 14 220C17 300 11 380 15 460C18 540 12 600 13 660H0Z'/%3E%3Cpath filter='url(%23t)' fill='%23060b1c' fill-opacity='0.27' d='M0 -20H20C24 80 17 170 22 260C26 350 18 450 23 540C26 600 21 640 22 660H0Z'/%3E%3Cg fill='none' stroke='%23c9d2e8' stroke-opacity='0.144' stroke-linecap='round' stroke-width='.7'%3E%3Cpath d='M6 70C16 74 26 70 36 78'/%3E%3Cpath d='M8 250C18 246 25 252 33 248'/%3E%3Cpath d='M5 410C15 418 22 414 31 420'/%3E%3Cpath d='M7 560C17 556 24 562 30 558'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  --w-i-deckle-r: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 640' preserveAspectRatio='none'%3E%3Cdefs%3E%3Cfilter id='t' x='-20%25' y='0' width='140%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.18 .035' numOctaves='3' seed='7'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='9'/%3E%3CfeGaussianBlur stdDeviation='.6'/%3E%3C/filter%3E%3ClinearGradient id='f'%3E%3Cstop offset='0' stop-opacity='1'/%3E%3Cstop offset='1' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg transform='translate(40 0) scale(-1 1)'%3E%3Cpath filter='url(%23t)' fill='%23060b1c' fill-opacity='0.6' d='M0 -20H13C16 60 10 140 14 220C17 300 11 380 15 460C18 540 12 600 13 660H0Z'/%3E%3Cpath filter='url(%23t)' fill='%23060b1c' fill-opacity='0.27' d='M0 -20H20C24 80 17 170 22 260C26 350 18 450 23 540C26 600 21 640 22 660H0Z'/%3E%3Cg fill='none' stroke='%23c9d2e8' stroke-opacity='0.144' stroke-linecap='round' stroke-width='.7'%3E%3Cpath d='M6 70C16 74 26 70 36 78'/%3E%3Cpath d='M8 250C18 246 25 252 33 248'/%3E%3Cpath d='M5 410C15 418 22 414 31 420'/%3E%3Cpath d='M7 560C17 556 24 562 30 558'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  --w-i-dry-l: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 8' preserveAspectRatio='none'%3E%3Cg fill='%23eceff5' fill-opacity='0.62'%3E%3Cpath d='M0 4.2C60 3.2 150 3 300 3.6L300 4.6C150 5 60 5.4 0 5Z' fill-opacity='.9'/%3E%3Cpath d='M4 2.6C70 2 160 2 260 2.4L260 3C160 2.8 70 3 4 3.3Z' fill-opacity='.5'/%3E%3Cpath d='M12 6C90 5.8 170 5.8 290 5.6L290 6.3C170 6.5 90 6.7 12 6.7Z' fill-opacity='.45'/%3E%3C/g%3E%3C/svg%3E");
+  --w-i-dry-h: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 8' preserveAspectRatio='none'%3E%3Cg fill='%23eceff5' fill-opacity='1'%3E%3Cpath d='M0 4.2C60 3.2 150 3 300 3.6L300 4.6C150 5 60 5.4 0 5Z' fill-opacity='.9'/%3E%3Cpath d='M4 2.6C70 2 160 2 260 2.4L260 3C160 2.8 70 3 4 3.3Z' fill-opacity='.5'/%3E%3Cpath d='M12 6C90 5.8 170 5.8 290 5.6L290 6.3C170 6.5 90 6.7 12 6.7Z' fill-opacity='.45'/%3E%3C/g%3E%3C/svg%3E");
+  --w-i-dry-v: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 8' preserveAspectRatio='none'%3E%3Cg fill='%23c6b4e0' fill-opacity='0.8'%3E%3Cpath d='M0 4.2C60 3.2 150 3 300 3.6L300 4.6C150 5 60 5.4 0 5Z' fill-opacity='.9'/%3E%3Cpath d='M4 2.6C70 2 160 2 260 2.4L260 3C160 2.8 70 3 4 3.3Z' fill-opacity='.5'/%3E%3Cpath d='M12 6C90 5.8 170 5.8 290 5.6L290 6.3C170 6.5 90 6.7 12 6.7Z' fill-opacity='.45'/%3E%3C/g%3E%3C/svg%3E");
+  --w-i-fibre: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='520'%3E%3Cg fill='none' stroke='%23c9d2e8' stroke-opacity='0.06' stroke-linecap='round'%3E%3Cpath d='M20 40C80 30 140 46 210 36' stroke-width='0.6'/%3E%3Cpath d='M300 90C340 120 390 118 450 140' stroke-width='0.8999999999999999'/%3E%3Cpath d='M60 220C110 210 150 240 200 232' stroke-width='1.2'/%3E%3Cpath d='M330 300C380 290 420 310 500 296' stroke-width='0.6'/%3E%3Cpath d='M120 380C170 400 230 392 260 420' stroke-width='0.8999999999999999'/%3E%3Cpath d='M400 460C430 440 470 450 510 430' stroke-width='1.2'/%3E%3Cpath d='M10 470C50 480 90 470 130 486' stroke-width='0.6'/%3E%3Cpath d='M240 150C260 180 300 190 330 214' stroke-width='0.8999999999999999'/%3E%3C/g%3E%3C/svg%3E");
+} }
+html[data-look="wash"][data-theme="dark"] {
+  --w-i-deckle-l: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 640' preserveAspectRatio='none'%3E%3Cdefs%3E%3Cfilter id='t' x='-20%25' y='0' width='140%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.18 .035' numOctaves='3' seed='7'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='9'/%3E%3CfeGaussianBlur stdDeviation='.6'/%3E%3C/filter%3E%3ClinearGradient id='f'%3E%3Cstop offset='0' stop-opacity='1'/%3E%3Cstop offset='1' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg%3E%3Cpath filter='url(%23t)' fill='%23060b1c' fill-opacity='0.6' d='M0 -20H13C16 60 10 140 14 220C17 300 11 380 15 460C18 540 12 600 13 660H0Z'/%3E%3Cpath filter='url(%23t)' fill='%23060b1c' fill-opacity='0.27' d='M0 -20H20C24 80 17 170 22 260C26 350 18 450 23 540C26 600 21 640 22 660H0Z'/%3E%3Cg fill='none' stroke='%23c9d2e8' stroke-opacity='0.144' stroke-linecap='round' stroke-width='.7'%3E%3Cpath d='M6 70C16 74 26 70 36 78'/%3E%3Cpath d='M8 250C18 246 25 252 33 248'/%3E%3Cpath d='M5 410C15 418 22 414 31 420'/%3E%3Cpath d='M7 560C17 556 24 562 30 558'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  --w-i-deckle-r: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 640' preserveAspectRatio='none'%3E%3Cdefs%3E%3Cfilter id='t' x='-20%25' y='0' width='140%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.18 .035' numOctaves='3' seed='7'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='9'/%3E%3CfeGaussianBlur stdDeviation='.6'/%3E%3C/filter%3E%3ClinearGradient id='f'%3E%3Cstop offset='0' stop-opacity='1'/%3E%3Cstop offset='1' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg transform='translate(40 0) scale(-1 1)'%3E%3Cpath filter='url(%23t)' fill='%23060b1c' fill-opacity='0.6' d='M0 -20H13C16 60 10 140 14 220C17 300 11 380 15 460C18 540 12 600 13 660H0Z'/%3E%3Cpath filter='url(%23t)' fill='%23060b1c' fill-opacity='0.27' d='M0 -20H20C24 80 17 170 22 260C26 350 18 450 23 540C26 600 21 640 22 660H0Z'/%3E%3Cg fill='none' stroke='%23c9d2e8' stroke-opacity='0.144' stroke-linecap='round' stroke-width='.7'%3E%3Cpath d='M6 70C16 74 26 70 36 78'/%3E%3Cpath d='M8 250C18 246 25 252 33 248'/%3E%3Cpath d='M5 410C15 418 22 414 31 420'/%3E%3Cpath d='M7 560C17 556 24 562 30 558'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  --w-i-dry-l: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 8' preserveAspectRatio='none'%3E%3Cg fill='%23eceff5' fill-opacity='0.62'%3E%3Cpath d='M0 4.2C60 3.2 150 3 300 3.6L300 4.6C150 5 60 5.4 0 5Z' fill-opacity='.9'/%3E%3Cpath d='M4 2.6C70 2 160 2 260 2.4L260 3C160 2.8 70 3 4 3.3Z' fill-opacity='.5'/%3E%3Cpath d='M12 6C90 5.8 170 5.8 290 5.6L290 6.3C170 6.5 90 6.7 12 6.7Z' fill-opacity='.45'/%3E%3C/g%3E%3C/svg%3E");
+  --w-i-dry-h: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 8' preserveAspectRatio='none'%3E%3Cg fill='%23eceff5' fill-opacity='1'%3E%3Cpath d='M0 4.2C60 3.2 150 3 300 3.6L300 4.6C150 5 60 5.4 0 5Z' fill-opacity='.9'/%3E%3Cpath d='M4 2.6C70 2 160 2 260 2.4L260 3C160 2.8 70 3 4 3.3Z' fill-opacity='.5'/%3E%3Cpath d='M12 6C90 5.8 170 5.8 290 5.6L290 6.3C170 6.5 90 6.7 12 6.7Z' fill-opacity='.45'/%3E%3C/g%3E%3C/svg%3E");
+  --w-i-dry-v: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 8' preserveAspectRatio='none'%3E%3Cg fill='%23c6b4e0' fill-opacity='0.8'%3E%3Cpath d='M0 4.2C60 3.2 150 3 300 3.6L300 4.6C150 5 60 5.4 0 5Z' fill-opacity='.9'/%3E%3Cpath d='M4 2.6C70 2 160 2 260 2.4L260 3C160 2.8 70 3 4 3.3Z' fill-opacity='.5'/%3E%3Cpath d='M12 6C90 5.8 170 5.8 290 5.6L290 6.3C170 6.5 90 6.7 12 6.7Z' fill-opacity='.45'/%3E%3C/g%3E%3C/svg%3E");
+  --w-i-fibre: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='520'%3E%3Cg fill='none' stroke='%23c9d2e8' stroke-opacity='0.06' stroke-linecap='round'%3E%3Cpath d='M20 40C80 30 140 46 210 36' stroke-width='0.6'/%3E%3Cpath d='M300 90C340 120 390 118 450 140' stroke-width='0.8999999999999999'/%3E%3Cpath d='M60 220C110 210 150 240 200 232' stroke-width='1.2'/%3E%3Cpath d='M330 300C380 290 420 310 500 296' stroke-width='0.6'/%3E%3Cpath d='M120 380C170 400 230 392 260 420' stroke-width='0.8999999999999999'/%3E%3Cpath d='M400 460C430 440 470 450 510 430' stroke-width='1.2'/%3E%3Cpath d='M10 470C50 480 90 470 130 486' stroke-width='0.6'/%3E%3Cpath d='M240 150C260 180 300 190 330 214' stroke-width='0.8999999999999999'/%3E%3C/g%3E%3C/svg%3E");
+}
+/* ---------- immersion (Nov 20 night): restraint and emptiness ----------
+   Ryan's word: every pixel belongs to the look. For this look that means taking away: the ruled frames, hairlines and
+   outlines of the base page are gone or dissolved into wash; the few marks left are made with one stroke each (a brush
+   ring, an ink dot, a hair-thin line that thins out at its ends); empty paper is the material between them.
+   Every rule here is static styling (it applies under reduced motion and Pause too); boxes keep their sizes (borders go
+   transparent, never zero). Masks live in --w-i-* (written by _tools/fluid/wash-immerse/art.py). Cursors: img/wash/. */
+html[data-look="wash"] { --radius: 0px; --w-i-line: color-mix(in srgb, var(--ink) 34%, transparent); --w-i-line-2: color-mix(in srgb, var(--ink) 20%, transparent);
+  --w-i-slip: color-mix(in srgb, var(--ink) 7%, var(--bg)); --w-i-water: var(--w-blue); --w-i-tip: url(img/wash/cursor-brush.svg) 2 2, auto;
+  --w-i-load: url(img/wash/cursor-loaded.svg) 2 2, pointer; --w-i-thread: url(img/wash/cursor-thread.svg) 16 16, text; }
+
+/* the brush is the cursor: a wet tip; over anything that takes a click it is loaded and a drop hangs; over words a fine
+   ink thread. No trail: look-wash.js only leaves a faint damp patch where the brush comes to rest. */
+html[data-look="wash"], html[data-look="wash"] body { cursor: var(--w-i-tip); }
+html[data-look="wash"] :is(p, li, h1, h2, h3, h4, h5, dd, dt, figcaption, pre, code, td, th, small, .lede, .kicker, .eyebrow):not(a *, button *, summary *, label *, [role="button"] *) { cursor: var(--w-i-thread); }
+html[data-look="wash"] :is(a[href], button, summary, label, select, [role="button"], .look-pick-btn, .look-menu li, .demo-poster),
+html[data-look="wash"] :is(a[href], button, summary, label, [role="button"], .look-pick-btn, .look-menu li, .demo-poster) * { cursor: var(--w-i-load); }
+/* the browser's own marks, in the look: a pale ink wash for a selection, an ink-dark thumb on a pale wash strip, no tap flash */
+html[data-look="wash"] { -webkit-tap-highlight-color: transparent; caret-color: var(--sig-ink); accent-color: var(--ink);
+  scrollbar-color: color-mix(in srgb, var(--ink) 74%, transparent) color-mix(in srgb, var(--w-blue) 13%, var(--bg)); }
+html[data-look="wash"] ::selection { background: color-mix(in srgb, var(--ink) 17%, transparent); color: var(--text); }
+html[data-look="wash"] ::-webkit-scrollbar { width: 12px; height: 12px; background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--w-blue) 14%, var(--bg)) 40%, color-mix(in srgb, var(--w-blue) 10%, var(--bg))); }
+html[data-look="wash"] ::-webkit-scrollbar-thumb { border: 3px solid transparent; border-radius: 40% 60% 50% 50% / 8px 8px 12px 12px; background: color-mix(in srgb, var(--ink) 74%, transparent) padding-box; }
+
+/* the paper itself: a few long fibres laid in the sheet (faint; visible in the gutters and under the footer) */
+/* the sheet's two side edges are deckled: a soft torn rim a shade darker than the sheet, fibres running out of it */
+html[data-look="wash"] body { background-image: var(--w-i-deckle-l), var(--w-i-deckle-r), var(--grain), var(--w-i-fibre), var(--sky);
+  background-size: 22px 640px, 22px 640px, 200px 200px, 520px 520px, 420px 420px; background-position: left 0 top 0, right 0 top 0, 0 0, 0 0, 0 0;
+  background-repeat: repeat-y, repeat-y, repeat, repeat, repeat; }
+@media (min-width: 620px) { html[data-look="wash"] body { background-size: 40px 640px, 40px 640px, 200px 200px, 520px 520px, 420px 420px; } }
+@media (min-width: 1160px) {
+  html[data-look="wash"] body { background-image: var(--w-i-deckle-l), var(--w-i-deckle-r), var(--grain), var(--w-i-fibre), var(--sky), var(--w-salt), var(--w-salt);
+    background-size: 40px 640px, 40px 640px, 200px 200px, 520px 520px, 420px 420px, calc((100% - 1032px) / 2 - 18px) 1200px, calc((100% - 1032px) / 2 - 18px) 1200px;
+    background-position: left 0 top 0, right 0 top 0, 0 0, 0 0, 0 0, 0 140px, right 0 top 740px; background-repeat: repeat-y, repeat-y, repeat, repeat, repeat, repeat-y, repeat-y; }
+}
+
+/* ---------- the top bar: no bar. Paper behind it (so words scrolling under it stay readable) that fades out below,
+   and one horizontal wash band that fades out before it reaches either end ---------- */
+html[data-look="wash"] .topbar { background: none; border-bottom-color: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; isolation: isolate; }
+html[data-look="wash"] .topbar::before { content: ""; position: absolute; z-index: -1; inset: 0 0 -18px; pointer-events: none;
+  background: color-mix(in srgb, var(--bg) 86%, transparent); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  -webkit-mask: linear-gradient(#000 calc(100% - 30px), transparent); mask: linear-gradient(#000 calc(100% - 30px), transparent); }
+html[data-look="wash"] .topbar::after { content: ""; position: absolute; z-index: -1; filter: none; left: 0; right: 0; bottom: -12px; height: 30px; pointer-events: none; opacity: .26;
+  background: linear-gradient(90deg, var(--w-blue), var(--w-violet) 55%, var(--w-pink)); -webkit-mask: var(--w-i-band) center / 100% 100% no-repeat; mask: var(--w-i-band) center / 100% 100% no-repeat; }
+/* the mark: one brush ring, laid in a single turn and left open where the brush lifted */
+html[data-look="wash"] .brand .mark { position: relative; border-color: transparent; }
+html[data-look="wash"] .brand .mark::after { content: ""; position: absolute; inset: -4px; pointer-events: none; background: var(--ink); -webkit-mask: var(--w-i-enso) center / 100% 100% no-repeat; mask: var(--w-i-enso) center / 100% 100% no-repeat; }
+/* the theme button is a water dish: a pool of clear water with a dried rim, no outline */
+html[data-look="wash"] .theme-toggle { border-color: transparent;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--w-i-water) 12%, transparent) 0 58%, color-mix(in srgb, var(--w-i-water) 34%, transparent) 78%, color-mix(in srgb, var(--w-i-water) 10%, transparent) 90%, transparent 100%); }
+html[data-look="wash"] .theme-toggle:is(:hover, :active),
+html[data-look="wash"] .theme-toggle:hover:not(:active) { border-color: transparent; background-color: transparent;
+  background-image: radial-gradient(closest-side, color-mix(in srgb, var(--w-i-water) 22%, transparent) 0 60%, color-mix(in srgb, var(--w-i-water) 48%, transparent) 80%, color-mix(in srgb, var(--w-i-water) 14%, transparent) 92%, transparent 100%); }
+/* the look picker: an ink stone (its well holds a little ink at one end); the open list is a slip of paper. (look.js
+   writes the picker's colours at :root:root .look-pick.lp-swatch, so these need one more class to win.) */
+html[data-look="wash"]:root:root .look-pick.look-pick { --lp-bg: color-mix(in srgb, var(--ink) 9%, var(--bg)); --lp-card: transparent; --lp-ink: var(--text); --lp-rim: transparent;
+  --lp-hi: color-mix(in srgb, var(--w-blue) 26%, var(--sheet)); --lp-on-hi: var(--text); }
+html[data-look="wash"]:root:root .look-pick.look-pick .look-pick-btn { border-color: transparent; border-radius: 46% 54% 50% 44% / 58% 46% 54% 42%;
+  background: radial-gradient(42% 70% at 14% 56%, color-mix(in srgb, var(--ink) 20%, transparent), transparent 80%), var(--lp-bg); }
+html[data-look="wash"]:root:root .look-pick.look-pick .look-menu { border-color: transparent; border-radius: 0; background: var(--sheet); border-image: var(--w-deckle) 24 fill / 8px / 7px round;
+  box-shadow: 0 16px 20px -18px color-mix(in srgb, var(--ink) 50%, transparent); }
+html[data-look="wash"]:root:root .look-pick.look-pick .look-menu li { border-radius: 0; }
+html[data-look="wash"]:root:root .look-pick.look-pick .look-menu li:is(:hover, :focus) { background: linear-gradient(90deg, color-mix(in srgb, var(--w-blue) 44%, var(--sheet)) 0 4px, var(--lp-hi) 14px, color-mix(in srgb, var(--w-blue) 10%, var(--sheet))); color: var(--text); }
+html[data-look="wash"]:root:root .look-pick.look-pick .look-pick-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+/* the skip link is a slip of paper tucked at the edge */
+html[data-look="wash"] .skip-link { border-radius: 0; background: var(--sheet); color: var(--text); border-image: var(--w-deckle) 24 fill / 8px / 7px round; }
+html[data-look="wash"] .skip-link:is(:focus, :focus-visible) { outline: 2px solid var(--ink); outline-offset: 6px; }
+
+/* ---------- headings: one wash swipe beneath, never an underline; the kicker in a thinner, drier ink ---------- */
+html[data-look="wash"] .section-head h2::after,
+html[data-look="wash"].motion .section-head h2::after,
+html[data-look="wash"].motion .section-head.in h2::after { content: none; }
+html[data-look="wash"] .group-h { box-shadow: none; }
+html[data-look="wash"] .group-h::after,
+html[data-look="wash"] .group .group-h::after { content: ""; position: absolute; z-index: -1; left: 6px; bottom: 1px; width: min(78%, 330px); height: .62em; pointer-events: none;
+  background: linear-gradient(90deg, var(--hue), color-mix(in srgb, var(--hue) 50%, transparent)); opacity: var(--swatch-o);
+  -webkit-mask: var(--wash-dr) center / 100% 100% no-repeat; mask: var(--wash-dr) center / 100% 100% no-repeat; }
+html[data-look="wash"] .group-h { isolation: isolate; }
+/* the group's mark: one drop of its colour, bled a little into the paper (was a ruled square on a stalk) */
+html[data-look="wash"] .group-h::before,
+html[data-look="wash"] .group .group-h::before { background: color-mix(in srgb, var(--hue) 78%, var(--ink));
+  -webkit-mask: var(--w-i-dot) 0 calc(100% - 9px) / 17px 17px no-repeat; mask: var(--w-i-dot) 0 calc(100% - 9px) / 17px 17px no-repeat; }
+html[data-look="wash"] :is(.kicker, .eyebrow, .lead-k) { color: color-mix(in srgb, var(--text) 82%, var(--hue, var(--w-blue))); }
+html[data-look="wash"] .prose h2::after { border-top-color: transparent; }
+html[data-look="wash"] .prose h2 { isolation: isolate; }
+/* the number at a part's head sits in a dried drop: a pale middle and the colour gathered at its rim */
+html[data-look="wash"] :is(.prose h2, .flow li, .method > li:last-child .who, .g-ball)::before,
+html[data-look="wash"] .flow li.key::before,
+html[data-look="wash"] :is(.okmark, .th-head) { border-color: transparent;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--hue, var(--w-blue)) 16%, transparent) 0 56%, color-mix(in srgb, var(--hue, var(--w-blue)) 50%, var(--ink) 10%) 80%, color-mix(in srgb, var(--hue, var(--w-blue)) 20%, transparent) 92%, transparent 100%); }
+html[data-look="wash"] .flow li.key::before { color: var(--text); background: radial-gradient(closest-side, color-mix(in srgb, var(--hue, var(--w-blue)) 40%, transparent) 0 54%, color-mix(in srgb, var(--hue, var(--w-blue)) 60%, var(--ink) 30%) 80%, color-mix(in srgb, var(--hue, var(--w-blue)) 30%, transparent) 92%, transparent 100%); }
+html[data-look="wash"] :is(.method > li:last-child .who, .g-ball)::before,
+html[data-look="wash"] .th-head { background: radial-gradient(closest-side, var(--ink) 0 26%, color-mix(in srgb, var(--ink) 40%, transparent) 36%, transparent 62%), radial-gradient(closest-side, transparent 0 62%, color-mix(in srgb, var(--ink) 46%, transparent) 82%, transparent 98%); }
+
+/* ---------- links: a dry-brush underline (streaks that run out unevenly); hover lays more ink; visited is dried violet ---------- */
+html[data-look="wash"] :is(.hero-sub, .hero-mail, footer.site, .prose, .lede, .pager-contact, .case-head) a:not(.btn, .back, .card, .badge, nav *, .repo-card *) { text-decoration: none; -webkit-box-decoration-break: clone; box-decoration-break: clone;
+  background-image: var(--w-i-dry-l); background-size: 100% 5px; background-position: 0 100%; background-repeat: no-repeat; }
+html[data-look="wash"] :is(.hero-sub, .hero-mail, footer.site, .prose, .lede, .pager-contact, .case-head) a:not(.btn, .back, .card, .badge, nav *, .repo-card *):visited { background-image: var(--w-i-dry-v); }
+html[data-look="wash"] :is(.hero-sub, .hero-mail, footer.site, .prose, .lede, .pager-contact, .case-head) a:not(.btn, .back, .card, .badge, nav *, .repo-card *):is(:hover, :active) { background-image: var(--w-i-dry-h); background-size: 100% 6px; }
+/* with motion the wash still swipes in from the pointer's side (liveliness 8), now over the dry stroke */
+@media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
+  html[data-look="wash"].motion.w-live.w-fine :is(.hero-sub, .hero-mail, footer.site, .prose, .lede, .pager-contact, .case-head) a:not(.btn, .back, .card, .badge, nav *, .repo-card *) {
+    background-image: var(--w-i-dry-l), linear-gradient(color-mix(in srgb, var(--hue) 16%, transparent), color-mix(in srgb, var(--hue) 46%, transparent));
+    background-size: 100% 5px, 0% .62em; background-position: 0 100%, 0 94%; background-repeat: no-repeat; }
+  html[data-look="wash"].motion.w-live.w-fine :is(.hero-sub, .hero-mail, footer.site, .prose, .lede, .pager-contact, .case-head) a[data-w-from="r"]:not(.btn, .back, .card, .badge, nav *, .repo-card *) { background-position: 0 100%, 100% 94%; }
+  html[data-look="wash"].motion.w-live.w-fine :is(.hero-sub, .hero-mail, footer.site, .prose, .lede, .pager-contact, .case-head) a:not(.btn, .back, .card, .badge, nav *, .repo-card *):visited { background-image: var(--w-i-dry-v), linear-gradient(color-mix(in srgb, var(--hue) 16%, transparent), color-mix(in srgb, var(--hue) 46%, transparent)); }
+  html[data-look="wash"].motion.w-live.w-fine :is(.hero-sub, .hero-mail, footer.site, .prose, .lede, .pager-contact, .case-head) a:not(.btn, .back, .card, .badge, nav *, .repo-card *):hover { background-image: var(--w-i-dry-h), linear-gradient(color-mix(in srgb, var(--hue) 16%, transparent), color-mix(in srgb, var(--hue) 46%, transparent)); background-size: 100% 6px, 100% .62em; }
+}
+html[data-look="wash"] .back { text-decoration: none; }
+html[data-look="wash"] .more a:is(:hover, :focus-visible) b { text-decoration: none; background: var(--w-i-dry-h) 0 100% / 100% 5px no-repeat; }
+
+/* ---------- buttons: a brushed slip of wash (the plain one) or a laid slab of ink (the main one); no outline ---------- */
+html[data-look="wash"] .btn { position: relative; isolation: isolate; }
+html[data-look="wash"] :is(.btn, .groupnav a, .pager a),
+html[data-look="wash"] :is(.btn, .groupnav a, .pager a):is(:hover, :active) { border-color: transparent; }
+html[data-look="wash"] .btn,
+html[data-look="wash"] .btn:is(:hover, :active) { background: none; color: var(--text); }
+html[data-look="wash"] .btn::before { content: ""; position: absolute; z-index: -1; inset: -4px -8px; pointer-events: none;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--ink) 26%, transparent), transparent 22px), color-mix(in srgb, var(--hue, var(--w-blue)) 24%, transparent);
+  -webkit-mask: var(--wash-dr) center / 100% 100% no-repeat; mask: var(--wash-dr) center / 100% 100% no-repeat; transition: background-color .35s ease; }
+html[data-look="wash"] .btn:is(:hover, :active)::before { background-color: color-mix(in srgb, var(--hue, var(--w-blue)) 44%, transparent); }
+html[data-look="wash"] .btn.primary,
+html[data-look="wash"] .btn.primary:is(:hover, :active) { background: none; border-color: transparent; color: var(--bg); }
+html[data-look="wash"] .btn.primary::before { inset: -5px -9px; background: var(--ink);
+  -webkit-mask: linear-gradient(90deg, transparent, #000 6px, #000 calc(100% - 9px), transparent), linear-gradient(transparent, #000 3px, #000 calc(100% - 4px), transparent); -webkit-mask-composite: source-in;
+  mask: linear-gradient(90deg, transparent, #000 6px, #000 calc(100% - 9px), transparent), linear-gradient(transparent, #000 3px, #000 calc(100% - 4px), transparent); mask-composite: intersect; }
+html[data-look="wash"] .btn.primary:is(:hover, :active)::before { background: var(--sig-ink); }
+/* group tabs and the pager: no box; the tab sits on a pale wash, the pager is a brushed stroke toward the next page */
+html[data-look="wash"] .groupnav a { border-color: transparent; background: linear-gradient(90deg, color-mix(in srgb, var(--hue, var(--w-blue)) 22%, transparent), color-mix(in srgb, var(--hue, var(--w-blue)) 6%, transparent)); }
+html[data-look="wash"] .pager a { position: relative; isolation: isolate; border-color: transparent; border-image: none; background: none; }
+html[data-look="wash"] .pager a:is(:hover, :active),
+html[data-look="wash"] .pager a:hover:not(:active) { border-color: transparent; background: none; }
+html[data-look="wash"] .pager a::before { content: ""; position: absolute; z-index: -1; inset: 0; pointer-events: none; opacity: .5;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--hue, var(--w-blue)) 52%, var(--ink) 8%) 0 3px, color-mix(in srgb, var(--hue, var(--w-blue)) 26%, transparent) 16px, color-mix(in srgb, var(--hue, var(--w-blue)) 8%, transparent));
+  -webkit-mask: var(--wash-dr) center / 100% 100% no-repeat; mask: var(--wash-dr) center / 100% 100% no-repeat; transition: opacity .35s ease; }
+html[data-look="wash"] .pager a.next::before { scale: -1 1; }
+html[data-look="wash"] .pager a:is(:hover, :active)::before { opacity: .9; }
+html[data-look="wash"] .pager small { position: relative; }
+html[data-look="wash"] .pager small::after { content: ""; position: absolute; left: calc(100% + 10px); top: calc(50% - 5px); width: 40px; height: 10px; pointer-events: none; background: var(--ink);
+  -webkit-mask: var(--w-i-arrow) 0 0 / 100% 100% no-repeat; mask: var(--w-i-arrow) 0 0 / 100% 100% no-repeat; }
+html[data-look="wash"] .pager a.prev small::after { scale: -1 1; }
+
+/* ---------- content edges bleed: each surface is a wash with its colour pooled darker along one side only ---------- */
+html[data-look="wash"] .card { background-color: transparent; isolation: isolate; }
+html[data-look="wash"] .card::after,
+html[data-look="wash"].js .card::after { inset: -10px -12px; z-index: -1; opacity: .9;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--hue) 58%, var(--ink) 6%) 0, color-mix(in srgb, var(--hue) 22%, transparent) 8px, color-mix(in srgb, var(--hue) 8%, transparent) 26%, color-mix(in srgb, var(--hue) 4%, transparent) 100%);
+  -webkit-mask: var(--wash-dr) center / 100% 100% no-repeat; mask: var(--wash-dr) center / 100% 100% no-repeat; }
+html[data-look="wash"] .card:is(:hover, :focus-visible)::after { inset: -10px -12px; opacity: 1; }
+html[data-look="wash"] .card :is(.thumb, .thumb-wrap .thumb) { border-color: transparent; box-shadow: 0 14px 18px -16px color-mix(in srgb, var(--hue) 80%, var(--ink)); }
+html[data-look="wash"] .card .stat { background: linear-gradient(90deg, color-mix(in srgb, var(--hue) 26%, transparent), color-mix(in srgb, var(--hue) 10%, transparent) 70%, transparent); }
+html[data-look="wash"] :is(.fact, .chart-card, .repo-card, .band3 > div, .paper) { border-image: none; background: none; box-shadow: none; isolation: isolate; }
+html[data-look="wash"] .method > li { background: none; isolation: isolate; }
+html[data-look="wash"] .method > li.ag { background: none; }
+html[data-look="wash"] :is(.fact, .chart-card, .repo-card, .band3 > div, .method > li)::before { content: ""; position: absolute; z-index: -1; inset: -6px -10px; pointer-events: none;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--hue, var(--w-blue)) 54%, var(--ink) 6%) 0, color-mix(in srgb, var(--hue, var(--w-blue)) 24%, transparent) 10px, color-mix(in srgb, var(--hue, var(--w-blue)) 10%, transparent) 30%, color-mix(in srgb, var(--hue, var(--w-blue)) 5%, transparent));
+  -webkit-mask: var(--wash-dr) center / 100% 100% no-repeat; mask: var(--wash-dr) center / 100% 100% no-repeat; }
+html[data-look="wash"] .band3 > .warn { --hue: var(--w-gold); }
+html[data-look="wash"] .band3 > .stop { --hue: var(--w-red); }
+html[data-look="wash"] .band3 > div:not(.warn, .stop) { --hue: var(--w-green); }
+html[data-look="wash"] .paper { background: var(--sheet); }
+/* the steps of a flow and the small nodes: a wash laid across, its colour pooled at the start and run out before the end */
+html[data-look="wash"] .flow li,
+html[data-look="wash"] :is(.node, .readme) { background-color: transparent; background-size: 100% 100%; background-position: 0 0; background-repeat: no-repeat;
+  background-image: radial-gradient(5% 46% at 1% 50%, color-mix(in srgb, var(--hue, var(--w-blue)) 34%, transparent), transparent), radial-gradient(70% 62% at 24% 50%, color-mix(in srgb, var(--hue, var(--w-blue)) 13%, transparent) 30%, transparent 100%), radial-gradient(50% 60% at 70% 46%, color-mix(in srgb, var(--hue, var(--w-blue)) 6%, transparent), transparent 100%); }
+html[data-look="wash"] .flow li.key { background-color: transparent; background-image: radial-gradient(5% 46% at 1% 50%, color-mix(in srgb, var(--hue) 46%, transparent), transparent), radial-gradient(70% 62% at 24% 50%, color-mix(in srgb, var(--hue) 22%, transparent) 30%, transparent 100%), radial-gradient(50% 60% at 70% 46%, color-mix(in srgb, var(--hue) 9%, transparent), transparent 100%); }
+/* badges and tags: a pale wash pill, no outline; the small marks are ink dots */
+html[data-look="wash"] :is(.card .badge, .lead-wrap > .badge, .badge) { border-color: transparent; border-radius: 0;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--hue, var(--w-blue)) 26%, var(--bg)) 0 74%, color-mix(in srgb, var(--hue, var(--w-blue)) 30%, transparent) 88%, transparent 100%); background-size: 100% 100%; }
+html[data-look="wash"] .pills span { box-shadow: none; border-radius: 0; background: radial-gradient(closest-side, color-mix(in srgb, var(--hue, var(--w-blue)) 7%, transparent) 0 70%, color-mix(in srgb, var(--hue, var(--w-blue)) 13%, transparent) 86%, transparent 100%); }
+html[data-look="wash"] .legend i { border-color: transparent; }
+html[data-look="wash"] .g-dots i { border-color: transparent; background: radial-gradient(closest-side, color-mix(in srgb, var(--hue) 22%, transparent) 0 55%, color-mix(in srgb, var(--hue) 60%, var(--ink) 10%) 80%, transparent 100%); }
+html[data-look="wash"] .g-dots i.x { border-color: transparent; background: radial-gradient(closest-side, var(--sig) 0 60%, color-mix(in srgb, var(--sig) 70%, var(--ink)) 82%, transparent 100%); }
+
+/* ---------- rules: hair-thin brush lines that thin out at their ends, never a ruled box ---------- */
+html[data-look="wash"] .more li { position: relative; border-top-color: transparent; }
+html[data-look="wash"] .more li + li::before { content: ""; position: absolute; left: 0; right: 14%; top: -2px; height: 4px; pointer-events: none; background: var(--w-i-line);
+  -webkit-mask: var(--w-i-hair) 0 0 / 100% 100% no-repeat; mask: var(--w-i-hair) 0 0 / 100% 100% no-repeat; }
+html[data-look="wash"] .more li:nth-child(3n + 2)::before { right: 26%; left: 2%; }
+html[data-look="wash"] .more li:nth-child(3n)::before { right: 6%; }
+html[data-look="wash"] .more li.more-pair > a + a { position: relative; border-left-color: transparent; border-top-color: transparent; }
+html[data-look="wash"] .more li.more-pair > a + a::before { content: ""; position: absolute; left: -2px; top: 10%; bottom: 14%; width: 4px; pointer-events: none; background: var(--w-i-line-2);
+  -webkit-mask: var(--w-i-vhair) 0 0 / 100% 100% no-repeat; mask: var(--w-i-vhair) 0 0 / 100% 100% no-repeat; }
+@media (max-width: 620px) { html[data-look="wash"] .more li.more-pair > a + a::before { left: 0; right: 20%; top: -2px; bottom: auto; width: auto; height: 4px; -webkit-mask-image: var(--w-i-hair); mask-image: var(--w-i-hair); } }
+/* the horizons the scene and the skylines stand on: a soft wet stroke that fades out at both ends */
+html[data-look="wash"] .section { background: none; }
+html[data-look="wash"] .section::after { background: var(--art-div) right top / 420px 64px no-repeat, linear-gradient(90deg, transparent, var(--w-i-line-2) 30%, var(--w-i-line) 86%, transparent) 0 55px / 100% 2px no-repeat; }
+html[data-look="wash"] .hero-mail,
+html[data-look="wash"] :is(.case-head, .case-part) .lede { background: linear-gradient(90deg, transparent, var(--w-i-line-2) 18%, var(--w-i-line) 80%, transparent) 0 100% / 100% 2px no-repeat; }
+html[data-look="wash"] .split .side::before { height: 4px; top: -13px; background: var(--w-i-line); -webkit-mask: var(--w-i-hair) 0 0 / 100% 100% no-repeat; mask: var(--w-i-hair) 0 0 / 100% 100% no-repeat; }
+/* tables: no outer box; rows ruled with brush hairlines that fade at the row's two ends */
+html[data-look="wash"] .minis th { border-bottom-color: transparent; background: linear-gradient(var(--w-i-line), var(--w-i-line)) 0 100% / 100% 2px no-repeat; }
+html[data-look="wash"] .minis td { border-top-color: transparent; background: linear-gradient(var(--w-i-line-2), var(--w-i-line-2)) 0 0 / 100% 1.5px no-repeat; }
+html[data-look="wash"] .minis tr > :first-child { background-image: linear-gradient(90deg, transparent, var(--w-i-line-2) 60%); }
+html[data-look="wash"] .minis tr > :last-child { background-image: linear-gradient(90deg, var(--w-i-line-2) 40%, transparent); }
+html[data-look="wash"] .minis th:first-child { background-image: linear-gradient(90deg, transparent, var(--w-i-line) 50%); }
+html[data-look="wash"] .minis th:last-child { background-image: linear-gradient(90deg, var(--w-i-line) 50%, transparent); }
+html[data-look="wash"] .minis .cell .track { border-left-color: transparent; background: none; }
+/* lists: ink dots that bled a little into the paper */
+html[data-look="wash"] .prose ul > li::before { border-color: transparent; border-radius: 0; background: color-mix(in srgb, var(--hue, var(--w-blue)) 34%, var(--ink));
+  -webkit-mask: var(--w-i-dot) center / contain no-repeat; mask: var(--w-i-dot) center / contain no-repeat; }
+
+/* ---------- pictures, the film, code ---------- */
+html[data-look="wash"] :is(.shot, .term, .paper, .figure > img, .figure .pair > img, .figure > video) { border-color: transparent; }
+/* a capture or the film has no frame: a soft wash surround that dissolves outward, and an ink pool in one corner */
+html[data-look="wash"] :is(.shot, .term)::after { inset: -14px; z-index: -1; opacity: 1;
+  background: radial-gradient(58px 44px at 6px calc(100% - 4px), color-mix(in srgb, var(--ink) 34%, transparent), color-mix(in srgb, var(--ink) 12%, transparent) 55%, transparent 100%),
+    radial-gradient(36px 30px at 30px calc(100% - 2px), color-mix(in srgb, var(--ink) 16%, transparent), transparent 100%); }
+html[data-look="wash"] .shot { box-shadow: 0 0 0 1px color-mix(in srgb, var(--bg) 40%, transparent), 0 0 16px 2px color-mix(in srgb, var(--hue, var(--w-blue)) 12%, transparent); }
+html[data-look="wash"] .shot .bar { border-bottom-color: transparent; background: linear-gradient(color-mix(in srgb, var(--hue, var(--w-blue)) 10%, var(--bg)), var(--bg)); }
+html[data-look="wash"] :is(.shot, .term) .bar i,
+html[data-look="wash"] :is(.shot, .term) .bar i:nth-child(n) { border-color: transparent; background: radial-gradient(closest-side, transparent 0 46%, color-mix(in srgb, currentColor 46%, transparent) 72%, transparent 100%); color: var(--ink); }
+html[data-look="wash"] .shot.phone { border-color: transparent; box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--ink) 24%, transparent), 0 14px 24px -14px color-mix(in srgb, var(--hue, var(--w-blue)) 70%, transparent); }
+html[data-look="wash"] :is(.figure > img, .figure .pair > img, .figure > video, .duo figure > img) { background-image: none; background-color: var(--sheet); box-shadow: 0 0 22px 4px color-mix(in srgb, var(--hue, var(--w-blue)) 14%, transparent); }
+html[data-look="wash"] figcaption { color: var(--muted); }
+/* the film's controls sit on a pale wash */
+html[data-look="wash"] :is(.vid-sound, .vid-sound[aria-pressed="true"], .vid-toggle, .demo-poster .play) { border-color: transparent; color: var(--text);
+  background: color-mix(in srgb, var(--bg) 82%, transparent); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+html[data-look="wash"] :is(.vid-sound, .vid-sound[aria-pressed="true"], .demo-poster .play) { border-radius: 0; -webkit-backdrop-filter: none; backdrop-filter: none;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--bg) 88%, transparent) 0 78%, color-mix(in srgb, var(--bg) 50%, transparent) 90%, transparent 100%); }
+html[data-look="wash"] .vid-toggle:hover { background: color-mix(in srgb, var(--w-blue) 30%, var(--bg)); }
+html[data-look="wash"] :is(.vid-sound, .demo-poster:hover .play, .demo-poster:focus-visible .play):hover { background: radial-gradient(closest-side, color-mix(in srgb, var(--w-blue) 30%, var(--bg)) 0 78%, color-mix(in srgb, var(--w-blue) 20%, transparent) 90%, transparent 100%); }
+html[data-look="wash"] .vid-bar { background: none; }
+/* code: a pale grey wash slip with the ink of the page (it was the one dark slab); colours from the palette */
+html[data-look="wash"] .term { color: var(--text); background-color: var(--w-i-slip);
+  background-image: radial-gradient(70% 90% at 86% 12%, color-mix(in srgb, var(--ink) 4%, transparent), transparent 70%), radial-gradient(60% 80% at 8% 92%, color-mix(in srgb, var(--hue, var(--w-blue)) 8%, transparent), transparent 72%); }
+html[data-look="wash"] .term .bar { border-bottom-color: transparent; }
+html[data-look="wash"] .term { box-shadow: 0 0 7px 4px var(--w-i-slip); }
+html[data-look="wash"] :is(.term .bar em, .term .dim) { color: var(--muted); }
+html[data-look="wash"] .term .cmd { color: var(--text); }
+html[data-look="wash"] .term .cmd::before { color: color-mix(in srgb, var(--s-blue) 78%, var(--text)); }
+html[data-look="wash"] .term .ok { color: color-mix(in srgb, var(--s-green) 78%, var(--text)); }
+html[data-look="wash"] .term .bad { color: color-mix(in srgb, var(--s-pink) 78%, var(--text)); }
+html[data-look="wash"] .term .hl { color: color-mix(in srgb, var(--s-yellow) 74%, var(--text)); }
+html[data-look="wash"] .term pre::after { color: var(--sig-ink); }
+html[data-look="wash"] .term pre:focus-visible { outline: 2px solid var(--ink); outline-offset: -3px; }
+html[data-look="wash"] :not(pre) > code { border: 0; box-shadow: 0 0 0 .2em color-mix(in srgb, var(--ink) 6%, transparent); border-radius: 40% 60% 45% 55% / 50%; color: var(--text);
+  background: linear-gradient(95deg, color-mix(in srgb, var(--ink) 4%, transparent), color-mix(in srgb, var(--ink) 11%, transparent) 40%, color-mix(in srgb, var(--ink) 6%, transparent)); }
+
+/* ---------- the footer: one last wide wash that settles into the bottom of the sheet ---------- */
+html[data-look="wash"] footer.site { border-top-color: transparent; isolation: isolate; }
+html[data-look="wash"] footer.site::after { content: ""; position: absolute; z-index: -1; left: 0; right: 0; top: 18px; bottom: 0; pointer-events: none;
+  background: linear-gradient(transparent, color-mix(in srgb, var(--w-blue) 9%, transparent) 46%, color-mix(in srgb, var(--w-violet) 13%, transparent)); }
+html[data-look="wash"] .motion-toggle { border-color: transparent; border-radius: 0; background: var(--w-i-dry-l) 0 100% / 100% 4px no-repeat; color: inherit; box-shadow: none; }
+html[data-look="wash"] .motion-toggle:hover { background-image: var(--w-i-dry-h); }
+
+/* ---------- the 404: one ink drop on an empty sheet ---------- */
+html[data-look="wash"] body:not(:has(.case-part, .sum, .pager)) .case-head:has(> h1:last-child) { position: relative; isolation: isolate; }
+html[data-look="wash"] body:not(:has(.case-part, .sum, .pager)) .case-head:has(> h1:last-child)::after { content: ""; position: absolute; z-index: -1; right: 6%; top: calc(100% + 34px); width: clamp(56px, 9vw, 104px); aspect-ratio: 1; pointer-events: none;
+  background: radial-gradient(closest-side, var(--ink) 0 34%, color-mix(in srgb, var(--ink) 70%, transparent) 48%, color-mix(in srgb, var(--ink) 18%, transparent) 70%, transparent 100%);
+  -webkit-mask: var(--w-i-dot) center / 100% 100% no-repeat; mask: var(--w-i-dot) center / 100% 100% no-repeat; }
+
+/* ---------- focus: a wet ink ring, clearly visible, in every state ---------- */
+html[data-look="wash"] :focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+
+/* ---------- the damp patch the brush leaves where it rests (look-wash.js; fine pointers, motion only) ---------- */
+@keyframes wi-damp { 0% { opacity: 0; scale: .7; } 30% { opacity: 1; scale: 1; } 100% { opacity: 0; scale: 1.12; } }
+html[data-look="wash"].motion.w-live .w-tip,
+html[data-look="wash"].motion.w-live .w-tip.w-on { opacity: 1; z-index: -1; }
+html[data-look="wash"].motion.w-live .w-tip::after { content: none; }
+html[data-look="wash"].motion.w-live .w-tip::before { left: -34px; top: -26px; width: 68px; height: 52px; translate: none; opacity: 0; transition: none;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--ink) 5%, transparent) 0 60%, color-mix(in srgb, var(--ink) 8%, transparent) 84%, transparent 100%); }
+html[data-look="wash"].motion.w-live .w-tip.w-on::before { animation: wi-damp 2.6s cubic-bezier(.2, .6, .3, 1) both; }
+
+/* the film and the captures have no hard picture edge: the last few pixels of the picture soak into the wash around it */
+html[data-look="wash"] :is(.shot.vid > video, .demo-poster img) {
+  -webkit-mask: linear-gradient(90deg, transparent, #000 7px, #000 calc(100% - 7px), transparent), linear-gradient(transparent, #000 7px, #000 calc(100% - 7px), transparent); -webkit-mask-composite: source-in;
+  mask: linear-gradient(90deg, transparent, #000 7px, #000 calc(100% - 7px), transparent), linear-gradient(transparent, #000 7px, #000 calc(100% - 7px), transparent); mask-composite: intersect; }
+/* "Read the script": a dry-brush underline, and a brushed flick for its arrow (turns down when open) */
+html[data-look="wash"] .film-script > summary { text-decoration: none; }
+html[data-look="wash"] .film-script > summary { background: var(--w-i-dry-l) 19px 78% / calc(100% - 19px) 5px no-repeat; }
+html[data-look="wash"] .film-script > summary::before { width: 12px; height: 9px; margin-right: -5px; border: 0; background: currentColor; -webkit-mask: var(--w-i-arrow) center / contain no-repeat; mask: var(--w-i-arrow) center / contain no-repeat; }
+html[data-look="wash"] .band3 > :is(div, .warn, .stop) { box-shadow: none; }
+html[data-look="wash"] :is(ol.flow, .flow) { border-radius: 0; }
+/* the way back is a brushed stroke under its arrow; the thumbnails have no rounded leftover */
+html[data-look="wash"] .back { background: var(--w-i-dry-l) 0 100% / 100% 4px no-repeat; }
+html[data-look="wash"] .back:is(:hover, :active) { background-image: var(--w-i-dry-h); }
+html[data-look="wash"] .card :is(.thumb, .thumb-wrap .thumb) { border-radius: 0; }
+/* small grey words that now sit on a wash (not on bare paper) take the darker of the two greys, so they read as well as before */
+html[data-look="wash"] :is(.fact, .chart-card, .repo-card, .band3 > div, .method > li, .card) :is(small, .sub, .dim, span:not([class])) { color: var(--muted); }
+
+/* the home title: one confident wash swipe laid under its last line (low, so it only meets the descenders) */
+html[data-look="wash"] .hero h1 { isolation: isolate; }
+html[data-look="wash"] .hero h1::after { content: ""; position: absolute; z-index: -1; left: -.18em; top: calc(100% - .2em); width: min(100% + .3em, 9.5em); height: .34em; pointer-events: none;
+  background: linear-gradient(95deg, var(--w-gold), color-mix(in srgb, var(--w-pink) 80%, var(--w-gold)) 60%, color-mix(in srgb, var(--w-pink) 40%, transparent));
+  opacity: .5; -webkit-mask: var(--wash-dr) center / 100% 100% no-repeat, var(--w-dry) center / 100% 100% no-repeat; -webkit-mask-composite: source-in;
+  mask: var(--wash-dr) center / 100% 100% no-repeat, var(--w-dry) center / 100% 100% no-repeat; mask-composite: intersect; }
+/* immerse:end */

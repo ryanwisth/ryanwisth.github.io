@@ -26,7 +26,7 @@
   var SDA = !!(W.CSS && CSS.supports && CSS.supports('animation-timeline: view()'));
   var live = false, offs = [], made = [], styled = [], timers = [], anims = [];
   /* motion tokens (polish, Nov 20): the same set look-wash.css names at the top of its fluid section (--w-t-*, --w-e-*) */
-  var MOTION = { page: 560, ink: 1000, dry: 650, soak: 350, press: 80, bloom: 'cubic-bezier(.2, .6, .3, 1)', drain: 'cubic-bezier(.45, 0, .65, 1)',
+  var MOTION = { dampRest: 520, page: 560, ink: 1000, dry: 650, soak: 350, press: 80, bloom: 'cubic-bezier(.2, .6, .3, 1)', drain: 'cubic-bezier(.45, 0, .65, 1)',
     spring: { k: .1, damp: .3, follow: .45 }, fast: 1.5 }; // fast: a scroll quicker than 1.5 px/ms is a fling // the wet-pigment drag: pull stiffness, damping, how fast it takes up a change of pace
 
   function wanted() { return r.getAttribute('data-look') === 'wash' && r.classList.contains('motion') && !mqReduce.matches; }
@@ -372,37 +372,28 @@
     if (f && !(e.relatedTarget && f.contains(e.relatedTarget))) f.classList.remove('w-pool');
   }
 
-  /* ---------- 10. a wet round brush tip for a cursor (fine pointers only) ----------
-     The dot sits on the hit point (moved in the pointermove handler itself, no frame lag); its halo of dilute colour is
-     wet and lags a little behind when the brush moves, then catches up. Native cursor kept in text fields. */
-  var TIP = null;
+  /* ---------- 10. the brush is the real cursor now (CSS cursors in img/wash/, immersion pass); the pointer only leaves a
+     faint damp patch in the paper where it comes to rest, which dries away (one CSS animation, no frame loop, no trail).
+     Never over text fields. */
+  var TIP = null, tipT = 0;
   function tipSetup() {
     if (!mqFine.matches) return;
-    TIP = { el: mk('i', 'w-tip', d.body), x: -99, y: -99, hx: 0, hy: 0, shown: false };
-    r.classList.add('w-tip-on');
+    TIP = { el: mk('i', 'w-tip', d.body), x: -99, y: -99, text: false };
+  }
+  function tipDamp() {
+    if (!TIP || TIP.text || TIP.x < 0) return;
+    TIP.el.style.transform = 'translate(' + TIP.x + 'px,' + TIP.y + 'px)';
+    TIP.el.classList.remove('w-on'); void TIP.el.offsetWidth; TIP.el.classList.add('w-on');
   }
   function tipMove(e) {
     if (!TIP || e.pointerType !== 'mouse') return;
-    var x = e.clientX, y = e.clientY;
-    if (TIP.shown) { TIP.hx += TIP.x - x; TIP.hy += TIP.y - y; TIP.hx = clamp(TIP.hx, -14, 14); TIP.hy = clamp(TIP.hy, -14, 14); }
-    TIP.x = x; TIP.y = y;
-    TIP.el.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+    TIP.x = e.clientX; TIP.y = e.clientY;
     var tg = e.target && e.target.closest ? e.target : null;
-    var text = tg && tg.closest('input, textarea, select, [contenteditable=""], [contenteditable="true"]');
-    var link = !text && tg && tg.closest('a[href], button, summary, label, [role="button"], .look-pick-btn');
-    TIP.el.classList.toggle('w-link', !!link);
-    TIP.el.classList.toggle('w-off', !!text);
-    if (!TIP.shown) { TIP.shown = true; TIP.el.classList.add('w-on'); }
-    kick();
+    TIP.text = !!(tg && tg.closest('input, textarea, select, [contenteditable=""], [contenteditable="true"]'));
+    clearTimeout(tipT); tipT = setTimeout(tipDamp, MOTION.dampRest);
   }
-  function tipStep() { // the wet halo eases back under the tip (a step of the one frame loop); true while it moves
-    if (!TIP.hx && !TIP.hy) return false;
-    TIP.hx *= .78; TIP.hy *= .78;
-    if (Math.abs(TIP.hx) < .3 && Math.abs(TIP.hy) < .3) TIP.hx = TIP.hy = 0;
-    TIP.el.style.setProperty('--hx', TIP.hx.toFixed(1) + 'px'); TIP.el.style.setProperty('--hy', TIP.hy.toFixed(1) + 'px');
-    return !!(TIP.hx || TIP.hy);
-  }
-  function tipLeave(e) { if (TIP && !e.relatedTarget) { TIP.shown = false; TIP.el.classList.remove('w-on'); } }
+  function tipStep() { return false; }
+  function tipLeave(e) { if (TIP && !e.relatedTarget) { clearTimeout(tipT); TIP.x = -99; } }
 
   /* ---------- 11. a selection in body text is a glaze behind the words, with a hard dried edge ---------- */
   var SELHOST = '.prose, .lede, .hero-sub, .hero h1, .card .body, .fact, .band';
@@ -535,7 +526,7 @@
     [].forEach.call(d.querySelectorAll('.w-tapb, .w-lift'), drop);
     if (DR.io) { DR.x = DR.v = DR.vel = 0; DR.on = false; DR.last = ''; DR.els.forEach(function (el) { el.style.removeProperty('--w-dy'); }); }
     clearTimeout(idleT); scrolling = false; speed = 0; pt = 0; sy = psy = W.scrollY || 0; acc.until = 0;
-    if (TIP) { TIP.hx = TIP.hy = 0; TIP.el.style.removeProperty('--hx'); TIP.el.style.removeProperty('--hy'); }
+    if (TIP) { clearTimeout(tipT); TIP.el.classList.remove('w-on'); }
     relay(); starKick();
   }
   /* polish (Nov 20): while a film plays, the ambient motion near it calms: the washes stop breathing, the damp patches
@@ -786,7 +777,7 @@
     on(d, 'focusin', onFocusIn);
     on(d, 'focusout', function () { setTimeout(function () { if (d.activeElement !== focEl) focusOff(); }, 0); });
     on(mqDark, 'change', starKick);
-    on(d, 'visibilitychange', function () { if (d.hidden) { cancelAnimationFrame(raf); raf = 0; clearFalls(); starOff(); clearTimeout(starT); if (TIP) TIP.el.classList.remove('w-on'); } else { starKick(); kick(); } });
+    on(d, 'visibilitychange', function () { if (d.hidden) { cancelAnimationFrame(raf); raf = 0; clearFalls(); starOff(); clearTimeout(starT); if (TIP) { clearTimeout(tipT); TIP.el.classList.remove('w-on'); } } else { starKick(); kick(); } });
     starKick();
     if (SW.due.length) dabSoon();
   }
@@ -820,7 +811,7 @@
   function stop() {
     live = false;
     offs.forEach(function (f) { f(); }); offs = [];
-    timers.forEach(clearTimeout); timers = []; clearTimeout(idleT); clearTimeout(starT); clearTimeout(fastT); fastOn = false;
+    timers.forEach(clearTimeout); timers = []; clearTimeout(tipT); clearTimeout(idleT); clearTimeout(starT); clearTimeout(fastT); fastOn = false;
     cancelAnimationFrame(raf); raf = 0; cancelAnimationFrame(selRaf); selRaf = 0; cancelAnimationFrame(focRaf); focRaf = 0;
     clearFalls(); clearSel(); unglaze(); starOff(); clearTimeout(dabT); SALTC = null; [].forEach.call(d.querySelectorAll('.wm-new'), function (e) { e.classList.remove('wm-new'); });
     anims.slice().forEach(function (a) { try { a.cancel(); } catch (e) {} }); anims = [];
