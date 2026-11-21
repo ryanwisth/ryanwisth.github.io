@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Game Boy link play, with no cable | Ryan Wisth</title>
-<meta name="description" content="My work on Slot, an open-source Game Boy game menu for handhelds: games link handheld to handheld by radio, up to four players, even from one cartridge, tested on four handhelds.">
+<meta name="description" content="My work on Slot, an open-source Game Boy game menu for handhelds: the link play, Share Game and screen features I designed, the rules I set for passing, and what I caught testing on four handhelds.">
 <meta property="og:title" content="Game Boy link play, with no cable | Ryan Wisth">
 <meta property="og:url" content="https://ryanwisth.github.io/slot.html">
-<meta property="og:description" content="My work on Slot, an open-source Game Boy game menu for handhelds: games link handheld to handheld by radio, up to four players, even from one cartridge, tested on four handhelds.">
+<meta property="og:description" content="My work on Slot, an open-source Game Boy game menu for handhelds: the link play, Share Game and screen features I designed, the rules I set for passing, and what I caught testing on four handhelds.">
 <meta property="og:image" content="https://ryanwisth.github.io/img/card.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#f58fb0" media="(prefers-color-scheme: light)">
@@ -33,160 +33,167 @@
 </header>
 
 <main id="main">
-  <div class="prose case-head">
-    <a class="back" href="index.html#work"><span class="hx-x">&larr; </span>All projects</a>
-    <p class="kicker">Things I use<span class="hx-x"> &middot;</span><span class="hx-alt">:</span> built on an open-source project</p>
-    <h1 style="view-transition-name: t-slot">Game Boy link play, with no cable</h1>
-  </div>
+<div class="prose case-head">
+<a class="back" href="index.html#work"><span class="hx-x">&larr; </span>All projects</a>
+<p class="kicker">Things I use<span class="hx-x"> &middot;</span><span class="hx-alt">:</span> built on an open-source project</p>
+<h1 style="view-transition-name: t-slot">Game Boy link play, with no cable</h1>
+</div>
 
-  <section class="sum" aria-label="Summary">
-    <div class="sum-top">
-      <figure class="figure sum-vis">
-        <div class="shot"><div class="bar"><i></i><i></i><i></i><em>Slot&rsquo;s link screen, as the handheld shows it</em></div><img src="img/slot-link.jpg" alt="The handheld&rsquo;s link screen: the word HOST at the top, a purple link cable plug in the middle, and two lines of advice: link here first, then pick multiplayer in the game; already waiting? Link, back out, pick it again" width="720" height="480"></div>
-    <figcaption>The link screen at the handheld&rsquo;s own size. Two lines added under the cable tell a player to link first, then choose multiplayer inside the game.</figcaption>
-      </figure>
-      <div class="facts">
-        <div class="fact"><b>28 of 28</b><span>linked-play checks passed on the newest build, handheld to handheld by radio</span></div>
-        <div class="fact"><b>20 of 20</b><span>four-player Mario Kart sessions from one cartridge stayed in sync, with the host on either emulator</span></div>
-        <div class="fact"><b>2.8 s</b><span>to send a whole 16 MB game from one handheld to another</span></div>
-      </div>
-    </div>
-  </section>
+<section class="sum" aria-label="Summary">
+<div class="sum-top">
+<figure class="figure sum-vis">
+<div class="shot"><div class="bar"><i></i><i></i><i></i><em>Slot&rsquo;s link screen, as the handheld shows it</em></div><img src="img/slot-link.jpg" alt="The handheld&rsquo;s link screen: the word HOST at the top, a purple link cable plug in the middle, and two lines of advice: link here first, then pick multiplayer in the game; already waiting? Link, back out, pick it again" width="720" height="480"></div>
+<figcaption>The link screen at the handheld&rsquo;s own size. I asked for the two lines under the cable: link here first, then choose multiplayer inside the game, the order the games expect.</figcaption>
+</figure>
+<div class="facts">
+<div class="fact"><b>30 to 994</b><span>bytes a second over the Game Boy link, after I asked for it faster before my first test. A real cable moves 1,011.</span></div>
+<div class="fact"><b>20 of 20</b><span>Pok&eacute;mon trades between two different emulators passed by radio once the host always leads</span></div>
+<div class="fact"><b>13 of 13</b><span>game sends passed by radio after I caught Share Game dropping out on the handhelds</span></div>
+</div>
+</div>
+</section>
 
-  <div class="prose case-part">
-    <dl class="brief">
-      <dt>Problem</dt><dd>Game Boy games were made to be linked by a cable: to trade Pok&eacute;mon, or to race in Mario Kart. A handheld that plays them through an emulator (a program that acts like the original console) has no such cable. Over the air, one message that arrives a little late can break the game&rsquo;s link, and two handhelds running different emulators did not always agree at all.</dd>
-      <dt>Result</dt><dd>Slot could already link Game Boy Advance games over Wi-Fi. Now Game Boy and Game Boy Color games link too, four players can share a single cartridge, and two handhelds on different emulators link and trade, all handheld to handheld by radio. On the newest build, 28 of 28 linked-play checks passed on four handhelds. A whole game can also be sent to another handheld in seconds. Still in progress: players other than the host feel more button delay than the host.</dd>
-    </dl>
-  </div>
+<div class="prose case-part">
+<dl class="brief">
+<dt>Problem</dt><dd>Game Boy games were made to be linked by a cable: to trade Pok&eacute;mon, or to race in Mario Kart. My handhelds play them through emulators (programs that act like the original console), so there is no cable. Slot, the game menu I use, could link Game Boy Advance games over Wi-Fi, but not the older Game Boy and Game Boy Color, and a handheld on one emulator had no way to link with one on another.</dd>
+<dt>Result</dt><dd>Linking now feels close to plugging in the cable, which was the goal I set. Game Boy and Game Boy Color games link at close to a real cable&rsquo;s speed, four players can share one cartridge, players on different emulators can trade, and a whole game can be sent to another handheld. On the newest build, 28 of 28 linked-play checks passed on my four handhelds, linked straight to each other by radio. Still open: players other than the host feel more button delay than the host.</dd>
+</dl>
+</div>
 
-  <!-- hx-log: the Version History look's changelog. Built by _tools/history/stamp.mjs from this page's own lede, method list and Problem/Result, with dates from git; edit those parts, then re-run. Every other look hides it. -->
+<!-- hx-log: the Version History look's changelog. Built by _tools/history/stamp.mjs from this page's own lede, method list and Problem/Result, with dates from git; edit those parts, then re-run. Every other look hides it. -->
   <section class="hx-log" aria-label="Changelog">
     <p class="hx-when">Added <time datetime="2026-11-21">21 November 2026</time>. Last changed <time datetime="2026-11-21">21 November 2026</time>.</p>
     <dl>
-      <div><dt>Problem</dt><dd>Game Boy games were made to be linked by a cable: to trade Pok&eacute;mon, or to race in Mario Kart. A handheld that plays them through an emulator (a program that acts like the original console) has no such cable. Over the air, one message that arrives a little late can break the game&rsquo;s link, and two handhelds running different emulators did not always agree at all.</dd></div>
-      <div><dt>Built</dt><dd>Slot is a free, open-source game menu for small handheld game players, made by Brandon Kowalski and built around Game Boy games. Everything on this page is my work on top of it, in my own copy of the project: linked play over the air, four players at once, sending a game to another handheld, plus TV output, Bluetooth headphones and screen options. None of it has been sent to the original project.</dd></div>
-      <div><dt>My rules</dt><dd><ul><li>Only handheld-to-handheld radio counts</li><li>Any emulator, at full speed</li><li>Keep fixing until it all passes</li></ul></dd></div>
+      <div><dt>Problem</dt><dd>Game Boy games were made to be linked by a cable: to trade Pok&eacute;mon, or to race in Mario Kart. My handhelds play them through emulators (programs that act like the original console), so there is no cable. Slot, the game menu I use, could link Game Boy Advance games over Wi-Fi, but not the older Game Boy and Game Boy Color, and a handheld on one emulator had no way to link with one on another.</dd></div>
+      <div><dt>Built</dt><dd>Slot is a free, open-source game menu for small handheld game players, made by Brandon Kowalski. I use it on four Anbernic handhelds and, since October, have been extending it in my own copy: Game Boy link play over the air, four players from one cartridge, sending a game to another handheld, a screen that looks like the original consoles, TV output and AirPods sound. None of it has been sent to the original project.</dd></div>
+      <div><dt>My rules</dt><dd><ul><li>It should feel like plugging in the cable</li><li>Any emulator, at the original speed</li><li>Only handheld-to-handheld radio counts</li></ul></dd></div>
       <div><dt>AI wrote</dt><dd>the code and the test rig</dd></div>
-      <div><dt>Proven</dt><dd><ul><li>On four real handhelds, never only on the Mac</li><li>Every console&rsquo;s copy compared while playing</li><li>Saved games checked unchanged after every set</li></ul></dd></div>
-      <div><dt>Now</dt><dd>Slot could already link Game Boy Advance games over Wi-Fi. Now Game Boy and Game Boy Color games link too, four players can share a single cartridge, and two handhelds on different emulators link and trade, all handheld to handheld by radio. On the newest build, 28 of 28 linked-play checks passed on four handhelds. A whole game can also be sent to another handheld in seconds. Still in progress: players other than the host feel more button delay than the host.</dd></div>
+      <div><dt>I tested</dt><dd><ul><li>Each build by hand on my handhelds</li><li>Caught breaks the automatic tests passed</li><li>Supplied my own games and saves for the rig</li></ul></dd></div>
+      <div><dt>Now</dt><dd>Linking now feels close to plugging in the cable, which was the goal I set. Game Boy and Game Boy Color games link at close to a real cable&rsquo;s speed, four players can share one cartridge, players on different emulators can trade, and a whole game can be sent to another handheld. On the newest build, 28 of 28 linked-play checks passed on my four handhelds, linked straight to each other by radio. Still open: players other than the host feel more button delay than the host.</dd></div>
     </dl>
   </section>
   <!-- /hx-log -->
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-slot.jpg" width="960" height="540" aria-label="Narrated film, 45 seconds" aria-describedby="film-script-text"><source src="video/film-slot.mp4" type="video/mp4"></video></span><figcaption>The project in 45 seconds, narrated. <span class="hx-x">Press ♪ for sound.</span><span class="hx-alt">It starts muted.</span></figcaption></figure>
-  <details class="film-script"><summary>Read the script</summary><p id="film-script-text">Game Boy link play with no cable, added to Slot, Brandon Kowalski&rsquo;s open-source game menu for handhelds. These games were made for a cable. Over the air, one late message can break the link. In lockstep play, only button presses cross the air. Each handheld runs every console, and the host checks they still match. Four players from one cartridge: 20 of 20 Mario Kart sessions stayed in sync. A whole game, 16 MB, moves to another handheld in 2.8 seconds. It is tested on four handhelds that link straight to each other, with no router in between. Link play, without the cable. Details are below.</p></details>
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-slot.jpg" width="960" height="540" aria-label="Narrated film, 49 seconds" aria-describedby="film-script-text"><source src="video/film-slot.mp4" type="video/mp4"></video></span><figcaption>The project in 49 seconds, narrated. <span class="hx-x">Press ♪ for sound.</span><span class="hx-alt">It starts muted.</span></figcaption></figure>
+<details class="film-script"><summary>Read the script</summary><p id="film-script-text">Game Boy link play with no cable, added to Slot, Brandon Kowalski&rsquo;s game menu for handhelds. The brief: feel like plugging in the cable. Each build was played by hand, catching what automatic tests missed: Share Game stalling, then dropping. Three calls shaped it. Only handheld to handheld radio counts. The host always leads. Late presses wait, never rewind. With the host leading, trades between two emulators passed 20 of 20. A whole game, 16 MB, moves in 2.8 seconds, and now picks up again after a drop. On four handhelds linked straight to each other, never through a router, the newest build passed 28 of 28. Link play, without the cable. Details are below.</p></details>
 
-  <div class="prose case-part">
-    <p class="lede">Slot is a free, open-source game menu for small handheld game players, made by Brandon Kowalski and built around Game Boy games. Everything on this page is my work on top of it, in my own copy of the project: linked play over the air, four players at once, sending a game to another handheld, plus TV output, Bluetooth headphones and screen options. None of it has been sent to the original project. My part: what to build, in what order, and what counts as working. AI wrote the code, built the test rig and ran the tests on my four handhelds.</p>
-  </div>
+<div class="prose case-part">
+<p class="lede">Slot is a free, open-source game menu for small handheld game players, made by Brandon Kowalski. I use it on four Anbernic handhelds and, since October, have been extending it in my own copy: Game Boy link play over the air, four players from one cartridge, sending a game to another handheld, a screen that looks like the original consoles, TV output and AirPods sound. None of it has been sent to the original project. My part: the idea, every feature list, the calls on how the link behaves and what counts as a pass, and testing each build by hand on the handhelds. AI wrote the code and the test rig.</p>
+</div>
 
-  <section class="sum sum-method" aria-label="How it was built">
-    <ol class="method" aria-label="My rules, who wrote it, how it was proven">
-      <li><p class="who">My rules</p><ul class="ticks"><li>Only handheld-to-handheld radio counts</li><li>Any emulator, at full speed</li><li>Keep fixing until it all passes</li></ul></li>
-      <li class="ag"><p class="who">AI wrote</p><p>the code and the test rig</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
-      <li><p class="who">Proven</p><ul class="ticks ok"><li>On four real handhelds, never only on the Mac</li><li>Every console&rsquo;s copy compared while playing</li><li>Saved games checked unchanged after every set</li></ul></li>
-    </ol>
-  </section>
+<section class="sum sum-method" aria-label="How it was built">
+<ol class="method" aria-label="My rules, who wrote it, what I tested">
+<li><p class="who">My rules</p><ul class="ticks"><li>It should feel like plugging in the cable</li><li>Any emulator, at the original speed</li><li>Only handheld-to-handheld radio counts</li></ul></li>
+<li class="ag"><p class="who">AI wrote</p><p>the code and the test rig</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
+<li><p class="who">I tested</p><ul class="ticks ok"><li>Each build by hand on my handhelds</li><li>Caught breaks the automatic tests passed</li><li>Supplied my own games and saves for the rig</li></ul></li>
+</ol>
+</section>
 
-  <div class="prose">
-    <h2>The cases that stood out</h2>
-    <ul>
-      <li><b>Four players, one cartridge.</b> On the original console, one copy of Mario Kart: Super Circuit was enough for four players: the others downloaded a small version of the game through the cable. Here the host handheld sends that download, then every handheld runs all four consoles side by side, and only the button presses cross the air. The host compares every console&rsquo;s copy about once a second. Result by radio: 20 of 20 four-player sessions in sync with the host on either Game Boy Advance emulator, and 12 of 12 Kirby sessions at 2 and 4 players.</li>
-      <li><b>A Pok&eacute;mon trade between two different emulators.</b> On a real cable, one console sets the pace and the other follows. With Pok&eacute;mon Crystal on Gambatte on one handheld and mGBA on the other, a late message could leave both sides trying to set the pace, and about 1 in 4 trades failed. The fix: the host always leads. Afterwards, 20 of 20 Crystal and Red trades passed by radio, in both orders.</li>
-      <li><b>Four handhelds, real button presses.</b> Each with its own cartridge, all four played Mario Kart from a script of real button presses. 16 of 16 runs stayed in sync, with 48 of 48 copies matching in every run.</li>
-      <li><b>Send a whole game to another handheld.</b> Share Game moves a game by radio: 16 MB in 2.8 seconds. It was tested between all 12 pairs of the four handhelds, and when a copy is already there, when the other player says no, and when the link is cut halfway. Every failure was in the test itself, its timing or its menu steps; each was fixed and passed when run again.</li>
-      <li><b>Two links in one room.</b> The handhelds link straight to each other by their own Wi-Fi radio, with no router. Two separate 2-player links in the same room ran at once: 12 of 12 runs passed.</li>
-      <li><b>Different emulators, one link.</b> Game Boy Advance games run on mGBA or gpSP. A Pok&eacute;mon Emerald trade with mGBA on one handheld and gpSP on the other passed 4 of 4 times by radio, where it had failed 6 of 6 times before the fix.</li>
-    </ul>
-  </div>
+<div class="prose">
+<h2>What I set out to build</h2>
+<p>It started on October 18 with a short note: add the Gambatte emulator for Game Boy and Game Boy Color games, link them the way Slot already linked Game Boy Advance games, but speak the real Game Boy cable&rsquo;s protocol, and fix how Game Boy Color palettes cycled. As it grew, I wrote the bar down plainly: linking should feel as simple as plugging in the original cable and starting a game; whichever emulator a player picks, it should behave like the original hardware; and the delay should be as small as possible. In November I widened it to every form of multiplayer the consoles had, at hardware speed, proven on four real handhelds.</p>
+</div>
 
-  <figure class="figure">
-    <ol class="flow c3">
-      <li><b>One cartridge</b><span>on the host handheld only</span></li>
-      <li><b>The download</b><span>the host sends the small game to each player by radio</span></li>
-      <li class="key"><b>Every console on every handheld</b><span>each one runs all four, side by side</span></li>
-      <li class="key"><b>Only buttons travel</b><span>each player&rsquo;s presses go to everyone</span></li>
-      <li><b>Checked while playing</b><span>the host compares every copy about once a second</span></li>
-      <li><b>Same race on four screens</b><span>20 of 20 sessions in sync by radio</span></li>
-    </ol>
-    <figcaption>How four players share one cartridge. Drawn from the project&rsquo;s notes.</figcaption>
-  </figure>
+<div class="prose">
+<h2>Features I designed</h2>
+<ul>
+<li><b>Share Game.</b> My design: press L2 and R2 on the shelf, pick Send or Receive, and the two handhelds link the way link play does. The game&rsquo;s label and manual go with it, the cartridge flies off the top of one screen and lands on the other&rsquo;s shelf, the other player is asked first, and a save that would be replaced goes to a recycle bin instead of being deleted. A 16 MB game moves in 2.8 seconds.</li>
+<li><b>Four players, one cartridge.</b> On the original console, one copy of Mario Kart: Super Circuit was enough for four: the others downloaded a small version through the cable. I asked for the same from the menu: Select and Menu open the link screen, a player with no cartridge starts the console&rsquo;s own start-up screen, and the host&rsquo;s game does the rest. 20 of 20 four-player sessions stayed in sync by radio.</li>
+<li><b>The link-first tip.</b> The two lines on the link screen above, because a game set to multiplayer before the link is made may never find it.</li>
+<li><b>A screen like the original.</b> An early shader only made light pixels see-through. I sent it back: the goal is the look of each console&rsquo;s original screen, and pointed to an existing Game Boy Color version as the model. Game Boy and Game Boy Advance versions followed, and I made sure later rebuilds kept them.</li>
+<li><b>Colors and start-up as on the real consoles.</b> Palettes from the original Game Boy, Game Boy Color and Super Game Boy; the button combinations at start-up that changed colors on real hardware; the start-up animation that matches the palette; each game opening in the colors it last used.</li>
+<li><b>TV and headphones.</b> TV output, with my one condition: the correct screen shape, no stretching. For Bluetooth I asked for AAC sound because I use AirPods.</li>
+</ul>
+</div>
 
-  <figure class="figure">
-        <div class="chart-card">
-      <h3>The newest build, by radio</h3>
-      <p class="sub">The 28 linked-play checks run on four handhelds on November 21, 2026, by kind. Every one passed.</p>
-      <div class="bars" role="img" aria-label="Bar chart. Of 28 checks, all passed: 8 four-player Mario Kart with real presses, 6 Crystal trades between emulators, 6 Red trades between emulators, 6 four-player games from one cartridge, 2 games sent to another handheld.">
-        <div class="row" title="Four handhelds, Mario Kart, real presses: 8 of 8"><span class="lab">Four handhelds, Mario Kart, real presses</span><span class="track"><i class="" style="--v:100%"></i></span><span class="val">8</span></div>
-        <div class="row" title="Crystal trade, two emulators: 6 of 6"><span class="lab">Crystal trade, two emulators</span><span class="track"><i class="" style="--v:75%"></i></span><span class="val">6</span></div>
-        <div class="row" title="Red trade, two emulators: 6 of 6"><span class="lab">Red trade, two emulators</span><span class="track"><i class="" style="--v:75%"></i></span><span class="val">6</span></div>
-        <div class="row" title="Four players, one cartridge: 6 of 6"><span class="lab">Four players, one cartridge</span><span class="track"><i class="" style="--v:75%"></i></span><span class="val">6</span></div>
-        <div class="row" title="Game sent to another handheld: 2 of 2"><span class="lab">Game sent to another handheld</span><span class="track"><i class="" style="--v:25%"></i></span><span class="val">2</span></div>
-      </div>
-    </div>
-  </figure>
+<figure class="figure">
+<div class="duo">
+<figure><p class="tagline">AirPods sound</p><img src="img/slot-bluetooth.jpg" alt="The Bluetooth menu: Bluetooth on, searching for devices, one pair of headphones connected and three other devices listed" width="720" height="480" loading="lazy"></figure>
+<figure><p class="tagline">Colors while playing</p><img src="img/slot-palette.jpg" alt="The in-game screen menu: shader Transparency, color correction off, and the palette set to Game Boy Color, Dark Brown" width="720" height="480" loading="lazy"></figure>
+</div>
+<figcaption>Left: Bluetooth headphones with AAC sound. When I found it working on the handheld but slightly behind the picture, the delay Slot itself adds was cut by about 60 ms. Right: the original-screen shader and a Game Boy Color palette, changeable while playing.</figcaption>
+</figure>
 
-  <div class="prose">
-    <h2>The hard part</h2>
-    <p>Making two programs that were never meant to talk behave like one cable. Each emulator keeps its own time, and a game that waits a fraction of a second too long for its partner drops the link. Most of the work was finding exactly which late message broke which game, then proving the fix on the handhelds, not just on the Mac.</p>
-  </div>
+<div class="prose">
+<h2>Decisions I made</h2>
+<ul>
+<li><b>Faster before I test.</b> The first Game Boy link worked but crawled, about 30 bytes a second, because every byte waited on Wi-Fi. I asked for it to be made fast before my first test. It was rebuilt so only button presses cross the air and each handheld runs both consoles: 994 bytes a second, against 1,011 on a real cable.</li>
+<li><b>Wait a little, never rewind.</b> Asked how to make the link steadier, I chose a delay that adjusts to the connection and turned down rewinding (guessing ahead, then undoing a wrong guess), because rewinding sounded like a source of new problems.</li>
+<li><b>Keep the link that works.</b> When the newer links were being built, I ruled that the working Game Boy link was not to be changed unless there was no other way.</li>
+<li><b>Same emulator first.</b> When every new link broke at once, I set the order: each emulator must link with itself before any work on mixing emulators. My reasoning on the mix: copy what the original cable carried, so each side receives only what its game expects. A Pok&eacute;mon Emerald trade between mGBA and gpSP then passed 4 of 4 times, after failing 6 of 6.</li>
+<li><b>Only handheld-to-handheld radio counts.</b> When I learned most runs had gone through the home router, I called those tests useless. Every one was rerun handheld to handheld, and router runs became fault-finding only.</li>
+<li><b>The host always leads.</b> I asked why it was not clearer which side leads the link. The answer became a rule: the host&rsquo;s console always sets the pace. Pok&eacute;mon Crystal trades between two emulators went from failing about 1 in 4 to 20 of 20, first try every time.</li>
+<li><b>Small dips are notes, real slowdowns are failures.</b> A frame-rate dip of about two frames for a second is noted beside the result. Anything slower still fails.</li>
+</ul>
+</div>
 
-  <div class="prose">
-    <h2>Also built: screens, sound and a TV</h2>
-    <p>Pictures of the handheld&rsquo;s own menus at its real screen size, taken by the project&rsquo;s automatic tests.</p>
-  </div>
+<div class="prose">
+<h2>What I caught on the handhelds</h2>
+<ul>
+<li><b>Every new link broken, November 15.</b> All the new multiplayer connections joined, but the games never saw a cable. Only the original Game Boy link still worked. That report set the same-emulator-first order above.</li>
+<li><b>Share Game dropping, November 21.</b> On my handhelds, Send stuck on &ldquo;waiting to receive&rdquo; and then the link dropped, though the automatic test had passed. The cause: after a radio gap of more than 8 seconds, the send started over from the first byte. It now picks up where it stopped: 13 of 13 sends passed by radio, from 64 KB to 32 MB, with each copy checked.</li>
+<li><b>A rig that could not run alone, November 17.</b> The handhelds did not join Wi-Fi at start-up until a button was pressed, so overnight tests would stall. A build that joins at start-up came next.</li>
+<li><b>Screen faults from playing.</b> Fit squeezed Game Boy games, the original-screen shader had gone missing on Game Boy Advance, the in-game Bluetooth page did not show connected headphones, and rounded corners appeared where the dock should be square. Each went into the next update.</li>
+</ul>
+</div>
 
-  <figure class="figure">
-    <div class="duo">
-      <figure><p class="tagline">Bluetooth headphones</p><img src="img/slot-bluetooth.jpg" alt="The Bluetooth menu: Bluetooth on, searching for devices, one pair of headphones connected and three other devices listed" width="720" height="480" loading="lazy"></figure>
-      <figure><p class="tagline">Colors while playing</p><img src="img/slot-palette.jpg" alt="The in-game screen menu: shader Transparency, color correction off, and the palette set to Game Boy Color, Dark Brown" width="720" height="480" loading="lazy"></figure>
-    </div>
-    <figcaption>Left: Bluetooth headphones, with AAC sound for AirPods. It works on the handheld, and the delay Slot itself adds was cut by about 60 ms. Right: each game keeps its own color palette, and it can be changed while playing.</figcaption>
-  </figure>
+<figure class="figure">
+<ol class="flow c3">
+<li><b>One cartridge</b><span>on the host handheld only</span></li>
+<li><b>The download</b><span>the host sends the small game to each player by radio</span></li>
+<li class="key"><b>Every console on every handheld</b><span>each one runs all four, side by side</span></li>
+<li class="key"><b>Only buttons travel</b><span>each player&rsquo;s presses go to everyone</span></li>
+<li><b>Checked while playing</b><span>the host compares every copy about once a second</span></li>
+<li><b>Same race on four screens</b><span>20 of 20 sessions in sync by radio</span></li>
+</ol>
+<figcaption>How four players share one cartridge. Drawn from the project&rsquo;s notes.</figcaption>
+</figure>
 
-  <figure class="figure">
-    <div class="duo">
-      <figure><p class="tagline">On a TV</p><img src="img/slot-tv.jpg" alt="The settings menu drawn at TV size, 1280 by 720, centered between black side bars" width="1280" height="720" loading="lazy"></figure>
-      <figure><p class="tagline">One sleep setting</p><img src="img/slot-sleep.jpg" alt="The General settings page with Sleep Power Off set to 3 minutes" width="720" height="480" loading="lazy"></figure>
-    </div>
-    <figcaption>Left: TV output, which the original project leaves to the system underneath. The menu and games move to the TV at 720p with sharp, even pixels: Game Boy games at exactly 5 times their size. Right: three sleep settings became one, Sleep Power Off.</figcaption>
-  </figure>
+<figure class="figure">
+<div class="chart-card">
+<h3>The newest build, by radio</h3>
+<p class="sub">The 28 linked-play checks run on four handhelds on November 21, 2026, by kind. Every one passed.</p>
+<div class="bars" role="img" aria-label="Bar chart. Of 28 checks, all passed: 8 four-player Mario Kart with real presses, 6 Crystal trades between emulators, 6 Red trades between emulators, 6 four-player games from one cartridge, 2 games sent to another handheld.">
+<div class="row" title="Four handhelds, Mario Kart, real presses: 8 of 8"><span class="lab">Four handhelds, Mario Kart, real presses</span><span class="track"><i class="" style="--v:100%"></i></span><span class="val">8</span></div>
+<div class="row" title="Crystal trade, two emulators: 6 of 6"><span class="lab">Crystal trade, two emulators</span><span class="track"><i class="" style="--v:75%"></i></span><span class="val">6</span></div>
+<div class="row" title="Red trade, two emulators: 6 of 6"><span class="lab">Red trade, two emulators</span><span class="track"><i class="" style="--v:75%"></i></span><span class="val">6</span></div>
+<div class="row" title="Four players, one cartridge: 6 of 6"><span class="lab">Four players, one cartridge</span><span class="track"><i class="" style="--v:75%"></i></span><span class="val">6</span></div>
+<div class="row" title="Game sent to another handheld: 2 of 2"><span class="lab">Game sent to another handheld</span><span class="track"><i class="" style="--v:25%"></i></span><span class="val">2</span></div>
+</div>
+</div>
+</figure>
 
-  <div class="prose">
-    <h2>Decisions I made</h2>
-    <ul>
-      <li><b>Only handheld-to-handheld radio counts.</b> A test that went through the home router could find a fault, but never counted as a pass. The trade-off I accepted: slower testing, because the handhelds drop off the home network for every linked test.</li>
-      <li><b>The host always leads.</b> Whatever the two games agree between themselves, the host&rsquo;s console keeps the link&rsquo;s pace. That removed the 1-in-4 failed trades between different emulators.</li>
-      <li><b>Wait a little, never rewind.</b> Each handheld waits a few frames for the others, set from a measured round trip (4 frames on a close link; a frame is a sixtieth of a second), instead of guessing ahead and rewinding when it guessed wrong.</li>
-      <li><b>Fixed on the handhelds, not just on the Mac.</b> A failure seen on the handhelds was fixed, rebuilt and tested again there. A pass on the Mac alone never closed it.</li>
-    </ul>
-  </div>
+<div class="prose">
+<h2>How it was tested</h2>
+<ul>
+<li><b>My four handhelds, on loan to the rig.</b> I set them up so the Mac could reach them, and supplied my own game copies and saves, including Pok&eacute;mon saves for the trade tests. The Mac installs each build, starts the games and presses the buttons; the link itself always runs handheld to handheld.</li>
+<li><b>Every copy compared.</b> While playing, the copies of every console are compared; a run passes only if they all match from start to finish.</li>
+<li><b>Speed against the hardware.</b> I asked for proof of one-to-one speed, not just a link that holds. In the first four-handheld runs every handheld played at about 59.6 frames a second, and no message was lost.</li>
+<li><b>My real saves kept safe.</b> One handheld holds my own saved games. They were checked unchanged after every set of tests.</li>
+</ul>
+</div>
 
-  <div class="prose">
-    <h2>How it was tested</h2>
-    <ul>
-      <li><b>Four real handhelds, no hands.</b> A test rig on the Mac installs each build, starts the games and presses the buttons on all four handhelds. The link itself always runs handheld to handheld.</li>
-      <li><b>Every copy compared.</b> While playing, the copies of every console are compared; a run passes only if they all match from start to finish.</li>
-      <li><b>Full speed.</b> In the first four-handheld runs, every handheld played at about 59.6 frames a second, and no message was lost.</li>
-      <li><b>Automatic checks on the Mac.</b> The newest build passed 1,112 of 1,113. The one miss passed 6 of 6 times when run again.</li>
-      <li><b>Real saves kept safe.</b> One handheld holds real saved games. They were checked unchanged after every set of tests.</li>
-    </ul>
-  </div>
+<figure class="figure">
+<div class="duo">
+<figure><p class="tagline">On a TV</p><img src="img/slot-tv.jpg" alt="The settings menu drawn at TV size, 1280 by 720, centered between black side bars" width="1280" height="720" loading="lazy"></figure>
+<figure><p class="tagline">Sleep timer</p><img src="img/slot-sleep.jpg" alt="The General settings page with Sleep Power Off set to 3 minutes" width="720" height="480" loading="lazy"></figure>
+</div>
+<figcaption>Left: TV output at 720p, kept to the true screen shape as I asked: Game Boy games at exactly 5 times their size between black bars. Right: the sleep timer from my first list, how long a sleeping handheld waits before it powers off.</figcaption>
+</figure>
 
-  <div class="prose">
-    <h2>What's next</h2>
-    <ul>
-      <li>In games where each player has a cartridge, players other than the host still feel 11 frames of button delay against the host&rsquo;s 4. A fix is being built now.</li>
-      <li>Trying TV output on a real TV.</li>
-      <li>Whether to offer any of this to the original project is still my call to make.</li>
-    </ul>
+<div class="prose">
+<h2>What's next</h2>
+<ul>
+<li>In games where each player has a cartridge, players other than the host still feel 11 frames of button delay against the host&rsquo;s 4. A fix is being built now.</li>
+<li>Trying TV output on a real TV.</li>
+<li>Whether to offer any of this to the original project is still my call to make.</li>
+</ul>
 
-    <nav class="pager" aria-label="More projects">
-      <a class="prev" href="claude-phone.html"><small><span class="hx-x">&larr; </span>Previous</small>Claude Code, run from my iPhone</a>
-      <a class="next" href="practice-engine.html"><small>Next<span class="hx-x"> &rarr;</span></small>A study app built around mistakes</a>
-    </nav>
-    <p class="pager-contact"><a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></p>
-  </div>
+<nav class="pager" aria-label="More projects">
+<a class="prev" href="claude-phone.html"><small><span class="hx-x">&larr; </span>Previous</small>Claude Code, run from my iPhone</a>
+<a class="next" href="practice-engine.html"><small>Next<span class="hx-x"> &rarr;</span></small>A study app built around mistakes</a>
+</nav>
+<p class="pager-contact"><a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></p>
+</div>
 </main>
 
 <footer class="site">
