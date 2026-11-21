@@ -444,27 +444,27 @@ html[data-look="paint"] .pm-dapple {
 html[data-look="paint"].pm-live .card.lead::after {
   content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; border: 0; border-radius: 0; box-shadow: none; transform: none;
   background: radial-gradient(130% 95% at 88% 4%, rgba(255, 196, 110, .5), rgba(255, 196, 110, .16) 55%, rgba(255, 196, 110, 0) 80%);
-  mix-blend-mode: screen; opacity: 0; transition: opacity .7s ease;
+  mix-blend-mode: screen; opacity: 0; transition: opacity var(--pm-d-sun) ease;
 }
 html[data-look="paint"].pm-live .card.lead.pm-sun::after { opacity: 1; }
 html[data-look="paint"].pm-live[data-theme="dark"] .card.lead::after { background: radial-gradient(130% 95% at 88% 4%, rgba(150, 196, 206, .14), rgba(150, 196, 206, 0) 70%); }
 html[data-look="paint"] .pm-tuft {
-  z-index: 2; bottom: -12px; width: 44px; height: 30px; transform-origin: 50% 100%; transition: transform .6s cubic-bezier(.3, .7, .3, 1);
+  z-index: 2; bottom: -12px; width: 44px; height: 30px; transform-origin: 50% 100%; transition: transform var(--pm-d-sway) var(--pm-e-settle); --pm-tk: 1;
   background: var(--pm-tuft) center bottom / 100% 100% no-repeat;
 }
 html[data-look="paint"] .pm-tuft.l { left: 14px; }
-html[data-look="paint"] .pm-tuft.r { right: 10px; scale: -1 1; }
-html[data-look="paint"] .card.lead.pm-sun .pm-tuft.l { transform: rotate(-16deg); }
-html[data-look="paint"] .card.lead.pm-sun .pm-tuft.r { transform: rotate(-16deg); }
+html[data-look="paint"] .pm-tuft.r { right: 10px; scale: -1 1; --pm-tk: -1; }
+/* (polish pass) grass bends from the root: a shear with the roots held, never the whole clump turning like a cut-out */
+html[data-look="paint"] .card.lead.pm-sun .pm-tuft { transform: skewX(calc(var(--pm-tk) * 16deg)) scaleY(.95); }
 /* 2. the footpath down the margin, painted as it is walked (the site's thin thread is hidden under it) */
 html[data-look="paint"].pm-live .thread .th-line { stroke: transparent; }
 html[data-look="paint"].pm-live .thread .th-head { visibility: hidden; }
 /* (.thread path sets fill: none in style.css; these name the thread so they outrank it) */
 .thread path.pm-fp-edge { fill: #a5875f; } .thread path.pm-fp-body { fill: #cbb189; } .thread path.pm-fp-worn { fill: none; stroke: #e2cfa7; stroke-width: 1.8; stroke-linecap: round; stroke-dasharray: 22 9 13 14 30 8; }
 .thread path.pm-fp-g1 { fill: #6c8a45; } .thread path.pm-fp-g2 { fill: #98b060; } .thread .pm-part path { fill: currentColor; stroke: none; }
-.pm-part path { transition: transform .55s cubic-bezier(.3, .7, .3, 1); transform-box: fill-box; transform-origin: 50% 100%; }
-.pm-part .pl { transform: rotate(-4deg); } .pm-part .pr { transform: rotate(4deg); }
-.pm-moving .pm-part .pl { transform: rotate(-30deg); } .pm-moving .pm-part .pr { transform: rotate(30deg); }
+.pm-part path { transition: transform var(--pm-d-sway) var(--pm-e-settle); transform-box: fill-box; transform-origin: 50% 100%; }
+.pm-part .pl { transform: skewX(4deg); } .pm-part .pr { transform: skewX(-4deg); }
+.pm-moving .pm-part .pl { transform: skewX(30deg) scaleY(.92); } .pm-moving .pm-part .pr { transform: skewX(-30deg) scaleY(.92); }
 /* 7, 8, 10. the gust's leaves, the leaf that lands by a heading, a tap's puff of seeds */
 .pm-leaf, .pm-seed { position: absolute; left: 0; top: 0; pointer-events: none; z-index: 5; will-change: transform; }
 .pm-leaf { width: 15px; height: 15px; background: var(--pm-fall) center / 100% 100% no-repeat; }
@@ -481,21 +481,21 @@ html[data-look="paint"].pm-live .pm-glint::after {
 /* 12. links in running text: on hover a painted grass-green stroke grows under the words from the side the pointer came in */
 html[data-look="paint"].pm-live :is(.hero-sub, .hero-mail, footer.site) a:not(.btn),
 html[data-look="paint"].pm-live .topnav a {
-  background: var(--pm-stroke) left 100% / 0% 7px no-repeat; padding-bottom: 3px; transition: background-size .45s cubic-bezier(.3, .7, .3, 1);
+  background: var(--pm-stroke) left 100% / 0% 7px no-repeat; padding-bottom: 3px; transition: background-size var(--pm-d-stroke) var(--pm-e-settle);
 }
 html[data-look="paint"].pm-live :is(.hero-sub, .hero-mail, footer.site) a:not(.btn)[data-pm-from="r"],
 html[data-look="paint"].pm-live .topnav a[data-pm-from="r"] { background-position: right 100%; }
 html[data-look="paint"].pm-live :is(.hero-sub, .hero-mail, footer.site) a:not(.btn):hover,
 html[data-look="paint"].pm-live .topnav a:hover { background-size: 100% 7px; text-decoration-color: transparent; }
 /* 14. keyboard focus: a painted ring of leaves round the usual ring (the 3 px ring stays, so it is never only decoration) */
-.pm-focus { position: absolute; left: 0; top: 0; z-index: 60; pointer-events: none; border: 13px solid transparent; border-image: var(--pm-ring) 22 round; opacity: 0; transition: opacity .25s ease, scale .35s cubic-bezier(.3, .7, .3, 1); scale: .96; }
+.pm-focus { position: absolute; left: 0; top: 0; z-index: 9; pointer-events: none; border: 13px solid transparent; border-image: var(--pm-ring) 22 round; opacity: 0; transition: opacity var(--pm-d-quick) ease, scale var(--pm-d-stroke) var(--pm-e-settle); scale: .96; }
 .pm-focus.pm-on { opacity: 1; scale: 1; }
 /* 15. at night: stars in the band's sky (they twinkle only as the page moves), fireflies near a fine pointer over open ground */
 .pm-stars { z-index: -1; left: calc(50% - 50vw); width: 100vw; top: 0; height: calc(var(--pm-bh) * .36); opacity: 0; display: none; }
 .pm-stars.f { top: 10px; height: 100px; }
 html[data-look="paint"][data-theme="dark"] .pm-stars { display: block; }
 @media (prefers-color-scheme: dark) { html[data-look="paint"]:not([data-theme="light"]) .pm-stars { display: block; } }
-.pm-fly { position: fixed; left: 0; top: 0; z-index: 50; width: 7px; height: 7px; border-radius: 50%; pointer-events: none; opacity: 0;
+.pm-fly { position: fixed; left: 0; top: 0; z-index: 9; width: 7px; height: 7px; border-radius: 50%; pointer-events: none; opacity: 0;
   background: radial-gradient(circle, #f4f6b0 0 30%, rgba(214, 232, 120, .55) 55%, rgba(214, 232, 120, 0) 72%); transition: opacity .6s ease; }
 .pm-fly.pm-on { opacity: .95; }
 html[data-look="paint"] {
@@ -844,7 +844,7 @@ html[data-look="paint"] .pm-shade.pm-band-c { top: calc(100% + var(--pm-bh) * .5
 html[data-look="paint"].pm-live .case-head + .sum .fact { isolation: isolate; }
 html[data-look="paint"] .prose > h2 .pm-land { position: absolute; margin-left: 0; }
 html[data-look="paint"].pm-live :is(.prose p, .prose li, .prose dd, .pager-contact, figcaption) a:not(.btn) {
-  background: var(--pm-stroke) left 100% / 0% 7px no-repeat; padding-bottom: 3px; transition: background-size .45s cubic-bezier(.3, .7, .3, 1);
+  background: var(--pm-stroke) left 100% / 0% 7px no-repeat; padding-bottom: 3px; transition: background-size var(--pm-d-stroke) var(--pm-e-settle);
 }
 html[data-look="paint"].pm-live :is(.prose p, .prose li, .prose dd, .pager-contact, figcaption) a:not(.btn)[data-pm-from="r"] { background-position: right 100%; }
 html[data-look="paint"].pm-live :is(.prose p, .prose li, .prose dd, .pager-contact, figcaption) a:not(.btn):hover { background-size: 100% 7px; text-decoration-color: transparent; }
@@ -867,8 +867,10 @@ html[data-look="paint"] .linechart .y-ply { display: none; }
 html[data-look="paint"].pm-live .pm-board { transform-origin: 50% 100%; }
 html[data-look="paint"].pm-live .pm-spr { will-change: rotate, translate; }
 /* the grass at every board's foot bends as the gust passes (lead cards: their two tufts; other boards: two small ones) */
-@keyframes pm-tuftgust { 0%, 57% { rotate: 0deg; } 60% { rotate: 7deg; } 64% { rotate: 15deg; } 69% { rotate: 5deg; } 72% { rotate: -2deg; } 76%, 100% { rotate: 0deg; } }
-html[data-look="paint"].pm-live .pm-tuft { animation: pm-tuftgust 7s cubic-bezier(.4, 0, .4, 1) var(--pm-gd, 0ms) infinite; }
+@keyframes pm-tuftgust { 0%, 57% { transform: skewX(0deg) scaleY(1); } 60% { transform: skewX(calc(var(--pm-tk) * -6deg)) scaleY(.99); } 64% { transform: skewX(calc(var(--pm-tk) * -15deg)) scaleY(.95); }
+  69% { transform: skewX(calc(var(--pm-tk) * -5deg)) scaleY(.99); } 72% { transform: skewX(calc(var(--pm-tk) * 2deg)) scaleY(1); } 76%, 100% { transform: skewX(0deg) scaleY(1); } }
+/* added onto the hover lean (animation-composition), so a gust passing a sunlit card's tufts bends them further, not instead */
+html[data-look="paint"].pm-live .pm-tuft { animation: pm-tuftgust 7s cubic-bezier(.4, 0, .4, 1) var(--pm-gd, 0ms) infinite; animation-composition: add; }
 html[data-look="paint"] .pm-tuft.pm-ft { width: 32px; height: 22px; bottom: -10px; }
 html[data-look="paint"] .pm-tuft.pm-ft.l { left: 10px; }
 html[data-look="paint"] .pm-tuft.pm-ft.r { right: 8px; }
@@ -892,12 +894,14 @@ html[data-look="paint"].pm-live .pm-dapple > .pm-drift {
 }
 @keyframes pm-leaflight { 0% { translate: 0 0; } 45% { translate: 11px 4px; } 100% { translate: 19px -3px; } }
 /* the pointer parts the grass: two clumps under it lean apart (look-paint.js moves and opens them) */
-.pm-wake { position: fixed; left: -22px; top: -10px; z-index: 4; width: 44px; height: 26px; pointer-events: none; opacity: 0; transition: opacity .45s ease; }
-.pm-wake.pm-on { opacity: .95; }
-.pm-wake > i { position: absolute; bottom: 0; width: 22px; height: 26px; transform-origin: 50% 100%; background: var(--pm-tuft) 0 100% / 44px 26px no-repeat; }
-.pm-wake > i + i { left: 22px; background-position: 100% 100%; }
-html[data-look="paint"][data-theme="dark"] .pm-wake > i { filter: brightness(.5) saturate(.7); }
-@media (prefers-color-scheme: dark) { html[data-look="paint"]:not([data-theme="light"]) .pm-wake > i { filter: brightness(.5) saturate(.7); } }
+.pm-wake { position: fixed; left: -32px; top: -24px; z-index: 4; width: 64px; height: 38px; pointer-events: none; opacity: 0; transition: opacity .45s ease; }
+.pm-wake.pm-on { opacity: .95; transition-duration: var(--pm-d-quick); } /* (polish) up quickly under a moving pointer, back down slowly */
+/* (polish) the size of the painted meadow's own blades, so it reads as that grass parting, not a sticker over it */
+.pm-wake > i { position: absolute; bottom: 0; width: 32px; height: 38px; transform-origin: 50% 100%; background: var(--pm-tuft) 0 100% / 64px 38px no-repeat; }
+.pm-wake > i + i { left: 32px; background-position: 100% 100%; }
+/* (polish) by night the grass is the moonlit meadow's own blue-green (a darkened day tuft read brown on the night hills) */
+html[data-look="paint"][data-theme="dark"] { --pm-tuft: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 30'%3E%3Cpath d='M6 30C7 22 6 15 3 9c5 6 7 13 7 21zM12 30c0-9 2-17 7-24-3 8-4 16-3 24zM17 30c1-7 0-13-3-19 5 5 6 12 7 19zM23 30c1-8 4-15 9-20-3 6-5 13-5 20zM29 30c0-6-1-11-4-15 5 3 7 9 8 15zM35 30c1-6 3-11 7-14-2 4-4 9-3 14z' fill='%233d6a66'/%3E%3Cpath d='M9 30c0-7 1-13 4-18-1 6-1 12 0 18zM20 30c1-8 3-14 7-19-2 6-3 12-3 19zM31 30c1-5 3-9 6-12-2 4-2 8-2 12z' fill='%236f9c92'/%3E%3C/svg%3E"); }
+@media (prefers-color-scheme: dark) { html[data-look="paint"]:not([data-theme="light"]) { --pm-tuft: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 30'%3E%3Cpath d='M6 30C7 22 6 15 3 9c5 6 7 13 7 21zM12 30c0-9 2-17 7-24-3 8-4 16-3 24zM17 30c1-7 0-13-3-19 5 5 6 12 7 19zM23 30c1-8 4-15 9-20-3 6-5 13-5 20zM29 30c0-6-1-11-4-15 5 3 7 9 8 15zM35 30c1-6 3-11 7-14-2 4-4 9-3 14z' fill='%233d6a66'/%3E%3Cpath d='M9 30c0-7 1-13 4-18-1 6-1 12 0 18zM20 30c1-8 3-14 7-19-2 6-3 12-3 19zM31 30c1-5 3-9 6-12-2 4-2 8-2 12z' fill='%236f9c92'/%3E%3C/svg%3E"); } }
 /* a press: the board or control sinks a hair into the meadow (scale, so it adds to the hover lift); petals scatter */
 html[data-look="paint"].pm-live :is(.card, .btn, .pager a, .back) { transition: transform .2s var(--pop), scale .16s ease-out; }
 html[data-look="paint"].pm-live :is(.card, .btn, .pager a, .back):active { scale: .985; }
@@ -905,19 +909,76 @@ html[data-look="paint"].pm-live :is(.card, .btn, .pager a, .back):active { scale
 html[data-look="paint"] {
   --pm-petal: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1.5 8.6C1 5 3.4 1.6 8.4 1.2c.6 4.2-2.6 7.6-6.9 7.4z' fill='%23f7efd6'/%3E%3Cpath d='M1.5 8.6C3 6.4 5 4.4 8.4 1.2 7.6 5 5 8 1.5 8.6z' fill='%23ead7a6'/%3E%3Cpath d='M1.5 8.6l1.6-1.5' stroke='%23d9a95a' stroke-width='1.1' stroke-linecap='round'/%3E%3C/svg%3E");
 }
-/* 1. page to page: a wind sweep. The new page comes in behind a ragged painted edge that runs left to right with flecks of
-   paint blown ahead of it; the old page drifts downwind and goes. The top bar stays put. 0.56 s. */
+/* 1. page to page: a wind sweep. The new page comes in behind a ragged painted edge that runs left to right with streaks of
+   paint blown ahead of it; the old page drifts downwind and goes. The top bar stays put. 0.56 s.
+   (polish) The edge is a clip-path polygon, not a moving mask: Chrome runs a clip-path animation off the main thread, so the
+   sweep keeps going while the new page is still busy loading (the mask sweep stalled and then popped in on a first visit). */
 html[data-look="paint"] .topbar { view-transition-name: pm-bar; }
 @keyframes pm-vt-out { 0% { translate: 0 0; opacity: 1; } 55% { opacity: 1; } 100% { translate: 28px -4px; opacity: 0; } }
-@keyframes pm-vt-in { from { -webkit-mask-position: 100% 0; mask-position: 100% 0; translate: -14px 0; } to { -webkit-mask-position: 0 0; mask-position: 0 0; translate: 0 0; } }
-html[data-look="paint"]::view-transition-old(root) { animation: pm-vt-out .5s cubic-bezier(.45, 0, .7, 1) both; }
-html[data-look="paint"]::view-transition-new(root) {
-  animation: pm-vt-in .56s cubic-bezier(.3, .55, .3, 1) both;
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 100' preserveAspectRatio='none'%3E%3Cpath d='M0 0H140C146 6 139 12 147 18S141 30 149 37 142 49 150 56 143 69 151 76 144 88 152 100H0z'/%3E%3Cg%3E%3Cellipse cx='150' cy='9' rx='7' ry='3' transform='rotate(-14 150 9)'/%3E%3Cellipse cx='156' cy='27' rx='8' ry='2.6' transform='rotate(-10 156 27)'/%3E%3Cellipse cx='152' cy='45' rx='6' ry='3' transform='rotate(-18 152 45)'/%3E%3Cellipse cx='158' cy='63' rx='8' ry='2.8' transform='rotate(-8 158 63)'/%3E%3Cellipse cx='154' cy='82' rx='7' ry='3' transform='rotate(-15 154 82)'/%3E%3Cellipse cx='166' cy='16' rx='4' ry='1.6' transform='rotate(-12 166 16)'/%3E%3Cellipse cx='170' cy='52' rx='4.5' ry='1.5' transform='rotate(-9 170 52)'/%3E%3Cellipse cx='168' cy='91' rx='4' ry='1.6' transform='rotate(-14 168 91)'/%3E%3Cellipse cx='181' cy='34' rx='2.6' ry='1' transform='rotate(-10 181 34)'/%3E%3Cellipse cx='186' cy='71' rx='2.4' ry='1' transform='rotate(-16 186 71)'/%3E%3Cellipse cx='194' cy='5' rx='1.8' ry='.8'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 300% 100% no-repeat;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 100' preserveAspectRatio='none'%3E%3Cpath d='M0 0H140C146 6 139 12 147 18S141 30 149 37 142 49 150 56 143 69 151 76 144 88 152 100H0z'/%3E%3Cg%3E%3Cellipse cx='150' cy='9' rx='7' ry='3' transform='rotate(-14 150 9)'/%3E%3Cellipse cx='156' cy='27' rx='8' ry='2.6' transform='rotate(-10 156 27)'/%3E%3Cellipse cx='152' cy='45' rx='6' ry='3' transform='rotate(-18 152 45)'/%3E%3Cellipse cx='158' cy='63' rx='8' ry='2.8' transform='rotate(-8 158 63)'/%3E%3Cellipse cx='154' cy='82' rx='7' ry='3' transform='rotate(-15 154 82)'/%3E%3Cellipse cx='166' cy='16' rx='4' ry='1.6' transform='rotate(-12 166 16)'/%3E%3Cellipse cx='170' cy='52' rx='4.5' ry='1.5' transform='rotate(-9 170 52)'/%3E%3Cellipse cx='168' cy='91' rx='4' ry='1.6' transform='rotate(-14 168 91)'/%3E%3Cellipse cx='181' cy='34' rx='2.6' ry='1' transform='rotate(-10 181 34)'/%3E%3Cellipse cx='186' cy='71' rx='2.4' ry='1' transform='rotate(-16 186 71)'/%3E%3Cellipse cx='194' cy='5' rx='1.8' ry='.8'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 300% 100% no-repeat;
+@keyframes pm-vt-in { from { clip-path: polygon(0.0% 0.00%, -28.0% 0.00%, -32.0% 6.25%, -25.0% 12.50%, -24.0% 14.43%, -9.0% 15.62%, -24.0% 16.82%, -30.0% 18.75%, -23.0% 25.00%, -29.0% 31.25%, -26.0% 37.50%, -31.0% 43.75%, -30.0% 45.98%, -10.0% 46.88%, -30.0% 47.77%, -24.0% 50.00%, -30.0% 56.25%, -22.0% 62.50%, -28.0% 68.75%, -25.0% 75.00%, -24.0% 77.03%, -11.0% 78.12%, -24.0% 79.22%, -32.0% 81.25%, -27.0% 87.50%, -29.0% 93.75%, -24.0% 100.00%, 0.0% 100.00%); translate: -14px 0; } to { clip-path: polygon(0.0% 0.00%, 104.0% 0.00%, 100.0% 6.25%, 107.0% 12.50%, 108.0% 14.43%, 123.0% 15.62%, 108.0% 16.82%, 102.0% 18.75%, 109.0% 25.00%, 103.0% 31.25%, 106.0% 37.50%, 101.0% 43.75%, 102.0% 45.98%, 122.0% 46.88%, 102.0% 47.77%, 108.0% 50.00%, 102.0% 56.25%, 110.0% 62.50%, 104.0% 68.75%, 107.0% 75.00%, 108.0% 77.03%, 121.0% 78.12%, 108.0% 79.22%, 100.0% 81.25%, 105.0% 87.50%, 103.0% 93.75%, 108.0% 100.00%, 0.0% 100.00%); translate: 0 0; } }
+html[data-look="paint"]::view-transition-old(root) { animation: pm-vt-out .5s var(--pm-e-leave, cubic-bezier(.45, 0, .7, 1)) both; mix-blend-mode: normal; }
+html[data-look="paint"]::view-transition-new(root) { animation: pm-vt-in var(--pm-d-vt, .56s) cubic-bezier(.3, .55, .3, 1) both; mix-blend-mode: normal; } /* new over old, never added together */
+/* ================= polish pass (Nov 20; brief _tools/fluid/POLISH-BRIEF.md) =================
+   One vocabulary: the tokens below are the sheet's half of look-paint.js's M (springs and fades live there). */
+html[data-look="paint"] {
+  --pm-e-settle: cubic-bezier(.3, .7, .3, 1);   /* everything that comes to rest in the wind: grass, strokes, rings, the title morph */
+  --pm-e-leave: cubic-bezier(.45, 0, .7, 1);     /* what the wind takes away */
+  --pm-d-quick: .2s; --pm-d-stroke: .45s; --pm-d-sway: .55s; --pm-d-sun: .7s; --pm-d-vt: .56s;
 }
+/* 1. Back plays the wind sweep in mirror: the old page drifts back the way it came and the painted edge runs right to left.
+   A reload has no sweep (the browser gives a reload none; if one ever runs, it is a short soft crossfade). */
+@keyframes pm-vt-out-b { 0% { translate: 0 0; opacity: 1; } 55% { opacity: 1; } 100% { translate: -28px -4px; opacity: 0; } }
+@keyframes pm-vt-in-b { from { clip-path: polygon(100.0% 0.00%, 128.0% 0.00%, 132.0% 6.25%, 125.0% 12.50%, 124.0% 14.43%, 109.0% 15.62%, 124.0% 16.82%, 130.0% 18.75%, 123.0% 25.00%, 129.0% 31.25%, 126.0% 37.50%, 131.0% 43.75%, 130.0% 45.98%, 110.0% 46.88%, 130.0% 47.77%, 124.0% 50.00%, 130.0% 56.25%, 122.0% 62.50%, 128.0% 68.75%, 125.0% 75.00%, 124.0% 77.03%, 111.0% 78.12%, 124.0% 79.22%, 132.0% 81.25%, 127.0% 87.50%, 129.0% 93.75%, 124.0% 100.00%, 100.0% 100.00%); translate: 14px 0; } to { clip-path: polygon(100.0% 0.00%, -4.0% 0.00%, 0.0% 6.25%, -7.0% 12.50%, -8.0% 14.43%, -23.0% 15.62%, -8.0% 16.82%, -2.0% 18.75%, -9.0% 25.00%, -3.0% 31.25%, -6.0% 37.50%, -1.0% 43.75%, -2.0% 45.98%, -22.0% 46.88%, -2.0% 47.77%, -8.0% 50.00%, -2.0% 56.25%, -10.0% 62.50%, -4.0% 68.75%, -7.0% 75.00%, -8.0% 77.03%, -21.0% 78.12%, -8.0% 79.22%, 0.0% 81.25%, -5.0% 87.50%, -3.0% 93.75%, -8.0% 100.00%, 100.0% 100.00%); translate: 0 0; } }
+html[data-look="paint"]:active-view-transition-type(back)::view-transition-old(root) { animation-name: pm-vt-out-b; }
+html[data-look="paint"]:active-view-transition-type(back)::view-transition-new(root) {
+  animation-name: pm-vt-in-b;
+}
+html[data-look="paint"]:active-view-transition-type(reload)::view-transition-old(root) { animation: pm-in .2s ease reverse both; }
+html[data-look="paint"]:active-view-transition-type(reload)::view-transition-new(root) { animation: pm-in .2s ease both; }
+/* the title carried from a card to its page (and back) lands with the sweep, on the wind's settle, not the browser's
+   quarter-second crossfade; the top bar is the same board on both pages, so it is swapped, never faded twice */
+html[data-look="paint"]::view-transition-group(*) { animation-duration: var(--pm-d-vt); animation-timing-function: var(--pm-e-settle); }
+html[data-look="paint"]::view-transition-group(pm-bar), html[data-look="paint"]::view-transition-old(pm-bar), html[data-look="paint"]::view-transition-new(pm-bar) { animation: none; }
+html[data-look="paint"]::view-transition-old(pm-bar) { display: none; }
 @media (prefers-reduced-motion: reduce) {
   html[data-look="paint"]::view-transition-group(*), html[data-look="paint"]::view-transition-old(*), html[data-look="paint"]::view-transition-new(*) { animation: none !important; }
 }
 html[data-look="paint"][data-motion="paused"]::view-transition-group(*), html[data-look="paint"][data-motion="paused"]::view-transition-old(*), html[data-look="paint"][data-motion="paused"]::view-transition-new(*) { animation: none !important; }
 html[data-look="paint"] .pm-tuft.pm-ft.pm-off { display: none; }
+/* (polish) a tap's seeds and a press's petals have to read on the pale meadow: petals in the meadow's flower paints (warm,
+   grain, the cream with a warm heart), a little larger; seeds by day carry a thin shade line round their fluff */
+.pm-petal { width: 12px; height: 12px; }
+html[data-look="paint"] .pm-petal.pm-p1 { --pm-petal: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1.5 8.6C1 5 3.4 1.6 8.4 1.2c.6 4.2-2.6 7.6-6.9 7.4z' fill='%23f3d48b'/%3E%3Cpath d='M1.5 8.6C3 6.4 5 4.4 8.4 1.2 7.6 5 5 8 1.5 8.6z' fill='%23dcae5a'/%3E%3Cpath d='M1.5 8.6l1.6-1.5' stroke='%23a8772e' stroke-width='1.1' stroke-linecap='round'/%3E%3C/svg%3E"); }
+html[data-look="paint"] .pm-petal.pm-p2 { --pm-petal: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1.5 8.6C1 5 3.4 1.6 8.4 1.2c.6 4.2-2.6 7.6-6.9 7.4z' fill='%23e4a271'/%3E%3Cpath d='M1.5 8.6C3 6.4 5 4.4 8.4 1.2 7.6 5 5 8 1.5 8.6z' fill='%23c98250'/%3E%3Cpath d='M1.5 8.6l1.6-1.5' stroke='%239a5a32' stroke-width='1.1' stroke-linecap='round'/%3E%3C/svg%3E"); }
+html[data-look="paint"] .pm-petal.pm-p0 { --pm-petal: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1.5 8.6C1 5 3.4 1.6 8.4 1.2c.6 4.2-2.6 7.6-6.9 7.4z' fill='%23f7efd6' stroke='%23c9b29e' stroke-width='.5'/%3E%3Cpath d='M1.5 8.6C3 6.4 5 4.4 8.4 1.2 7.6 5 5 8 1.5 8.6z' fill='%23ead7a6'/%3E%3Cpath d='M1.5 8.6l2-1.9' stroke='%23e4a271' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E"); }
+html[data-look="paint"]:not([data-theme="dark"]) .pm-seed { filter: drop-shadow(0 0 .6px rgba(64, 90, 77, .7)) drop-shadow(0 1px 1px rgba(64, 90, 77, .25)); }
+@media (prefers-color-scheme: dark) { html[data-look="paint"]:not([data-theme="light"]) .pm-seed { filter: none; } }
+/* (polish) while a film plays on screen the meadow calms: cloud shadows and leaf light hold where they are */
+html[data-look="paint"].pm-hush .pm-drift { animation-play-state: paused; }
+/* (polish) a big board pressed sinks less than a small control: the same few pixels of give, whatever its size */
+html[data-look="paint"].pm-live .card.lead:active { scale: .993; }
+/* (polish) no sticky hover on a touch screen: a tapped card, button or link does not stay lifted or underlined after the finger leaves */
+@media (hover: none) {
+  html[data-look="paint"] :is(.card, .btn, .pager a, .back, .theme-toggle):hover:not(:active) { transform: none; }
+  html[data-look="paint"].pm-live :is(.hero-sub, .hero-mail, footer.site, .prose p, .prose li, .prose dd, .pager-contact, figcaption) a:not(.btn):hover,
+  html[data-look="paint"].pm-live .topnav a:hover { background-size: 0% 7px; }
+  html[data-look="paint"] .card:hover h4 { text-decoration: none; }
+}
+/* (polish) the focus ring of leaves sits under the top bar for the page's controls (a ring scrolled up under the bar is
+   hidden by it, as the control is) and above it only for the bar's own */
+.pm-focus.pm-top { z-index: 60; }
+/* (polish) the look picker and the skip link in this look's paints: the list is a small board (board face, earth edge,
+   ink), the chosen row a leaf tag; it opens like a board settling in the wind. Night: a moonlit board. */
+html[data-look="paint"] .look-pick { --lp-bg: #f3eadc; --lp-ink: #1b3b2e; --lp-rim: #a5875f; --lp-hi: #9bb37e; --lp-on-hi: #1b3b2e; }
+html[data-look="paint"][data-theme="dark"] .look-pick { --lp-bg: #1f3e44; --lp-ink: #f3ede2; --lp-rim: #bfd6d6; --lp-hi: #e6cd86; --lp-on-hi: #17313a; }
+@media (prefers-color-scheme: dark) { html[data-look="paint"]:not([data-theme="light"]) .look-pick { --lp-bg: #1f3e44; --lp-ink: #f3ede2; --lp-rim: #bfd6d6; --lp-hi: #e6cd86; --lp-on-hi: #17313a; } }
+html[data-look="paint"] .look-menu { border-radius: 6px; box-shadow: 0 2px 0 rgba(165, 135, 95, .55), 0 12px 24px -10px rgba(27, 59, 46, .45); transform-origin: 85% 0; }
+html[data-look="paint"] .look-pick-btn { border-radius: 6px; }
+@keyframes pm-menu-in { from { opacity: 0; translate: -6px -4px; rotate: -.8deg; } to { opacity: 1; translate: 0 0; rotate: 0deg; } }
+@media (prefers-reduced-motion: no-preference) { html[data-look="paint"].motion .look-menu:not([hidden]) { animation: pm-menu-in var(--pm-d-stroke) var(--pm-e-settle) both; } }
+html[data-look="paint"] .skip-link { background: #1b3b2e; color: #fbf6ed; }
+/* (polish) what the script adds arrives softly: the tufts, cloud shadows and leaf light fade in when look-paint.js starts
+   (late on a slow connection, or after a light/dark switch), never popping in */
+html[data-look="paint"].pm-live .pm-tuft { transition: transform var(--pm-d-sway) var(--pm-e-settle), opacity .6s ease; }
+html[data-look="paint"].pm-live :is(.pm-shade, .pm-dapple) { transition: opacity .9s ease; }
+@starting-style { html[data-look="paint"].pm-live :is(.pm-tuft, .pm-shade, .pm-dapple) { opacity: 0; } }
