@@ -653,7 +653,9 @@
   }
   function fluid(t) {
     var y = W.scrollY || 0, dt = clamp(t - (FL.t || t - 16), 8, 50), f = dt / 16.7;
-    var v = (y - FL.y) / dt; FL.y = y; FL.t = t;
+    var v = (y - FL.y) / dt;
+    if (Math.abs(y - FL.y) > innerHeight * 1.2 && Math.abs(FL.v) < .05) v = 0; // a jump from rest (anchor, hash, Home/End without smooth scroll) is a cut, not a fling: no wobble on arrival
+    FL.y = y; FL.t = t;
     FL.v = FL.v * .6 + v * .4;                                           // px per ms, smoothed
     var moving = Math.abs(v) > .02, busy = false;
     // the sheets: spring toward a lag set by scroll speed (down = the block hangs back, below)

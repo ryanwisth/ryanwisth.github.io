@@ -284,7 +284,8 @@ html[data-look="brush"] .theme-toggle { border: 0; border-radius: 0; background:
 html[data-look="brush"] .theme-toggle::before { content: ""; position: absolute; inset: -1px; pointer-events: none; background: var(--ink); mask: var(--b-enso0) 0 0 / 100% 100% no-repeat; }
 html[data-look="brush"] .look-toggle::before { mask-image: var(--b-enso2); }
 html[data-look="brush"] .look-toggle { color: var(--verm); }
-html[data-look="brush"] :is(.theme-toggle):is(:hover, :active) { transform: none; box-shadow: none; color: var(--sig-ink); }
+html[data-look="brush"] :is(.theme-toggle):active { transform: none; box-shadow: none; color: var(--sig-ink); }
+@media (hover: hover) { html[data-look="brush"] :is(.theme-toggle):hover { transform: none; box-shadow: none; color: var(--sig-ink); } } /* polish: no hover left stuck on a phone after a tap */
 
 /* ---------- the head of the page: a painted scene under the opening paragraph ----------
    Sun behind the far range, two ranges of mountains parted by mist, near hills in black ink, two cloud bands and a
@@ -417,7 +418,8 @@ html[data-look="brush"] .film::after { content: ""; position: absolute; left: -1
 html[data-look="brush"] .film::before { top: -14px; }
 html[data-look="brush"] .film::after { bottom: -16px; height: 20px; mask-size: 100% 17px, 20px 20px, 20px 20px; }
 html[data-look="brush"] .vid-toggle { border: 0; border-radius: 50%; box-shadow: none; background: var(--ink); color: var(--bg); mask: var(--b-sealo) 0 0 / 100% 100% no-repeat; -webkit-backdrop-filter: none; backdrop-filter: none; }
-html[data-look="brush"] .vid-toggle:hover { background: var(--seal); color: var(--on-seal); }
+@media (hover: hover) { html[data-look="brush"] .vid-toggle:hover { background: var(--seal); color: var(--on-seal); } }
+html[data-look="brush"] .vid-toggle:active { background: var(--seal); color: var(--on-seal); }
 html[data-look="brush"] :is(.vid-sound, .vid-sound[aria-pressed="true"]) { isolation: isolate; border: 0; border-radius: 0; background: none; box-shadow: none; color: var(--on-seal); font-weight: 900; letter-spacing: .03em; -webkit-backdrop-filter: none; backdrop-filter: none; }
 html[data-look="brush"] .vid-sound::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: var(--seal); mask: var(--b-seal) 0 0 / 100% 100% no-repeat; }
 html[data-look="brush"] .vid-sound[aria-pressed="true"]::before { background: #1b1713; }
@@ -698,7 +700,7 @@ html[data-look="brush"] .demo-poster:hover img { scale: 1; }
   /* the round buttons' rings boil; a hover gives a quick turn, a press pushes in */
   html[data-look="brush"].motion .theme-toggle::before { animation: b-boil-ring .375s steps(1) infinite; }
   html[data-look="brush"].motion .theme-toggle { transition: scale .08s steps(2); }
-  html[data-look="brush"].motion .theme-toggle:hover::before { rotate: 40deg; }
+  @media (hover: hover) { html[data-look="brush"].motion .theme-toggle:hover::before { rotate: 40deg; } }
   html[data-look="brush"].motion .theme-toggle:active { scale: .88; }
 
   /* outlines: drawn round the box, then they boil; the colour block snaps in after the outline, off-register */
@@ -1167,6 +1169,13 @@ html[data-look="brush"] .b-cseal.b-v4 { mask-image: var(--b-cs4); }
   html[data-look="brush"].motion.b-live .b-flick-d.b-v { background: var(--verm); }
   /* 5 the focus frame is drawn, left to right, round each element it lands on */
   html[data-look="brush"].motion.b-live .b-focus.b-on { animation: b-focus-draw .24s var(--snap) both; }
+
+  /* 15 the look picker unrolls from the bar when opened and rolls back up when closed; the film script unrolls when opened */
+  html[data-look="brush"].motion .look-menu { clip-path: inset(-30px -30px -30px -30px); transition: clip-path var(--b-quick) var(--b-lay), display var(--b-quick) allow-discrete; }
+  html[data-look="brush"].motion .look-menu[hidden] { clip-path: inset(-30px -30px 100% -30px); transition-duration: .16s; transition-timing-function: var(--b-lift); }
+  @starting-style { html[data-look="brush"].motion .look-menu:not([hidden]) { clip-path: inset(-30px -30px 100% -30px); } }
+  html[data-look="brush"].motion .film-script[open] > :not(summary) { animation: b-unroll var(--b-turn) var(--b-lay) both; }
+  html[data-look="brush"].motion .film-script > summary::before { transition: rotate var(--b-quick) var(--b-lay); }
 
   /* 1 page to page. Forward: the old sheet rolls up into the top mounting, the next unrolls down from it. Back (polish):
      the mirror, the sheet you leave rolls down onto the rod at the foot and the one you return to unrolls up from it, the
