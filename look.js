@@ -30,8 +30,8 @@ var LOOK_ROWS = [
   ["cel",   "Cel & Tide",      ["#5078ff", "#101b4d"],    ["#0963e0", "#f2f2f2"],    true],
   ["paint", "Paint & Meadow",  ["#dcc2a6", "#18373e"],    ["#d9d5b9", "#0275a0"],    true],
   ["dots",  "Dots & Panels",   ["#f6f0dc", "#272015"],    ["#f6f0dc", "#c8321e"],    true],
-  /* history: light only, the same colour both ways (Nov 21 2026; replaced Studio, which git keeps). Films: video/film-<page>-history.mp4 + img/film-<page>-history.jpg from _tools/history-films/out/. */
-  ["history", "Studio",          ["#e9ecef", "#e9ecef"],  ["#e9ecef", "#14594a"],    true]
+  /* history: light and dark (dark added Nov 21 2026; replaced Studio, which git keeps). Films: video/film-<page>-history.mp4 + img/film-<page>-history.jpg from _tools/history-films/out/ (the light twins in both settings). */
+  ["history", "Studio",          ["#e9ecef", "#34332f"],  ["#e9ecef", "#14594a"],    true]
 ];
 
 /* To try a look without changing anything, add ?look=<key> (?look=wash, ?look=cel, ?look=yarn ...) to any page address.

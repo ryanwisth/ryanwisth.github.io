@@ -3,7 +3,9 @@
    square corners (6 px only on pictures and films), Familjen Grotesk for names and headings, Atkinson Hyperlegible Next
    for reading, one deep green for links and the log's labels. Left-aligned. Each case page opens on its changelog
    (.hx-log, written by _tools/history/stamp.mjs from the page's own words and git dates) beside the film.
-   Light only: light and dark settings both get it, and the light/dark button is hidden in this look.
+   Light and dark (dark added Nov 21 2026): the same log at night, a warm dark paper, ink-light text, the green lifted;
+   all of it is tokens (the --vh-* block below, swapped by the dark block after it), so every rule draws both. The
+   light/dark button is a plain word ("Dark" / "Light") beside the picker.
    Written against NOTES.md section 1 (28 "default Claude" tells): no gradients, glow, shadows, blur, tinted black,
    mono labels (code only), capitals, middots, arrows, numbered markers, pills, status dots, cards-in-a-grid or
    fade-ups. The one movement: the changelog rows (and the home's numbers) write in once, under motion only.
@@ -18,6 +20,8 @@
 /* ---------- tokens ---------- */
 html[data-look="history"]:not(#_) {
   --vh-field: #e9ecef; --vh-ink: #14171c; --vh-panel: #ffffff; --vh-muted: #5e6672; --vh-green: #14594a; --vh-line: #d3d8dd; --vh-tint: #dce9e4;
+  --vh-bad: #9b2c1f; --vh-warn: #7a4a00; --vh-scroll: #b9c0c7; --vh-tt: "Dark";
+  --vh-plate-w: 0px; --vh-plate-pad: 0px; --vh-plate-bg: var(--vh-tint);
   --vh-head: "Familjen Grotesk", "Atkinson Hyperlegible Next", sans-serif;
   --vh-body: "Atkinson Hyperlegible Next", sans-serif;
 
@@ -40,7 +44,43 @@ html[data-look="history"]:not(#_) {
   --g-felt: none; --g-cotton: none; --quilt: none; --strand-sig: none; --strand-pink: none; --strand-yellow: none; --zip-dim: none; --beads: none;
   color-scheme: light;
   background: var(--vh-field);
-  scrollbar-color: #b9c0c7 var(--vh-field);
+  scrollbar-color: var(--vh-scroll) var(--vh-field);
+}
+
+/* ---------- dark: the same log at night (Nov 21 2026) ----------
+   Field #34332f and panels #3e3d38: a warm neutral dark paper (not black, no blue; kept above
+   luminance .03 so it never reads as the near-black ground of tell C4), panels a step lighter like the white
+   panels on the light field. Ink #ecebe6, muted #b8b4ac, the green lifted to #8cc7b1 (the same green as #14594a, lighter and a little softer). Hairlines
+   #5c5a54 instead of shadows. Every text pair passes WCAG AA (on the panel: ink 9.1:1, muted 5.3:1, green 5.7:1).
+   The films stay the light twins: they sit in a hairline frame with a panel-coloured margin, like a tipped-in plate.
+   Kept twice, as yarn's sheet does: once for the system setting (unless the button picked light), once for the button. */
+@media (prefers-color-scheme: dark) {
+  html[data-look="history"]:not(#_):not([data-theme="light"]) {
+    --vh-field: #34332f; --vh-ink: #ecebe6; --vh-panel: #3e3d38; --vh-muted: #b8b4ac; --vh-green: #8cc7b1; --vh-line: #5c5a54; --vh-tint: #3a4641;
+    --vh-bad: #efa293; --vh-warn: #e0b56e; --vh-scroll: #6a6862; --vh-tt: "Light";
+    --vh-plate-w: 1px; --vh-plate-pad: 6px; --vh-plate-bg: var(--vh-panel);
+    --bg: #34332f; --bg-soft: #34332f; --text: #ecebe6; --muted: #b8b4ac; --faint: #b8b4ac; --line: #5c5a54;
+    --card: #3e3d38; --ink: #ecebe6; --accent: #8cc7b1; --accent-2: #8cc7b1; --accent-soft: #3a4641; --mark-ink: #34332f;
+    --sig: #8cc7b1; --sig-ink: #8cc7b1; --on-sig: #34332f;
+    --y-pink: #3e3d38; --y-blue: #3e3d38; --y-green: #3e3d38; --y-yellow: #3e3d38;
+    --s-pink: #ecebe6; --s-blue: #ecebe6; --s-green: #ecebe6; --s-yellow: #ecebe6;
+    --felt-ink: #ecebe6; --bead: #3e3d38; --bead-ink: #ecebe6; --yarn-hi: #8cc7b1; --yarn-lo: #8cc7b1; --btn: #ecebe6;
+    --h-indigo: #ecebe6; --h-teal: #ecebe6; --h-amber: #ecebe6; --h-rose: #ecebe6; --h-violet: #ecebe6; --h-sky: #ecebe6; --h-green: #8cc7b1;
+    color-scheme: dark;
+  }
+}
+html[data-look="history"]:not(#_)[data-theme="dark"] {
+  --vh-field: #34332f; --vh-ink: #ecebe6; --vh-panel: #3e3d38; --vh-muted: #b8b4ac; --vh-green: #8cc7b1; --vh-line: #5c5a54; --vh-tint: #3a4641;
+  --vh-bad: #efa293; --vh-warn: #e0b56e; --vh-scroll: #6a6862; --vh-tt: "Light";
+  --vh-plate-w: 1px; --vh-plate-pad: 6px; --vh-plate-bg: var(--vh-panel);
+  --bg: #34332f; --bg-soft: #34332f; --text: #ecebe6; --muted: #b8b4ac; --faint: #b8b4ac; --line: #5c5a54;
+  --card: #3e3d38; --ink: #ecebe6; --accent: #8cc7b1; --accent-2: #8cc7b1; --accent-soft: #3a4641; --mark-ink: #34332f;
+  --sig: #8cc7b1; --sig-ink: #8cc7b1; --on-sig: #34332f;
+  --y-pink: #3e3d38; --y-blue: #3e3d38; --y-green: #3e3d38; --y-yellow: #3e3d38;
+  --s-pink: #ecebe6; --s-blue: #ecebe6; --s-green: #ecebe6; --s-yellow: #ecebe6;
+  --felt-ink: #ecebe6; --bead: #3e3d38; --bead-ink: #ecebe6; --yarn-hi: #8cc7b1; --yarn-lo: #8cc7b1; --btn: #ecebe6;
+  --h-indigo: #ecebe6; --h-teal: #ecebe6; --h-amber: #ecebe6; --h-rose: #ecebe6; --h-violet: #ecebe6; --h-sky: #ecebe6; --h-green: #8cc7b1;
+  color-scheme: dark;
 }
 
 /* ---------- page, type ---------- */
@@ -79,7 +119,12 @@ html[data-look="history"]:not(#_) .hx-ver { font: 400 15px/1.2 var(--vh-body); c
 html[data-look="history"]:not(#_) .topnav { display: flex; align-items: center; gap: 26px; margin-left: auto; }
 html[data-look="history"]:not(#_) .topnav a { color: var(--vh-ink); font: 400 15px/1.2 var(--vh-body); background: none; border: 0; box-shadow: none; text-decoration: none; padding: 0; margin: 0; min-height: 0; }
 html[data-look="history"]:not(#_) .topnav a:hover { color: var(--vh-green); text-decoration: underline; }
-html[data-look="history"]:not(#_) .theme-toggle { display: none !important; }
+/* the light/dark button: a plain word naming the other setting, drawn like the picker beside it (the half-moon sign hidden) */
+html[data-look="history"]:not(#_) .theme-toggle:not([hidden]) { display: inline-flex; align-items: center; width: auto; height: auto; min-height: 32px; margin: -6px 0; padding: 0 10px; font-size: 0; color: var(--vh-ink); background: var(--vh-panel); border: 1px solid var(--vh-line); border-radius: 4px; box-shadow: none; transform: none; transition: none; }
+html[data-look="history"]:not(#_) .theme-toggle::before { content: var(--vh-tt); font: 400 14px/1 var(--vh-body); color: inherit; -webkit-mask: none; mask: none; background: none; position: static; inset: auto; }
+html[data-look="history"]:not(#_) .theme-toggle svg { display: none !important; }
+html[data-look="history"]:not(#_) .theme-toggle:hover { color: var(--vh-green); border-color: var(--vh-muted); transform: none; box-shadow: none; }
+html[data-look="history"]:not(#_) .theme-toggle:focus-visible { border-radius: 4px; outline-offset: 3px; }
 /* the look picker: a plain small control after the nav (its colours come from look.js's swatch sheet, given this look's lines) */
 html[data-look="history"]:not(#_) .look-pick { --lp-bg: var(--vh-panel); --lp-card: var(--vh-panel); --lp-ink: var(--vh-ink); --lp-rim: var(--vh-line); --lp-hi: var(--vh-field); --lp-on-hi: var(--vh-ink); margin-left: 0; align-self: center; }
 html[data-look="history"]:not(#_) .look-pick-btn { font: 400 14px/1 var(--vh-body); min-height: 32px; padding: 0 10px; border: 1px solid var(--vh-line); border-radius: 4px !important; box-shadow: none; }
@@ -114,7 +159,7 @@ html[data-look="history"]:not(#_) .facts.proof .fact span { display: inline; fon
 html[data-look="history"]:not(#_) .facts.proof .fact b span { display: inline; font-size: inherit; color: inherit; margin: 0; }
 
 /* every film: a 6 px corner, no frame; caption and script quiet below it */
-html[data-look="history"]:not(#_) :is(.film, .case-film) .shot { position: relative; display: block; border: 0; border-radius: 6px; overflow: hidden; background: var(--vh-tint); box-shadow: none; padding: 0; margin: 0; transform: none; rotate: none; }
+html[data-look="history"]:not(#_) :is(.film, .case-film) .shot { position: relative; display: block; border: var(--vh-plate-w) solid var(--vh-line); border-radius: 6px; overflow: hidden; background: var(--vh-plate-bg); box-shadow: none; padding: var(--vh-plate-pad); margin: 0; transform: none; rotate: none; }
 html[data-look="history"]:not(#_) :is(.film, .case-film) .shot video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border: 0; border-radius: 0; filter: none; }
 html[data-look="history"]:not(#_) .film-cap, html[data-look="history"]:not(#_) .case-film figcaption { margin: 10px 0 0; font: 400 14.5px/1.45 var(--vh-body); color: var(--vh-muted); text-align: left; background: none; padding: 0; }
 html[data-look="history"]:not(#_) .film-script { margin: 4px 0 0; font-size: 15px; color: var(--vh-ink); background: none; border: 0; box-shadow: none; padding: 0; text-align: left; }
@@ -260,7 +305,7 @@ html[data-look="history"]:not(#_) .hx-log dd li { margin: 0 0 3px; }
 html[data-look="history"]:not(#_) body.case main > .sum:not(.sum-method) { margin: 64px 0 0; padding: 0; max-width: none; background: none; border: 0; }
 html[data-look="history"]:not(#_) .sum-top { display: block; max-width: 760px; margin: 0; }
 html[data-look="history"]:not(#_) .sum-vis { margin: 0; min-width: 0; }
-html[data-look="history"]:not(#_) .sum-vis .shot { border-radius: 6px; overflow: hidden; background: var(--vh-tint); border: 0; box-shadow: none; }
+html[data-look="history"]:not(#_) .sum-vis .shot { border-radius: 6px; overflow: hidden; background: var(--vh-plate-bg); border: var(--vh-plate-w) solid var(--vh-line); padding: var(--vh-plate-pad); box-shadow: none; }
 html[data-look="history"]:not(#_) .sum .facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px 28px; margin: 22px 0 0; padding: 0; background: none; }
 html[data-look="history"]:not(#_) .fact { position: relative; display: block; background: none; border: 0; border-radius: 0; padding: 0; margin: 0; box-shadow: none; color: var(--vh-ink); overflow: visible; }
 html[data-look="history"]:not(#_) .sum .fact { margin: 0; }
@@ -295,7 +340,7 @@ html[data-look="history"]:not(#_) .prose :is(p, li) b { font-weight: 700; color:
 /* figures inside the write-up: as wide as the reading column and a little more */
 html[data-look="history"]:not(#_) body.case main > .figure:not(.case-film) { width: 100%; max-width: 760px; margin: 28px 0 0; padding: 0; background: none; border: 0; box-shadow: none; }
 html[data-look="history"]:not(#_) .figure figcaption, html[data-look="history"]:not(#_) .figure .cap { font-size: 14.5px; line-height: 1.45; color: var(--vh-muted); margin: 10px 0 0; text-align: left; background: none; padding: 0; }
-html[data-look="history"]:not(#_) .figure .shot { border: 0; border-radius: 6px; box-shadow: none; background: var(--vh-tint); overflow: hidden; }
+html[data-look="history"]:not(#_) .figure .shot { border: var(--vh-plate-w) solid var(--vh-line); border-radius: 6px; box-shadow: none; background: var(--vh-plate-bg); overflow: hidden; }
 html[data-look="history"]:not(#_) .figure .shot .bar { background: var(--vh-panel); border: 0; }
 html[data-look="history"]:not(#_) .figure .shot .bar i, html[data-look="history"]:not(#_) .term .bar i { display: none; }
 html[data-look="history"]:not(#_) .flow { list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin: 0; padding: 0; counter-reset: none; background: var(--vh-panel); border: 0; border-radius: 0; overflow: visible; }
@@ -316,12 +361,12 @@ html[data-look="history"]:not(#_) .term .bar { background: none; border: 0; padd
 html[data-look="history"]:not(#_) .term .bar em { color: var(--vh-muted); font: 400 14.5px/1.3 var(--vh-body); position: static; }
 html[data-look="history"]:not(#_) .term pre { margin: 0; padding: 16px; border-radius: 6px; background: var(--vh-field); color: var(--vh-ink); font: 13px/1.55 var(--mono); }
 html[data-look="history"]:not(#_) .term .cmd { color: var(--vh-green); }
-html[data-look="history"]:not(#_) .term .bad { color: #9b2c1f; }
+html[data-look="history"]:not(#_) .term .bad { color: var(--vh-bad); }
 html[data-look="history"]:not(#_) .term .hl { color: var(--vh-ink); background: none; }
 html[data-look="history"]:not(#_) .term .dim { color: var(--vh-muted); }
 html[data-look="history"]:not(#_) .term .cmd::before { color: var(--vh-muted); }
 html[data-look="history"]:not(#_) .term .ok { color: var(--vh-green); }
-html[data-look="history"]:not(#_) .term .warn { color: #7a4a00; }
+html[data-look="history"]:not(#_) .term .warn { color: var(--vh-warn); }
 html[data-look="history"]:not(#_) .term .key { color: var(--vh-ink); font-weight: 700; }
 html[data-look="history"]:not(#_) .legend li { color: var(--vh-ink); }
 html[data-look="history"]:not(#_) .legend i { border-radius: 0; border-color: var(--vh-line); box-shadow: none; }
