@@ -469,6 +469,8 @@ footer.site a { color: var(--muted); }
 }
 
 @view-transition { navigation: auto; }
+/* Pause motion: the drawn-handwriting thumbnail shows finished (an <img> SVG cannot see the page's data-motion). Reduced motion is handled inside the SVG itself. */
+html[data-motion="paused"] img[src$="ink-feedback.svg"] { content: url("img/ink-feedback-still.svg"); }
 ::view-transition-old(root), ::view-transition-new(root) { animation-duration: .22s; }
 
 @media (prefers-reduced-motion: no-preference) {
