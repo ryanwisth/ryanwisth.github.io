@@ -41,6 +41,11 @@ html[data-look="brush"] {
   --g-felt: none; --g-cotton: none; --quilt: none; --strand-sig: none; --strand-pink: none; --strand-yellow: none;
   --spring: cubic-bezier(.2, .9, .3, 1); --zip-dim: none;
   --snap: cubic-bezier(.15, .85, .3, 1);
+  /* polish (Nov 20): the motion vocabulary. lay = ink laid down and settling (arrivals, strokes, unrolls); lift = paper
+     lifted away (leaving); snap = a quick decisive stroke (focus, rod); spring = a press giving back. quick/move/turn are the
+     three durations: a mark (.24s), a sheet arriving or a page change half (.34s), a full stroke (.46s). */
+  --b-lay: cubic-bezier(.2, .85, .35, 1); --b-lift: cubic-bezier(.55, 0, .8, .3); --b-quick: .24s; --b-move: .34s; --b-turn: .46s;
+  --b-carry: cubic-bezier(.5, 0, .2, 1); /* a sheet carried from one place to another (a title between pages) */
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
@@ -279,7 +284,8 @@ html[data-look="brush"] .theme-toggle { border: 0; border-radius: 0; background:
 html[data-look="brush"] .theme-toggle::before { content: ""; position: absolute; inset: -1px; pointer-events: none; background: var(--ink); mask: var(--b-enso0) 0 0 / 100% 100% no-repeat; }
 html[data-look="brush"] .look-toggle::before { mask-image: var(--b-enso2); }
 html[data-look="brush"] .look-toggle { color: var(--verm); }
-html[data-look="brush"] :is(.theme-toggle):is(:hover, :active) { transform: none; box-shadow: none; color: var(--sig-ink); }
+html[data-look="brush"] :is(.theme-toggle):active { transform: none; box-shadow: none; color: var(--sig-ink); }
+@media (hover: hover) { html[data-look="brush"] :is(.theme-toggle):hover { transform: none; box-shadow: none; color: var(--sig-ink); } } /* polish: no hover left stuck on a phone after a tap */
 
 /* ---------- the head of the page: a painted scene under the opening paragraph ----------
    Sun behind the far range, two ranges of mountains parted by mist, near hills in black ink, two cloud bands and a
@@ -412,7 +418,8 @@ html[data-look="brush"] .film::after { content: ""; position: absolute; left: -1
 html[data-look="brush"] .film::before { top: -14px; }
 html[data-look="brush"] .film::after { bottom: -16px; height: 20px; mask-size: 100% 17px, 20px 20px, 20px 20px; }
 html[data-look="brush"] .vid-toggle { border: 0; border-radius: 50%; box-shadow: none; background: var(--ink); color: var(--bg); mask: var(--b-sealo) 0 0 / 100% 100% no-repeat; -webkit-backdrop-filter: none; backdrop-filter: none; }
-html[data-look="brush"] .vid-toggle:hover { background: var(--seal); color: var(--on-seal); }
+@media (hover: hover) { html[data-look="brush"] .vid-toggle:hover { background: var(--seal); color: var(--on-seal); } }
+html[data-look="brush"] .vid-toggle:active { background: var(--seal); color: var(--on-seal); }
 html[data-look="brush"] :is(.vid-sound, .vid-sound[aria-pressed="true"]) { isolation: isolate; border: 0; border-radius: 0; background: none; box-shadow: none; color: var(--on-seal); font-weight: 900; letter-spacing: .03em; -webkit-backdrop-filter: none; backdrop-filter: none; }
 html[data-look="brush"] .vid-sound::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: var(--seal); mask: var(--b-seal) 0 0 / 100% 100% no-repeat; }
 html[data-look="brush"] .vid-sound[aria-pressed="true"]::before { background: #1b1713; }
@@ -683,8 +690,8 @@ html[data-look="brush"] .demo-poster:hover img { scale: 1; }
   /* the head of the page: the headline is written in, the scene's outlines are painted left to right, then colour
      floods out from the sun, the rays come up and turn, petals start to fall and the mist drifts */
   html[data-look="brush"].motion .hero h1 { animation: rise .55s var(--snap) .05s both; }
-  html[data-look="brush"].motion .hero-mail::after { animation: b-wipe 1s cubic-bezier(.3, .6, .3, 1) .25s both, b-boil-scene .375s steps(1) 1.3s infinite; }
-  html[data-look="brush"].motion .hero-mail::before { animation: b-bloom .55s cubic-bezier(.3, .7, .3, 1) 1.15s both, b-mist 70s linear 1.7s infinite; }
+  html[data-look="brush"].motion .hero-mail::after { animation: b-wipe 1s var(--b-lay) .25s both, b-boil-scene .375s steps(1) 1.3s infinite; }
+  html[data-look="brush"].motion .hero-mail::before { animation: b-bloom .55s var(--b-lay) 1.15s both, b-mist 70s linear 1.7s infinite; }
   html[data-look="brush"].motion .hero-one::before { animation: b-pop .3s var(--snap) 1.45s both, b-turn 80s linear 1.75s infinite; }
   html[data-look="brush"].motion .hero-one::after { animation: b-in .5s ease-out 1.6s both, b-petals 26s linear infinite; }
   html[data-look="brush"].motion .brand .mark { animation: b-stamp .2s var(--snap) .15s both; }
@@ -693,7 +700,7 @@ html[data-look="brush"] .demo-poster:hover img { scale: 1; }
   /* the round buttons' rings boil; a hover gives a quick turn, a press pushes in */
   html[data-look="brush"].motion .theme-toggle::before { animation: b-boil-ring .375s steps(1) infinite; }
   html[data-look="brush"].motion .theme-toggle { transition: scale .08s steps(2); }
-  html[data-look="brush"].motion .theme-toggle:hover::before { rotate: 40deg; }
+  @media (hover: hover) { html[data-look="brush"].motion .theme-toggle:hover::before { rotate: 40deg; } }
   html[data-look="brush"].motion .theme-toggle:active { scale: .88; }
 
   /* outlines: drawn round the box, then they boil; the colour block snaps in after the outline, off-register */
@@ -708,26 +715,26 @@ html[data-look="brush"] .demo-poster:hover img { scale: 1; }
   html[data-look="brush"].motion .method > li:nth-child(3)::after { animation-delay: .5s, 0s; }
   html[data-look="brush"].motion .unzipped .method > li::after { animation-play-state: running; }
   html[data-look="brush"].motion .section:not(.unzipped) .method > li::before { opacity: 0; }
-  html[data-look="brush"].motion .unzipped .method > li::before { animation: b-flood .4s cubic-bezier(.3, .7, .3, 1) .55s both; }
+  html[data-look="brush"].motion .unzipped .method > li::before { animation: b-flood .4s var(--b-lay) .55s both; }
   html[data-look="brush"].motion .unzipped .method > li:nth-child(2)::before { animation-delay: .8s; }
   html[data-look="brush"].motion .unzipped .method > li:nth-child(3)::before { animation-delay: 1.05s; }
   html[data-look="brush"].motion .pills span::after { animation: b-boil .375s steps(1) infinite; }
 
   /* life returns: a section's long stroke is drawn, a ring runs out from its title, colour floods back behind it,
      the branch flowers, petals lift */
-  html[data-look="brush"].motion .section::before { clip-path: inset(-50% 100% -50% 0); transition: clip-path .5s cubic-bezier(.2, .85, .35, 1); }
+  html[data-look="brush"].motion .section::before { clip-path: inset(-50% 100% -50% 0); transition: clip-path .5s var(--b-lay); }
   html[data-look="brush"].motion .section.unzipped::before { clip-path: inset(-50% 0 -50% 0); animation: b-boil-line .375s steps(1) .5s infinite; }
   html[data-look="brush"].motion #how.section.unzipped::before { animation: none; }
   html[data-look="brush"].motion .section:not(.unzipped)::after { scale: 0; }
   html[data-look="brush"].motion #how.section:not(.unzipped)::after { scale: 0; }
   html[data-look="brush"].motion .section.unzipped::after { animation: b-pop .32s var(--snap) .45s both, b-sway 5s ease-in-out .8s infinite; }
   html[data-look="brush"].motion #how.section.unzipped::after { animation: b-pop .32s var(--snap) .45s both; }
-  html[data-look="brush"].motion .section-head h2::after { clip-path: inset(-50% 100% -50% 0); transition: clip-path .32s cubic-bezier(.2, .85, .35, 1) .15s; }
+  html[data-look="brush"].motion .section-head h2::after { clip-path: inset(-50% 100% -50% 0); transition: clip-path .32s var(--b-lay) .15s; }
   html[data-look="brush"].motion .section-head.in h2::after { clip-path: inset(-50% -2% -50% 0); }
-  html[data-look="brush"].motion .section-head.in::before { animation: b-ring .6s cubic-bezier(.2, .7, .3, 1) .2s; }
+  html[data-look="brush"].motion .section-head.in::before { animation: b-ring .6s var(--b-lay) .2s; }
   html[data-look="brush"].motion .section-head.in::after { animation: b-lift 1.6s ease-out .55s; }
   html[data-look="brush"].motion .section:not(.unzipped) .group-h::after { clip-path: circle(0 at 6% 30%); }
-  html[data-look="brush"].motion .unzipped .group-h::after { animation: b-flood .45s cubic-bezier(.3, .7, .3, 1) .45s both; }
+  html[data-look="brush"].motion .unzipped .group-h::after { animation: b-flood .45s var(--b-lay) .45s both; }
   html[data-look="brush"].motion .unzipped .more-g:nth-child(2) .group-h::after { animation-delay: .6s; }
   html[data-look="brush"].motion .unzipped .more-g:nth-child(3) .group-h::after { animation-delay: .75s; }
   html[data-look="brush"].motion .unzipped .more-g:nth-child(4) .group-h::after { animation-delay: .9s; }
@@ -751,15 +758,15 @@ html[data-look="brush"] .demo-poster:hover img { scale: 1; }
   html[data-look="brush"].motion .btn:not(.primary):hover::after { animation: b-boil .2s steps(1) infinite; }
   html[data-look="brush"].motion .btn:active { scale: .94; transition: scale .06s steps(2); }
   html[data-look="brush"].motion .btn.primary:hover::before { translate: 1px 2px; }
-  html[data-look="brush"].motion :is(.topnav a, .lead-go, .card .lead-go)::after { transition: clip-path .22s cubic-bezier(.2, .85, .35, 1); }
+  html[data-look="brush"].motion :is(.topnav a, .lead-go, .card .lead-go)::after { transition: clip-path .22s var(--b-lay); }
   html[data-look="brush"].motion .vid-sound:active,
   html[data-look="brush"].motion .vid-toggle:active { scale: .92; }
   /* ---------- the case pages ---------- */
   /* the head: the branch bursts into flower and sways; the stroke is swept under the title once it is written */
   html[data-look="brush"].motion .case-head::before { animation: b-pop .32s var(--snap) .55s both, b-sway 5s ease-in-out 1s infinite; }
-  html[data-look="brush"].motion .case-head h1::after { animation: b-wipe .32s cubic-bezier(.2, .85, .35, 1) .5s both; }
+  html[data-look="brush"].motion .case-head h1::after { animation: b-wipe .32s var(--b-lay) .5s both; }
   html[data-look="brush"].motion .kicker::before { animation: b-stamp .2s var(--snap) .3s both; }
-  html[data-look="brush"].motion .back::after { transition: clip-path .22s cubic-bezier(.2, .85, .35, 1); }
+  html[data-look="brush"].motion .back::after { transition: clip-path .22s var(--b-lay); }
   /* sheets: the outline is drawn round, then boils; the colour snaps in after it, off-register. Panels inside a figure,
      the repository card and the pager wait until they are reached; the facts at the top are drawn on arrival. */
   html[data-look="brush"].motion :is(.fact, .chart-card, .repo-card, .flow li, .band3 > div, .pager a, .term, .paper, .shot)::after { animation: b-sew .45s linear var(--d, 0s) backwards, b-boil .375s steps(1) infinite; animation-play-state: paused; }
@@ -783,7 +790,7 @@ html[data-look="brush"] .demo-poster:hover img { scale: 1; }
   html[data-look="brush"].motion .flow li,
   html[data-look="brush"].motion .in .flow li { opacity: 1; translate: none; transition: none; --d: calc(var(--i, 0) * .14s + .3s); }
   html[data-look="brush"].motion .flow::before { clip-path: inset(0 0 100% 0); }
-  html[data-look="brush"].motion .figure.in .flow::before { animation: b-down .6s cubic-bezier(.2, .85, .35, 1) .05s both; }
+  html[data-look="brush"].motion .figure.in .flow::before { animation: b-down .6s var(--b-lay) .05s both; }
   html[data-look="brush"].motion .figure:not(.in) .flow li { background-size: 0 0; }
   html[data-look="brush"].motion .figure.in .flow li { animation: b-snapbg .13s steps(2) calc(var(--d) + .42s) backwards; }
   html[data-look="brush"].motion .figure.in .flow li::before { animation: b-stamp .2s var(--snap) calc(var(--d) + .3s) both; }
@@ -795,11 +802,11 @@ html[data-look="brush"] .demo-poster:hover img { scale: 1; }
   html[data-look="brush"].motion .th-live .prose > h2.th-on::before { animation: b-stamp .2s var(--snap) both; }
   html[data-look="brush"].motion .prose h2::after { animation: b-boil-hl .375s steps(1) infinite; }
   /* charts: each bar is painted along, quick off the mark; a range's dry bristles follow it */
-  html[data-look="brush"].motion .track i { transition: clip-path .5s cubic-bezier(.2, .85, .35, 1) .25s; }
+  html[data-look="brush"].motion .track i { transition: clip-path .5s var(--b-lay) .25s; }
   html[data-look="brush"].motion .row:nth-child(2) .track i,
   html[data-look="brush"].motion tr:nth-child(odd) .track i { transition-delay: .38s; }
   html[data-look="brush"].motion .row:nth-child(3) .track i { transition-delay: .5s; }
-  html[data-look="brush"].motion .linechart .ln1 { transition: stroke-dashoffset .8s cubic-bezier(.2, .85, .35, 1) .3s; }
+  html[data-look="brush"].motion .linechart .ln1 { transition: stroke-dashoffset .8s var(--b-lay) .3s; }
   html[data-look="brush"].motion .linechart .y-ply { opacity: 0; transition: opacity .01s steps(1) 1.1s; }
   html[data-look="brush"].motion .in .linechart .y-ply { opacity: 1; }
   html[data-look="brush"].motion .linechart :is(.pt, .val) { transition: opacity .01s steps(1) calc(var(--k, 0) * 180ms + 700ms); }
@@ -872,7 +879,7 @@ html[data-look="brush"][data-theme="dark"] { --b-selc: color-mix(in srgb, var(--
   html[data-look="brush"].motion.b-live .thread .b-th-body { fill: var(--ink); stroke: none; }
   html[data-look="brush"].motion.b-live .thread .b-th-dry { fill: none; stroke: var(--ink); stroke-width: .9; stroke-dasharray: 7 3 2 4 11 3; stroke-linecap: round; opacity: .8; }
   html[data-look="brush"].motion.b-live .b-th-pool { position: absolute; left: 0; top: 0; width: 18px; height: 18px; pointer-events: none; background: var(--ink); mask: var(--b-dab) 0 0 / 100% 100% no-repeat; scale: .15; opacity: 0; transition: scale .12s ease-in, opacity .12s; }
-  html[data-look="brush"].motion.b-live .b-th-pool.b-on { scale: 1; opacity: .9; transition: scale .6s cubic-bezier(.2, .8, .3, 1), opacity .2s; }
+  html[data-look="brush"].motion.b-live .b-th-pool.b-on { scale: 1; opacity: .9; transition: scale .6s var(--b-lay), opacity .2s; }
 
   /* 2 and 14 by scroll timeline: the stroke follows the scroll both ways; at rest it holds still */
   @supports (animation-timeline: view()) {
@@ -893,7 +900,7 @@ html[data-look="brush"][data-theme="dark"] { --b-selc: color-mix(in srgb, var(--
   html[data-look="brush"].motion.b-live.b-sjs .in :is(.bars .row, .minis tr) .track i { transition: none; clip-path: inset(-10px calc(100% - var(--b-p, 1) * (100% + 14px)) -10px -2px); }
 
   /* 3. the opening painting: the hills barely move, the mist drifts lower, the sun sinks behind the far range */
-  html[data-look="brush"].motion.b-live .hero-mail::before { background: var(--b-scene-x, var(--b-scene)) right bottom / auto 100% no-repeat; animation: b-bloom .55s cubic-bezier(.3, .7, .3, 1) 1.15s both; translate: 0 var(--b-hill-y, 0px); }
+  html[data-look="brush"].motion.b-live .hero-mail::before { background: var(--b-scene-x, var(--b-scene)) right bottom / auto 100% no-repeat; animation: b-bloom .55s var(--b-lay) 1.15s both; translate: 0 var(--b-hill-y, 0px); }
   html[data-look="brush"].motion.b-live .hero-mail::after { translate: 0 var(--b-hill-y, 0px); }
   html[data-look="brush"].motion.b-live .hero-one::before { translate: 0 var(--b-sun-y, 0px); }
   html[data-look="brush"].motion.b-live .b-mist { position: absolute; z-index: -1; left: 0; right: 0; bottom: 0; height: var(--sh); pointer-events: none;
@@ -908,16 +915,16 @@ html[data-look="brush"][data-theme="dark"] { --b-selc: color-mix(in srgb, var(--
   html[data-look="brush"].motion.b-live .b-petal { position: fixed; top: 0; z-index: 5; width: 11px; height: 8px; pointer-events: none; background: var(--blossom); mask: var(--b-dab) 0 0 / 100% 100% no-repeat; opacity: 0; }
 
   /* 5. the second coat: over the vermilion stroke a darker one is swept; the thin case-page stroke turns full ink */
-  html[data-look="brush"].motion.b-live .section-head h2.b-coat::before { content: ""; position: absolute; left: -6px; bottom: 0; width: min(100% + 60px, 460px); height: 16px; pointer-events: none; background: var(--sig-ink); opacity: .85; mask: var(--b-sweep1) 0 0 / 100% 100% no-repeat; animation: b-coatk .26s cubic-bezier(.2, .85, .35, 1) both; }
+  html[data-look="brush"].motion.b-live .section-head h2.b-coat::before { content: ""; position: absolute; left: -6px; bottom: 0; width: min(100% + 60px, 460px); height: 16px; pointer-events: none; background: var(--sig-ink); opacity: .85; mask: var(--b-sweep1) 0 0 / 100% 100% no-repeat; animation: b-coatk .26s var(--b-lay) both; }
   html[data-look="brush"].motion.b-live .prose > h2::after { transition: background-color .5s ease-out; }
   html[data-look="brush"].motion.b-live .prose > h2.b-coat::after { background-color: var(--ink); transition: background-color .14s steps(2); }
 
   /* 6. a sheet soaks: its colour wicks a few pixels past the outline and the outline boils faster */
   html[data-look="brush"].motion.b-live :is(.card.in, .pager.in a)::before { transition: inset .35s ease-out, translate .08s steps(2); }
-  html[data-look="brush"].motion.b-live :is(.card.in, .pager.in a).b-soak::before { inset: -8px -9px -9px -8px; translate: 7px 6px; transition: inset .45s cubic-bezier(.2, .7, .3, 1), translate .08s steps(2); }
+  html[data-look="brush"].motion.b-live :is(.card.in, .pager.in a).b-soak::before { inset: -8px -9px -9px -8px; translate: 7px 6px; transition: inset .45s var(--b-lay), translate .08s steps(2); }
   html[data-look="brush"].motion.b-live :is(.card.in, .pager.in a).b-soak::after { animation-duration: .45s, .2s; }
   @media (hover: hover) and (pointer: fine) {
-    html[data-look="brush"].motion.b-live :is(.card.in, .pager.in a):hover::before { inset: -8px -9px -9px -8px; translate: 7px 6px; transition: inset .45s cubic-bezier(.2, .7, .3, 1), translate .08s steps(2); }
+    html[data-look="brush"].motion.b-live :is(.card.in, .pager.in a):hover::before { inset: -8px -9px -9px -8px; translate: 7px 6px; transition: inset .45s var(--b-lay), translate .08s steps(2); }
   }
 
   /* 7. the seal's print, left where it was pressed */
@@ -925,16 +932,16 @@ html[data-look="brush"][data-theme="dark"] { --b-selc: color-mix(in srgb, var(--
 
   /* 8. a link's stroke grows from the side the pointer came in, over the resting stroke */
   @media (hover: hover) and (pointer: fine) {
-    html[data-look="brush"].motion.b-live :is(.hero-sub, footer.site, .prose, .lede) a { background: var(--b-ul) 0 100% / 0 .5em no-repeat, var(--b-ul) 0 100% / 100% .34em no-repeat; transition: background-size .24s cubic-bezier(.2, .85, .35, 1); }
-    html[data-look="brush"].motion.b-live .hero-mail a { background: var(--b-ul) 0 calc(50% + .78em) / 0 .5em no-repeat, var(--b-ul) 0 calc(50% + .78em) / 100% .34em no-repeat; transition: background-size .24s cubic-bezier(.2, .85, .35, 1); }
+    html[data-look="brush"].motion.b-live :is(.hero-sub, footer.site, .prose, .lede) a { background: var(--b-ul) 0 100% / 0 .5em no-repeat, var(--b-ul) 0 100% / 100% .34em no-repeat; transition: background-size .24s var(--b-lay); }
+    html[data-look="brush"].motion.b-live .hero-mail a { background: var(--b-ul) 0 calc(50% + .78em) / 0 .5em no-repeat, var(--b-ul) 0 calc(50% + .78em) / 100% .34em no-repeat; transition: background-size .24s var(--b-lay); }
     html[data-look="brush"].motion.b-live :is(.hero-sub, footer.site, .prose, .lede) a[data-b-from="r"] { background-position: 100% 100%, 0 100%; }
     html[data-look="brush"].motion.b-live .hero-mail a[data-b-from="r"] { background-position: 100% calc(50% + .78em), 0 calc(50% + .78em); }
     html[data-look="brush"].motion.b-live :is(.hero-sub, footer.site, .prose, .lede, .hero-mail) a:hover { background-size: 100% .5em, 100% .34em; }
   }
 
   /* 9. a tap: a drop of ink that spreads into the paper (touch only; the script makes it) */
-  html[data-look="brush"].motion.b-live .b-drop { position: fixed; z-index: 30; width: 64px; height: 64px; margin: -32px 0 0 -32px; pointer-events: none; background: var(--ink);
-    mask: var(--b-dab) center / 34% 34% no-repeat, var(--b-enso2) center / 100% 100% no-repeat; animation: b-dropk .7s cubic-bezier(.2, .7, .3, 1) both; }
+  html[data-look="brush"].motion.b-live .b-drop { position: fixed; z-index: 9; width: 64px; height: 64px; margin: -32px 0 0 -32px; pointer-events: none; background: var(--ink);
+    mask: var(--b-dab) center / 34% 34% no-repeat, var(--b-enso2) center / 100% 100% no-repeat; animation: b-dropk .7s var(--b-lay) both; }
 
   /* 10. the brush tip that follows a mouse; the system pointer comes back in fields you type in */
   html[data-look="brush"].motion.b-live.b-tip-on,
@@ -958,7 +965,7 @@ html[data-look="brush"][data-theme="dark"] { --b-selc: color-mix(in srgb, var(--
   html[data-look="brush"].motion.b-live :is(.fact b, .bigfig b, .card .stat b) { position: relative; }
   html[data-look="brush"].motion.b-live :is(.fact b, .bigfig b, .card .stat b)::after { content: ""; position: absolute; left: calc(var(--b-cx, 0px) - var(--b-es, 0px) / 2); top: calc(var(--b-cy, 0px) - var(--b-es, 0px) / 2); width: var(--b-es, 0px); height: var(--b-es, 0px); scale: var(--b-sx, 1) 1; pointer-events: none; opacity: 0; transition: opacity .3s;
     background: var(--verm); mask: var(--b-enso1) 0 0 / 100% 100% no-repeat, conic-gradient(from -100deg, #000 var(--b-a), #0000 0); mask-composite: intersect; }
-  html[data-look="brush"].motion.b-live :is(.fact b, .bigfig b, .card .stat b).b-enso::after { opacity: 1; transition: opacity .05s; animation: b-enso-draw .45s cubic-bezier(.3, .7, .3, 1) both; }
+  html[data-look="brush"].motion.b-live :is(.fact b, .bigfig b, .card .stat b).b-enso::after { opacity: 1; transition: opacity .05s; animation: b-enso-draw .45s var(--b-lay) both; }
 
   /* 13. keyboard focus: a brushed ring (round things) or frame, in the same vermilion as the outline it replaces */
   html[data-look="brush"].motion.b-live.b-kbd :focus-visible,
@@ -971,11 +978,11 @@ html[data-look="brush"][data-theme="dark"] { --b-selc: color-mix(in srgb, var(--
   /* 14. a bar's value is written again, with a dry tail under it (hover, or a tap) */
   html[data-look="brush"].motion.b-live .bars .val { position: relative; }
   html[data-look="brush"].motion.b-live .bars .val::after { content: ""; position: absolute; left: 0; right: 0; bottom: -.18em; height: .34em; pointer-events: none; background: var(--verm); mask: var(--b-dry) 0 50% / 100% 100% no-repeat; clip-path: inset(0 100% 0 0); transition: clip-path .12s; }
-  html[data-look="brush"].motion.b-live .bars .row.b-tap .val { animation: b-write .28s cubic-bezier(.2, .85, .35, 1) both; }
-  html[data-look="brush"].motion.b-live .bars .row.b-tap .val::after { clip-path: inset(0); transition: clip-path .3s cubic-bezier(.2, .85, .35, 1) .18s; }
+  html[data-look="brush"].motion.b-live .bars .row.b-tap .val { animation: b-write .28s var(--b-lay) both; }
+  html[data-look="brush"].motion.b-live .bars .row.b-tap .val::after { clip-path: inset(0); transition: clip-path .3s var(--b-lay) .18s; }
   @media (hover: hover) and (pointer: fine) {
-    html[data-look="brush"].motion.b-live .bars .row:hover .val { animation: b-write .28s cubic-bezier(.2, .85, .35, 1) both; }
-    html[data-look="brush"].motion.b-live .bars .row:hover .val::after { clip-path: inset(0); transition: clip-path .3s cubic-bezier(.2, .85, .35, 1) .18s; }
+    html[data-look="brush"].motion.b-live .bars .row:hover .val { animation: b-write .28s var(--b-lay) both; }
+    html[data-look="brush"].motion.b-live .bars .row:hover .val::after { clip-path: inset(0); transition: clip-path .3s var(--b-lay) .18s; }
   }
 
   /* 15. touch screens and narrow windows: the outlines boil four times a second instead of eight */
@@ -1085,9 +1092,9 @@ html[data-look="brush"] .b-cseal.b-v4 { mask-image: var(--b-cs4); }
 @keyframes b-glint { from { opacity: 0; } to { opacity: .95; } }
 @media (prefers-reduced-motion: no-preference) {
   html[data-look="brush"].motion.b-live .b-print { animation: b-printk 1.1s ease-out both, b-printwet 1.1s ease-out both; }
-  html[data-look="brush"].motion.b-live .b-cseal.b-new { animation: b-sealk 1.3s cubic-bezier(.2, .9, .3, 1) both; }
+  html[data-look="brush"].motion.b-live .b-cseal.b-new { animation: b-sealk 1.3s var(--spring) both; }
   html[data-look="brush"].motion.b-live footer.site:not(.b-stamped) .wrap > span:nth-child(2)::before { opacity: 0; }
-  html[data-look="brush"].motion.b-live footer.site.b-stamped .wrap > span:nth-child(2)::before { animation: b-sealk 1.3s cubic-bezier(.2, .9, .3, 1) .2s both; }
+  html[data-look="brush"].motion.b-live footer.site.b-stamped .wrap > span:nth-child(2)::before { animation: b-sealk 1.3s var(--spring) .2s both; }
   html[data-look="brush"].motion :is(.shot img, .shot video, .demo-poster img, .card .thumb) { transition: filter .7s ease-out; }
   @supports (animation-timeline: scroll()) {
     html[data-look="brush"].motion.b-live .b-mica { position: absolute; top: 0; z-index: -1; pointer-events: none; }
@@ -1112,27 +1119,39 @@ html[data-look="brush"] .b-cseal.b-v4 { mask-image: var(--b-cs4); }
    5 focus and press: the brushed focus frame draws itself round each new element; focus landing on a sheet nudges it.
    Everything here sits under .b-live (only while look-brush.js runs: motion on, not reduced) except the page transition,
    which is gated on the same things by media query and data-motion. Nothing here takes a tap or a click. */
-@keyframes b-hang { 0%, 100% { rotate: calc(var(--b-sa, 0deg) * -1); } 50% { rotate: var(--b-sa, 0deg); } }
+/* polish: the sway moves the paper, never the words. b-hang now drives --b-sw on the sheet (registered, not inherited, so
+   the text inside is never restyled or turned) and only the sheet's colour block and outline take it as a rotate, hung
+   from their top edge: text on a sheet stays crisp at rest. */
+@property --b-sw { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+@keyframes b-hang { 0%, 100% { --b-sw: calc(var(--b-sa, 0deg) * -1); } 50% { --b-sw: var(--b-sa, 0deg); } }
 @keyframes b-unroll { from { clip-path: inset(-30px -30px 100% -30px); } to { clip-path: inset(-30px -30px -30px -30px); } }
 @keyframes b-focus-draw { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0); } }
 @keyframes b-vt-roll { from { clip-path: inset(0); } to { clip-path: inset(0 0 100% 0); } }
 @keyframes b-vt-open { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0); } }
+@keyframes b-vt-roll-down { from { clip-path: inset(0); } to { clip-path: inset(100% 0 0 0); } }
+@keyframes b-vt-open-up { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0); } }
+@keyframes b-vt-lift { to { opacity: 0; } }
+@keyframes b-vt-write { from { clip-path: inset(-25% 100% -25% -4%); } to { clip-path: inset(-25% -4% -25% -4%); } }
 @media (prefers-reduced-motion: no-preference) {
   /* 2 and 3: hang and unroll (the :is(…, #b-x) lifts these over the reveal rules' "animation: none") */
   html[data-look="brush"].motion.b-live :is(.b-fl, #b-x) { transform-origin: 50% 0; translate: calc(var(--b-fx, 0) * .1px) calc(var(--b-fy, 0) * .14px); }
-  html[data-look="brush"].motion.b-live :is(.b-fl, #b-x).b-vis { animation: b-hang 11s ease-in-out calc(var(--b-ph, 0s) * -1) infinite; } /* only sheets on (or near) the screen */
+  html[data-look="brush"].motion.b-live :is(.b-fl, #b-x).b-vis { animation: b-hang 11s steps(22) calc(var(--b-ph, 0s) * -1) infinite; } /* only sheets on (or near) the screen */
   html[data-look="brush"].motion.b-live.b-scr :is(.b-fl, #b-x).b-vis { animation-play-state: paused; }
   html[data-look="brush"].motion.b-live.b-scr :is(.b-ur, #b-x).b-fl.b-vis.in { animation-play-state: running, paused; } /* an unroll still runs */
   html[data-look="brush"].motion.b-live :is(.b-ur, #b-x):not(.in) { opacity: 0; } /* (not a clip: a clipped sheet never counts as on screen, so it would never be reached) */
-  html[data-look="brush"].motion.b-live :is(.b-ur, #b-x).in { animation: b-unroll .46s cubic-bezier(.3, .7, .25, 1) var(--d, 0s) backwards; }
-  html[data-look="brush"].motion.b-live :is(.b-ur, #b-x).b-fl.b-vis.in { animation: b-unroll .46s cubic-bezier(.3, .7, .25, 1) var(--d, 0s) backwards, b-hang 11s ease-in-out calc(var(--b-ph, 0s) * -1) infinite; }
+  html[data-look="brush"].motion.b-live :is(.b-ur, #b-x).in { animation: b-unroll .46s var(--b-lay) var(--d, 0s) backwards; }
+  html[data-look="brush"].motion.b-live :is(.b-ur, #b-x).b-fl.b-vis.in { animation: b-unroll .46s var(--b-lay) var(--d, 0s) backwards, b-hang 11s steps(22) calc(var(--b-ph, 0s) * -1) infinite; }
   /* 3 the paper flexing: the block lags most, the outline less, the words on the sheet barely (above, 0.14 of it) */
   html[data-look="brush"].motion.b-live .b-fl::before { transform: translate(calc(var(--b-fx, 0) * 1px), calc(var(--b-fy, 0) * 1px)) skewY(calc(var(--b-fy, 0) * .07deg)); }
   html[data-look="brush"].motion.b-live .b-fl::after { transform: translate(calc(var(--b-fx, 0) * .4px), calc(var(--b-fy, 0) * .4px)); }
+  html[data-look="brush"].motion.b-live .b-fl.b-vis::before,
+  html[data-look="brush"].motion.b-live .b-fl.b-vis::after { --b-sw: inherit; rotate: var(--b-sw); transform-origin: 50% 0; }
   /* 3 the scroll rod: the paper curling onto it, a gold mounting strip, the rod with its grain, octagonal knobs */
   html[data-look="brush"].motion.b-live .b-rod { position: fixed; left: 0; right: 0; bottom: 0; height: 24px; z-index: 6; pointer-events: none; overflow: hidden; contain: strict;
-    translate: 0 110%; visibility: hidden; transition: translate .3s cubic-bezier(.55, 0, .8, .3), visibility 0s .3s; }
+    translate: 0 110%; visibility: hidden; transition: translate .3s var(--b-lift), visibility 0s .3s; }
   html[data-look="brush"].motion.b-live .b-rod.b-on { translate: 0 0; visibility: visible; transition: translate .14s var(--snap), visibility 0s; }
+  html[data-look="brush"].motion.b-live .b-rod.b-now { transition: none; } /* put away at once (tab hidden, page leaving) */
+  html[data-look="brush"].motion.b-live :is(.b-fl, #b-x).b-vis.b-hush { animation-play-state: paused; } /* 14 a playing film's sheet holds still */
   /* (hidden when down, not only moved below the window: a full-page capture draws what sits below the window) */
   html[data-look="brush"].motion.b-live .b-rod-grain { position: absolute; left: 0; right: 0; top: 10px; height: 38px; will-change: transform;
     background: var(--ink) repeating-linear-gradient(to bottom, transparent 0 5px, color-mix(in srgb, var(--bg) 30%, transparent) 5px 7px, transparent 7px 9px, color-mix(in srgb, var(--bg) 14%, transparent) 9px 10px, transparent 10px 12px); }
@@ -1142,8 +1161,9 @@ html[data-look="brush"] .b-cseal.b-v4 { mask-image: var(--b-cs4); }
   html[data-look="brush"].motion.b-live .b-rod::after { content: ""; position: absolute; z-index: 1; bottom: 0; width: 14px; height: 15px; left: 0; background: var(--seal);
     clip-path: polygon(30% 0, 70% 0, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0 70%, 0 30%); }
   html[data-look="brush"].motion.b-live .b-rod::after { left: auto; right: 0; }
-  /* 4 the flick: a tapered stroke from the tip and a spray of drops (one vermilion), animated by the script */
-  html[data-look="brush"].motion.b-live .b-flick { position: fixed; z-index: 30; width: 0; height: 0; pointer-events: none; }
+  /* 4 the flick: a tapered stroke from the tip and a spray of drops (one vermilion), animated by the script. Thrown ink and
+     the tap drop sit at z 9: over the rod (6) and petals (5), under the top bar (10), which stays above everything. */
+  html[data-look="brush"].motion.b-live .b-flick { position: fixed; z-index: 9; width: 0; height: 0; pointer-events: none; }
   html[data-look="brush"].motion.b-live .b-flick-s { position: absolute; left: 0; top: -3px; width: 30px; height: 6px; transform-origin: 0 50%; background: var(--ink);
     clip-path: polygon(0 18%, 14% 0, 40% 22%, 100% 46%, 100% 54%, 40% 78%, 14% 100%, 0 82%); }
   html[data-look="brush"].motion.b-live .b-flick-d { position: absolute; left: 0; top: 0; background: var(--ink); clip-path: polygon(30% 0, 70% 0, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0 70%, 0 30%); }
@@ -1151,12 +1171,36 @@ html[data-look="brush"] .b-cseal.b-v4 { mask-image: var(--b-cs4); }
   /* 5 the focus frame is drawn, left to right, round each element it lands on */
   html[data-look="brush"].motion.b-live .b-focus.b-on { animation: b-focus-draw .24s var(--snap) both; }
 
-  /* 1 page to page */
+  /* 15 the look picker unrolls from the bar when opened and rolls back up when closed; the film script unrolls when opened */
+  html[data-look="brush"].motion .look-menu { clip-path: inset(-30px -30px -30px -30px); transition: clip-path var(--b-quick) var(--b-lay), display var(--b-quick) allow-discrete; }
+  html[data-look="brush"].motion .look-menu[hidden] { clip-path: inset(-30px -30px 100% -30px); transition-duration: .16s; transition-timing-function: var(--b-lift); }
+  @starting-style { html[data-look="brush"].motion .look-menu:not([hidden]) { clip-path: inset(-30px -30px 100% -30px); } }
+  html[data-look="brush"].motion .film-script[open] > :not(summary) { animation: b-unroll var(--b-turn) var(--b-lay) both; }
+  html[data-look="brush"].motion .film-script > summary::before { transition: rotate var(--b-quick) var(--b-lay); }
+
+  /* 1 page to page. Forward: the old sheet rolls up into the top mounting, the next unrolls down from it. Back (polish):
+     the mirror, the sheet you leave rolls down onto the rod at the foot and the one you return to unrolls up from it, the
+     ink edge riding on top. Titles (the site's t-* names, classed b-t here): the old title's ink lifts in the first half
+     while the page rolls away, the new one is written left to right in the second half; a title that exists on both
+     pages is carried between its two places across the whole change. The top bar is one still sheet: no crossfade.
+     A reload (none in Chrome today) and the paused/reduced cases have no animation. */
   html[data-look="brush"]:not([data-motion="paused"]) .topbar { view-transition-name: b-top; }
-  html[data-look="brush"]:not([data-motion="paused"])::view-transition-old(root) { animation: b-vt-roll .26s cubic-bezier(.55, 0, .8, .3) both; }
-  html[data-look="brush"]:not([data-motion="paused"])::view-transition-new(root) { animation: b-vt-open .34s cubic-bezier(.2, .8, .3, 1) .24s both; }
+  html[data-look="brush"]:not([data-motion="paused"]) [style*="view-transition-name: t-"] { view-transition-class: b-t; }
+  html[data-look="brush"]:not([data-motion="paused"])::view-transition-old(root) { animation: b-vt-roll .26s var(--b-lift) both; }
+  html[data-look="brush"]:not([data-motion="paused"])::view-transition-new(root) { animation: b-vt-open var(--b-move) var(--b-lay) .24s both; }
   html[data-look="brush"]:not([data-motion="paused"])::view-transition-image-pair(root) { filter: drop-shadow(0 4px 0 var(--ink)); }
-  html[data-look="brush"]:not([data-motion="paused"])::view-transition-group(b-top) { animation-duration: .58s; }
+  html[data-look="brush"]:not([data-motion="paused"]):active-view-transition-type(back)::view-transition-old(root) { animation-name: b-vt-roll-down; }
+  html[data-look="brush"]:not([data-motion="paused"]):active-view-transition-type(back)::view-transition-new(root) { animation-name: b-vt-open-up; }
+  html[data-look="brush"]:not([data-motion="paused"]):active-view-transition-type(back)::view-transition-image-pair(root) { filter: drop-shadow(0 -4px 0 var(--ink)); }
+  html[data-look="brush"]:not([data-motion="paused"])::view-transition-group(b-top) { animation-duration: .58s; z-index: 2; }
+  html[data-look="brush"]:not([data-motion="paused"])::view-transition-old(b-top) { animation: none; opacity: 0; }
+  html[data-look="brush"]:not([data-motion="paused"])::view-transition-new(b-top) { animation: none; }
+  html[data-look="brush"]:not([data-motion="paused"])::view-transition-group(*.b-t) { animation-duration: .58s; animation-timing-function: var(--b-carry); }
+  html[data-look="brush"]:not([data-motion="paused"])::view-transition-old(*.b-t) { animation: b-vt-lift .22s var(--b-lift) .04s both; }
+  html[data-look="brush"]:not([data-motion="paused"])::view-transition-new(*.b-t) { animation: b-vt-write var(--b-move) var(--b-lay) .24s both; }
+  html[data-look="brush"]:not([data-motion="paused"])::view-transition-new(*.b-t):only-child { animation-delay: .3s; animation-duration: .28s; } /* waits for the paper to unroll under it */
+  html[data-look="brush"]:active-view-transition-type(reload)::view-transition-old(*),
+  html[data-look="brush"]:active-view-transition-type(reload)::view-transition-new(*) { animation: none !important; }
 }
 @media (prefers-reduced-motion: reduce) {
   html[data-look="brush"]::view-transition-group(*),
