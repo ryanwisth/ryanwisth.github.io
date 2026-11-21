@@ -47,7 +47,7 @@
 
   /* ---------- the scroll frame: one rAF per frame while scrolling, nothing at rest ---------- */
   var raf = 0, sy = 0, psy = 0, pt = 0, speed = 0, idleT = 0, scrolling = false;
-  function onScroll() { if (!raf && !d.hidden) raf = requestAnimationFrame(frame); }
+  function onScroll() { if (FL) { FL.dirty = true; flKick(); return; } if (!raf && !d.hidden) raf = requestAnimationFrame(frame); }
   function frame(t) {
     raf = 0;
     sy = W.scrollY || 0;
@@ -89,6 +89,7 @@
     T.d = ds; T.P = []; T.N = [];
     var L = 0; try { L = ds ? T.line.getTotalLength() : 0; } catch (e) {}
     var n = Math.floor(L / STEP), i, p;
+    if (!(L > 0)) { T.P = [0, 0]; T.N = [0, 1]; T.C = new Float32Array(1); T.k = Math.min(T.k, 0); return; } // an empty line (the 404 page): getPointAtLength would throw
     for (i = 0; i <= n; i++) { p = T.line.getPointAtLength(i * STEP); T.P.push(p.x, p.y); }
     for (i = 0; i <= n; i++) {
       var a = Math.max(0, i - 1), b = Math.min(n, i + 1), dx = T.P[2 * b] - T.P[2 * a], dy = T.P[2 * b + 1] - T.P[2 * a + 1], l = Math.hypot(dx, dy) || 1;
@@ -640,14 +641,202 @@
     MK = null; CAPS = []; looked = null;
   }
 
+  /* ---------- fluid (Nov 20 2026): the whole page moves like water ----------
+     One requestAnimationFrame loop (the scroll frame above runs inside it while it is going) drives: the swell every
+     soft panel rides (a bob of 1.6 px and a tilt that moves its edges at most 1.2 px, phase travelling across the
+     page), the push of the scroll on the panels (a damped spring; lower panels feel it a few frames later), a panel
+     surfacing as it comes up from below, a panel dipping toward the side pointed at and rocking when pressed, the sea's
+     light lagging the scroll, and the foam rings and wakes on the water (.cf-wake canvas, under the panels). The loop
+     runs only while a panel is on screen or something on the water is still moving, never while the tab is hidden.
+     Layout is read when the loop is set up and on resize (relay), never inside it. */
+  var FL = null;
+  var PAN = 'main :is(.card, .more-g, .method > li, .fact, .chart-card, .repo-card, .pager a, .band3 > div, .band)';
+  function flSetup() {
+    var main = d.querySelector('main'); if (!main) return;
+    FL = { ps: [], vis: 0, raf: 0, pt: 0, py: W.scrollY || 0, vs: 0, hist: [], hi: 0, dirty: false, wake: [], rings: [], drawn: false,
+      foam: '#ffffff', seaTop: 0, st: -1, A: 1344, B: 588, dpr: Math.min(2, W.devicePixelRatio || 1), io: null, hover: null, lastW: null };
+    for (var i = 0; i < 12; i++) FL.hist.push(0);
+    r.classList.add('cf-on');
+    FL.sea = mk('i', 'cf-sea', main); FL.sa = mk('b', '', FL.sea); FL.sb = mk('b', '', FL.sea);
+    FL.cvs = mk('canvas', 'cf-wake', main); FL.ctx = FL.cvs.getContext('2d');
+    [].forEach.call(d.querySelectorAll(PAN), function (el, n) {
+      if (el.closest('.case-head, .hero-one')) return;
+      el.classList.add('cf-p');
+      var c = mk('i', 'cf-caus', el, el.firstChild), ci = mk('i', '', c);
+      ci.style.setProperty('--cf-cd', (-(n * 13.7) % 70).toFixed(1) + 's');
+      FL.ps.push({ el: el, cx: 0, cy: 0, w: 1, h: 1, ph: 0, tA: 0, tM: 0, y: 0, v: 0, r: 0, rv: 0, tr: 0, ty: 0, on: false, still: 0, last: '' });
+    });
+    if (W.IntersectionObserver) {
+      FL.io = new IntersectionObserver(function (es) {
+        es.forEach(function (e) {
+          var p = flFind(e.target); if (!p) return;
+          if (e.isIntersecting && !p.on) {
+            p.on = true; FL.vis++;
+            // surfacing: a panel coming up from below while the page scrolls down rises out of the water, one overshoot
+            if (e.boundingClientRect.top > innerHeight * .5 && FL.vs > 120) { p.y = 14; p.v = 0; }
+          } else if (!e.isIntersecting && p.on) { p.on = false; FL.vis--; p.el.style.transform = ''; p.last = ''; p.y = p.v = p.r = p.rv = 0; } // off screen: at rest when it comes back
+        });
+        flKick();
+      }, { rootMargin: '40px 0px' });
+      FL.ps.forEach(function (p) { FL.io.observe(p.el); });
+      var io = FL.io; offs.push(function () { io.disconnect(); });
+    } else FL.ps.forEach(function (p) { p.on = true; FL.vis++; });
+    flLay();
+    on(d, 'pointermove', flMove, { passive: true });
+    on(d, 'touchmove', flTouch, { passive: true });
+    on(d, 'pointerdown', flDown, { passive: true });
+    on(d, 'pointerout', flOut, { passive: true });
+    on(d, 'click', flKeyClick, true);
+    on(d, 'focusin', flFocus);
+    on(d, 'focusout', function (e) { var el = e.target && e.target.closest ? e.target.closest('.cf-p') : null, p = el && FL ? flFind(el) : null; if (p && !(e.relatedTarget && el.contains(e.relatedTarget))) p.still = 0; });
+    on(d, 'visibilitychange', function () { if (d.hidden) { cancelAnimationFrame(FL.raf); FL.raf = 0; } else flKick(); });
+    flKick();
+  }
+  function flFind(el) { for (var i = 0; i < FL.ps.length; i++) if (FL.ps[i].el === el) return FL.ps[i]; return null; }
+  function flLay() {
+    if (!FL) return;
+    var y = W.scrollY || 0, main = d.querySelector('main');
+    FL.ps.forEach(function (p) {
+      var q = p.el.getBoundingClientRect();
+      p.w = Math.max(40, q.width); p.h = q.height; p.cx = q.left + q.width / 2; p.cy = q.top + y + q.height / 2;
+      p.ph = p.cx * .0062 + p.cy * .0021;                 // the swell's phase travels across and down the page
+      p.tA = Math.min(.35, 1.2 / (p.w / 2) * 57.3);        // tilt that moves the panel's edges at most 1.2 px
+      p.tM = Math.min(.9, 2 / (p.w / 2) * 57.3);           // dip toward the pointer: edges at most 2 px
+    });
+    if (main) FL.seaTop = Math.max(0, seaTop(main) + main.getBoundingClientRect().top + y);
+    var tile = parseFloat(getComputedStyle(r).getPropertyValue('--tile')) || 840; FL.A = tile * 1.6; FL.B = tile * .7;
+    FL.dpr = Math.min(narrow() ? 1.5 : 2, W.devicePixelRatio || 1);
+    FL.cvs.width = Math.round(innerWidth * FL.dpr); FL.cvs.height = Math.round(Math.min(innerHeight, 3000) * FL.dpr);
+    FL.drawn = true; FL.st = -1;
+    flFoam();
+    flKick();
+  }
+  function flFoam() { FL.foam = getComputedStyle(r).getPropertyValue('--c-foam').trim() || '#ffffff'; }
+  function flKick() { if (FL && !FL.raf && !d.hidden) { FL.pt = 0; FL.raf = requestAnimationFrame(flFrame); } }
+  function flFrame(t) {
+    FL.raf = 0;
+    var y = W.scrollY || 0;
+    if (FL.dirty) { FL.dirty = false; frame(t); }
+    var dt = clamp((t - (FL.pt || t - 16)) / 1000, .008, .05); FL.pt = t;
+    var vel = (y - FL.py) / dt; FL.py = y;
+    FL.vs = FL.vs * .72 + vel * .28;
+    FL.hi = (FL.hi + 1) % 12; FL.hist[FL.hi] = FL.vs;
+    var time = t / 1000, ih = innerHeight, moving = Math.abs(FL.vs) > 4, K = 110, C = 6.6, busy = false;
+    for (var i = 0; i < FL.ps.length; i++) {
+      var p = FL.ps[i]; if (!p.on) continue;
+      var k = Math.round(clamp((p.cy - y) / ih, 0, 1) * 8), vd = FL.hist[(FL.hi - k + 12) % 12];
+      var tgt = clamp(vd * .007, -10, 10) + p.ty;
+      p.v += (K * (tgt - p.y) - C * p.v) * dt; p.y += p.v * dt;
+      p.rv += (K * (p.tr - p.r) - C * p.rv) * dt; p.r += p.rv * dt;
+      if (Math.abs(p.y) > 16) { p.y = clamp(p.y, -16, 16); p.v *= .5; }
+      if (Math.abs(p.v) > .5 || Math.abs(p.y - tgt) > .05 || Math.abs(p.rv) > .05) busy = true;
+      if (ih > 3000) { p.y = p.v = p.r = p.rv = 0; }  // a full-page capture window (a screenshot tool): everything at rest
+      var hold = p.still || ih > 3000 ? 0 : 1, s = time * 1.12 + p.ph;   // the swell: one roll every 5.6 s
+      var Y = p.y + 1.6 * Math.sin(s) * hold, R = p.r + p.y * .03 + p.tA * Math.sin(s + 1.2) * hold;
+      var tf = 'translate3d(0,' + Y.toFixed(2) + 'px,0) rotate(' + R.toFixed(3) + 'deg)';
+      if (tf !== p.last) { p.el.style.transform = tf; p.last = tf; }
+    }
+    // the sea's light: two layers drifting (one down-right, one down-left, slowly) and lagging the scroll (a third of
+    // its speed), each wrapped inside its own tile; cut off above the top of the sea
+    var st = Math.max(0, Math.round(FL.seaTop - y)), seaOn = st < ih;
+    if (seaOn) {
+      var ax = (time * 9) % FL.A, ay = (time * 9 + y * .33) % FL.A, bx = FL.B - (time * 7) % FL.B, by = (time * 6 + y * .33) % FL.B;
+      FL.sa.style.transform = 'translate3d(' + ax.toFixed(1) + 'px,' + ay.toFixed(1) + 'px,0)';
+      FL.sb.style.transform = 'translate3d(' + bx.toFixed(1) + 'px,' + by.toFixed(1) + 'px,0)';
+    }
+    if (st !== FL.st) { FL.sea.style.setProperty('--cf-st', Math.min(st, ih + 2) + 'px'); FL.st = st; }
+    var water = flDraw(t, y);
+    if (FL.vis > 0 || seaOn || water || busy || moving) FL.raf = requestAnimationFrame(flFrame);
+  }
+  // the water: foam rings from taps and clicks, a wake behind a moving pointer or finger. Filled shapes, one paint.
+  function flDraw(t, y) {
+    var c = FL.ctx, D = FL.dpr, alive = false, top = Math.max(0, FL.seaTop - y);
+    if (!FL.rings.length && !FL.wake.length) { if (FL.drawn) { c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, FL.cvs.width, FL.cvs.height); FL.drawn = false; } return false; }
+    c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, FL.cvs.width, FL.cvs.height);
+    c.setTransform(D, 0, 0, D, 0, 0);
+    c.save(); c.beginPath(); c.rect(0, top, innerWidth, innerHeight - top); c.clip();
+    c.fillStyle = FL.foam;
+    FL.rings = FL.rings.filter(function (g) {
+      var a = (t - g.t0) / g.dur; if (a >= 1) return false; alive = true;
+      if (a < 0) return true;
+      var e = 1 - Math.pow(1 - a, 3), R = g.r0 + g.max * e, th = Math.max(1.2, g.th * (1 - a));
+      c.beginPath(); c.arc(g.x, g.y - y, R + th, 0, 6.2832); c.arc(g.x, g.y - y, Math.max(0, R - th), 0, 6.2832, true); c.fill('evenodd');
+      return true;
+    });
+    FL.wake = FL.wake.filter(function (w) {
+      var a = (t - w.t0) / 900; if (a >= 1) return false; alive = true;
+      var sp = 3 + a * 26, rad = 1.2 + (1 - a) * 3.6, bx = w.x - w.dx * a * 10, by = w.y - y - w.dy * a * 10;
+      c.beginPath(); c.ellipse(bx - w.dy * sp, by + w.dx * sp, rad * 1.5, rad, Math.atan2(w.dy, w.dx), 0, 6.2832);
+      c.ellipse(bx + w.dy * sp, by - w.dx * sp, rad * 1.5, rad, Math.atan2(w.dy, w.dx), 0, 6.2832); c.fill();
+      return true;
+    });
+    c.restore(); FL.drawn = true;
+    return alive;
+  }
+  function flRing(x, y, big) { // x, y in page coordinates
+    var n = now();
+    FL.rings.push({ x: x, y: y, t0: n, dur: 820, r0: 4, max: big ? 150 : 90, th: 4.2 });
+    FL.rings.push({ x: x, y: y, t0: n + 140, dur: 760, r0: 2, max: big ? 96 : 56, th: 3 });
+    if (FL.rings.length > 12) FL.rings.splice(0, FL.rings.length - 12);
+    flKick();
+  }
+  function flWake(cx, cy) {
+    var y = W.scrollY || 0, L = FL.lastW, n = now();
+    if (!FL.wake.length) flFoam();
+    if (L && n - L.t < 400) {
+      var dx = cx - L.cx, dy = cy + y - L.py, m = Math.hypot(dx, dy); if (m < 9) return;
+      FL.wake.push({ x: cx, y: cy + y, dx: dx / m, dy: dy / m, t0: n });
+      if (FL.wake.length > 40) FL.wake.shift();
+      flKick();
+    }
+    FL.lastW = { cx: cx, py: cy + y, t: n };
+  }
+  function flMove(e) {
+    flWake(e.clientX, e.clientY);
+    if (e.pointerType !== 'mouse') return;
+    var el = e.target && e.target.closest ? e.target.closest('.cf-p') : null, p = el ? flFind(el) : null;
+    if (FL.hover && FL.hover !== p) { FL.hover.tr = 0; FL.hover.ty = 0; }
+    FL.hover = p;
+    if (p && !p.still) { var rel = clamp((e.clientX - (p.cx)) / (p.w / 2), -1, 1); p.tr = rel * p.tM; flKick(); }
+  }
+  function flOut(e) { if (FL.hover && (!e.relatedTarget || !FL.hover.el.contains(e.relatedTarget))) { FL.hover.tr = 0; FL.hover.ty = 0; FL.hover = null; flKick(); } }
+  function flTouch(e) { var q = e.touches && e.touches[0]; if (q) flWake(q.clientX, q.clientY); }
+  function flPress(p, side, kick) { if (!p) return; p.v += kick; p.rv += side * 9; flKick(); }
+  function flDown(e) {
+    flFoam();
+    var y = W.scrollY || 0, el = e.target && e.target.closest ? e.target.closest('.cf-p') : null, p = el ? flFind(el) : null;
+    flRing(e.clientX, e.clientY + y, !p);
+    if (p) flPress(p, clamp((e.clientX - p.cx) / (p.w / 2), -1, 1), 70);
+  }
+  function flKeyClick(e) {
+    if (e.detail !== 0 || !e.target.closest) return;
+    var el = e.target.closest('.cf-p'), p = el ? flFind(el) : null; if (!p) return;
+    flPress(p, 0, 70); flRing(p.cx, p.cy, true);
+  }
+  function flFocus(e) {
+    var t = e.target; FL.ps.forEach(function (p) { p.still = 0; });
+    var vis = false; try { vis = t.matches(':focus-visible'); } catch (er) {}
+    if (!vis || !t.closest) return;
+    var el = t.closest('.cf-p'), p = el ? flFind(el) : null; if (!p) return;
+    p.still = 1; p.tr = 0; p.ty = 0;           // held still on the water so the painted focus ring stays on it
+    flFoam(); flRing(p.cx, p.cy, true);
+  }
+  function flStop() {
+    if (!FL) return;
+    cancelAnimationFrame(FL.raf);
+    FL.ps.forEach(function (p) { p.el.style.transform = ''; p.el.classList.remove('cf-p'); });
+    r.classList.remove('cf-on');
+    FL = null;
+  }
+
   /* ---------- on, off ---------- */
-  function relay() { if (T) { T.d = null; resample(); } boundsSetup(); if (!SDA) scrub(); if (H) { H.last = -1; hero(); } if (SEL) onSel(); focusFollow();  sparkLay(); }
+  function relay() { if (T) { T.d = null; resample(); } boundsSetup(); if (!SDA) scrub(); if (H) { H.last = -1; hero(); } if (SEL) onSel(); focusFollow();  sparkLay(); flLay(); }
   function start() {
     live = true;
     r.classList.add('c-live');
     sy = psy = W.scrollY || 0;
     if (mqFine.matches) r.classList.add('cl-fine');
-    threadSetup(); scrubSetup(); heroSetup(); boundsSetup(); dotSetup(); sparkSetup(); endSetup();
+    threadSetup(); scrubSetup(); heroSetup(); boundsSetup(); dotSetup(); sparkSetup(); endSetup(); flSetup();
     on(W, 'scroll', onScroll, { passive: true });
     on(W, 'scroll', focusFollow, { passive: true });
     on(W, 'resize', relay, { passive: true });
@@ -671,7 +860,7 @@
     offs.forEach(function (f) { f(); }); offs = [];
     timers.forEach(clearTimeout); timers = []; clearTimeout(idleT);
     cancelAnimationFrame(raf); raf = 0; cancelAnimationFrame(selRaf); selRaf = 0; cancelAnimationFrame(focRaf); focRaf = 0;
-    clearPuffs(); clearSel(); glintOff();
+    clearPuffs(); clearSel(); glintOff(); flStop();
     made.slice().forEach(drop); made = [];
     styled.forEach(function (el) { ['--cl-p', '--cl-cy', '--cl-by', '--cl-rw', '--cl-rh', '--cl-rb', '--cl-rx', '--cl-ry'].forEach(function (k) { el.style.removeProperty(k); }); }); styled = [];
     [].forEach.call(d.querySelectorAll('.cl-float, .cl-tap, .cl-ring, .cl-selhost, .cl-glinthost'), function (e) { e.classList.remove('cl-float', 'cl-tap', 'cl-ring', 'cl-selhost', 'cl-glinthost'); });
@@ -687,6 +876,6 @@
   }
   new MutationObserver(sync).observe(r, { attributes: true, attributeFilter: ['data-look', 'class', 'data-motion'] });
   if (mqReduce.addEventListener) mqReduce.addEventListener('change', sync);
-  W.__celLiveState = function () { return { live: live, sda: SDA, made: made.length, listeners: offs.length, puffs: puffs.length, acc: acc.name, mat: mat, marks: MK ? MK.got.slice() : null, caps: CAPS.length, mlisteners: moffs.length }; }; // read by the checks
+  W.__celLiveState = function () { return { live: live, sda: SDA, made: made.length, listeners: offs.length, puffs: puffs.length, acc: acc.name, fluid: FL ? { panels: FL.ps.length, vis: FL.vis, loop: !!FL.raf, rings: FL.rings.length, wake: FL.wake.length } : null, mat: mat, marks: MK ? MK.got.slice() : null, caps: CAPS.length, mlisteners: moffs.length }; }; // read by the checks
   sync();
 })();

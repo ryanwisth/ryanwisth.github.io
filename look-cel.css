@@ -1154,3 +1154,114 @@ html[data-look="cel"][data-theme="dark"].motion.c-live .cl-spark { background-im
 @keyframes cl-twos-rise { 0% { opacity: 0; translate: 0 26px; scale: .94; } 16.7% { opacity: 1; translate: 0 12px; scale: .97 1.02; } 33.3% { opacity: 1; translate: 0 -5px; scale: 1.02 .98; } 50% { opacity: 1; translate: 0 -2px; scale: 1 1; } 66.7% { opacity: 1; translate: 0 1px; scale: 1; } 83.3% { opacity: 1; translate: 0 0; scale: 1; } 100% { opacity: 1; translate: 0 0; scale: 1; } }
 @keyframes cl-tw-a { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
 @keyframes cl-tw-b { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+/* ---------- fluid (Nov 20 2026): the whole page moves like the water it is ----------
+   Ryan's word: "cel and shade is water tropical cel shaded the pages should feel alive and fluid like water". Five
+   layers, on top of the liveliness and material passes (which stay as they are):
+   1 page to page: a tide wash. The new page comes in from the foot of the window under a scalloped wave edge, a hard
+     foam band riding between it and the old page; the top bar stays put (its own named group). .56 s. Static CSS (a
+     cross-document view transition, defined by the page being opened); none under reduced motion or "Pause motion".
+   2 at rest: hard-edged caustic light drifts over the sea (two nets of foam light at other scales crossing, .cf-sea,
+     under the white net and the calm patches) and over the shade side of every soft panel (.cf-caus); panels ride a
+     slow swell, a tiny bob and tilt whose phase travels across the page (transform, written by look-cel.js).
+   3 scroll: the sea's light lags the scroll; panels are pushed by it and settle on a damped spring, the push reaching
+     lower panels a few frames later (a wave); a panel coming up from below surfaces (rises with one overshoot).
+   4 pointer and touch: a panel dips toward the side pointed at; a tap or click throws hard-edged foam rings on the
+     water (.cf-wake canvas, under the panels) and rocks the panel it hit; a moving pointer or finger leaves a wake.
+   5 focus and press: a press rocks its panel down and back; keyboard focus throws a ring round its panel and holds it
+     still on the water (so the painted focus ring stays on it).
+   Everything but 1 needs .cf-on, which look-cel.js sets with .c-live (motion on, no reduced motion) and removes with it.
+   Paints: foam (#ffffff, night #b9cdf5) only. No outline, no stroke, no soft gradient on a hard thing. */
+html[data-look="cel"] { --cf-caus: rgba(255, 255, 255, .9); --cf-sea: rgba(255, 255, 255, .13); --cf-sea2: rgba(255, 255, 255, .08); }
+@media (prefers-color-scheme: dark) {
+  html[data-look="cel"]:not([data-theme="light"]) { --cf-caus: rgba(185, 205, 245, .09); --cf-sea: rgba(185, 205, 245, .09); --cf-sea2: rgba(185, 205, 245, .06); }
+}
+html[data-look="cel"][data-theme="dark"] { --cf-caus: rgba(185, 205, 245, .09); --cf-sea: rgba(185, 205, 245, .09); --cf-sea2: rgba(185, 205, 245, .06); }
+
+/* 1. the tide wash between pages. The group behind both pictures is painted foam; the old page is cut off just above
+   the new page's scalloped edge, so a band of foam runs up the window between them. Mask tiles are drawn here (data
+   SVG, filled paths, no stroke): the new page's edge is a row of round scallops, the old page's a gentle swell. */
+@keyframes cf-tide-new {
+  from { -webkit-mask-position: left 0px bottom 0px, left 0 top 100vh; mask-position: left 0px bottom 0px, left 0 top 100vh; }
+  to { -webkit-mask-position: left -180px bottom calc(100vh + 64px), left 0 top -64px; mask-position: left -180px bottom calc(100vh + 64px), left 0 top -64px; }
+}
+@keyframes cf-tide-old {
+  from { -webkit-mask-position: left 0px top calc(100vh - 60px), left 0 top -60px; mask-position: left 0px top calc(100vh - 60px), left 0 top -60px; }
+  to { -webkit-mask-position: left 120px top -124px, left 0 top calc(-100vh - 124px); mask-position: left 120px top -124px, left 0 top calc(-100vh - 124px); translate: 0 -18px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  html[data-look="cel"]:not([data-motion="paused"]) .topbar { view-transition-name: cel-top; }
+  html[data-look="cel"]:not([data-motion="paused"])::view-transition-group(root) { background: var(--c-foam); animation-duration: .56s; }
+  html[data-look="cel"]:not([data-motion="paused"])::view-transition-image-pair(root) { isolation: auto; }
+  /* named groups (the top bar, the project title that flies from its card to the page head) ride with the tide */
+  html[data-look="cel"]:not([data-motion="paused"])::view-transition-group(*) { animation-duration: .5s; animation-timing-function: cubic-bezier(.5, .05, .3, 1); }
+  html[data-look="cel"]:not([data-motion="paused"])::view-transition-old(*),
+  html[data-look="cel"]:not([data-motion="paused"])::view-transition-new(*) { animation-duration: .5s; }
+  html[data-look="cel"]:not([data-motion="paused"])::view-transition-new(root) {
+    mix-blend-mode: normal; opacity: 1;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 40'%3E%3Cpath d='M0 40V24A20 20 0 0 1 30 14A20 20 0 0 1 60 24A20 20 0 0 1 90 14A20 20 0 0 1 120 24V40Z'/%3E%3C/svg%3E"), linear-gradient(#000, #000);
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 40'%3E%3Cpath d='M0 40V24A20 20 0 0 1 30 14A20 20 0 0 1 60 24A20 20 0 0 1 90 14A20 20 0 0 1 120 24V40Z'/%3E%3C/svg%3E"), linear-gradient(#000, #000);
+    -webkit-mask-repeat: repeat-x, no-repeat; mask-repeat: repeat-x, no-repeat;
+    -webkit-mask-size: 120px 40px, 100% calc(100vh + 64px); mask-size: 120px 40px, 100% calc(100vh + 64px);
+    animation: cf-tide-new .56s cubic-bezier(.5, .05, .3, 1) both;
+  }
+  html[data-look="cel"]:not([data-motion="paused"])::view-transition-old(root) {
+    mix-blend-mode: normal; opacity: 1;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 40'%3E%3Cpath d='M0 0H160V12C130 22 110 22 80 12C50 2 30 2 0 12Z'/%3E%3C/svg%3E"), linear-gradient(#000, #000);
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 40'%3E%3Cpath d='M0 0H160V12C130 22 110 22 80 12C50 2 30 2 0 12Z'/%3E%3C/svg%3E"), linear-gradient(#000, #000);
+    -webkit-mask-repeat: repeat-x, no-repeat; mask-repeat: repeat-x, no-repeat;
+    -webkit-mask-size: 160px 40px, 100% 100vh; mask-size: 160px 40px, 100% 100vh;
+    animation: cf-tide-old .56s cubic-bezier(.5, .05, .3, 1) both;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-look="cel"]::view-transition-group(*), html[data-look="cel"]::view-transition-old(*), html[data-look="cel"]::view-transition-new(*) { animation: none; }
+}
+html[data-look="cel"][data-motion="paused"]::view-transition-group(*),
+html[data-look="cel"][data-motion="paused"]::view-transition-old(*),
+html[data-look="cel"][data-motion="paused"]::view-transition-new(*) { animation: none; }
+
+@keyframes cf-drift { to { transform: translate3d(var(--cf-t), var(--cf-t), 0); } }
+@media (prefers-reduced-motion: no-preference) {
+  /* 2. panels: their own stack (so the caustic sits over their paint and under their words), a layer of their own */
+  html[data-look="cel"].motion.c-live.cf-on .cf-p { isolation: isolate; will-change: transform; }
+  /* caustic light on the shade side of a panel (lower right, away from the sun): foam light cut by the net, drifting */
+  html[data-look="cel"].motion.c-live.cf-on .cf-caus {
+    position: absolute; inset: 0; z-index: -1; display: block; overflow: hidden; border-radius: inherit; pointer-events: none;
+    -webkit-mask: radial-gradient(110% 95% at 100% 100%, #000 0, rgba(0, 0, 0, .55) 40%, transparent 72%); mask: radial-gradient(110% 95% at 100% 100%, #000 0, rgba(0, 0, 0, .55) 40%, transparent 72%);
+  }
+  html[data-look="cel"].motion.c-live.cf-on .cf-caus > i {
+    --cf-t: 380px; position: absolute; display: block; left: -380px; top: -380px; right: 0; bottom: 0; background: var(--cf-caus);
+    -webkit-mask: var(--c-net) 0 0 / 380px 380px repeat; mask: var(--c-net) 0 0 / 380px 380px repeat;
+    animation: cf-drift 70s linear var(--cf-cd, 0s) infinite;
+  }
+  /* the sea's light: fixed to the window (never taller than 3000 px), under the white net and under the calm water, cut
+     off above the sea's top. Two layers of foam light cut by the net at 1.6 and 0.7 times its size; each layer is one
+     tile bigger than the window and look-cel.js slides it inside that tile (drift plus a third of the scroll), so the
+     layers stay small (GPU memory) and the light lags the page. */
+  html[data-look="cel"].motion.c-live.cf-on .cf-sea {
+    position: fixed; left: 0; top: 0; width: 100%; height: min(100%, 3000px); z-index: -3; display: block; overflow: hidden; pointer-events: none; clip-path: inset(var(--cf-st, 0px) 0 0 0);
+    --cf-a: calc(var(--tile) * 1.6); --cf-b: calc(var(--tile) * .7);
+  }
+  html[data-look="cel"].motion.c-live.cf-on .cf-sea > b {
+    position: absolute; display: block; left: calc(var(--cf-a) * -1); top: calc(var(--cf-a) * -1); width: calc(100% + var(--cf-a)); height: calc(100% + var(--cf-a));
+    background: var(--cf-sea); -webkit-mask: var(--c-net) 0 0 / var(--cf-a) var(--cf-a) repeat; mask: var(--c-net) 0 0 / var(--cf-a) var(--cf-a) repeat; will-change: transform;
+  }
+  html[data-look="cel"].motion.c-live.cf-on .cf-sea > b + b {
+    left: calc(var(--cf-b) * -1); top: calc(var(--cf-b) * -1); width: calc(100% + var(--cf-b)); height: calc(100% + var(--cf-b)); background: var(--cf-sea2);
+    -webkit-mask: var(--c-net) 0 0 / var(--cf-b) var(--cf-b) repeat; mask: var(--c-net) 0 0 / var(--cf-b) var(--cf-b) repeat;
+  }
+  /* rings and wakes on the water: one canvas the size of the window, under the panels, never in the way */
+  html[data-look="cel"].motion.c-live.cf-on .cf-wake { position: fixed; left: 0; top: 0; z-index: -2; display: block; width: 100%; height: min(100%, 3000px); pointer-events: none; }
+  /* a window taller than 3000 px is a full-page capture (a screenshot tool), not a reader: no extra layers there, so
+     the capture has the memory to draw the whole page */
+  @media (min-height: 3001px) {
+    html[data-look="cel"].motion.c-live.cf-on :is(.cf-caus, .cf-sea) { display: none; }
+    html[data-look="cel"].motion.c-live.cf-on .cf-p { will-change: auto; }
+  }
+  /* phones: the light drifts slower (battery) */
+  @media (pointer: coarse), (max-width: 620px) {
+    html[data-look="cel"].motion.c-live.cf-on .cf-caus > i { animation-duration: 100s; }
+  }
+}
+/* fluid-cel:end */
