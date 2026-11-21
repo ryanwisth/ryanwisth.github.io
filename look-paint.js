@@ -13,7 +13,11 @@
    - decoration only: every element is aria-hidden, takes no clicks, and never moves layout;
    - words never sit on moving light: the moving light (leaf light, the sun on a card, fireflies, stars, cloud shadows) is
      kept to the painted world and to the boards' edge ring, never under a line of text;
-   - passive listeners, one requestAnimationFrame per frame at most, nothing while the tab is hidden. */
+   - passive listeners, one requestAnimationFrame per frame at most, nothing while the tab is hidden.
+   Polish pass (Nov 20, _tools/fluid/paint-polish.md): one motion vocabulary (M below), grass that bends from the root, the
+   wake only where grass is painted, petals that read on the pale meadow, pooled and faded (never popped), a pointer lean that
+   lets go, a calmer meadow while a film plays, a leaf that comes down in the footer at the end of the page, a clean
+   back/forward-cache restore, and a frame that sleeps whenever nothing moves (the night fireflies used to keep it awake). */
 (function () {
   'use strict';
   var d = document, r = d.documentElement, W = window;
@@ -24,6 +28,17 @@
   var mqFine = matchMedia('(hover: hover) and (pointer: fine)');
   var mqDark = matchMedia('(prefers-color-scheme: dark)');
   var live = false, offs = [], made = [], styled = [], timers = [], frames = 0;
+  /* one motion vocabulary (polish pass, Nov 20): every spring, fade and hold in this file comes from here; the sheet's
+     matching tokens are --pm-e-* and --pm-d-* at the top of its fluid block */
+  var M = {
+    K: 70, C: 2 * Math.sqrt(70) * .8, // the boards' spring: a little under critical, settles in about 0.6 s, no visible bounce
+    fadeMs: 220,                      // anything taken away early (a puff cleared by a newer one) fades, never pops
+    pushHoldMs: 180, pushFadeMs: 650, // a board leans away from the pointer while it moves, then stands back up
+    wakeMs: 1400,                     // the grass stands back up this long after the pointer stops
+    petalMs: 1000, seedMs: 1300,      // a press's petals; a tap's seeds
+    poolMax: 14,                      // never more than this many petals, seeds and leaves in the air at once
+    ease: 'cubic-bezier(.2,.6,.4,1)'  // the easing of everything thrown by the wind (petals, seeds)
+  };
 
   function wanted() { return r.getAttribute('data-look') === 'paint' && r.classList.contains('motion') && !mqReduce.matches; }
   function night() { var t = r.getAttribute('data-theme'); return t === 'dark' || (t !== 'light' && mqDark.matches); }
@@ -44,14 +59,21 @@
 
   /* ---------- one moving accent at a time ---------- */
   var acc = { until: 0 }, flying = [];
-  function ambientFree() { return now() > acc.until; }
-  function claim(ms) { acc.until = now() + ms; clearFlying(); }
+  function ambientFree() { return now() > acc.until && !hushOn; }
+  function claim(ms) { acc.until = now() + ms; flying.slice().forEach(function (e) { if (e.classList.contains('pm-leaf') || e.classList.contains('pm-amb')) fadeOut(e); }); } // the ambient ones make way; the reader's own keep flying (capped)
   function fly(el, keyframes, opt, then) {
-    var a = el.animate(keyframes, opt); flying.push(el);
+    cap(); var a = el.animate(keyframes, opt); flying.push(el);
     a.onfinish = function () { var i = flying.indexOf(el); if (i >= 0) flying.splice(i, 1); if (then) then(el); else drop(el); if (live && !scrolling && !flying.length) later(settle, 300); }; // the leaf lands once the gust has passed
     return a;
   }
-  function clearFlying() { flying.slice().forEach(function (e) { e.getAnimations().forEach(function (a) { a.cancel(); }); drop(e); }); flying = []; }
+  function fadeOut(e) { // taken away early: fade from where it is (it keeps drifting on its own path), then go
+    var i = flying.indexOf(e); if (i >= 0) flying.splice(i, 1);
+    if (!e.animate || d.hidden) { drop(e); return; }
+    var f = e.animate([{ opacity: getComputedStyle(e).opacity }, { opacity: 0 }], { duration: M.fadeMs, easing: 'ease-out', fill: 'forwards', composite: 'replace' });
+    f.onfinish = f.oncancel = function () { e.getAnimations().forEach(function (a) { a.cancel(); }); drop(e); };
+  }
+  function clearFlying(hard) { flying.slice().forEach(function (e) { if (hard) { e.getAnimations().forEach(function (a) { a.cancel(); }); drop(e); } else fadeOut(e); }); if (hard) flying = []; }
+  function cap() { while (flying.length >= M.poolMax) fadeOut(flying[0]); } // spam is pooled: the oldest goes first
 
   /* ---------- the one frame: scroll work and pointer work share a single requestAnimationFrame ---------- */
   var raf = 0, vs = 0, dirtyScroll = false, dirtyPtr = false, sy = 0, psy = 0, pt = 0, speed = 0, idleT = 0, windT = 0, scrolling = false;
@@ -64,8 +86,9 @@
     var sp = sway(t);
     if (dirtyScroll || dirtyPtr || sp) need();
   }
+  var maxY = 0; // the page's scroll range, read at measure time (never in the frame)
   function scrollFrame(t) {
-    sy = W.scrollY || 0;
+    sy = clamp(W.scrollY || 0, 0, maxY || 1e9); // a touch rubber-band past either end moves nothing
     var dt = Math.max(8, t - (pt || t - 16)), v = Math.abs(sy - psy) / dt, dir = sy > psy ? 1 : sy < psy ? -1 : 0;
     speed = speed * .6 + v * .4; vs = vs * .6 + (sy - psy) / dt * .4; psy = sy; pt = t;
     if (!scrolling && dir) startMove();
@@ -220,7 +243,7 @@
     gust(crossed, 0); later(function () { if (live && ambientFree() && flying.length < 2) gust(crossed, 1); }, 450);
   }
   function gust(sec, n) {
-    var nt = night(), e = mk('i', nt ? 'pm-seed' : 'pm-leaf', sec), vw = d.documentElement.clientWidth, x0 = -sec.getBoundingClientRect().left - 30;
+    var nt = night(), e = mk('i', (nt ? 'pm-seed' : 'pm-leaf') + ' pm-amb', sec), vw = d.documentElement.clientWidth, x0 = -sec.getBoundingClientRect().left - 30;
     var y = 40 + 50 * Math.random() + n * 22, amp = 14 + 10 * Math.random(), turns = nt ? 30 : 540 + 200 * Math.random(), kf = [], i;
     for (i = 0; i <= 8; i++) { var f = i / 8; kf.push({ transform: 'translate(' + (x0 + f * (vw + 60)).toFixed(0) + 'px,' + (y + Math.sin(f * 6.3 + n) * amp - f * 18).toFixed(0) + 'px) rotate(' + (f * turns).toFixed(0) + 'deg)', opacity: i === 0 || i === 8 ? 0 : 1 }); }
     fly(e, kf, { duration: 1900 + 400 * Math.random(), easing: 'cubic-bezier(.35,.1,.55,.9)' });
@@ -230,7 +253,14 @@
   var landed = null;
   function settle() {
     if (!live || scrolling || landed || !ambientFree() || flying.length) return;
-    var vh = W.innerHeight, best = null, bd = 1e9;
+    var vh = W.innerHeight, best = null, bd = 1e9, ft = d.querySelector('footer.site');
+    if (ft && maxY > 0 && sy >= maxY - 4 && getComputedStyle(ft).position !== 'static') { // the end of the page: the wind dies and one leaf comes down in the footer's meadow
+      var fw = ft.clientWidth, el = mk('i', (night() ? 'pm-seed' : 'pm-leaf') + ' pm-land', ft); landed = el;
+      el.style.left = Math.round(fw * (fw < 620 ? .78 : .2)) + 'px'; el.style.top = (fw < 620 ? 112 : 132) + 'px';
+      el.animate([{ transform: 'translate(-30px,-70px) rotate(-70deg)', opacity: 0 }, { transform: 'translate(-12px,-40px) rotate(20deg)', opacity: 1, offset: .35 },
+        { transform: 'translate(-20px,-16px) rotate(-30deg)', offset: .7 }, { transform: 'translate(0,0) rotate(8deg)', opacity: 1 }], { duration: 1700, easing: 'ease-out', fill: 'forwards' });
+      return;
+    }
     [].forEach.call(d.querySelectorAll('.section-head h2, .prose > h2'), function (h) {
       var b = h.getBoundingClientRect(); if (b.bottom < 70 || b.top > vh - 60) return;
       var dd = Math.abs((b.top + b.bottom) / 2 - vh * .45); if (dd < bd) { bd = dd; best = h; }
@@ -263,6 +293,8 @@
   function onOut(e) {
     var c = e.target.closest && e.target.closest('.leads .card.lead');
     if (c && !(e.relatedTarget && c.contains(e.relatedTarget))) c.classList.remove('pm-sun');
+    var a = e.target.closest && e.target.closest('[data-pm-from]'); // the stroke drains out the side the pointer leaves by
+    if (a && !(e.relatedTarget && a.contains(e.relatedTarget))) { var b = a.getBoundingClientRect(); a.setAttribute('data-pm-from', e.clientX > b.left + b.width / 2 ? 'r' : 'l'); }
   }
 
   /* ---------- 10. a tap on open ground: a small puff of dandelion seeds from the point ---------- */
@@ -271,8 +303,8 @@
     down = { x: e.clientX, y: e.clientY, t: now() };
     if (e.pointerType !== 'mouse') { var c = e.target.closest && e.target.closest('.leads .card.lead'); if (c) { c.classList.add('pm-sun'); later(function () { c.classList.remove('pm-sun'); }, 1400); }
       var bc = e.target.closest && e.target.closest('.pm-board'), b = bc && bc.__pmb;
-      if (b && b.w) { var pu = push = { b: b, v: clamp((e.clientX - b.l - b.w / 2) / (b.w / 2), -1, 1), touch: true }; later(function () { if (push === pu) push = null; need(); }, 450); need(); }
-      if (WK) { ptr.x = e.clientX; ptr.y = e.clientY; ptr.t = now(); chk = ptr.t; ptr.ok = openGround(ptr.x, ptr.y); WK.sp = 1.2; dirtyPtr = true; need(); } }
+      if (b && b.w) { push = { b: b, v: clamp((e.clientX - b.l - b.w / 2) / (b.w / 2), -1, 1), touch: true, t: now() }; need(); }
+      if (WK) { ptr.x = e.clientX; ptr.y = e.clientY; ptr.t = now(); chk = ptr.t; ptr.ok = inGrass(ptr.x, ptr.y); WK.sp = 1.2; dirtyPtr = true; need(); } }
   }
   function onUp(e) {
     if (!down || Math.hypot(e.clientX - down.x, e.clientY - down.y) > 8 || now() - down.t > 600) { down = null; return; }
@@ -291,7 +323,7 @@
       e.style.left = (x - 5) + 'px'; e.style.top = (y - 5) + 'px';
       fly(e, [{ transform: 'translate(0,0) rotate(0)', opacity: 0 }, { opacity: 1, offset: .15 },
         { transform: 'translate(' + (Math.cos(a) * dist + 14).toFixed(0) + 'px,' + (Math.sin(a) * dist - 18).toFixed(0) + 'px) rotate(' + (40 * (i - 2)) + 'deg)', opacity: 0 }],
-        { duration: 1300 + 200 * Math.random(), easing: 'cubic-bezier(.2,.6,.4,1)' });
+        { duration: M.seedMs + 200 * Math.random(), easing: M.ease });
     }
   }
 
@@ -311,11 +343,13 @@
     var kbd = false; try { kbd = t.matches(':focus-visible'); } catch (x) {}
     if (!kbd) { focusOff(); return; }
     focEl = t; if (!FOC) FOC = mk('i', 'pm-focus', d.body);
+    FOC.classList.toggle('pm-top', !!t.closest('.topbar, .skip-link, .look-menu')); // above the bar only for the bar's own controls; under it for the page's
     placeFocus(); FOC.classList.add('pm-on');
     if (FOC.animate) FOC.animate([{ rotate: '-2.5deg' }, { rotate: '1deg', offset: .45 }, { rotate: '0deg' }], { duration: 650, easing: 'ease-out' });
   }
   function onKey(e) {
-    if ((e.key !== 'Enter' && e.key !== ' ') || !focEl || !FOC || d.activeElement !== focEl) return;
+    if ((e.key !== 'Enter' && e.key !== ' ') || !focEl || !FOC || d.activeElement !== focEl || e.repeat) return;
+    if (e.key === ' ' && !focEl.matches('button, summary, [role="button"], input[type="checkbox"], input[type="radio"]')) return; // Space on a link scrolls the page: no press there
     if (FOC.animate) FOC.animate([{ scale: '1' }, { scale: '.94', offset: .35 }, { scale: '1' }], { duration: 320, easing: 'ease-out' });
     var b = focEl.getBoundingClientRect(); scatter(b.left + b.width / 2 + W.scrollX, b.top + W.scrollY + 4, 3);
   }
@@ -354,25 +388,26 @@
     var t = now();
     if (WK) { var dd = Math.hypot(e.clientX - ptr.x, e.clientY - ptr.y), dtt = Math.max(8, t - ptr.t); WK.sp = WK.sp * .7 + clamp(dd / dtt, 0, 4) * .3; }
     ptr.x = e.clientX; ptr.y = e.clientY; ptr.t = t; dirtyPtr = true;
-    if (t - chk > 120) { chk = t; ptr.ok = openGround(ptr.x, ptr.y); } // hit-tested here, in the event, never inside the frame
+    if (t - chk > 120) { chk = t; ptr.ok = night() ? openGround(ptr.x, ptr.y) : inGrass(ptr.x, ptr.y); } // hit-tested here, in the event, never inside the frame
     if (e.pointerType === 'mouse') { // a board leans away from where the pointer is over it
       var c = e.target.closest && e.target.closest('.pm-board'), b = c && c.__pmb;
-      if (b && b.w) push = { b: b, v: clamp((e.clientX - b.l - b.w / 2) / (b.w / 2), -1, 1) }; else if (push && !push.touch) push = null;
+      if (b && b.w) push = { b: b, v: clamp((e.clientX - b.l - b.w / 2) / (b.w / 2), -1, 1), t: t }; else if (push && !push.touch) push.t = Math.min(push.t, t - M.pushHoldMs); // off the board: it stands back up from where it is
     }
     need();
   }
   function flyStep() {
     if (!FLY.length && !WK) return false;
     var t = now();
-    var moving = false, nt = night(), fresh = t - ptr.t < 1400;
+    var moving = false, nt = night(), fresh = t - ptr.t < M.wakeMs;
     if (WK) { // the grass parts under the pointer: wider while it moves fast, standing back up as it slows, gone 1.4 s after
       WK.sp *= .94;
       var ta = fresh && ptr.ok ? 6 + clamp(WK.sp * 16, 0, 24) : 0;
       WK.ang += (ta - WK.ang) * .18;
       if (Math.abs(ta - WK.ang) > .2) moving = true;
       WK.e.style.transform = 'translate(' + ptr.x.toFixed(1) + 'px,' + ptr.y.toFixed(1) + 'px)';
-      WK.a.style.transform = 'rotate(' + (-WK.ang).toFixed(1) + 'deg)'; WK.b.style.transform = 'rotate(' + WK.ang.toFixed(1) + 'deg)';
-      WK.e.classList.toggle('pm-on', fresh && ptr.ok);
+      var sq = 'scaleY(' + (1 - WK.ang / 160).toFixed(3) + ')'; // blades bend from the root (a shear, not a turn) and stand a little lower
+      WK.a.style.transform = 'skewX(' + WK.ang.toFixed(1) + 'deg) ' + sq; WK.b.style.transform = 'skewX(' + (-WK.ang).toFixed(1) + 'deg) ' + sq;
+      WK.e.classList.toggle('pm-on', fresh && ptr.ok && inGrass(ptr.x, ptr.y, true));
     }
     if (!nt) { FLY.forEach(function (f) { f.e.classList.remove('pm-on'); }); return moving || fresh; }
     FLY.forEach(function (f, i) {
@@ -384,8 +419,8 @@
       f.e.classList.toggle('pm-on', ptr.ok);
     });
     // they drift while the pointer moves and a moment after; then they hold still and fade
-    if (t - ptr.t > 1400) { FLY.forEach(function (f) { f.e.classList.remove('pm-on'); }); if (WK) WK.e.classList.remove('pm-on'); return moving; }
-    return moving || t - ptr.t < 1400;
+    if (t - ptr.t > M.wakeMs) { FLY.forEach(function (f) { f.e.classList.remove('pm-on'); }); if (WK) WK.e.classList.remove('pm-on'); return false; } // (polish) they hold where they are and fade: their orbit never ends, so it must not keep the frame awake
+    return moving || t - ptr.t < M.wakeMs;
   }
 
 
@@ -402,7 +437,7 @@
      Between gusts the frame sleeps (one timer wakes it for the next gust of a board on screen). */
   var BOARDS = '.leads .card.lead, .more-g, main ol.method, main .band, .fact, .chart-card, .term, main > .prose:not(.case-head), .pager a';
   var BD = [], bio = null, ro = null, cyc0 = 0, CYC = 7000, gustT = 0, push = null, armed = false, swLast = 0;
-  var K = 70, C = 2 * Math.sqrt(70) * .8; // a spring a little under critical: settles in about 0.6 s with no visible bounce
+  var K = M.K, C = M.C;
   function gustClock() { // phase of the grass's gust (an animation with no delay: the hero band's, or a case page's first band)
     cyc0 = now();
     try { var as = d.getAnimations(); for (var i = 0; i < as.length; i++) { var a = as[i];
@@ -432,6 +467,7 @@
     if (W.ResizeObserver) { var roT = 0; ro = new ResizeObserver(function () { clearTimeout(roT); roT = setTimeout(function () { if (live) { boardsMeasure(); need(); } }, 200); }); ro.observe(d.body); offs.push(function () { ro.disconnect(); ro = null; clearTimeout(roT); }); }
   }
   function boardsMeasure() {
+    maxY = Math.max(0, r.scrollHeight - W.innerHeight);
     var words = null, syy = W.scrollY || 0, vw = r.clientWidth || 1, vh = W.innerHeight, hosts = [], h0 = leads || d.querySelector('main > .case-head + .sum');
     if (h0) hosts.push(h0.getBoundingClientRect().top + syy);
     sections.forEach(function (s) { hosts.push(s.getBoundingClientRect().top + syy); });
@@ -441,7 +477,10 @@
       b.amax = q.height > vh * 2 ? 0 : Math.min(.5, 1.8 / Math.max(q.height, q.width / 2, 1) * 57.3);
       hosts.forEach(function (ht, i) { if (ht <= b.top + 100) k = i; });
       b.delay = Math.min(k, 2) * 900 + clamp((b.l + b.w / 2) / vw, 0, 1) * 350; // a beat per band down the page, and left to right
-      // the tufts' CSS gust runs on the same clock: its delay is counted from when the tufts were made
+      // the tufts' CSS gust runs on the same clock: its delay is counted from when their animation started (read from the
+      // animation itself, so a page restored from the back/forward cache stays in step)
+      var tu = b.el.querySelector('.pm-tuft'), ta = tu && tu.getAnimations && tu.getAnimations()[0];
+      if (ta && ta.startTime != null && d.timeline && d.timeline.currentTime != null) b.tc = ta.startTime + (now() - d.timeline.currentTime);
       prop(b.el, '--pm-gd', (cyc0 + b.delay - b.tc).toFixed(0) + 'ms');
       if (b.tf) tuftsClear(b, words || (words = wordRects()));
     });
@@ -474,7 +513,7 @@
     for (var i = 0; i < BD.length; i++) {
       var b = BD[i];
       if (b.top - sy > vh + 40 || b.top + b.h - sy < -40) { if (b.on) restB(b); continue; }
-      var g = gustAt(b, tn), p = push && push.b === b ? push.v : 0;
+      var g = gustAt(b, tn) * hushK(b), p = push && push.b === b ? push.v * clamp(1 - (tn - push.t - M.pushHoldMs) / M.pushFadeMs, 0, 1) : 0;
       var tr = b.amax * (.8 * g + .9 * wind - .7 * p), tx = b.amax ? .8 * (g + wind) : 0, ty = b.amax ? lag : 0;
       b.vr += (K * (tr - b.r) - C * b.vr) * dt; b.r += b.vr * dt;
       b.vx += (K * (tx - b.x) - C * b.vx) * dt; b.x += b.vx * dt;
@@ -485,41 +524,74 @@
       if (!b.on) { b.on = true; b.el.classList.add('pm-spr'); }
       b.el.style.rotate = b.r.toFixed(3) + 'deg'; b.el.style.translate = b.x.toFixed(2) + 'px ' + b.y.toFixed(2) + 'px';
     }
+    if (push && tn - push.t > M.pushHoldMs + M.pushFadeMs) push = null; // the lean is a nudge: a resting pointer never holds a board (or the frame) bent
     clearTimeout(gustT); gustT = 0;
     if (!busy) { swLast = 0; if (next < 1e9) gustT = setTimeout(function () { gustT = 0; if (live) need(); }, Math.max(16, next - 8)); }
     return busy;
   }
 
+  /* while a film plays on screen the meadow calms: the gust through the boards drops to a third (none through the board
+     the film stands in), cloud shadows and leaf light hold (CSS, html.pm-hush), and no ambient leaf crosses */
+  var hushOn = false, hushEl = null, vio = null, vseen = [];
+  function hushK(b) { return !hushOn ? 1 : b.el.contains(hushEl) ? 0 : .35; }
+  function hushSync() {
+    var v = null; for (var i = 0; i < vseen.length; i++) if (!vseen[i].paused && !vseen[i].ended) { v = vseen[i]; break; }
+    hushEl = v; if (!!v === hushOn) return; hushOn = !!v; r.classList.toggle('pm-hush', hushOn); need();
+  }
+  function hushSetup() {
+    var vids = d.querySelectorAll('main video'); if (!vids.length || !W.IntersectionObserver) return;
+    vio = new IntersectionObserver(function (en) { en.forEach(function (x) { var i = vseen.indexOf(x.target); if (x.isIntersecting && i < 0) vseen.push(x.target); else if (!x.isIntersecting && i >= 0) vseen.splice(i, 1); }); hushSync(); }, { threshold: .25 });
+    [].forEach.call(vids, function (v) { vio.observe(v); });
+    ['play', 'playing', 'pause', 'ended'].forEach(function (k) { on(d, k, hushSync, true); });
+    offs.push(function () { vio.disconnect(); vio = null; vseen = []; hushEl = null; hushOn = false; r.classList.remove('pm-hush'); });
+  }
+
   /* the pointer parts the grass: where it moves over open ground (and where a finger lands there), two clumps of grass part
      under it, more the faster it goes, and stand back up when it stops */
   var WK = null;
+  /* only where grass is painted (polish pass: a clump that followed the pointer over bare ground read as grass floating in the
+     air): each hill band's meadow, the hero band's meadow, the footer's meadow; read at measure time, in page coordinates */
+  var GZ = [];
+  function grassMeasure() {
+    var syy = W.scrollY || 0; GZ = [];
+    sections.forEach(function (s) { var t = s.getBoundingClientRect().top + syy; GZ.push([t + 100, t + 155]); });
+    if (leads) { var lt = leads.getBoundingClientRect().top + syy, lp = parseFloat(getComputedStyle(leads).paddingTop) || 0; if (lp > 80) GZ.push([lt + lp * .45, lt + lp - 6]); }
+    var ft = d.querySelector('footer.site'); if (ft) { var fb = ft.getBoundingClientRect(); GZ.push([fb.top + syy + 115, fb.bottom + syy - 4]); }
+  }
+  function inGrass(x, y, geomOnly) {
+    var py = y + (W.scrollY || 0), hit = false;
+    for (var i = 0; i < GZ.length; i++) if (py > GZ[i][0] && py < GZ[i][1]) { hit = true; break; }
+    return hit && (geomOnly || openGround(x, y));
+  }
   function wakeSetup() { WK = { e: mk('i', 'pm-wake', d.body), ang: 0, sp: 0, lx: 0, ly: 0, lt: 0 }; WK.a = d.createElement('i'); WK.b = d.createElement('i'); WK.e.appendChild(WK.a); WK.e.appendChild(WK.b); }
 
   /* a press: a few painted petals (by night, seeds) scatter downwind from the point */
+  var pk = 0; // petals come in the meadow's three flower paints, in turn
   function scatter(x, y, n, keep) {
     if (!keep) claim(1300);
     var nt = night();
     for (var i = 0; i < n; i++) {
-      var e = mk('i', nt ? 'pm-seed pm-sc' : 'pm-petal', d.body), a = -Math.PI / 2 + .35 + (i - (n - 1) / 2) * .55 + (Math.random() - .5) * .3, dist = 26 + 22 * Math.random();
+      var e = mk('i', nt ? 'pm-seed pm-sc' : 'pm-petal pm-p' + ((i + pk++) % 3), d.body), a = -Math.PI / 2 + .35 + (i - (n - 1) / 2) * .55 + (Math.random() - .5) * .3, dist = 26 + 22 * Math.random();
       e.style.left = (x - 5) + 'px'; e.style.top = (y - 5) + 'px';
       fly(e, [{ transform: 'translate(0,0) rotate(0)', opacity: 0 }, { opacity: 1, offset: .12 },
         { transform: 'translate(' + (Math.cos(a) * dist + 22).toFixed(0) + 'px,' + (Math.sin(a) * dist - 6 + 14).toFixed(0) + 'px) rotate(' + (120 + 90 * i) + 'deg)', opacity: 0 }],
-        { duration: 1000 + 250 * Math.random(), easing: 'cubic-bezier(.2,.6,.4,1)' });
+        { duration: M.petalMs + 250 * Math.random(), easing: M.ease });
     }
   }
 
   /* ---------- on, off ---------- */
-  function relay() { if (FP) { FP.d = null; path(); } boundsSetup(); depth(); placeFocus(); boardsMeasure(); need(); }
+  function relay() { if (FP) { FP.d = null; path(); } boundsSetup(); depth(); placeFocus(); boardsMeasure(); grassMeasure(); need(); }
   function start() {
     live = true; frames = 0;
     r.classList.add('pm-live');
     sy = psy = W.scrollY || 0;
     depthSetup(); pathSetup(); boundsSetup(); cardsSetup(); glintSetup(); starsSetup(); flySetup();
-    shadeDrift(); boardsSetup(); wakeSetup();
+    shadeDrift(); boardsSetup(); wakeSetup(); grassMeasure(); hushSetup();
     depth(); stars(); need();
     on(W, 'scroll', onScroll, { passive: true });
     on(W, 'scroll', placeFocus, { passive: true });
-    on(W, 'resize', relay, { passive: true });
+    var rsT = 0; on(W, 'resize', function () { depth(); placeFocus(); clearTimeout(rsT); rsT = setTimeout(function () { if (live) relay(); }, 140); }, { passive: true }); // (polish) a drag-resize or a phone turning re-measures once it ends, not on every step
+    offs.push(function () { clearTimeout(rsT); });
     on(W, 'load', relay);
     on(d, 'pointerdown', onDown, { passive: true });
     on(d, 'pointerup', onUp, { passive: true });
@@ -530,7 +602,15 @@
     on(d, 'focusin', onFocusIn);
     on(d, 'keydown', onKey);
     on(d, 'focusout', function () { setTimeout(function () { if (d.activeElement !== focEl) focusOff(); }, 0); });
-    on(d, 'visibilitychange', function () { if (d.hidden) { cancelAnimationFrame(raf); raf = 0; dirtyScroll = dirtyPtr = false; clearFlying(); FLY.forEach(function (f) { f.e.classList.remove('pm-on'); }); BD.forEach(restB); clearTimeout(gustT); gustT = 0; swLast = 0; } else need(); });
+    on(r, 'pointerleave', function () { if (push && !push.touch) push.t = Math.min(push.t, now() - M.pushHoldMs); ptr.t = Math.min(ptr.t, now() - M.wakeMs); need(); });
+    on(W, 'pageshow', function (e) { // back/forward cache: nothing frozen half way, nothing queued; the wind picks up where the grass is
+      if (!e.persisted) return;
+      clearFlying(true); if (landed) { drop(landed); landed = null; } BD.forEach(restB); push = null; speed = vs = 0; scrolling = false; swLast = 0;
+      clearTimeout(idleT); clearTimeout(windT); r.classList.remove('pm-windy'); if (FP) FP.th.classList.remove('pm-moving');
+      ptr.t = 0; if (WK) WK.e.classList.remove('pm-on'); FLY.forEach(function (f) { f.e.classList.remove('pm-on'); });
+      sy = psy = W.scrollY || 0; pt = 0; gustClock(); relay(); hushSync();
+    });
+    on(d, 'visibilitychange', function () { if (d.hidden) { cancelAnimationFrame(raf); raf = 0; dirtyScroll = dirtyPtr = false; clearFlying(true); FLY.forEach(function (f) { f.e.classList.remove('pm-on'); }); BD.forEach(restB); clearTimeout(gustT); gustT = 0; swLast = 0; } else need(); });
   }
   function stop() {
     live = false;
@@ -538,7 +618,7 @@
     timers.forEach(clearTimeout); timers = []; clearTimeout(idleT); clearTimeout(windT); clearTimeout(gustT); gustT = 0;
     BD.forEach(function (b) { restB(b); b.el.classList.remove('pm-board'); delete b.el.__pmb; }); BD = []; push = null; armed = false; swLast = 0; WK = null; vs = 0;
     cancelAnimationFrame(raf); raf = 0; dirtyScroll = dirtyPtr = false;
-    clearFlying(); if (landed) { drop(landed); landed = null; }
+    clearFlying(true); if (landed) { drop(landed); landed = null; }
     made.forEach(drop); made = [];
     styled.forEach(function (el) { if (el.style.getPropertyValue('--pm-pos')) el.style.removeProperty('position');
       ['--pm-sy', '--pm-cx', '--pm-cy', '--pm-hy', '--pm-shx', '--pm-lx', '--pm-ly', '--pm-pos', '--pm-gd'].forEach(function (k) { el.style.removeProperty(k); }); }); styled = [];
