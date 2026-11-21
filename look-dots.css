@@ -628,6 +628,175 @@ html[data-look="dots"][data-look] .skip-link { background: var(--dp-yellow); col
 html[data-look="dots"][data-look] .skip-link:focus-visible { outline: 3px solid var(--dp-ink); outline-offset: 3px; }
 /* fluid-dots:end */
 
+/* immerse-dots:start (immersion pass, Nov 20: _tools/fluid/IMMERSE-dots.md; drawings from _tools/fluid/dots-immerse-art.mjs) */
+html[data-look="dots"][data-look] {
+  --dp-i-ruled: url(img/dots/ruled.svg);
+  --dp-i-ruled-c: url(img/dots/ruled-c.svg);
+  --dp-i-ruled-y: url(img/dots/ruled-y.svg);
+  --dp-i-ruled-p: url(img/dots/ruled-p.svg);
+  --dp-i-under: url(img/dots/under.svg);
+  --dp-i-under-c: url(img/dots/under-c.svg);
+  --dp-i-under-r: url(img/dots/under-r.svg);
+  --dp-i-under-y: url(img/dots/under-y.svg);
+  --dp-i-bullet: url(img/dots/bullet.svg);
+  --dp-i-bullet-c: url(img/dots/bullet-c.svg);
+  --dp-i-burst: url(img/dots/burst.svg);
+  --dp-i-burst-d: url(img/dots/burst-d.svg);
+  --dp-i-barcode: url(img/dots/barcode.svg);
+  --dp-i-reg: url(img/dots/reg.svg);
+  --dp-i-reg-c: url(img/dots/reg-c.svg);
+  --dp-i-tooth: url(img/dots/tooth.svg);
+  --dp-i-tooth-c: url(img/dots/tooth-c.svg);
+  --dp-i-balloon: url(img/dots/balloon.svg);
+}
+/* the page as a comic issue: ink the panels, letter, then colour (shadow tints last). Every rule is static styling, so
+   reduced motion and Pause keep it; nothing here moves at rest. Words never sit on dots. */
+html[data-look="dots"][data-look] { --dp-sh: 6px; --dp-shc: var(--dp-ink); --dp-ul: var(--dp-i-under); --dp-bul: var(--dp-i-bullet); --dp-reg: var(--dp-i-reg); --dp-tooth: var(--dp-i-tooth); --dp-drop: var(--dp-red); --dp-drop2: var(--dp-yellow); }
+html[data-look="dots"][data-look][data-theme="dark"] { --dp-shc: var(--dp-blue); --dp-ul: var(--dp-i-under-c); --dp-bul: var(--dp-i-bullet-c); --dp-reg: var(--dp-i-reg-c); --dp-tooth: var(--dp-i-tooth-c); --dp-drop2: var(--dp-blue); }
+@media (prefers-color-scheme: dark) {
+  html[data-look="dots"][data-look]:not([data-theme="light"]) { --dp-shc: var(--dp-blue); --dp-ul: var(--dp-i-under-c); --dp-bul: var(--dp-i-bullet-c); --dp-reg: var(--dp-i-reg-c); --dp-tooth: var(--dp-i-tooth-c); --dp-drop2: var(--dp-blue); }
+}
+
+/* A. the pen and the finger: an inked arrow with a halftone fill, a zap on anything that acts, a heavy-inked I-beam */
+html[data-look="dots"][data-look], html[data-look="dots"][data-look] body { cursor: url(img/dots/cursor-arrow.svg) 3 3, default; }
+html[data-look="dots"][data-look] :is(a[href], button, summary, label, select, [role="button"], .look-pick li, video, .vid-toggle, .vid-sound) { cursor: url(img/dots/cursor-zap.svg) 3 3, pointer; }
+html[data-look="dots"][data-look] :is(p, li, dd, dt, h1, h2, h3, h4, figcaption, pre, code, td, th, .fact b, .bigfig b, .hero-sub, footer.site span):not(:is(a, button, summary) *) { cursor: url(img/dots/cursor-text.svg) 16 16, text; }
+html[data-look="dots"][data-look] :is(a, button, summary) :is(p, li, h2, h3, h4, span, b, i, em) { cursor: inherit; }
+html[data-look="dots"][data-look] * { -webkit-tap-highlight-color: transparent; }
+html[data-look="dots"][data-look] { caret-color: var(--dp-red); accent-color: var(--dp-red); }
+html[data-look="dots"][data-look][data-theme="dark"] { caret-color: var(--dp-yellow); accent-color: var(--dp-yellow); }
+
+/* the page ground: newsprint with a fine tooth (a faint fibre tile; words keep full contrast); printer's registration
+   marks in the two outer margins, only where the margins are wide enough to hold them */
+html[data-look="dots"][data-look] body { background-image: var(--dp-tooth); background-size: 160px 160px; }
+@media (min-width: 1180px) {
+  html[data-look="dots"][data-look] body::after { content: ""; position: fixed; inset: 92px 14px 18px; pointer-events: none; z-index: 0; opacity: .55;
+    background: var(--dp-reg) 0 0 / 22px 22px no-repeat, var(--dp-reg) 100% 0 / 22px 22px no-repeat, var(--dp-reg) 0 100% / 22px 22px no-repeat, var(--dp-reg) 100% 100% / 22px 22px no-repeat; }
+}
+
+/* the scrollbar: an inked gutter, the thumb a halftone plate in a key line (Chrome and Safari); elsewhere the inks */
+html[data-look="dots"][data-look] ::-webkit-scrollbar { width: 12px; height: 12px; }
+html[data-look="dots"][data-look] ::-webkit-scrollbar-track { background: var(--dp-paper); box-shadow: inset 2px 0 0 var(--dp-ink); }
+html[data-look="dots"][data-look] ::-webkit-scrollbar-thumb { background: radial-gradient(circle, var(--dp-red) 1.2px, transparent 1.5px) 0 0 / 4px 4px, var(--dp-yellow); border: 2px solid var(--dp-ink); border-left-width: 3px; }
+html[data-look="dots"][data-look] ::-webkit-scrollbar-thumb:hover { background: radial-gradient(circle, var(--dp-red) 1.6px, transparent 1.9px) 0 0 / 4px 4px, var(--dp-yellow); }
+html[data-look="dots"][data-look] ::-webkit-scrollbar-corner { background: var(--dp-ink); }
+html[data-look="dots"][data-look][data-theme="dark"] ::-webkit-scrollbar-track { background: var(--dp-plate); box-shadow: inset 2px 0 0 var(--dp-paper); }
+@media (prefers-color-scheme: dark) { html[data-look="dots"][data-look]:not([data-theme="light"]) ::-webkit-scrollbar-track { background: var(--dp-plate); box-shadow: inset 2px 0 0 var(--dp-paper); } }
+@supports not selector(::-webkit-scrollbar) { html[data-look="dots"][data-look] { scrollbar-color: var(--dp-red) var(--dp-plate); } }
+/* selection: the yellow plate in day, the blue (cyan) separation at night */
+html[data-look="dots"][data-look][data-theme="dark"] ::selection { background: var(--dp-blue); color: var(--dp-ink); }
+@media (prefers-color-scheme: dark) { html[data-look="dots"][data-look]:not([data-theme="light"]) ::selection { background: var(--dp-blue); color: var(--dp-ink); } }
+
+/* focus: the thick ink ring with an offset colour plate between it and the part */
+html[data-look="dots"][data-look] :is(a, button, summary, video, [tabindex]):focus-visible { outline: 3px solid var(--dp-ink); outline-offset: 3px; box-shadow: 0 0 0 3px var(--dp-yellow); }
+html[data-look="dots"][data-look][data-theme="dark"] :is(main > *, .section, footer.site, .topbar) :is(a, summary, button):focus-visible { outline-color: var(--dp-paper); }
+
+/* B. ink the panels: every top-level panel casts a halftone shadow down and right, an L of dots outside its key line
+   (clipped so the dots never reach inside the panel, even mid-arrival); ruled parts cast a smaller one */
+html[data-look="dots"][data-look] :is(.card.lead, .film .shot, .chart-card, .term, .shot:not(.film .shot), .case-head)::after,
+html[data-look="dots"][data-look] .band::before,
+html[data-look="dots"][data-look] :is(.more-g, .fact, .band3 > div, .repo-card)::after,
+html[data-look="dots"][data-look] .method > li::before {
+  content: ""; display: block; position: absolute; pointer-events: none; z-index: 0; border: 0; border-radius: 0; box-shadow: none;
+  left: calc(var(--dp-sh) - var(--dp-bw, 4px)); top: calc(var(--dp-sh) - var(--dp-bw, 4px));
+  right: calc(-1 * var(--dp-sh) - var(--dp-bw, 4px)); bottom: calc(-1 * var(--dp-sh) - var(--dp-bw, 4px)); width: auto; height: auto;
+  background: radial-gradient(circle, var(--dp-shc) 1.15px, transparent 1.45px) 0 0 / 4px 4px;
+  clip-path: polygon(calc(100% - var(--dp-sh)) 0, 100% 0, 100% 100%, 0 100%, 0 calc(100% - var(--dp-sh)), calc(100% - var(--dp-sh)) calc(100% - var(--dp-sh)));
+}
+html[data-look="dots"][data-look] :is(.more-g, .fact, .band3 > div, .repo-card, .method > li) { --dp-sh: 4px; --dp-bw: 1px; }
+html[data-look="dots"][data-look] .repo-card { --dp-bw: 3px; }
+html[data-look="dots"][data-look] .term { position: relative; }
+/* the parts that clip their insides let their own shadow out (the clip moves 14 px out; their contents still fit) */
+html[data-look="dots"][data-look] :is(.film .shot, .term, .shot:not(.film .shot), .more-g, .fact) { overflow: clip; overflow-clip-margin: 14px; }
+/* 404: the empty panel; a balloon with three dots floats in it (no letters, no speaker) */
+html[data-look="dots"][data-look] main > .case-head:not(:has(.kicker, p)) h1::after { content: ""; display: block; margin-top: 14px; width: 120px; height: 70px; background: var(--dp-i-balloon) 0 0 / 100% 100% no-repeat; pointer-events: none; }
+
+/* the hand-inked ruled line: every ruled part's straight 1 px border becomes a pen line 1 to 2 px, heavier at the turns
+   (drawn 1 px into the padding, so no box changes size) */
+html[data-look="dots"][data-look] :is(.more-g, .method > li, .fact, .flow li, .band3 > div, .pager a, .brief, .brief dt, figcaption, .figcap, .who, .lead-k, .pills span, .badge, .back, .kicker, .look-pick-btn, footer.site .motion-toggle, .bars .track, .minis .cell .track) {
+  border-style: solid; border-image: var(--dp-i-ruled) 6 / 2px stretch;
+}
+html[data-look="dots"][data-look] .topbar { border-top-color: transparent; border-image: none; }
+html[data-look="dots"][data-look] .topbar .wrap::before { content: ""; position: absolute; left: -50vw; right: -50vw; top: -1px; height: 2px; background: var(--dp-ink); -webkit-mask: var(--dp-m-taper) 0 0 / 100% 100% no-repeat; mask: var(--dp-m-taper) 0 0 / 100% 100% no-repeat; pointer-events: none; }
+html[data-look="dots"][data-look] .topbar { overflow-x: clip; }
+html[data-look="dots"][data-look] .skip-link { border: 2px solid var(--dp-ink); border-image: var(--dp-i-ruled) 6 / 2px stretch; }
+
+/* C. letter the issue. Caption boxes: kickers, labels, figure captions and the back link are yellow caption boxes with a
+   small ink corner tab (the caption-box corner); stickers (pills, badges) carry the tab at the other corner */
+html[data-look="dots"][data-look] :is(.kicker, .lead-k, .who, .brief dt, figcaption, .figcap, .back) {
+  background: linear-gradient(135deg, var(--dp-ink) 0 6px, transparent 6px) 0 0 / 100% 100% no-repeat, var(--dp-yellow); color: var(--dp-ink);
+}
+html[data-look="dots"][data-look] :is(.pills span, .badge) {
+  background: linear-gradient(225deg, var(--dp-red) 0 6px, transparent 6px) 0 0 / 100% 100% no-repeat, var(--dp-paper); color: var(--dp-ink);
+}
+@media (hover: hover) { html[data-look="dots"][data-look] a.back:hover { background: linear-gradient(135deg, var(--dp-ink) 0 6px, transparent 6px) 0 0 / 100% 100% no-repeat, radial-gradient(circle, var(--dp-red) 1.1px, transparent 1.4px) 0 100% / 4px 4px repeat-x, var(--dp-yellow); } }
+/* the top bar: the masthead strip; its links are caption tabs drawn round the words (outset, so the bar never grows) */
+html[data-look="dots"][data-look] .topnav a { border: 0 solid transparent; border-image: var(--dp-i-ruled-p) 6 fill / 2px / 3px 7px stretch; }
+@media (hover: hover) { html[data-look="dots"][data-look] .topnav a:hover { text-decoration: none; border-image-source: var(--dp-i-ruled-y); } }
+html[data-look="dots"][data-look] .topnav a[aria-current] { border-image-source: var(--dp-i-ruled-y); }
+/* the look list's button: a sticker plate; the theme button: a square day/night caption box (sizes unchanged) */
+html[data-look="dots"][data-look][data-look] .look-pick.look-pick .look-pick-btn { background: linear-gradient(225deg, var(--dp-red) 0 7px, transparent 7px) 0 0 / 100% 100% no-repeat, var(--dp-yellow); color: var(--dp-ink); }
+html[data-look="dots"][data-look] .theme-toggle { border: 0 solid transparent; border-radius: 0; border-image: var(--dp-i-ruled) 6 / 2px stretch; background: var(--dp-t-yellow), var(--dp-paper); }
+html[data-look="dots"][data-look][data-theme="dark"] .theme-toggle { background: var(--dp-t-blue), var(--dp-paper); }
+@media (prefers-color-scheme: dark) { html[data-look="dots"][data-look]:not([data-theme="light"]) .theme-toggle { background: var(--dp-t-blue), var(--dp-paper); } }
+@media (hover: hover) {
+  html[data-look="dots"][data-look] .theme-toggle:hover { background: var(--dp-t-yellow-2), var(--dp-t-yellow), var(--dp-paper); }
+  html[data-look="dots"][data-look][data-theme="dark"] .theme-toggle:hover { background: var(--dp-t-blue-2), var(--dp-t-blue), var(--dp-paper); }
+}
+
+/* titles: cover lettering. A colour plate prints under the feet of the ink letters (scarlet under the cover title,
+   yellow or the blue separation under section titles), the way a letterer's title sits on a band of colour. Drawn as a
+   thick text decoration behind the glyphs (painted under them), so the letters stay crisp and keep their colour. */
+html[data-look="dots"][data-look] :is(h1, h2, .fact b, .bigfig b) { text-decoration-line: underline; text-decoration-skip-ink: none; text-decoration-thickness: .24em; text-underline-offset: -.2em; }
+html[data-look="dots"][data-look] h1 { text-decoration-color: var(--dp-drop); }
+html[data-look="dots"][data-look] :is(h2, .fact b, .bigfig b) { text-decoration-color: var(--dp-drop2); }
+html[data-look="dots"][data-look] h1 .grad { text-decoration: inherit; }
+/* figures and numbers: lettered like sound effects, leaning forward; the big figure the same, on its band */
+html[data-look="dots"][data-look] :is(.fact, .bigfig) b { display: inline-block; transform: skewX(-8deg); letter-spacing: .02em; }
+
+/* links: the heavy ink underline is a drawn swelling stroke under each line of words; hover lays a yellow highlight
+   behind them (solid: words never sit on dots); pressed turns the stroke scarlet */
+html[data-look="dots"][data-look] :is(.hero-sub, .hero-mail, footer.site, .prose p, .prose li, .prose dd, figcaption, .note, .pager-contact) a:not(.btn) {
+  text-decoration: none; background: var(--dp-ul) 0 100% / 100% 3px no-repeat; -webkit-box-decoration-break: clone; box-decoration-break: clone; padding-bottom: 3px;
+}
+@media (hover: hover) {
+  html[data-look="dots"][data-look] :is(.hero-sub, .hero-mail, footer.site, .prose p, .prose li, .prose dd, figcaption, .note, .pager-contact) a:not(.btn):hover {
+    background: var(--dp-i-under) 0 100% / 100% 3px no-repeat, linear-gradient(var(--dp-yellow), var(--dp-yellow)) 0 0 / 100% 100% no-repeat; color: var(--dp-ink);
+  }
+}
+html[data-look="dots"][data-look] :is(.hero-sub, .hero-mail, footer.site, .prose p, .prose li, .prose dd, figcaption, .note, .pager-contact) a:not(.btn):active { background-image: var(--dp-i-under-r); }
+
+/* bullets: a small starburst with a scarlet centre */
+html[data-look="dots"][data-look] .more li::before { width: 13px; height: 13px; left: -1px; top: 15px; border: 0; border-radius: 0; background: var(--dp-bul) 0 0 / 100% 100% no-repeat; }
+html[data-look="dots"][data-look] .prose ul:not([class]) > li::before { width: 13px; height: 13px; top: 13px; left: 2px; border: 0; border-radius: 0; background: var(--dp-bul) 0 0 / 100% 100% no-repeat; }
+/* tick lists: each disc a halftone of its own ink inside a ring */
+html[data-look="dots"][data-look] ul.ticks > li::before { background: radial-gradient(circle, var(--dp-blue) 1.05px, transparent 1.35px) 0 0 / 3px 3px, var(--dp-paper); outline: 1.5px solid var(--dp-ink); outline-offset: -1.5px; }
+html[data-look="dots"][data-look] ul.ticks.ok > li::before { background: radial-gradient(circle, var(--dp-red) 1.05px, transparent 1.35px) 0 0 / 3px 3px, var(--dp-yellow); }
+
+/* code: inline code a small caption; a table a panel grid with inked gutters and a caption-box head row */
+html[data-look="dots"][data-look] :not(pre) > code { background: var(--dp-yellow); color: var(--dp-ink); padding: 0 4px; border-radius: 0; border: 0 solid; border-image: var(--dp-i-ruled) 6 / 1px / 0 stretch; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+html[data-look="dots"][data-look] table:not(.minis) { border-collapse: separate; border-spacing: 0; border: 0 solid; border-image: var(--dp-k-frame) 4 / 4px / 0 stretch; }
+html[data-look="dots"][data-look] table:not(.minis) :is(th, td) { border: 0 solid; border-image: var(--dp-i-ruled) 6 / 1px stretch; }
+html[data-look="dots"][data-look] table:not(.minis) thead th { background: var(--dp-yellow); color: var(--dp-ink); }
+
+/* the film script's summary: a caption tab */
+html[data-look="dots"][data-look] .film-script > summary { display: inline-block; list-style: none; padding: 2px 10px; background: var(--dp-yellow); color: var(--dp-ink); border: 1px solid; border-image: var(--dp-i-ruled) 6 / 2px stretch; }
+html[data-look="dots"][data-look] .film-script > summary::-webkit-details-marker { display: none; }
+
+/* D. the back page: the footer's last panel carries a printed barcode block in its corner (decorative) */
+html[data-look="dots"][data-look] footer.site .wrap::after { content: ""; position: absolute; right: 0; bottom: -34px; width: 74px; height: 24px; background: var(--dp-i-barcode) 0 0 / 100% 100% no-repeat; pointer-events: none; opacity: .9; }
+html[data-look="dots"][data-look] :is(footer.site, figcaption) a:not(.btn) { background-image: var(--dp-i-under); }
+/* links laid out as tall tap boxes keep the stroke under the words, not at the box foot */
+html[data-look="dots"][data-look] footer.site a:not(.btn) { background-position: 0 calc(50% + .8em); }
+/* the small tables: each row ruled with the pen line */
+html[data-look="dots"][data-look] table.minis :is(td, th) { border-image: var(--dp-i-ruled) 6 / 2px 0 0 0 stretch; }
+/* the open look list: a stack of panels; the list is a panel in the pen line with its own halftone shadow */
+html[data-look="dots"][data-look][data-look] .look-pick.look-pick .look-menu { border-image: var(--dp-i-ruled) 6 / 2px stretch; }
+html[data-look="dots"][data-look] .look-pick .look-menu::after { content: ""; position: absolute; pointer-events: none; left: 5px; top: 5px; right: -6px; bottom: -6px;
+  background: radial-gradient(circle, var(--dp-shc) 1.15px, transparent 1.45px) 0 0 / 4px 4px;
+  clip-path: polygon(calc(100% - 6px) 0, 100% 0, 100% 100%, 0 100%, 0 calc(100% - 6px), calc(100% - 6px) calc(100% - 6px)); }
+/* immerse-dots:end */
+
 /* art:start (generated by _tools/dots/dots-art.mjs; never edit by hand) */
 html[data-look="dots"][data-look] {
   --dp-t-red-light: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='21' height='21'><g fill='%23c8321e'><circle cx='0' cy='0' r='1.57'/><circle cx='0' cy='21' r='1.57'/><circle cx='21' cy='0' r='1.57'/><circle cx='21' cy='21' r='1.57'/><circle cx='1.24' cy='4.94' r='1.57'/><circle cx='22.24' cy='4.94' r='1.57'/><circle cx='2.47' cy='9.88' r='1.57'/><circle cx='3.71' cy='14.82' r='1.57'/><circle cx='4.94' cy='-1.24' r='1.57'/><circle cx='4.94' cy='19.76' r='1.57'/><circle cx='6.18' cy='3.71' r='1.57'/><circle cx='7.41' cy='8.65' r='1.57'/><circle cx='8.65' cy='13.59' r='1.57'/><circle cx='9.88' cy='18.53' r='1.57'/><circle cx='11.12' cy='2.47' r='1.57'/><circle cx='12.35' cy='7.41' r='1.57'/><circle cx='13.59' cy='12.35' r='1.57'/><circle cx='14.82' cy='17.29' r='1.57'/><circle cx='16.06' cy='1.24' r='1.57'/><circle cx='16.06' cy='22.24' r='1.57'/><circle cx='17.29' cy='6.18' r='1.57'/><circle cx='18.53' cy='11.12' r='1.57'/><circle cx='-1.24' cy='16.06' r='1.57'/><circle cx='19.76' cy='16.06' r='1.57'/></g></svg>");
