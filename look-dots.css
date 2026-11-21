@@ -651,10 +651,10 @@ html[data-look="dots"][data-look] {
 }
 /* the page as a comic issue: ink the panels, letter, then colour (shadow tints last). Every rule is static styling, so
    reduced motion and Pause keep it; nothing here moves at rest. Words never sit on dots. */
-html[data-look="dots"][data-look] { --dp-sh: 6px; --dp-shc: var(--dp-ink); --dp-ul: var(--dp-i-under); --dp-bul: var(--dp-i-bullet); --dp-reg: var(--dp-i-reg); --dp-tooth: var(--dp-i-tooth); --dp-drop: var(--dp-red); --dp-drop2: var(--dp-yellow); --dp-burst: var(--dp-i-burst); }
-html[data-look="dots"][data-look][data-theme="dark"] { --dp-shc: var(--dp-blue); --dp-ul: var(--dp-i-under-c); --dp-bul: var(--dp-i-bullet-c); --dp-reg: var(--dp-i-reg-c); --dp-tooth: var(--dp-i-tooth-c); --dp-drop2: var(--dp-blue); --dp-burst: var(--dp-i-burst-d); }
+html[data-look="dots"][data-look] { --dp-sh: 6px; --dp-shc: var(--dp-ink); --dp-ul: var(--dp-i-under); --dp-bul: var(--dp-i-bullet); --dp-reg: var(--dp-i-reg); --dp-tooth: var(--dp-i-tooth); --dp-drop: var(--dp-red); --dp-drop2: var(--dp-yellow); }
+html[data-look="dots"][data-look][data-theme="dark"] { --dp-shc: var(--dp-blue); --dp-ul: var(--dp-i-under-c); --dp-bul: var(--dp-i-bullet-c); --dp-reg: var(--dp-i-reg-c); --dp-tooth: var(--dp-i-tooth-c); --dp-drop2: var(--dp-blue); }
 @media (prefers-color-scheme: dark) {
-  html[data-look="dots"][data-look]:not([data-theme="light"]) { --dp-shc: var(--dp-blue); --dp-ul: var(--dp-i-under-c); --dp-bul: var(--dp-i-bullet-c); --dp-reg: var(--dp-i-reg-c); --dp-tooth: var(--dp-i-tooth-c); --dp-drop2: var(--dp-blue); --dp-burst: var(--dp-i-burst-d); }
+  html[data-look="dots"][data-look]:not([data-theme="light"]) { --dp-shc: var(--dp-blue); --dp-ul: var(--dp-i-under-c); --dp-bul: var(--dp-i-bullet-c); --dp-reg: var(--dp-i-reg-c); --dp-tooth: var(--dp-i-tooth-c); --dp-drop2: var(--dp-blue); }
 }
 
 /* A. the pen and the finger: an inked arrow with a halftone fill, a zap on anything that acts, a heavy-inked I-beam */
@@ -747,13 +747,12 @@ html[data-look="dots"][data-look][data-theme="dark"] .theme-toggle { background:
 /* titles: cover lettering. A colour plate prints under the feet of the ink letters (scarlet under the cover title,
    yellow or the blue separation under section titles), the way a letterer's title sits on a band of colour. Drawn as a
    thick text decoration behind the glyphs (painted under them), so the letters stay crisp and keep their colour. */
-html[data-look="dots"][data-look] :is(h1, h2, .fact b) { text-decoration-line: underline; text-decoration-skip-ink: none; text-decoration-thickness: .24em; text-underline-offset: -.2em; }
+html[data-look="dots"][data-look] :is(h1, h2, .fact b, .bigfig b) { text-decoration-line: underline; text-decoration-skip-ink: none; text-decoration-thickness: .24em; text-underline-offset: -.2em; }
 html[data-look="dots"][data-look] h1 { text-decoration-color: var(--dp-drop); }
-html[data-look="dots"][data-look] :is(h2, .fact b) { text-decoration-color: var(--dp-drop2); }
+html[data-look="dots"][data-look] :is(h2, .fact b, .bigfig b) { text-decoration-color: var(--dp-drop2); }
 html[data-look="dots"][data-look] h1 .grad { text-decoration: inherit; }
-/* figures and numbers: lettered like sound effects, leaning forward; the big figure on a yellow burst */
+/* figures and numbers: lettered like sound effects, leaning forward; the big figure the same, on its band */
 html[data-look="dots"][data-look] :is(.fact, .bigfig) b { display: inline-block; transform: skewX(-8deg); letter-spacing: .02em; }
-html[data-look="dots"][data-look] .bigfig b { padding: 4px 18px; background: var(--dp-i-burst) 0 0 / 100% 100% no-repeat; }
 
 /* links: the heavy ink underline is a drawn swelling stroke under each line of words; hover lays a yellow highlight
    behind them (solid: words never sit on dots); pressed turns the stroke scarlet */
@@ -775,7 +774,7 @@ html[data-look="dots"][data-look] ul.ticks > li::before { background: radial-gra
 html[data-look="dots"][data-look] ul.ticks.ok > li::before { background: radial-gradient(circle, var(--dp-red) 1.05px, transparent 1.35px) 0 0 / 3px 3px, var(--dp-yellow); }
 
 /* code: inline code a small caption; a table a panel grid with inked gutters and a caption-box head row */
-html[data-look="dots"][data-look] :not(pre) > code { background: var(--dp-yellow); color: var(--dp-ink); padding: 0 4px; border-radius: 0; border: 0 solid; border-image: var(--dp-i-ruled) 6 / 1px / 1px stretch; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+html[data-look="dots"][data-look] :not(pre) > code { background: var(--dp-yellow); color: var(--dp-ink); padding: 0 4px; border-radius: 0; border: 0 solid; border-image: var(--dp-i-ruled) 6 / 1px / 0 stretch; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
 html[data-look="dots"][data-look] table:not(.minis) { border-collapse: separate; border-spacing: 0; border: 0 solid; border-image: var(--dp-k-frame) 4 / 4px / 0 stretch; }
 html[data-look="dots"][data-look] table:not(.minis) :is(th, td) { border: 0 solid; border-image: var(--dp-i-ruled) 6 / 1px stretch; }
 html[data-look="dots"][data-look] table:not(.minis) thead th { background: var(--dp-yellow); color: var(--dp-ink); }
