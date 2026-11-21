@@ -25,6 +25,9 @@
   var mqDark = matchMedia('(prefers-color-scheme: dark)');
   var SDA = !!(W.CSS && CSS.supports && CSS.supports('animation-timeline: view()'));
   var live = false, offs = [], made = [], styled = [], timers = [], anims = [];
+  /* motion tokens (polish, Nov 20): the same set look-wash.css names at the top of its fluid section (--w-t-*, --w-e-*) */
+  var MOTION = { page: 560, ink: 1000, dry: 650, soak: 350, press: 80, bloom: 'cubic-bezier(.2, .6, .3, 1)', drain: 'cubic-bezier(.45, 0, .65, 1)',
+    spring: { k: .1, damp: .3, follow: .45 }, fast: 1.5 }; // fast: a scroll quicker than 1.5 px/ms is a fling // the wet-pigment drag: pull stiffness, damping, how fast it takes up a change of pace
 
   function wanted() { return r.getAttribute('data-look') === 'wash' && r.classList.contains('motion') && !mqReduce.matches; }
   function on(t, type, fn, opt) { t.addEventListener(type, fn, opt); offs.push(function () { t.removeEventListener(type, fn, opt); }); }
@@ -44,7 +47,7 @@
 
   /* ---------- 15. one moving accent at a time ---------- */
   var acc = { name: '', until: 0 };
-  function ambientFree() { return now() > acc.until; }
+  function ambientFree() { return now() > acc.until && !r.classList.contains('w-calm'); }
   function claim(name, ms) { acc.name = name; acc.until = now() + ms; clearFalls(); unglaze(); starOff(); }
 
   /* ---------- the one frame loop: one rAF per frame while the page scrolls, the wet washes settle or the brush tip's
@@ -58,6 +61,7 @@
     var dt = Math.max(8, Math.min(64, t - (pt || t - 16))), moved = sy !== psy, vs = (sy - psy) / dt;
     if (moved) {
       speed = speed * .5 + Math.abs(vs) * .5;
+      if (speed > MOTION.fast && !fastOn) { fastOn = true; clearTimeout(fastT); r.classList.add('w-fast'); } // polish: a fling blooms blocks in quickly
       var dir = sy > psy ? 1 : -1;
       if (!scrolling) { scrolling = true; startMove(); }
       thread(false);
@@ -71,7 +75,9 @@
     if (TIP && tipStep()) busy = true;
     if (busy) kick();
   }
-  function rest() { scrolling = false; speed = 0; pt = 0; thread(true); settle(); starKick(); if (SW.due.length) dabSoon(); }
+  var fastOn = false, fastT = 0;
+  function fastOff() { fastOn = false; r.classList.remove('w-fast'); }
+  function rest() { if (fastOn) { clearTimeout(fastT); fastT = setTimeout(fastOff, 1200); } scrolling = false; speed = 0; pt = 0; thread(true); calmCheck(); settle(); starKick(); if (SW.due.length) dabSoon(); }
   function startMove() { if (T) T.bloom.classList.remove('w-on'); unglaze(); clearTimeout(dabT); if (acc.name === 'dab') acc.until = 0; } // a dab in progress never holds back the drops
 
   /* ---------- fluid (Nov 20) 3: the washes are wet, so the scroll drags them ----------
@@ -98,11 +104,11 @@
   }
   function dragStep(vs, dt) { // vs: the scroll's speed this frame in px/ms (signed); returns true while the pigment still moves
     if (!DR.io) return false;
-    DR.vel = DR.vel * .55 + vs * .45;
+    DR.vel = DR.vel * (1 - MOTION.spring.follow) + vs * MOTION.spring.follow;
     var cap = mqSlow.matches ? 14 : 22, tgt = clamp(DR.vel * 15, -cap, cap), n = Math.max(1, Math.min(4, Math.round(dt / 16.7)));
     if (Math.abs(vs) > .01) DR.on = true;
     if (!DR.on) return false;
-    for (var i = 0; i < n; i++) { DR.v += (tgt - DR.x) * .1 - DR.v * .3; DR.x += DR.v; }
+    for (var i = 0; i < n; i++) { DR.v += (tgt - DR.x) * MOTION.spring.k - DR.v * MOTION.spring.damp; DR.x += DR.v; }
     if (Math.abs(DR.x) < .06 && Math.abs(DR.v) < .03 && Math.abs(tgt) < .06) { // still: take every offset off again
       DR.x = DR.v = DR.vel = 0; DR.on = false; DR.last = '';
       DR.vis.forEach(function (el) { el.style.removeProperty('--w-dy'); });
@@ -138,7 +144,7 @@
     T.d = ds; T.P = []; T.N = []; T.k = -1; T.built = -2;
     var L = 0; try { L = ds ? T.line.getTotalLength() : 0; } catch (e) {}
     var n = Math.floor(L / STEP), i, p;
-    for (i = 0; i <= n; i++) { p = T.line.getPointAtLength(i * STEP); T.P.push(p.x, p.y); }
+    try { for (i = 0; i <= n; i++) { p = T.line.getPointAtLength(i * STEP); T.P.push(p.x, p.y); } } catch (e) { T.P = []; n = -1; } // (polish: an empty path, as on the 404, is no thread, not an error)
     for (i = 0; i <= n; i++) {
       var a = Math.max(0, i - 1), b = Math.min(n, i + 1), dx = T.P[2 * b] - T.P[2 * a], dy = T.P[2 * b + 1] - T.P[2 * a + 1], l = Math.hypot(dx, dy) || 1;
       T.N.push(-dy / l, dx / l);
@@ -323,10 +329,11 @@
   var lastTap = null, CTRL = 'a[href], button, input, textarea, select, label, summary, video, [role="button"], [contenteditable], .look-pick, .thread';
   function waterDrop(x, y, t) {
     claim('tap', 1000);
-    drop(lastTap);
+    [].forEach.call(d.querySelectorAll('.w-tapgo'), drop); // at most two on the page: the one thinning away and the new one
+    if (lastTap) { var old = lastTap; old.classList.add('w-tapgo'); anim(old, [{ opacity: getComputedStyle(old).opacity }, { opacity: 0 }], { duration: 160, fill: 'forwards' }); later(function () { drop(old); }, 170); } // (polish: the last drop thins away, no pop)
     var p = lastTap = mk('i', 'w-tapb', d.body), h = t && t.closest ? t.closest('.card, .fact, .chart-card, .sum, .section, .band, .prose, .case-head, .hero') : null;
     p.style.cssText = 'left:' + x.toFixed(0) + 'px;top:' + y.toFixed(0) + 'px;--w-ih:' + hueOf(h) + ';--w-ir:' + ((hash(x.toFixed(0) + 'y' + y.toFixed(0)) % 36) * 10) + 'deg';
-    later(function () { drop(p); if (lastTap === p) lastTap = null; }, 1050);
+    later(function () { drop(p); if (lastTap === p) lastTap = null; }, MOTION.ink + 50);
   }
   // 12: a pooled wash round a big figure's leading number: colour that ran to the edge of a puddle and dried there
   function pool(el, ms) {
@@ -454,7 +461,7 @@
     if (focEl !== focWas) { // fluid (Nov 20): the ring is laid wet (the colour, spreading a hair wide) and dries to its ink edge
       focWas = focEl;
       if (focAn) try { focAn.cancel(); } catch (er) {}
-      focAn = anim(FOC, [{ borderColor: fc, opacity: .35, transform: 'scale(1.06)' }, { borderColor: fc, opacity: 1, transform: 'none', offset: .3 }, { borderColor: getComputedStyle(FOC).borderTopColor }], { duration: 650, easing: 'cubic-bezier(.2, .6, .3, 1)' });
+      focAn = anim(FOC, [{ borderColor: fc, opacity: .35, transform: 'scale(1.06)' }, { borderColor: fc, opacity: 1, transform: 'none', offset: .3 }, { borderColor: getComputedStyle(FOC).borderTopColor }], { duration: MOTION.dry, easing: MOTION.bloom });
     }
   }
   function focusFollow() { if (focEl && !focRaf) focRaf = requestAnimationFrame(placeFocus); }
@@ -505,18 +512,40 @@
      page. Not on a reload (the look picker reloads the page), only when the browser runs a view transition. */
   var lastDown = null;
   function onSwap(e) {
-    var vt = e.viewTransition, ty = e.activation && e.activation.navigationType;
+    var vt = e.viewTransition, ac = e.activation, ty = ac && ac.navigationType;
     if (!vt || !live || ty === 'reload') return;
-    var vw = innerWidth, vh = innerHeight, x = vw / 2, y = vh * .45, h = null, ae = d.activeElement;
-    if (lastDown && now() - lastDown.t < 5000) { x = lastDown.x; y = lastDown.y; h = lastDown.el; }
+    var back = ty === 'traverse' && ac.entry && ac.from && ac.entry.index < ac.from.index;
+    var vw = innerWidth, vh = innerHeight, x = vw / 2, y = vh * .45, h = null, ae = d.activeElement, fresh = lastDown && now() - lastDown.t < 3000;
+    if (fresh) { x = lastDown.x; y = lastDown.y; h = lastDown.el; }
+    else if (back) { x = -70; y = vh * .42; } // polish: Back draws the ink out to the left edge (where Back is), from just off the window
     else if (ae && ae !== d.body && ae.getBoundingClientRect) { var q = ae.getBoundingClientRect(); x = q.left + q.width / 2; y = q.top + q.height / 2; h = ae; }
     var f = mk('i', 'w-flood', d.body);
-    f.style.cssText = 'left:' + clamp(x, 0, vw).toFixed(0) + 'px;top:' + clamp(y, 0, vh).toFixed(0) + 'px;--w-fh:' + hueOf(h && h.closest ? h.closest('.card, .pager a, .groupnav a, .section, .sum, .prose, .case-head, .hero, footer') || h : null);
+    f.style.cssText = 'left:' + clamp(x, -70, vw).toFixed(0) + 'px;top:' + clamp(y, 0, vh).toFixed(0) + 'px;--w-fh:' + hueOf(h && h.closest ? h.closest('.card, .pager a, .groupnav a, .section, .sum, .prose, .case-head, .hero, footer') || h : null);
     var gone = function () { drop(f); var i = made.indexOf(f); if (i >= 0) made.splice(i, 1); };
     try { vt.finished.then(gone, gone); } catch (er) {}
     later(gone, 2000);
   }
-  function floodOff() { [].forEach.call(d.querySelectorAll('.w-flood'), drop); } // back from the back-forward cache: no ink left on the page
+  function floodOff() { [].forEach.call(d.querySelectorAll('.w-flood'), drop); }
+  /* polish (Nov 20): back from the back-forward cache the page is exactly as it was left, mid-gesture: take off every
+     half-way mark (ink, drops, the glaze, a wet card, the spring's offsets) and start again from rest, with no burst */
+  function onShow(e) {
+    floodOff();
+    if (!e.persisted || !live) return;
+    drop(lastTap); lastTap = null; clearFalls(); starOff(); unglaze(); wetOff(); down = null; lastDown = null;
+    [].forEach.call(d.querySelectorAll('.w-tapb, .w-lift'), drop);
+    if (DR.io) { DR.x = DR.v = DR.vel = 0; DR.on = false; DR.last = ''; DR.els.forEach(function (el) { el.style.removeProperty('--w-dy'); }); }
+    clearTimeout(idleT); scrolling = false; speed = 0; pt = 0; sy = psy = W.scrollY || 0; acc.until = 0;
+    if (TIP) { TIP.hx = TIP.hy = 0; TIP.el.style.removeProperty('--hx'); TIP.el.style.removeProperty('--hy'); }
+    relay(); starKick();
+  }
+  /* polish (Nov 20): while a film plays, the ambient motion near it calms: the washes stop breathing, the damp patches
+     stop drifting, and no drop falls and no star glints (the reader's own taps and scroll still answer) */
+  function calmCheck() {
+    var v = d.querySelectorAll('video'), on = false;
+    for (var i = 0; i < v.length; i++) if (!v[i].paused && !v[i].ended && v[i].readyState > 2 && !(v[i].muted && (v[i].autoplay || v[i].hasAttribute('data-auto') || v[i].classList.contains('preview')))) { var q = v[i].getBoundingClientRect(); if (q.bottom > 0 && q.top < innerHeight) on = true; } // (a film being watched: on screen, and started by the reader or playing with sound; the silent opening loop is part of the page)
+    r.classList.toggle('w-calm', on);
+    if (on) { clearFalls(); starOff(); }
+  }
 
   /* ---------- material (Nov 20) ----------
      1 wet, then dry: a wash newly laid on the page (a section's wash, the swatch under a heading, card or capture, the
@@ -735,10 +764,12 @@
     r.classList.add('w-live');
     sy = psy = W.scrollY || 0;
     if (mqFine.matches) r.classList.add('w-fine');
+    arrived();
     threadSetup(); scrubSetup(); heroSetup(); boundsSetup(); tipSetup(); wetSetup(); saltSetup(); signSetup();
     dragSetup(); mk('i', 'w-damp', d.body);
     on(W, 'pageswap', onSwap);
-    on(W, 'pageshow', floodOff);
+    on(W, 'pageshow', onShow);
+    on(d, 'playing', calmCheck, true); on(d, 'pause', calmCheck, true); on(d, 'ended', calmCheck, true); calmCheck();
     on(W, 'scroll', onScroll, { passive: true });
     on(W, 'scroll', focusFollow, { passive: true });
     on(W, 'resize', relay, { passive: true });
@@ -759,18 +790,45 @@
     starKick();
     if (SW.due.length) dabSoon();
   }
+  /* polish (Nov 20): a page reached through the ink (a view transition still running when this script starts), or opened
+     part-way down (restored scroll, a #link, Back, a reload), shows the blocks already in the window at rest; the ones
+     further down still bloom in as they are scrolled to */
+  function arrived() {
+    var vt = false; try { vt = r.matches(':active-view-transition'); } catch (e) {}
+    var nav = r.getAttribute('data-nav'), late = nav === 'back' || nav === 'reload' || !!location.hash;
+    if (vt || (W.scrollY || 0) > 40 || late) atRest(vt);
+    if (!late) return; // a fresh page at its top: the blocks' bloom is its opening
+    // the browser puts the scroll back (or goes to the #link) a moment later: a jump of over half a window in the first
+    // 1.5 s lands at rest too
+    var t0 = now(), y0 = W.scrollY || 0, jump = function () {
+      var y = W.scrollY || 0;
+      if (now() - t0 > 1500) { W.removeEventListener('scroll', jump); return; }
+      if (Math.abs(y - y0) > innerHeight * .5) atRest(false);
+      y0 = y;
+    };
+    on(W, 'scroll', jump, { passive: true });
+  }
+  function atRest(vt) {
+    var vh = innerHeight, rs = d.querySelectorAll('.reveal'), q, a;
+    for (var i = 0; i < rs.length; i++) {
+      q = rs[i].getBoundingClientRect(); if (q.top >= vh || q.bottom <= 0) continue;
+      // (outside the ink, one already well into its bloom is left to finish rather than jump)
+      if (!vt && rs[i].classList.contains('in')) { a = rs[i].getAnimations ? rs[i].getAnimations().filter(function (x) { return x.animationName === 'wash-inkin'; })[0] : null; if (a && a.currentTime > 150) continue; }
+      rs[i].classList.add('w-here');
+    }
+  }
   function stop() {
     live = false;
     offs.forEach(function (f) { f(); }); offs = [];
-    timers.forEach(clearTimeout); timers = []; clearTimeout(idleT); clearTimeout(starT);
+    timers.forEach(clearTimeout); timers = []; clearTimeout(idleT); clearTimeout(starT); clearTimeout(fastT); fastOn = false;
     cancelAnimationFrame(raf); raf = 0; cancelAnimationFrame(selRaf); selRaf = 0; cancelAnimationFrame(focRaf); focRaf = 0;
     clearFalls(); clearSel(); unglaze(); starOff(); clearTimeout(dabT); SALTC = null; [].forEach.call(d.querySelectorAll('.wm-new'), function (e) { e.classList.remove('wm-new'); });
     anims.slice().forEach(function (a) { try { a.cancel(); } catch (e) {} }); anims = [];
     made.forEach(drop); made = [];
     styled.forEach(function (el) { ['--w-p', '--w-cloud-y', '--w-moon-y', '--w-ph', '--w-pw', '--w-cx', '--w-cy', '--w-pc', '--w-dy'].forEach(function (k) { el.style.removeProperty(k); }); }); styled = [];
-    [].forEach.call(d.querySelectorAll('.w-glaze, .w-wet, .w-tap, .w-pool, .w-selhost'), function (e) { e.classList.remove('w-glaze', 'w-wet', 'w-tap', 'w-pool', 'w-selhost'); });
+    [].forEach.call(d.querySelectorAll('.w-glaze, .w-wet, .w-tap, .w-pool, .w-selhost, .w-here'), function (e) { e.classList.remove('w-glaze', 'w-wet', 'w-tap', 'w-pool', 'w-selhost', 'w-here'); });
     [].forEach.call(d.querySelectorAll('[data-w-from]'), function (e) { e.removeAttribute('data-w-from'); });
-    r.classList.remove('w-live', 'w-sjs', 'w-fine', 'w-tip-on', 'w-kbd', 'w-th-on', 'w-drag');
+    r.classList.remove('w-live', 'w-sjs', 'w-fine', 'w-tip-on', 'w-kbd', 'w-th-on', 'w-drag', 'w-calm', 'w-fast');
     floodOff(); lastDown = null; focWas = null; focAn = null;
     T = H = TIP = FOC = SEL = null; focEl = null; glazed = null; scrubs = []; bounds = []; falls = []; lastTap = null; scrolling = false;
   }

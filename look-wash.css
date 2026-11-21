@@ -770,9 +770,13 @@ html[data-look="wash"].wm-touch :is(.shot, .demo-poster, .card .thumb-wrap):is(.
    Under reduced motion or Pause motion: none of it (the script is not running, and every rule below needs .motion or
    .w-live inside "no-preference"); the view transition is an instant swap. */
 @property --w-dy { syntax: "<length>"; inherits: false; initial-value: 0px; }
-html[data-look="wash"] { --w-iblend: multiply; --w-damp-a: 7%; }
-@media (prefers-color-scheme: dark) { html[data-look="wash"]:not([data-theme="light"]) { --w-iblend: screen; --w-damp-a: 9%; } }
-html[data-look="wash"][data-theme="dark"] { --w-iblend: screen; --w-damp-a: 9%; }
+/* motion tokens (polish, Nov 20): every timing the fluid and polish layers use comes from this set; look-wash.js keeps
+   the same numbers in its own MOTION table (page 560 ms, ink 1 s, dry 650 ms, soak 350 ms, press 80 ms) */
+html[data-look="wash"] { --w-iblend: multiply; --w-damp-a: 7%; --w-fink: var(--ink); --w-frim: var(--ink);
+  --w-t-page: .56s; --w-t-ink: 1s; --w-t-bloom: 1.15s; --w-t-soak: .35s; --w-t-press: .08s; --w-t-dry: .65s;
+  --w-e-bloom: cubic-bezier(.2, .6, .3, 1); --w-e-flood: cubic-bezier(.4, .12, .5, 1); --w-e-drain: cubic-bezier(.45, 0, .65, 1); }
+@media (prefers-color-scheme: dark) { html[data-look="wash"]:not([data-theme="light"]) { --w-iblend: screen; --w-damp-a: 9%; --w-fink: var(--bg-soft); } }
+html[data-look="wash"][data-theme="dark"] { --w-iblend: screen; --w-damp-a: 9%; --w-fink: var(--bg-soft); }
 
 @keyframes wash-breathe { 0% { filter: opacity(1); } 50% { filter: opacity(.8); } 100% { filter: opacity(.93); } }
 @keyframes wash-damp { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(-4vw, 3vh) scale(1.08); } }
@@ -786,27 +790,57 @@ html[data-look="wash"][data-theme="dark"] { --w-iblend: screen; --w-damp-a: 9%; 
 }
 @keyframes wash-inkdrop { 0% { scale: .12; opacity: 1; } 35% { opacity: 1; } 75% { opacity: .75; } 100% { scale: 1; opacity: 0; } }
 @keyframes wash-inkcore { 0% { scale: .5; opacity: 1; } 55% { scale: 1.5; opacity: .5; } 100% { scale: 1.9; opacity: 0; } }
-@keyframes wash-vt-flood {
-  0% { transform: scale(.5); opacity: .92; animation-timing-function: cubic-bezier(.25, .7, .35, 1); }
-  48% { transform: scale(34); opacity: .9; animation-timing-function: cubic-bezier(.4, 0, .6, 1); }
-  100% { transform: scale(40); opacity: 0; }
+@keyframes wash-vt-flood { /* forward: the drop spreads from the spot, its wet front sweeps off the window, the glaze left behind drains */
+  0% { transform: scale(1); opacity: 1; animation-timing-function: cubic-bezier(.4, .12, .5, 1); }
+  52% { transform: scale(30); opacity: 1; animation-timing-function: cubic-bezier(.45, 0, .65, 1); }
+  100% { transform: scale(33); opacity: 0; }
 }
-@keyframes wash-vt-out { 0%, 38% { opacity: 1; filter: blur(0); } 62%, 100% { opacity: 0; filter: blur(2px); } }
-@keyframes wash-vt-in { 0%, 38% { opacity: 0; } 62%, 100% { opacity: 1; } }
+@keyframes wash-vt-unflood { /* back (the reverse): a glaze gathers over the page, then the ink is drawn back into the drop it came from */
+  0% { transform: scale(33); opacity: 0; animation-timing-function: cubic-bezier(.45, 0, .65, 1); }
+  34% { transform: scale(30); opacity: 1; animation-timing-function: cubic-bezier(.3, .05, .45, 1); }
+  100% { transform: scale(.3); opacity: 1; }
+}
+@keyframes wash-vt-out { 0%, 34% { opacity: 1; filter: none; } 52%, 100% { opacity: 0; filter: blur(1.5px); } }
+@keyframes wash-vt-in { 0%, 34% { opacity: 0; } 52%, 100% { opacity: 1; } }
+@keyframes wash-vt-out-b { 0%, 18% { opacity: 1; filter: none; } 34%, 100% { opacity: 0; filter: blur(1.5px); } }
+@keyframes wash-vt-in-b { 0%, 18% { opacity: 0; } 34%, 100% { opacity: 1; } }
+@keyframes wash-title-out { 0% { opacity: 1; filter: none; } 55%, 100% { opacity: 0; filter: blur(3px); } }
+@keyframes wash-title-in { 0%, 30% { opacity: 0; filter: blur(3px); } 78%, 100% { opacity: 1; filter: none; } }
 
 @media (prefers-reduced-motion: no-preference) {
-  /* 1. page to page: the drop of ink left where the page was pressed floods the window, then drains over the new page */
-  html[data-look="wash"]:not([data-motion="paused"])::view-transition-old(root) { animation: wash-vt-out .56s linear both; }
-  html[data-look="wash"]:not([data-motion="paused"])::view-transition-new(root) { animation: wash-vt-in .56s linear both; }
-  html[data-look="wash"]:not([data-motion="paused"])::view-transition-group(w-flood) { animation-duration: .56s; z-index: 2147483001; }
-  html[data-look="wash"]:not([data-motion="paused"])::view-transition-old(w-flood) { animation: wash-vt-flood .56s both; }
-  /* the drop itself, on the page being left (it shows only for the moment the next page takes to arrive) */
-  html[data-look="wash"].motion.w-live .w-flood { --c: color-mix(in srgb, var(--w-fh, var(--w-blue)) 80%, var(--ink)); --c2: color-mix(in srgb, var(--c) 86%, transparent); position: fixed; z-index: 2147483001; width: 160px; height: 160px; margin: -80px 0 0 -80px; pointer-events: none; view-transition-name: w-flood;
-    background: radial-gradient(closest-side, var(--c) 0 50%, color-mix(in srgb, var(--c) 90%, var(--ink)) 57%, var(--c2) 59%, transparent 63%),
-      radial-gradient(closest-side, var(--c2) 0 50%, transparent 72%) 2% 12% / 52% 50% no-repeat,
-      radial-gradient(closest-side, var(--c2) 0 50%, transparent 72%) 98% 94% / 50% 56% no-repeat,
-      radial-gradient(closest-side, var(--c2) 0 46%, transparent 70%) 94% 4% / 38% 36% no-repeat,
-      radial-gradient(closest-side, var(--c2) 0 46%, transparent 70%) 6% 96% / 34% 40% no-repeat; }
+  /* 1. page to page (polish, Nov 20): forward, the drop left where the page was pressed spreads, its darker wet front
+     sweeps off the window and the pale glaze it leaves drains over the new page; back plays it in reverse (a glaze gathers,
+     then the ink is drawn back out to the left edge, where Back is); a reload has no transition. The top bar stays put
+     above the ink; titles that carry a view-transition-name travel with the ink and bleed out / dry in. */
+  html[data-look="wash"]:not([data-motion="paused"]) .topbar { view-transition-name: w-bar; }
+  html[data-look="wash"]:not([data-motion="paused"]) [style*="view-transition-name: t-"] { view-transition-class: w-title; }
+  html[data-look="wash"]:not([data-motion="paused"])::view-transition-group(*) { animation-duration: var(--w-t-page); animation-timing-function: var(--w-e-flood); }
+  html[data-look="wash"]:not([data-motion="paused"])::view-transition-old(root) { animation: wash-vt-out var(--w-t-page) linear both; }
+  html[data-look="wash"]:not([data-motion="paused"])::view-transition-new(root) { animation: wash-vt-in var(--w-t-page) linear both; }
+  html[data-look="wash"]:not([data-motion="paused"])::view-transition-group(w-flood) { z-index: 2147483001; }
+  html[data-look="wash"]:not([data-motion="paused"])::view-transition-old(w-flood) { animation: wash-vt-flood var(--w-t-page) both; filter: blur(1.4px); }
+  html[data-look="wash"]:not([data-motion="paused"])::view-transition-group(w-bar) { z-index: 2147483002; animation: none; }
+  html[data-look="wash"]:not([data-motion="paused"])::view-transition-old(w-bar) { animation: none; opacity: 0; }
+  html[data-look="wash"]:not([data-motion="paused"])::view-transition-new(w-bar) { animation: none; }
+  html[data-look="wash"]:not([data-motion="paused"])::view-transition-old(*.w-title) { animation: wash-title-out var(--w-t-page) linear both; }
+  html[data-look="wash"]:not([data-motion="paused"])::view-transition-new(*.w-title) { animation: wash-title-in var(--w-t-page) linear both; }
+  html[data-look="wash"]:not([data-motion="paused"]):active-view-transition-type(back)::view-transition-old(w-flood) { animation-name: wash-vt-unflood; }
+  html[data-look="wash"]:not([data-motion="paused"]):active-view-transition-type(back)::view-transition-old(root) { animation-name: wash-vt-out-b; }
+  html[data-look="wash"]:not([data-motion="paused"]):active-view-transition-type(back)::view-transition-new(root) { animation-name: wash-vt-in-b; }
+  html[data-look="wash"]:active-view-transition-type(reload)::view-transition-group(*),
+  html[data-look="wash"]:active-view-transition-type(reload)::view-transition-old(*),
+  html[data-look="wash"]:active-view-transition-type(reload)::view-transition-new(*) { animation: none; }
+  /* the drop itself, on the page being left: the browser holds that frame until the next page arrives, so it is drawn as
+     the drop that landed: a pale wash in the middle, a darker wet rim, a few blooms out along the rim */
+  html[data-look="wash"].motion.w-live .w-flood { --h: var(--w-fh, var(--w-blue)); --c: color-mix(in srgb, color-mix(in srgb, var(--h) 76%, var(--w-fink)) 40%, transparent);
+    --e: color-mix(in srgb, color-mix(in srgb, var(--h) 52%, var(--w-frim)) 86%, transparent);
+    position: fixed; z-index: 2147483001; width: 180px; height: 180px; margin: -90px 0 0 -90px; pointer-events: none; view-transition-name: w-flood;
+    background: radial-gradient(closest-side, var(--c) 0 34%, color-mix(in srgb, var(--e) 70%, var(--c)) 50%, var(--e) 57%, color-mix(in srgb, var(--e) 40%, transparent) 63%, transparent 68%),
+      radial-gradient(closest-side, color-mix(in srgb, var(--e) 55%, transparent) 0 30%, transparent 78%) 12% 26% / 30% 26% no-repeat,
+      radial-gradient(closest-side, color-mix(in srgb, var(--e) 50%, transparent) 0 30%, transparent 78%) 84% 80% / 26% 32% no-repeat,
+      radial-gradient(closest-side, color-mix(in srgb, var(--e) 45%, transparent) 0 30%, transparent 78%) 76% 18% / 18% 16% no-repeat,
+      radial-gradient(closest-side, color-mix(in srgb, var(--e) 45%, transparent) 0 30%, transparent 78%) 28% 84% / 22% 18% no-repeat,
+      radial-gradient(closest-side, color-mix(in srgb, var(--e) 40%, transparent) 0 30%, transparent 78%) 90% 48% / 14% 20% no-repeat; }
 
   /* 2. at rest: the washes breathe, each on its own slow beat (the pigment pales a little as the sheet dries and comes back
      as it takes up water again: never stronger than the wash as drawn, and never moving its edge, so no word's contrast
@@ -829,6 +863,13 @@ html[data-look="wash"][data-theme="dark"] { --w-iblend: screen; --w-damp-a: 9%; 
     mask: linear-gradient(90deg, #000 calc(50vw - 600px), transparent calc(50vw - 540px), transparent calc(50vw + 540px), #000 calc(50vw + 600px)) 12vw 0 / 100vw 100% no-repeat;
     animation: wash-damp 48s ease-in-out infinite alternate; }
   /* (the patches stay in the margins, clear of the column of text, so no word's contrast changes) */
+  /* while a film plays (.w-calm, from look-wash.js) the breathing and the damp drift hold still where they are */
+  html[data-look="wash"].motion.w-live.w-calm .w-damp,
+  html[data-look="wash"].motion.w-live.w-calm.w-drag body .card .thumb-wrap::before,
+  html[data-look="wash"].motion.w-live.w-calm.w-drag.w-sjs body :is(.section, .shot, .term, .paper, .figure, .duo figure, .sum-vis, .band)::before { animation-play-state: paused; }
+  @supports (animation-timeline: view()) {
+    html[data-look="wash"].motion.w-live.w-calm.w-drag body :is(.section, .shot, .term, .paper, .figure:has(> img.narrow), .duo figure, .sum-vis:has(> .shot.phone), .band)::before { animation-play-state: running, paused; }
+  }
 
   /* 3. blocks arrive as ink spreading into damp paper: three lobes of a soft mask grow at different rates, so the edge
      runs out unevenly; no rise, no fade-up (the wash rules above slid them up 12 px) */
@@ -838,10 +879,14 @@ html[data-look="wash"][data-theme="dark"] { --w-iblend: screen; --w-damp-a: 9%; 
     animation: wash-inkin 1.15s cubic-bezier(.3, .55, .3, 1) var(--d, 0ms) both; }
   html[data-look="wash"].motion .reveal.in:nth-child(even) { -webkit-mask-position: 70% 26%, 22% 58%, 60% 86%; mask-position: 70% 26%, 22% 58%, 60% 86%; }
   html[data-look="wash"].motion :is(.section-head, .group-h).reveal.in { animation: none; -webkit-mask-image: none; mask-image: none; }
+  /* polish: during a fling (.w-fast, from look-wash.js) a block blooms in at once, so a fast reader never waits on blank paper */
+  html[data-look="wash"].motion.w-fast .reveal.in { animation-duration: .42s; animation-delay: 0s; }
+  /* polish: a block already in the window when a page arrives through the ink is simply there (the ink was its arrival) */
+  html[data-look="wash"].motion .reveal.w-here { opacity: 1; transform: none; transition: none; animation: none; -webkit-mask-image: none; mask-image: none; }
 
   /* 4. a tap drops ink: a dark core that lands and spreads, a pale stain with a darker dried rim, and a feathered edge
      (a fine fringe of fibres the pigment runs out along); multiplied into the paper by day, lit on the night sky */
-  html[data-look="wash"].motion.w-live .w-tapb { --c: var(--w-ih, var(--w-blue)); width: 92px; height: 92px; margin: -46px 0 0 -46px; mix-blend-mode: var(--w-iblend); rotate: var(--w-ir, 0deg);
+  html[data-look="wash"].motion.w-live .w-tapb { --c: var(--w-ih, var(--w-blue)); z-index: 9; /* (polish: under the top bar, z 10) */ width: 92px; height: 92px; margin: -46px 0 0 -46px; mix-blend-mode: var(--w-iblend); rotate: var(--w-ir, 0deg);
     background: radial-gradient(closest-side, color-mix(in srgb, var(--c) 40%, transparent) 0 16%, color-mix(in srgb, var(--c) 26%, transparent) 44%, color-mix(in srgb, var(--c) 18%, transparent) 56%, color-mix(in srgb, var(--c) 62%, transparent) 63%, transparent 70%),
       radial-gradient(closest-side, color-mix(in srgb, var(--c) 32%, transparent) 0 40%, transparent 66%) 100% 0 / 46% 46% no-repeat;
     -webkit-mask: radial-gradient(closest-side, #000 0 54%, transparent 62%), repeating-conic-gradient(from 4deg, #000 0 1.6deg, rgba(0, 0, 0, .45) 3deg, transparent 4.4deg 7.5deg, #000 8.4deg 9.2deg, transparent 10.5deg 13deg);
@@ -861,3 +906,18 @@ html[data-look="wash"][data-theme="dark"] { --w-iblend: screen; --w-damp-a: 9%; 
   html[data-look="wash"]::view-transition-group(*), html[data-look="wash"]::view-transition-old(*), html[data-look="wash"]::view-transition-new(*) { animation: none; }
 }
 html[data-look="wash"][data-motion="paused"]::view-transition-group(*), html[data-look="wash"][data-motion="paused"]::view-transition-old(*), html[data-look="wash"][data-motion="paused"]::view-transition-new(*) { animation: none; }
+
+/* ---------- polish (Nov 20): hover and touch ----------
+   A pager card keeps its paper sheet when pointed at (it only takes a faint ink wash, it was going see-through); on a
+   touch screen nothing stays in its hover state after the finger lifts (the press itself still shows, through :active). */
+html[data-look="wash"] .pager a:is(:hover, :active) { background-color: color-mix(in srgb, var(--ink) 6%, var(--sheet)); }
+@media (hover: none) {
+  html[data-look="wash"] .card:hover:not(:focus-visible)::after { opacity: .8; }
+  html[data-look="wash"] .card:hover:not(:active) h4 { color: var(--text); }
+  html[data-look="wash"] .btn:not(.primary):hover:not(:active) { color: var(--text); background-color: transparent; background-size: 100% 0; }
+  html[data-look="wash"] .btn.primary:hover:not(:active) { background: var(--ink); border-color: var(--ink); }
+  html[data-look="wash"] :is(.groupnav a, .theme-toggle):hover:not(:active) { background-color: transparent; }
+  html[data-look="wash"] .theme-toggle:hover:not(:active) { border-color: var(--rule-soft); }
+  html[data-look="wash"] .pager a:hover:not(:active) { background-color: var(--sheet); border-color: var(--rule-soft); }
+  html[data-look="wash"] .demo-poster:hover:not(:focus-visible) .play { background: var(--bg); }
+}
