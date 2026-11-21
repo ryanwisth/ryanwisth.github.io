@@ -792,13 +792,16 @@
     bob: 0.9,                // keyboard focus nudges it down this fast
     jump: 0.8,               // one frame's scroll over 0.8 of the window is a jump, not a fling: nothing trails it
     drag: 6,                 // a press that moves more than 6 px is a drag (selecting text): the patch is let go
-    corner: 2,               // the swing moves no corner of a patch more than 2 px
-    maxDeg: 0.32,            // and never turns it more than this
+    corner: 4.5,             // sway and swing together move no corner of the felt more than 4.5 px (the words never turn) ...
+    maxDeg: 0.5,             // ... and never turn it more than this
+    rest: 0.28,              // the resting sway takes this share of that reach either way, a swing the rest of it ...
+    restMs: [7000, 10500],   // ... over this long each way, per patch, always on while the patch is on screen
+    slowK: 0.8,              // the least a scroll's swing is, as a share of the reach (a slow scroll still swings visibly)
     period: [2600, 3700],    // one swing there and back (ms), per patch
     decay: 2500,             // the swing loses two thirds of its reach every 2.5 s ...
     still: 9000,             // ... and is gone after 9 s (the last 15 % eases to exactly 0)
-    breeze: [15000, 24000],  // a draught through the hanging cloth now and then, while the page is left alone
-    breezeK: 0.35, breezeGap: 140 // how hard it pushes, and its delay from one patch to the next, left to right
+    breeze: [6000, 10000],   // a draught through the hanging cloth now and then, while the page is left alone
+    breezeK: 0.45, breezeGap: 140 // how hard it pushes, and its delay from one patch to the next, left to right
   };
 
   var live = false, offs = [], made = [], anims = [], timers = [], items = [], byEl = null, io = null;
@@ -819,22 +822,55 @@
   }
   function px(v) { return Math.round(v * dpr) / dpr; } // a held offset lands on whole device pixels, so its words stay crisp
 
-  /* ---------- the patches: found once (and again when the page grows), each with its own weight and swing ---------- */
-  function reach(it) { // how far the swing may turn this patch: it pivots on its top edge, so the far bottom corner moves most
+  /* ---------- the patches: found once (and again when the page grows), each with its own weight and swing ----------
+     Only the felt layer turns: a copy of the patch's cloth laid behind the words (.y-felt, z -1 in the isolated patch),
+     its stitches (.seam), its hairy or pinked edge (::before) and a card's dashed seam (::after). The words, links and
+     buttons never turn, so they stay crisp while the cloth behind them is always a little alive. */
+  function reach(it) { // how far the felt may turn: it pivots on its top edge, so the far bottom corner moves most
     var q = it.el.getBoundingClientRect(), w = q.width, h = q.height;
     it.A = w && h ? Math.min(M.maxDeg, (M.corner / Math.sqrt(w * w / 4 + h * h)) * 57.2958) : 0;
     if (it.A < 0.05) it.A = 0;
+    it.B = it.A * M.rest; it.S = it.A - it.B;
   }
+  function layersOf(it) {
+    var f = d.createElement('span'); f.className = 'y-felt'; f.setAttribute('aria-hidden', 'true');
+    it.el.insertBefore(f, it.el.firstChild); made.push(f);
+    var L = [{ el: f }], seam = it.el.querySelector(':scope > .seam');
+    if (seam) L.push({ el: seam });
+    L.push({ el: it.el, pseudo: '::before' });
+    if (it.el.matches('.card')) L.push({ el: it.el, pseudo: '::after' });
+    return L;
+  }
+  function forget(a) { var i = anims.indexOf(a); if (i >= 0) anims.splice(i, 1); }
+  function kill(a) { try { a.cancel(); } catch (e) {} forget(a); }
+  function play(it, kf, opt) { // the same animation on every felt layer of a patch
+    var out = [];
+    it.layers.forEach(function (l) {
+      if (!l.el.animate) return;
+      var o = {}, k; for (k in opt) o[k] = opt[k]; if (l.pseudo) o.pseudoElement = l.pseudo;
+      try { var an = l.el.animate(kf, o); anims.push(an); out.push(an); an.addEventListener('finish', function () { forget(an); }); } catch (e) {}
+    });
+    return out;
+  }
+  function restOn(it) { // the resting sway: slow, always on while the patch is on screen, phase-offset per patch
+    if (it.rest || !it.B || !it.layers.length) return;
+    var dur = M.restMs[0] + ((it.i * 1913) % (M.restMs[1] - M.restMs[0]));
+    it.rest = play(it, [{ rotate: (-it.B).toFixed(3) + 'deg' }, { rotate: it.B.toFixed(3) + 'deg' }],
+      { duration: dur, iterations: Infinity, direction: 'alternate', easing: 'ease-in-out', delay: -((it.i * 2311) % dur) });
+    it.rest.forEach(function (a) { a.playbackRate = filmOn ? 0.35 : 1; if (d.hidden) a.pause(); });
+  }
+  function restOff(it) { (it.rest || []).forEach(kill); it.rest = null; }
   function scan() {
     var list = [].slice.call(d.querySelectorAll(SWAY)), small = mqSmall.matches;
     list.forEach(function (el, i) {
       if (byEl.has(el)) return;
       for (var p = el.parentElement; p; p = p.parentElement) if (byEl.has(p) || (p.matches && p.matches(SWAY))) return; // outer patch only
       if (!el.getClientRects().length) return;
-      var it = { el: el, i: i, y: 0, vy: 0, x: 0, vx: 0, hold: 0, vis: false, set: false, dent: null, sw: null, anim: null, A: 0,
+      var it = { el: el, i: i, y: 0, vy: 0, x: 0, vx: 0, hold: 0, vis: false, set: false, dent: null, sw: null, anim: null, rest: null, A: 0, B: 0,
         wt: (0.75 + ((i * 37) % 11) / 20) * (small ? 0.7 : 1), side: i % 2 ? 1 : -1,
         per: M.period[0] + ((i * 1370) % (M.period[1] - M.period[0])) };
       reach(it);
+      it.layers = layersOf(it);
       // a patch still being sewn on (site.js's entrance turns it about its middle) takes its top pivot once that ends,
       // so the script arriving mid-entrance never shifts it
       var sewing = el.getAnimations ? el.getAnimations().filter(function (a) { return a.animationName && a.playState === 'running'; }) : [];
@@ -848,51 +884,53 @@
     es.forEach(function (en) {
       var it = byEl && byEl.get(en.target); if (!it) return;
       it.vis = en.isIntersecting;
-      if (!it.vis) { unswing(it); it.y = it.vy = it.x = it.vx = 0; it.hold = 0; if (it.set) { it.el.style.removeProperty('translate'); it.set = false; } }
+      if (it.vis) restOn(it);
+      else { restOff(it); unswing(it); it.y = it.vy = it.x = it.vx = 0; it.hold = 0; if (it.set) { it.el.style.removeProperty('translate'); it.set = false; } }
     });
   }
 
-  /* ---------- the swing: a damped sway on the top stitches, sampled into one compositor animation ----------
-     angle(e) = fall(e) * (a cos(w e) + b sin(w e)): a is where the patch is turned now (so a new swing starts from
-     there, without a jump), b the new push. When it ends the `rotate` property is gone and the words sit square. */
+  /* ---------- the swing: a damped sway of the felt layer, added on top of the resting sway ----------
+     angle(e) = fall(e) * (a cos(w e) + b sin(w e)): a is where the swing is now (so a new one starts from there, without
+     a jump), b the new push. It is composited onto the resting sway and ends at exactly 0 added. */
   function angleAt(s, e) {
     if (e <= 0) return s.a; if (e >= M.still) return 0;
     var w = 2 * Math.PI * e / s.per, k = Math.exp(-e / M.decay), tail = e > M.still * 0.85 ? (M.still - e) / (M.still * 0.15) : 1;
     return k * (s.a * Math.cos(w) + s.b * Math.sin(w)) * tail * tail * (3 - 2 * tail);
   }
   function angleNow(it) { return it.sw ? angleAt(it.sw, now() - it.sw.t0) : 0; }
-  function unswing(it) { if (it.anim) { try { it.anim.cancel(); } catch (e) {} } it.anim = null; it.sw = null; }
+  function unswing(it) { (it.anim || []).forEach(kill); it.anim = null; it.sw = null; }
   function swing(it, k, dir, delay) {
-    if (!it.A || !it.vis || !it.el.animate || d.hidden) return;
+    if (!it.S || !it.vis || !it.layers || !it.layers.length || d.hidden) return;
     if (filmOn) k *= 0.5; // a film playing nearby: the cloth answers the reader, but softly
     var had = !!it.anim, wait = had ? 0 : delay || 0; // a swing already going is taken on from where it is, at once
-    var a = had ? angleNow(it) : 0, room = Math.sqrt(Math.max(0, it.A * it.A - a * a));
-    var s = { a: a, b: (dir || it.side) * Math.min(it.A * k, room), per: it.per, t0: now() + wait };
+    var a = had ? angleNow(it) : 0, room = Math.sqrt(Math.max(0, it.S * it.S - a * a));
+    var s = { a: a, b: (dir || it.side) * Math.min(it.S * k, room), per: it.per, t0: now() + wait };
     if (Math.abs(s.a) + Math.abs(s.b) < 0.01) return;
     var kf = [], n = 48, j;
     for (j = 0; j <= n; j++) kf.push({ rotate: angleAt(s, M.still * j / n).toFixed(4) + 'deg' });
     kf[n].rotate = '0deg';
     unswing(it);
-    var an;
-    try { an = it.el.animate(kf, { duration: M.still, delay: wait, easing: 'linear' }); } catch (e) { return; }
-    it.anim = an; it.sw = s; anims.push(an);
-    an.onfinish = an.oncancel = function () { var i = anims.indexOf(an); if (i >= 0) anims.splice(i, 1); if (it.anim === an) { it.anim = null; it.sw = null; } };
+    var list = play(it, kf, { duration: M.still, delay: wait, easing: 'linear', composite: 'add' });
+    if (!list.length) return;
+    it.anim = list; it.sw = s;
+    list[0].addEventListener('finish', function () { if (it.anim === list) { it.anim = null; it.sw = null; } });
   }
-  function calmDown(it) { // a quick, soft stop from wherever it is (a film started)
+  function calmDown(it) { // a film started: the swing eases out from wherever it is, the resting sway slows right down
+    (it.rest || []).forEach(function (r) { r.playbackRate = 0.35; });
     if (!it.anim) return;
     var a = angleNow(it); unswing(it);
-    if (Math.abs(a) < 0.005 || !it.el.animate) return;
-    try { var an = it.el.animate([{ rotate: a.toFixed(4) + 'deg' }, { rotate: '0deg' }], { duration: 600, easing: 'cubic-bezier(.3, .6, .25, 1)' }); anims.push(an); an.onfinish = an.oncancel = function () { var i = anims.indexOf(an); if (i >= 0) anims.splice(i, 1); }; } catch (e) {}
+    if (Math.abs(a) >= 0.005) play(it, [{ rotate: a.toFixed(4) + 'deg' }, { rotate: '0deg' }], { duration: 600, easing: 'cubic-bezier(.3, .6, .25, 1)', composite: 'add' });
   }
+  function calmUp(it) { (it.rest || []).forEach(function (r) { r.playbackRate = 1; }); }
   function swingAll(k, dir) { for (var i = 0; i < items.length; i++) if (items[i].vis) swing(items[i], k, dir * items[i].side, 0); }
 
-  /* a draught now and then while the page is left alone: the patches in view swing a little, left to right */
+  /* a draught now and then while the page is left alone: the felt in view swings a little more, left to right */
   function breezeLater() { clearTimeout(bz); bz = later(breeze, M.breeze[0] + Math.random() * (M.breeze[1] - M.breeze[0])); }
   function breeze() {
     var acc = W.__yarnAccent;
     if (!live) return;
     if (!d.hidden && !filmOn && !raf && (!acc || acc.free())) {
-      var vis = items.filter(function (it) { return it.vis && !it.anim && it.A; });
+      var vis = items.filter(function (it) { return it.vis && it.A; });
       vis.map(function (it) { return { it: it, x: it.el.getBoundingClientRect().left }; }).sort(function (p, q) { return p.x - q.x; })
         .forEach(function (p, j) { swing(p.it, M.breezeK, 1, j * M.breezeGap); });
     }
@@ -943,7 +981,7 @@
       clearTimeout(mT); mT = setTimeout(onMedia, 0); // is a film still on screen? (read after this frame, not in it)
     }
   }
-  function swingNow() { if (Math.abs(peak) > 1.5) swingAll(clamp(Math.abs(peak) / 30, 0.3, 1), pdir); peak = 0; }
+  function swingNow() { if (Math.abs(peak) > 1.5) swingAll(clamp(Math.abs(peak) / 12, M.slowK, 1), pdir); peak = 0; }
   function onScroll() { kick(); }
 
   /* ---------- the felt dents under the pointer ---------- */
@@ -1017,7 +1055,7 @@
     var any = [].some.call(d.querySelectorAll('video'), function (v) { if (v.paused || v.ended) return false; var q = v.getBoundingClientRect(); return q.bottom > 0 && q.top < innerHeight; });
     if (any === filmOn) return;
     filmOn = any; r.classList.toggle('y-filmon', any);
-    if (any) items.forEach(calmDown); else breezeLater();
+    if (any) items.forEach(calmDown); else { items.forEach(calmUp); breezeLater(); }
   }
 
   /* ---------- leaving: only the title of the page being opened keeps its shared name ----------
@@ -1058,10 +1096,10 @@
     on(d, 'play', onMedia, true); on(d, 'pause', onMedia, true); on(d, 'ended', onMedia, true);
     on(W, 'pageswap', onSwap);
     on(W, 'load', scan);
-    on(W, 'resize', function () { clearTimeout(rsT); rsT = setTimeout(function () { if (!live) return; dpr = Math.min(2, W.devicePixelRatio || 1); items.forEach(function (it) { unswing(it); reach(it); }); }, 250); }, { passive: true });
+    on(W, 'resize', function () { clearTimeout(rsT); rsT = setTimeout(function () { if (!live) return; dpr = Math.min(2, W.devicePixelRatio || 1); items.forEach(function (it) { unswing(it); restOff(it); reach(it); if (it.vis) restOn(it); }); }, 250); }, { passive: true });
     on(d, 'visibilitychange', function () {
-      if (d.hidden) { raf = F.off(tick); lastT = 0; peak = 0; items.forEach(function (it) { unswing(it); it.y = it.vy = it.x = it.vx = 0; it.hold = 0; if (it.set) { it.el.style.removeProperty('translate'); it.set = false; } }); }
-      else { sy = clamp(W.scrollY || 0, 0, 1e9); breezeLater(); }
+      if (d.hidden) { raf = F.off(tick); lastT = 0; peak = 0; items.forEach(function (it) { unswing(it); (it.rest || []).forEach(function (a) { a.pause(); }); it.y = it.vy = it.x = it.vx = 0; it.hold = 0; if (it.set) { it.el.style.removeProperty('translate'); it.set = false; } }); }
+      else { sy = clamp(W.scrollY || 0, 0, 1e9); items.forEach(function (it) { (it.rest || []).forEach(function (a) { a.play(); }); }); breezeLater(); }
     });
     if (W.ResizeObserver && d.querySelector('main')) {
       var ro = new ResizeObserver(function () { clearTimeout(scanT); scanT = setTimeout(function () { if (live) scan(); }, 300); });
@@ -1090,8 +1128,8 @@
   // back/forward cache: the page comes back as it was left (maybe mid-swing or mid-press): start clean, names put back
   W.addEventListener('pageshow', function (e) { if (!e.persisted) return; names(); if (live) { stop(); sync(); } });
   W.__yarnFluState = function () {
-    var moving = 0, playing = 0, vis = 0; items.forEach(function (it) { if (it.set) moving++; if (it.anim && it.anim.playState === 'running') playing++; if (it.vis) vis++; });
-    return { live: live, hang: items.length, vis: vis, reach: items.map(function (it) { return +it.A.toFixed(3); }), swaying: anims.length, playing: playing, moving: moving, dents: made.length, listeners: offs.length, frames: frames, loop: !!raf, film: filmOn, asked: F.asked() };
+    var moving = 0, playing = 0, resting = 0, vis = 0; items.forEach(function (it) { if (it.set) moving++; if (it.anim && it.anim[0].playState === 'running') playing++; if (it.rest && it.rest.length && it.rest[0].playState === 'running') resting++; if (it.vis) vis++; });
+    return { live: live, hang: items.length, vis: vis, resting: resting, felts: d.querySelectorAll('.y-felt').length, reach: items.map(function (it) { return +it.A.toFixed(3); }), swaying: anims.length, playing: playing, moving: moving, dents: d.querySelectorAll('.y-dent').length, listeners: offs.length, frames: frames, loop: !!raf, film: filmOn, asked: F.asked() };
   };
   sync();
 })();

@@ -2208,6 +2208,13 @@ html:not([data-look])[data-motion="paused"]::view-transition-new(*) { animation:
 @media (prefers-reduced-motion: no-preference) {
   /* a patch hangs from its top stitches: the swing, the puff and the press all pivot there */
   html:not([data-look]).y-flu .y-hang { transform-origin: 50% 0; }
+  /* the felt layer (look-yarn.js): a copy of the patch's cloth behind its words, which sways with the patch's stitches,
+     its hairy or pinked edge and a card's dashed seam, all pivoting on the top edge; the words stay square */
+  html:not([data-look]).y-flu .y-felt { position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit; background: inherit; box-shadow: none; transform-origin: 50% 0; }
+  html:not([data-look]).y-flu :has(> .y-felt) { isolation: isolate; }
+  html:not([data-look]).y-flu :has(> .y-felt) > .seam { transform-origin: 50% 0; }
+  html:not([data-look]).y-flu :has(> .y-felt)::before { transform-origin: 50% 4px; }
+  html:not([data-look]).y-flu .card:has(> .y-felt)::after { transform-origin: 50% -8px; }
 
   /* the felt dents where it is pointed at or pressed: a shaded hollow with a hair of light on its lower lip,
      behind the words (the patch is isolated, the span sits at z -1) */
@@ -2234,7 +2241,7 @@ html:not([data-look])[data-motion="paused"]::view-transition-new(*) { animation:
     html:not([data-look]).y-flu main :is(.section-head h2, .group-h, .prose > h2):hover::after { scale: 1.012 .62; }
   }
 }
-html:not([data-look])[data-motion="paused"] .y-dent { display: none; }
+html:not([data-look])[data-motion="paused"] :is(.y-dent, .y-felt) { display: none; }
 
 @media (prefers-reduced-motion: no-preference) {
   /* the look picker's list drops from the button like a felt tag on its loop, and settles */
