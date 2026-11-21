@@ -1806,7 +1806,7 @@ footer.site .wrap { align-items: center; }
 .case-part > :last-child { margin-bottom: 0; }
 .case-part .brief, .case-part .lede { margin-top: 0; }
 .sum.sum-method { margin-top: 26px; }
-.prose + .figure { margin-top: 28px; }
+.prose + .figure, .prose + .hx-log + .figure { margin-top: 28px; } /* the history changelog (hidden in every other look) sits between them on case pages */
 
 /* === Yarn & Felt liveliness (Nov 20 2026): the parts look-yarn.js drives ===
    look-yarn.js is fetched only in this look (no data-look) and never under reduced motion; it puts .y-live on the root
@@ -2604,4 +2604,5 @@ html:not([data-look]) .film-script > summary::before {
    so they draw exactly as before; .hx-x marks what history hides (the middot, the arrow, the note sign). */
 .hx-log, .hx-ver, .hx-lead-log, .hx-since, .hx-alt { display: none !important; }
 i.hx-x, i.hx-alt { font-style: inherit; }
+.hx-x { display: contents; } /* in a flex row (.back) the wrapper must not become its own item with a gap */
 /* === end Version History pass === */

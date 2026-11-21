@@ -324,6 +324,14 @@ html[data-look="history"]:not(#_) .term .ok { color: var(--vh-green); }
 html[data-look="history"]:not(#_) .term .warn { color: #7a4a00; }
 html[data-look="history"]:not(#_) .term .key { color: var(--vh-ink); font-weight: 700; }
 html[data-look="history"]:not(#_) .legend li { color: var(--vh-ink); }
+html[data-look="history"]:not(#_) .legend i { border-radius: 0; border-color: var(--vh-line); box-shadow: none; }
+html[data-look="history"]:not(#_) .g-dots { gap: 3px; }
+html[data-look="history"]:not(#_) .g-dots i { background: var(--vh-line); border-radius: 0; box-shadow: none; }
+html[data-look="history"]:not(#_) .g-dots i.x { background: var(--vh-green); box-shadow: none; }
+html[data-look="history"]:not(#_) .bigfig b { font: 600 40px/1.05 var(--vh-head); color: var(--vh-ink); -webkit-text-stroke: 0; margin-top: 12px; }
+html[data-look="history"]:not(#_) .shot .bar em, html[data-look="history"]:not(#_) .figure .shot .bar em { font: 400 14px/1.3 var(--vh-body); color: var(--vh-muted); }
+html[data-look="history"]:not(#_) .demo-poster .play svg { display: none; }
+html[data-look="history"]:not(#_) .paper { border-radius: 6px; box-shadow: none; }
 html[data-look="history"]:not(#_) .linechart .area { fill: var(--vh-tint); }
 html[data-look="history"]:not(#_) .linechart .ln1 { stroke: var(--vh-green); }
 html[data-look="history"]:not(#_) .linechart .pt { fill: var(--vh-green); }
