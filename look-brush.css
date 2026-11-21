@@ -940,7 +940,7 @@ html[data-look="brush"][data-theme="dark"] { --b-selc: color-mix(in srgb, var(--
   }
 
   /* 9. a tap: a drop of ink that spreads into the paper (touch only; the script makes it) */
-  html[data-look="brush"].motion.b-live .b-drop { position: fixed; z-index: 30; width: 64px; height: 64px; margin: -32px 0 0 -32px; pointer-events: none; background: var(--ink);
+  html[data-look="brush"].motion.b-live .b-drop { position: fixed; z-index: 9; width: 64px; height: 64px; margin: -32px 0 0 -32px; pointer-events: none; background: var(--ink);
     mask: var(--b-dab) center / 34% 34% no-repeat, var(--b-enso2) center / 100% 100% no-repeat; animation: b-dropk .7s var(--b-lay) both; }
 
   /* 10. the brush tip that follows a mouse; the system pointer comes back in fields you type in */
@@ -1161,8 +1161,9 @@ html[data-look="brush"] .b-cseal.b-v4 { mask-image: var(--b-cs4); }
   html[data-look="brush"].motion.b-live .b-rod::after { content: ""; position: absolute; z-index: 1; bottom: 0; width: 14px; height: 15px; left: 0; background: var(--seal);
     clip-path: polygon(30% 0, 70% 0, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0 70%, 0 30%); }
   html[data-look="brush"].motion.b-live .b-rod::after { left: auto; right: 0; }
-  /* 4 the flick: a tapered stroke from the tip and a spray of drops (one vermilion), animated by the script */
-  html[data-look="brush"].motion.b-live .b-flick { position: fixed; z-index: 30; width: 0; height: 0; pointer-events: none; }
+  /* 4 the flick: a tapered stroke from the tip and a spray of drops (one vermilion), animated by the script. Thrown ink and
+     the tap drop sit at z 9: over the rod (6) and petals (5), under the top bar (10), which stays above everything. */
+  html[data-look="brush"].motion.b-live .b-flick { position: fixed; z-index: 9; width: 0; height: 0; pointer-events: none; }
   html[data-look="brush"].motion.b-live .b-flick-s { position: absolute; left: 0; top: -3px; width: 30px; height: 6px; transform-origin: 0 50%; background: var(--ink);
     clip-path: polygon(0 18%, 14% 0, 40% 22%, 100% 46%, 100% 54%, 40% 78%, 14% 100%, 0 82%); }
   html[data-look="brush"].motion.b-live .b-flick-d { position: absolute; left: 0; top: 0; background: var(--ink); clip-path: polygon(30% 0, 70% 0, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0 70%, 0 30%); }
