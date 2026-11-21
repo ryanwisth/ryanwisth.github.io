@@ -1637,3 +1637,55 @@ html[data-look="cel"]:root main:has(> .case-head):not(:has(> :is(section, figure
 }
 @keyframes c-sway { from { rotate: -2.5deg; } to { rotate: 2deg; } }
 /* immerse-2-cel:end */
+
+/* ---------- immerse 3 (Nov 21 2026): the last world-map rows. LOOK.md still rules: no outline, no cast shadow, one
+   hard step between a carried thing's lit and shade paint, light upper left ---------- */
+/* 1 + 2. films, captures and pictures sit in a lashed bamboo frame: four poles in the mount's 10 px, each lit on its sun
+   side (top / left half) and in shade on the other (x #9c8c86), a node every 48 px; the cloud mount stays inside. The foam
+   waterline under the frame (immerse) is where it stands in the water */
+html[data-look="cel"]:root:root :is(.film .shot, .shot, .paper, .figure > img, .figure .pair > img, .figure > video) {
+  --bb-h: url("img/cel/bamboo-h.svg"); --bb-v: url("img/cel/bamboo-v.svg");
+  background: var(--bb-h) 0 0 / 48px 10px repeat-x, var(--bb-h) 0 100% / 48px 10px repeat-x, var(--bb-v) 0 0 / 10px 48px repeat-y, var(--bb-v) 100% 0 / 10px 48px repeat-y,
+    var(--cm-paint), radial-gradient(140% 140% at 12% 0%, var(--c-panel-hi), var(--c-panel) 52%, var(--c-panel-turn));
+  border-radius: 6px;
+  box-shadow: 0 5px 0 -1px var(--im-foam), 0 9px 0 -2px var(--im-foam-2), 12px 18px 28px -10px var(--c-drop-sea);
+}
+html[data-look="cel"]:root:root :is(.shot > img, .shot > video, .shot > a, .shot .demo-frame, .paper img, .shot.vid video) { border-radius: 3px; }
+html[data-look="cel"] .shot .cm-water { border-radius: 3px !important; }
+/* 2. a caption is a luggage tag: an eyelet punched at its left end, tied on with a short rope */
+html[data-look="cel"]:root:root :is(figcaption, .figcap) {
+  position: relative; border-radius: 5px 14px 14px 5px; padding-left: 26px;
+  background: radial-gradient(circle at 12px 50%, var(--c-sea-calm) 0 3.5px, transparent 4px), var(--c-cloth);
+}
+html[data-look="cel"]:root:root .chart-card :is(figcaption, .figcap) { background: radial-gradient(circle at 12px 50%, var(--c-sea-calm) 0 3.5px, transparent 4px), var(--c-inner); }
+html[data-look="cel"] :is(figcaption, .figcap)::before {
+  content: ""; position: absolute; left: -9px; top: calc(50% - 2px); width: 22px; height: 4px; pointer-events: none;
+  background: url("img/cel/rope-h.svg") 0 0 / 9px 4px repeat-x; border-radius: 2px;
+}
+/* 3. the "Live demo" badge is a luggage tag: square at its rope end (its red ball is the eyelet), round at the other,
+   the rope running off to the left */
+html[data-look="cel"]:root:root :is(.card .badge, .lead-wrap > .badge) { border-radius: 4px 999px 999px 4px; }
+html[data-look="cel"] :is(.card .badge, .lead-wrap > .badge)::before {
+  content: ""; position: absolute; left: -12px; top: calc(50% - 2px); width: 16px; height: 4px; pointer-events: none;
+  background: url("img/cel/rope-h.svg") 0 0 / 9px 4px repeat-x; border-radius: 2px;
+}
+/* 4. a big figure's number is painted on a marker buoy: sun-yellow body, a red cap at each end (inside its padding, so
+   no letter sits on red), the shade lip below as before */
+html[data-look="cel"]:root:root :is(.fact, .bigfig) b {
+  background: linear-gradient(90deg, #ec5640 0 7px, var(--l) 7px calc(100% - 7px), #ec5640 calc(100% - 7px));
+}
+/* 5. the pager's way: a small fish swims ahead of the words, the way the stone leads (left for Previous, right for Next) */
+html[data-look="cel"] .pager .prev small::before,
+html[data-look="cel"] .pager .next small::after {
+  content: ""; display: inline-block; width: 24px; height: 14px; vertical-align: -2px; pointer-events: none;
+  background: url("img/cel/fish-l.svg") 0 0 / 24px 14px no-repeat;
+}
+html[data-look="cel"] .pager .prev small::before { margin-right: 6px; }
+html[data-look="cel"] .pager .next small::after { margin-left: 6px; background-image: url("img/cel/fish-r.svg"); }
+/* 6. between the home page's blocks the sea runs deeper: a channel of calm, darker water (no net, as round a rock) across
+   the top of each section, with one pale ribbon at its far edge (LOOK.md section 4: the shore's one see-through ribbon) */
+html[data-look="cel"] main > section.section {
+  background: linear-gradient(var(--c-sea-calm), var(--c-sea-calm)) 0 0 / 100% 26px no-repeat,
+    linear-gradient(var(--im-foam-2), var(--im-foam-2)) 0 26px / 100% 3px no-repeat;
+}
+/* immerse-3-cel:end */
