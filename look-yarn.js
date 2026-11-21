@@ -835,7 +835,11 @@
         wt: (0.75 + ((i * 37) % 11) / 20) * (small ? 0.7 : 1), side: i % 2 ? 1 : -1,
         per: M.period[0] + ((i * 1370) % (M.period[1] - M.period[0])) };
       reach(it);
-      el.classList.add('y-hang');
+      // a patch still being sewn on (site.js's entrance turns it about its middle) takes its top pivot once that ends,
+      // so the script arriving mid-entrance never shifts it
+      var sewing = el.getAnimations ? el.getAnimations().filter(function (a) { return a.animationName && a.playState === 'running'; }) : [];
+      if (sewing.length) Promise.all(sewing.map(function (a) { return a.finished.catch(function () {}); })).then(function () { if (live && byEl && byEl.get(el) === it) el.classList.add('y-hang'); });
+      else el.classList.add('y-hang');
       byEl.set(el, it); items.push(it);
       if (io) io.observe(el);
     });
