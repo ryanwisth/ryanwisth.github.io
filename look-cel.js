@@ -647,15 +647,14 @@
      from below, a panel dipping as the pointer comes on and lifting as it leaves, sloshing with the pointer and rocking
      when pressed, the sea's light lagging the scroll, and the foam rings and wakes on the water (.cf-wake canvas, under
      the panels). The loop runs only while something is moving and sleeps at rest (polish, Nov 20). The swell every
-     soft panel rides at rest (2 px, phase travelling across the page) is held in whole pixels and stepped by a timer
-     on a 0.4 s beat, so resting words are crisp and no frame loop runs; the sea's sideways drift is CSS. Never runs
+     soft panel rides at rest is a CSS animation on its water layer (.cf-slab: the panel's paint and caustic light), so it
+     is smooth, the words and controls stay still and crisp, and no frame loop runs; the sea's sideways drift is CSS. Never runs
      while the tab is hidden.
      Layout is read when the loop is set up and on resize (relay), never inside it. */
   var FL = null;
   /* polish (Nov 20 2026): one set of motion tokens for everything below. One spring for every push, dip and rock;
-     the swell is held in whole pixels and changes only on a beat (cel animation's held drawings), so the words on a
-     panel at rest are never on a half pixel and the loop can sleep (the beat is a timer, not a frame loop). */
-  var FLK = { K: 110, C: 6.6, push: .007, pushMax: 10, yMax: 16, amp: 2, period: 6.4, beat: 400, ringMs: 820, ring2Ms: 760, wakeMs: 900,
+     the swell at rest is CSS on each panel's water layer (see flPaint), so the words never move at rest and the loop sleeps. */
+  var FLK = { K: 110, C: 6.6, push: .007, pushMax: 10, yMax: 16, ringMs: 820, ring2Ms: 760, wakeMs: 900,
     press: 70, rock: 9, dipIn: 14, dipOut: -10, slosh: .12, seaLag: .33 };   // a spring under .3 px / .02 deg snaps to rest
   var PAN = 'main :is(.card, .more-g, .method > li, .fact, .chart-card, .repo-card, .pager a, .band3 > div, .band)';
   function flSetup() {
@@ -670,10 +669,13 @@
     [].forEach.call(d.querySelectorAll(PAN), function (el, n) {
       if (el.closest('.case-head, .hero-one')) return;
       el.classList.add('cf-p');
-      var c = mk('i', 'cf-caus', el, el.firstChild), ci = mk('i', '', c);
+      // the panel's water layer: its paint (copied from the panel, which goes hollow) and its caustic light ride the swell
+      // as one compositor animation; the words and controls stay still and crisp
+      var sl = mk('i', 'cf-slab', el, el.firstChild), c = mk('i', 'cf-caus', sl), ci = mk('i', '', c);
       ci.style.setProperty('--cf-cd', (-(n * 13.7) % 70).toFixed(1) + 's');
-      FL.ps.push({ el: el, cx: 0, cy: 0, w: 1, h: 1, ph: 0, tA: 0, tM: 0, y: 0, v: 0, r: 0, rv: 0, tr: 0, ty: 0, on: false, still: 0, last: '', rest: true });
+      FL.ps.push({ el: el, sl: sl, cx: 0, cy: 0, w: 1, h: 1, ph: 0, tA: 0, tM: 0, y: 0, v: 0, r: 0, rv: 0, tr: 0, ty: 0, on: false, still: 0, last: '', rest: true });
     });
+    flPaint(FL.ps);
     if (W.IntersectionObserver) {
       FL.io = new IntersectionObserver(function (es) {
         es.forEach(function (e) {
@@ -701,7 +703,10 @@
     // back/forward cache: the page is put away at rest and comes back at rest (no half-way springs, no queued rings)
     on(W, 'pagehide', flReset); on(W, 'pageshow', function (e) { if (e.persisted) { flReset(); flLay(); } });
     // the theme changes the foam paint; a narrated film playing calms the water round it (it holds its swell)
-    var mo = new MutationObserver(function () { if (FL) { flFoam(); flKick(); } }); mo.observe(r, { attributes: true, attributeFilter: ['data-theme'] }); offs.push(function () { mo.disconnect(); });
+    var mo = new MutationObserver(function () { if (FL) { flFoam(); flPaint(FL.ps); flKick(); } }); mo.observe(r, { attributes: true, attributeFilter: ['data-theme'] }); offs.push(function () { mo.disconnect(); });
+    var mqDark = W.matchMedia('(prefers-color-scheme: dark)'), onScheme = function () { if (FL) flPaint(FL.ps); };
+    if (mqDark.addEventListener) { mqDark.addEventListener('change', onScheme); offs.push(function () { mqDark.removeEventListener('change', onScheme); }); }
+    on(d, 'pointerup', function (e) { var el = e.target && e.target.closest ? e.target.closest('.cf-p') : null, p = el && FL ? flFind(el) : null; if (p) flPaint([p]); }, { passive: true });
     on(d, 'play', flFilm, true); on(d, 'pause', flFilm, true); on(d, 'ended', flFilm, true);
     flKick(); flBeat();
   }
@@ -718,21 +723,22 @@
     FL.ps.forEach(function (p) { p.y = p.v = p.r = p.rv = p.tr = p.ty = 0; p.rest = true; });
     flBeat(true); flKick();
   }
-  // the swell, in whole pixels, at the beat (time held between beats); 0 when held still, calmed, or in a capture window
-  function flSwell(p, tq) { return p.still || FL.calm || innerHeight > 3000 ? 0 : Math.round(FLK.amp * Math.sin(tq * 6.2832 / FLK.period + p.ph)) || 0; }
-  function flTq(t) { return Math.floor(t / FLK.beat) * FLK.beat / 1000; }
-  function flRestTf(p, tq) { var s = flSwell(p, tq); return s ? 'translate3d(0,' + s + 'px,0)' : ''; }
-  // the beat: while a panel is on screen, a timer (not a frame loop) moves resting panels to their next held step
-  function flBeat(force) {
-    if (!FL) return;
-    if (force) { clearTimeout(FL.tick); FL.tick = 0; }
-    if (FL.tick || d.hidden) return;
-    var t = now(), tq = flTq(t);
-    if (!FL.raf) for (var i = 0; i < FL.ps.length; i++) {
-      var p = FL.ps[i]; if (!p.on || !p.rest) continue;
-      var tf = flRestTf(p, tq); if (tf !== p.last) { p.el.style.transform = tf; p.last = tf; }
-    }
-    if (FL.vis > 0) FL.tick = setTimeout(function () { FL && (FL.tick = 0); flBeat(); }, FLK.beat - (t % FLK.beat) + 4);
+  // the swell at rest is CSS on each panel's water layer (.cf-slab), so the panel itself rests with no transform at all
+  function flSwell() { return 0; }
+  function flTq() { return 0; }
+  function flRestTf() { return ''; }
+  // resting panels: no transform (words crisp); nothing to time, the swell runs on the compositor
+  function flBeat() {
+    if (!FL || FL.raf) return;
+    for (var i = 0; i < FL.ps.length; i++) { var p = FL.ps[i]; if (p.on && p.rest && p.last !== '') { p.el.style.transform = ''; p.last = ''; } }
+  }
+  // the water layer wears the panel's own paint: read it with the panel solid, then hollow the panel (both states with no
+  // transition, so nothing fades double). Read in one pass, written in another. Again on hover, press, theme.
+  var PAINT = ['backgroundColor', 'backgroundImage', 'backgroundSize', 'backgroundPosition', 'backgroundRepeat', 'backgroundOrigin', 'backgroundClip', 'boxShadow', 'borderRadius'];
+  function flPaint(list) {
+    list.forEach(function (p) { p.el.classList.add('cf-read'); p.el.classList.remove('cf-hollow'); });
+    var got = list.map(function (p) { var cs = getComputedStyle(p.el), o = {}; PAINT.forEach(function (k) { o[k] = cs[k]; }); return o; });
+    list.forEach(function (p, i) { var o = got[i]; PAINT.forEach(function (k) { if (p.sl.style[k] !== o[k]) p.sl.style[k] = o[k]; }); p.el.classList.add('cf-hollow'); p.el.classList.remove('cf-read'); });
   }
   function flFind(el) { for (var i = 0; i < FL.ps.length; i++) if (FL.ps[i].el === el) return FL.ps[i]; return null; }
   function flLay() {
@@ -744,6 +750,8 @@
       p.ph = p.cx * .0062 + p.cy * .0021;                 // the swell's phase travels across and down the page
       p.tA = Math.min(.35, 1.2 / (p.w / 2) * 57.3);        // tilt that moves the panel's edges at most 1.2 px
       p.tM = Math.min(.9, 2 / (p.w / 2) * 57.3);           // dip toward the pointer: edges at most 2 px
+      p.sl.style.setProperty('--cf-sd', (-(((p.ph % 6.2832) + 6.2832) % 6.2832) / 6.2832 * 5.6).toFixed(2) + 's');
+      p.sl.style.setProperty('--cf-ta', p.tA.toFixed(3) + 'deg');
     });
     if (main) FL.seaTop = Math.max(0, seaTop(main) + main.getBoundingClientRect().top + y);
     var tile = parseFloat(getComputedStyle(r).getPropertyValue('--tile')) || 840; FL.A = tile * 1.6; FL.B = tile * .7;
@@ -775,7 +783,7 @@
       if (cap) { p.y = p.v = p.r = p.rv = 0; }  // a full-page capture window (a screenshot tool): everything at rest
       var tf;
       if (Math.abs(tgt) < .05 && p.tr === 0 && Math.abs(p.v) < 2 && Math.abs(p.y) < .3 && Math.abs(p.rv) < .3 && Math.abs(p.r) < .02) {
-        p.y = p.v = p.r = p.rv = 0; p.rest = true; tf = flRestTf(p, tq);   // settled: whole pixels, no turn, words crisp
+        p.y = p.v = p.r = p.rv = 0; p.rest = true; tf = flRestTf(p, tq);   // settled: no transform at all, words crisp
       } else {
         p.rest = false; busy = true;
         var Y = p.y + flSwell(p, tq), R = p.r + p.y * .03;
@@ -843,17 +851,17 @@
     flWake(e.clientX, e.clientY);
     if (e.pointerType !== 'mouse') return;
     var el = e.target && e.target.closest ? e.target.closest('.cf-p') : null, p = el ? flFind(el) : null;
-    if (FL.hover !== p) { if (FL.hover && !FL.hover.still) FL.hover.v += FLK.dipOut; if (p && !p.still) p.v += FLK.dipIn; FL.hover = p; flKick(); }
+    if (FL.hover !== p) { var was = FL.hover; if (was && !was.still) was.v += FLK.dipOut; if (p && !p.still) p.v += FLK.dipIn; FL.hover = p; flPaint([was, p].filter(Boolean)); flKick(); }
     if (p && !p.still && e.movementX) { p.rv += clamp(e.movementX, -30, 30) * FLK.slosh * p.tM; flKick(); }
   }
-  function flOut(e) { if (FL.hover && (!e.relatedTarget || !FL.hover.el.contains(e.relatedTarget))) { if (!FL.hover.still) FL.hover.v += FLK.dipOut; FL.hover = null; flKick(); } }
+  function flOut(e) { if (FL.hover && (!e.relatedTarget || !FL.hover.el.contains(e.relatedTarget))) { var was = FL.hover; if (!was.still) was.v += FLK.dipOut; FL.hover = null; flPaint([was]); flKick(); } }
   function flTouch(e) { var q = e.touches && e.touches[0]; if (q) flWake(q.clientX, q.clientY); }
   function flPress(p, side, kick) { if (!p) return; p.v += kick; p.rv += side * FLK.rock; flKick(); }
   function flDown(e) {
     flFoam();
     var y = W.scrollY || 0, el = e.target && e.target.closest ? e.target.closest('.cf-p') : null, p = el ? flFind(el) : null;
     flRing(e.clientX, e.clientY + y, !p);
-    if (p) flPress(p, clamp((e.clientX - p.cx) / (p.w / 2), -1, 1), FLK.press);
+    if (p) { flPress(p, clamp((e.clientX - p.cx) / (p.w / 2), -1, 1), FLK.press); flPaint([p]); }
   }
   function flKeyClick(e) {
     if (e.detail !== 0 || !e.target.closest) return;
@@ -871,7 +879,7 @@
   function flStop() {
     if (!FL) return;
     cancelAnimationFrame(FL.raf); clearTimeout(FL.tick);
-    FL.ps.forEach(function (p) { p.el.style.transform = ''; p.el.classList.remove('cf-p'); });
+    FL.ps.forEach(function (p) { p.el.style.transform = ''; p.el.classList.remove('cf-p', 'cf-hollow', 'cf-read'); });
     r.classList.remove('cf-on', 'cf-calm');
     FL = null;
   }

@@ -1357,3 +1357,48 @@ html[data-look="cel"] .skip-link { --s: #9c8c86; border-radius: 999px; padding: 
   html[data-look="cel"].motion .skip-link:focus { animation: c-pop .36s var(--pop) both; }
 }
 /* polish-cel:end */
+
+/* ---------- polish 2 (Nov 20 2026): the swell is water, not held steps ----------
+   Ryan's word is "alive and fluid like water", and held 1 px steps read as jitter. So the panel itself stays still (its
+   words and controls crisp, no transform at rest) and only its water layer moves: .cf-slab, which look-cel.js paints with
+   the panel's own paint (read from the panel, which then goes hollow) and which carries the caustic light. The slab rides
+   a smooth, continuous swell on the compositor (--cf-swell, 5.6 s: a 1.6 px bob and a tilt that lifts its edges at most
+   1.2 px), phase-offset per panel by its place on the page (--cf-sd), so the loop still requests no frames at rest. */
+html[data-look="cel"] { --cf-swell: 5.6s; }
+@keyframes c-swell {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  25% { transform: translate3d(0, -1.6px, 0) rotate(var(--cf-ta, 0deg)); }
+  50% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  75% { transform: translate3d(0, 1.6px, 0) rotate(calc(var(--cf-ta, 0deg) * -1)); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  html[data-look="cel"].motion.c-live.cf-on .cf-p { position: relative; }
+  /* (only in a reader's window: a window taller than 3000 px is a full-page capture, where the panel paints itself and
+     the water layer is gone, so the capture sees the still page) */
+  @media (max-height: 3000px) {
+  html[data-look="cel"].motion.c-live.cf-on .cf-p.cf-hollow { background: none !important; transition: none !important; }
+  /* the shadow too, except on a card or pager panel floating up (its own animated shadow then tightens as it bobs, and
+     the water layer drops its copy, so there is only ever one shadow) */
+  html[data-look="cel"].motion.c-live.cf-on :is(.card:not(.reveal), .pager a).cl-float > .cf-slab { box-shadow: none !important; }
+  @media not ((hover: hover) and (pointer: fine)) {
+    html[data-look="cel"].motion.c-live.cf-on .cf-p.cf-hollow:not(:is(.card:not(.reveal), .pager a).cl-float) { box-shadow: none !important; }
+  }
+  @media (hover: hover) and (pointer: fine) {
+    html[data-look="cel"].motion.c-live.cf-on .cf-p.cf-hollow:not(:is(.card:not(.reveal), .pager a):is(.cl-float, :hover)) { box-shadow: none !important; }
+    html[data-look="cel"].motion.c-live.cf-on :is(.card:not(.reveal), .pager a):hover > .cf-slab { box-shadow: none !important; }
+  }
+  }
+  html[data-look="cel"].motion.c-live.cf-on .cf-p.cf-read { transition: none !important; }
+  html[data-look="cel"].motion.c-live.cf-on .cf-slab {
+    position: absolute; inset: 0; z-index: -2; display: block; pointer-events: none;
+    transition: background-color .15s, box-shadow .15s;
+    animation: c-swell var(--cf-swell) ease-in-out var(--cf-sd, 0s) infinite; will-change: transform;
+  }
+  /* the caustic light now lives on the slab and rides with it */
+  html[data-look="cel"].motion.c-live.cf-on .cf-slab > .cf-caus { z-index: 0; }
+  html[data-look="cel"].motion.c-live.cf-on.cf-calm .cf-slab { animation-play-state: paused; }
+  @media (min-height: 3001px) {
+    html[data-look="cel"].motion.c-live.cf-on .cf-slab { display: none; }
+  }
+}
+/* polish-2-cel:end */
