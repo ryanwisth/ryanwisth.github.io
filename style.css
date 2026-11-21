@@ -2123,19 +2123,49 @@ html:not([data-look]).y-mat .y-merit .ym-dot { fill: var(--felt-ink); }
 /* === end Yarn & Felt material === */
 
 /* fluid-yarn:start */
-/* === Yarn & Felt fluid (Nov 20 2026): the page hangs like soft fabric ===
-   Ryan: "making the pages super fluid with the style". Every rule is scoped html:not([data-look]) (the default look),
-   so no other look is touched. look-yarn.js ("Yarn & Felt fluid" block) sets .y-flu on the root with motion on and
-   reduced motion off, .y-hang on each hanging patch, .y-dent spans, .y-taut on a touched heading; it writes only the
-   `rotate` (a Web Animation) and `translate` properties of a patch. Page to page: the next page is draped down over
-   the last one from the top bar, its hem rippling, and settles with a little bounce; the top bar stays put. */
+/* === Yarn & Felt fluid (Nov 20 2026; polish pass the same day): the page hangs like soft fabric ===
+   Ryan: "making the pages super fluid with the style", then "the highest level of polish in every sense". Every rule is
+   scoped html:not([data-look]) (the default look), so no other look is touched. look-yarn.js ("Yarn & Felt fluid"
+   block) sets .y-flu on the root with motion on and reduced motion off, .y-hang on each hanging patch, .y-dent spans,
+   .y-taut on a touched heading, .y-filmon while a film plays; it writes only the `rotate` (Web Animations) and
+   `translate` properties of a patch. Page to page: the next page is draped down over the last one from the top bar, its
+   hem rippling, and settles with a little bounce; Back pulls the drape up off the page and the last one rises back;
+   the top bar stays put; a project's title is carried across on the same beat. */
+
+/* the motion tokens: the look's page change, titles, dents and stitch rows move by these */
+html:not([data-look]) {
+  --y-quick: .14s; --y-mid: .32s; --y-slow: .52s;
+  --y-out: cubic-bezier(.3, .6, .25, 1);   /* arriving, settling */
+  --y-inout: cubic-bezier(.4, 0, .6, 1);   /* going, or a sheet pulled away */
+  --y-follow: cubic-bezier(.2, .7, .3, 1); /* following the pointer */
+  --y-settle: linear(0, .3 10%, .66 22%, .92 36%, 1.025 50%, 1.012 64%, .998 80%, 1); /* carried, with a soft give at the end */
+}
+/* a project's title (named t-<page> in the pages) is carried as one thing between pages */
+html:not([data-look]) [style*="view-transition-name: t-"] { view-transition-class: y-title; }
+
 @media (prefers-reduced-motion: no-preference) {
   html:not([data-look]):not([data-motion="paused"]) .topbar { view-transition-name: y-bar; }
   html:not([data-look]):not([data-motion="paused"])::view-transition-old(root),
   html:not([data-look]):not([data-motion="paused"])::view-transition-new(root) { mix-blend-mode: normal; }
-  html:not([data-look]):not([data-motion="paused"])::view-transition-old(root) { animation: y-drape-under .52s cubic-bezier(.4, 0, .6, 1) both; }
-  html:not([data-look]):not([data-motion="paused"])::view-transition-new(root) { animation: y-drape-in .52s cubic-bezier(.3, .6, .25, 1) both; }
-  html:not([data-look]):not([data-motion="paused"])::view-transition-group(y-bar) { animation-duration: .3s; }
+  html:not([data-look]):not([data-motion="paused"])::view-transition-old(root) { animation: y-drape-under var(--y-slow) var(--y-inout) both; }
+  html:not([data-look]):not([data-motion="paused"])::view-transition-new(root) { animation: y-drape-in var(--y-slow) var(--y-out) both; }
+  html:not([data-look]):not([data-motion="paused"])::view-transition-group(y-bar) { animation-duration: var(--y-mid); }
+  /* Back: the sheet that was draped on is pulled up off the page, and the page under it rises back into place */
+  html:not([data-look]):not([data-motion="paused"]):active-view-transition-type(back)::view-transition-old(root) { z-index: 1; animation: y-drape-off var(--y-slow) var(--y-inout) both; }
+  html:not([data-look]):not([data-motion="paused"]):active-view-transition-type(back)::view-transition-new(root) { animation: y-drape-rise var(--y-slow) var(--y-out) both; }
+  /* a reload is the same page: no drape */
+  html:not([data-look]):active-view-transition-type(reload)::view-transition-group(*),
+  html:not([data-look]):active-view-transition-type(reload)::view-transition-old(*),
+  html:not([data-look]):active-view-transition-type(reload)::view-transition-new(*) { animation: none; }
+  /* the title is carried on the drape's beat and settles with a little give; the old words leave before the new ones
+     come, so the two never sit on top of each other as a blur */
+  html:not([data-look]):not([data-motion="paused"])::view-transition-group(*.y-title) { animation-duration: var(--y-slow); animation-timing-function: var(--y-settle); }
+  html:not([data-look]):not([data-motion="paused"])::view-transition-old(*.y-title) { mix-blend-mode: normal; animation: y-title-out var(--y-slow) linear both; }
+  html:not([data-look]):not([data-motion="paused"])::view-transition-new(*.y-title) { mix-blend-mode: normal; animation: y-title-in var(--y-slow) linear both; }
+  /* a title with no partner on the other page comes down with the drape, or goes down with the page */
+  html:not([data-look]):not([data-motion="paused"])::view-transition-new(*.y-title):only-child { animation: y-title-drop var(--y-slow) var(--y-out) both; }
+  html:not([data-look]):not([data-motion="paused"])::view-transition-old(*.y-title):only-child { animation: y-title-sink var(--y-mid) var(--y-inout) both; }
+  html:not([data-look]):not([data-motion="paused"]):active-view-transition-type(back)::view-transition-new(*.y-title):only-child { animation: y-title-rise var(--y-slow) var(--y-out) both; }
 }
 @keyframes y-drape-in {
   0% { clip-path: polygon(0 0, 100% 0, 100% -3%, 87.5% -.6%, 75% -3%, 62.5% -.6%, 50% -3%, 37.5% -.6%, 25% -3%, 12.5% -.6%, 0 -3%); translate: 0 -18px; }
@@ -2144,6 +2174,18 @@ html:not([data-look]).y-mat .y-merit .ym-dot { fill: var(--felt-ink); }
   100% { clip-path: polygon(0 0, 100% 0, 100% 104%, 87.5% 106.4%, 75% 104%, 62.5% 106.4%, 50% 104%, 37.5% 106.4%, 25% 104%, 12.5% 106.4%, 0 104%); translate: 0 0; }
 }
 @keyframes y-drape-under { to { translate: 0 12px; filter: brightness(.9); } }
+@keyframes y-drape-off {
+  0% { clip-path: polygon(0 0, 100% 0, 100% 104%, 87.5% 106.4%, 75% 104%, 62.5% 106.4%, 50% 104%, 37.5% 106.4%, 25% 104%, 12.5% 106.4%, 0 104%); translate: 0 0; }
+  18% { translate: 0 1.5px; }
+  50% { clip-path: polygon(0 0, 100% 0, 100% 64%, 87.5% 61.6%, 75% 64%, 62.5% 61.6%, 50% 64%, 37.5% 61.6%, 25% 64%, 12.5% 61.6%, 0 64%); }
+  100% { clip-path: polygon(0 0, 100% 0, 100% -3%, 87.5% -.6%, 75% -3%, 62.5% -.6%, 50% -3%, 37.5% -.6%, 25% -3%, 12.5% -.6%, 0 -3%); translate: 0 -18px; }
+}
+@keyframes y-drape-rise { from { translate: 0 12px; filter: brightness(.9); } }
+@keyframes y-title-out { 0% { opacity: 1; } 38%, 100% { opacity: 0; } }
+@keyframes y-title-in { 0%, 22% { opacity: 0; } 62%, 100% { opacity: 1; } }
+@keyframes y-title-drop { 0%, 30% { opacity: 0; translate: 0 -18px; } 62% { opacity: 1; translate: 0 2px; } 82% { translate: 0 -1px; } 100% { opacity: 1; translate: 0 0; } }
+@keyframes y-title-sink { to { opacity: 0; translate: 0 12px; } }
+@keyframes y-title-rise { 0%, 35% { opacity: 0; translate: 0 12px; } 75%, 100% { opacity: 1; translate: 0 0; } }
 @media (prefers-reduced-motion: reduce) {
   html:not([data-look])::view-transition-group(*), html:not([data-look])::view-transition-old(*), html:not([data-look])::view-transition-new(*) { animation: none !important; }
 }
@@ -2151,8 +2193,16 @@ html:not([data-look])[data-motion="paused"]::view-transition-group(*),
 html:not([data-look])[data-motion="paused"]::view-transition-old(*),
 html:not([data-look])[data-motion="paused"]::view-transition-new(*) { animation: none !important; }
 
+/* touch screens: a tapped patch or button does not stay lifted after the finger goes (no sticky hover); the press
+   itself still sinks it */
+@media (hover: none) {
+  html:not([data-look]) .card:hover:not(:active) { transform: none; box-shadow: var(--shadow); }
+  html:not([data-look]) .card:hover::after { inset: 8px; }
+  html:not([data-look]) :is(.btn, .groupnav a, .pager a, .theme-toggle):hover:not(:active) { transform: none; box-shadow: 0 0 0 5px var(--card), 0 1px 1.5px 5px var(--shade), 0 7px 12px 1px var(--shade); }
+}
+
 @media (prefers-reduced-motion: no-preference) {
-  /* a patch hangs from its top stitches: the sway, the puff and the press all pivot there */
+  /* a patch hangs from its top stitches: the swing, the puff and the press all pivot there */
   html:not([data-look]).y-flu .y-hang { transform-origin: 50% 0; }
 
   /* the felt dents where it is pointed at or pressed: a shaded hollow with a hair of light on its lower lip,
@@ -2164,9 +2214,9 @@ html:not([data-look])[data-motion="paused"]::view-transition-new(*) { animation:
     background:
       radial-gradient(closest-side at 50% 60%, transparent 70%, color-mix(in srgb, #fff 16%, transparent) 86%, transparent),
       radial-gradient(closest-side at 50% 45%, var(--shade-2), color-mix(in srgb, var(--shade-2) 45%, transparent) 55%, transparent);
-    transition: opacity .4s ease, scale .5s var(--spring);
+    transition: opacity .4s ease, scale var(--y-slow) var(--spring);
   }
-  html:not([data-look]).y-flu .y-dent.y-follow i { transition: translate .28s cubic-bezier(.2, .7, .3, 1), opacity .4s ease, scale .5s var(--spring); }
+  html:not([data-look]).y-flu .y-dent.y-follow i { transition: translate .28s var(--y-follow), opacity .4s ease, scale var(--y-slow) var(--spring); }
   html:not([data-look]).y-flu .y-dent.y-on i { opacity: 1; scale: 1; }
   html:not([data-look]).y-flu .y-dent.y-deep i { scale: .8; background:
       radial-gradient(closest-side at 50% 62%, transparent 68%, color-mix(in srgb, #fff 20%, transparent) 85%, transparent),

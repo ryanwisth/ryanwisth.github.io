@@ -13,11 +13,35 @@
      caused (a dimple, a pin-prick, a wrapped figure) is showing, and are cleared by it;
    - scroll-driven movement stops when the scroll stops (the thread's slack loop settles once, then is still);
    - passive listeners, one requestAnimationFrame per frame at most, nothing while the tab is hidden. */
+
+/* One frame loop for the whole look (polish pass, Nov 20 2026). Every block below asks for its next frame through
+   window.__yarnFrame.on(fn) instead of its own requestAnimationFrame, so scroll, spring, needle, selection, focus and
+   merit checks all run in the same frame, in the order they asked, and nothing is requested when nobody asks.
+   off(fn) withdraws a request; the frame itself is cancelled when the last one goes. */
+(function () {
+  'use strict';
+  var W = window;
+  if (W.__yarnFrame || !W.requestAnimationFrame) return;
+  var q = [], id = 0, asked = 0, cur = null;
+  function run(t) {
+    id = 0; cur = q; q = [];
+    for (var i = 0; i < cur.length; i++) { var fn = cur[i]; if (fn) try { fn(t); } catch (e) { setTimeout(function () { throw e; }, 0); } }
+    cur = null;
+  }
+  W.__yarnFrame = {
+    on: function (fn) { if (q.indexOf(fn) < 0) q.push(fn); if (!id) { id = requestAnimationFrame(run); asked++; } return 1; },
+    off: function (fn) { var i = q.indexOf(fn); if (i >= 0) q.splice(i, 1); if (cur && (i = cur.indexOf(fn)) >= 0) cur[i] = null; // withdrawn mid-frame: skipped
+      if (!q.length && id) { cancelAnimationFrame(id); id = 0; } return 0; },
+    asked: function () { return asked; }
+  };
+})();
+
 (function () {
   'use strict';
   var d = document, r = d.documentElement, W = window;
   if (W.__yarnLive || !d.addEventListener || !W.requestAnimationFrame) return;
   W.__yarnLive = 1;
+  var F = W.__yarnFrame;
   var NS = 'http://www.w3.org/2000/svg';
   var mqReduce = matchMedia('(prefers-reduced-motion: reduce)');
   var mqFine = matchMedia('(hover: hover) and (pointer: fine)');
@@ -53,7 +77,7 @@
 
   /* ---------- the scroll frame: one rAF per frame while scrolling, nothing at rest ---------- */
   var raf = 0, sy = 0, psy = 0, pt = 0, speed = 0, idleT = 0, scrolling = false;
-  function onScroll() { if (!raf && !d.hidden) raf = requestAnimationFrame(frame); }
+  function onScroll() { if (!raf && !d.hidden) raf = F.on(frame); }
   function frame(t) {
     raf = 0;
     sy = W.scrollY || 0;
@@ -183,7 +207,7 @@
   function boundary(dir) {
     var k = index(); if (k === cur) return;
     cur = k;
-    if (!ambientFree() || flecks.length >= 2 || now() - lastFleck < 500) return;
+    if (!ambientFree() || flecks.length >= 2 || now() - lastFleck < 500 || r.classList.contains('y-filmon')) return; // a film playing: the margin stays calm
     lastFleck = now();
     var col = d.querySelector('main .wrap, main .prose') || d.querySelector('main'), left = col ? col.getBoundingClientRect().left : 20;
     var x = clamp(left - 30 + Math.random() * 12, 2, Math.max(2, left - 14)), vh = innerHeight;
@@ -250,14 +274,15 @@
   function onKeyClick(e) { if (e.detail === 0 && e.target.closest) { var b = e.target.closest(PRESS); if (b) { sink(b); later(unsink, 220); } } }
   // 7: a sewing-button press: the patch sinks into the cloth, the yarn loop round it is pulled taut, and the cloth
   // keeps a dimple where it was pressed for a moment after it springs back
-  var sunk = null;
+  var sunk = null, lastDim = null;
   function sink(el) {
     unsink();
     sunk = el; el.classList.add('y-sink');
     claim('dimple', 1000);
-    var q = el.getBoundingClientRect(), p = mk('i', 'y-dimple', d.body), pad = 10;
+    forget(lastDim); // one dimple at a time: a quick second press replaces the first (no pile of rings)
+    var q = el.getBoundingClientRect(), p = lastDim = mk('i', 'y-dimple', d.body), pad = 10;
     p.style.cssText = 'left:' + (q.left + (W.scrollX || 0) - pad).toFixed(1) + 'px;top:' + (q.top + (W.scrollY || 0) - pad).toFixed(1) + 'px;width:' + (q.width + 2 * pad).toFixed(1) + 'px;height:' + (q.height + 2 * pad).toFixed(1) + 'px';
-    later(function () { forget(p); }, 1150);
+    later(function () { forget(p); if (lastDim === p) lastDim = null; }, 1150);
   }
   function unsink() { if (sunk) { var s = sunk; sunk = null; later(function () { s.classList.remove('y-sink'); }, 90); } }
   // 9: a pin-prick where a finger taps: the linen puckers round a tiny hole and relaxes
@@ -343,7 +368,7 @@
     TIP.el.classList.toggle('y-link', !!link);
     TIP.el.classList.toggle('y-off', !!text);
     if (!TIP.shown) { TIP.shown = true; TIP.el.classList.add('y-on'); }
-    if (!TIP.raf) TIP.raf = requestAnimationFrame(tipTail);
+    if (!TIP.raf) TIP.raf = F.on(tipTail);
   }
   function tipTail() { // a short length of thread trails from the needle's eye when it moves fast, and is drawn back in
     TIP.raf = 0;
@@ -353,7 +378,7 @@
     TIP.vx *= .7; TIP.vy *= .7;
     TIP.el.style.setProperty('--tl', TIP.len.toFixed(1) + 'px');
     TIP.el.style.setProperty('--ta', TIP.ang.toFixed(0) + 'deg');
-    if (TIP.len > .4 || sp > .05) TIP.raf = requestAnimationFrame(tipTail);
+    if (TIP.len > .4 || sp > .05) TIP.raf = F.on(tipTail);
     else TIP.el.style.setProperty('--tl', '0px');
   }
   function tipLeave(e) { if (TIP && !e.relatedTarget) { TIP.shown = false; TIP.el.classList.remove('y-on'); } }
@@ -361,7 +386,7 @@
   /* ---------- 11. a selection in body text sits on a strip of felt with a blanket-stitched edge ---------- */
   var SELHOST = '.prose, .lede, .hero-sub, .hero h1, .card .body, .fact, .band, .principle';
   var SEL = null, selRaf = 0;
-  function onSel() { if (!selRaf) selRaf = requestAnimationFrame(paintSel); }
+  function onSel() { if (!selRaf) selRaf = F.on(paintSel); }
   function clearSel() { if (SEL) { drop(SEL.box); var i = made.indexOf(SEL.box); if (i >= 0) made.splice(i, 1); SEL.host.classList.remove('y-selhost'); SEL = null; } }
   function paintSel() {
     selRaf = 0;
@@ -414,7 +439,7 @@
     FOC.classList.add('y-on');
     FOC.style.cssText = 'left:' + (q.left - pad).toFixed(1) + 'px;top:' + (q.top - pad).toFixed(1) + 'px;width:' + (q.width + 2 * pad).toFixed(1) + 'px;height:' + (q.height + 2 * pad).toFixed(1) + 'px;border-radius:' + Math.min(rad, (q.height + 2 * pad) / 2).toFixed(1) + 'px';
   }
-  function focusFollow() { if (focEl && !focRaf) focRaf = requestAnimationFrame(placeFocus); }
+  function focusFollow() { if (focEl && !focRaf) focRaf = F.on(placeFocus); }
 
   /* ---------- on, off ---------- */
   function relay() { boundsSetup(); if (!SDA) scrubSetup(); if (H) { H.last = -1; hero(); } if (SEL) onSel(); focusFollow(); if (T && T.shown) slackPlace(); } // (moved, not bounced again)
@@ -439,15 +464,15 @@
     on(d, 'selectionchange', onSel);
     on(d, 'focusin', onFocusIn);
     on(d, 'focusout', function () { setTimeout(function () { if (d.activeElement !== focEl) focusOff(); }, 0); });
-    on(d, 'visibilitychange', function () { if (d.hidden) { cancelAnimationFrame(raf); raf = 0; clearFlecks(); if (TIP) TIP.el.classList.remove('y-on'); } });
+    on(d, 'visibilitychange', function () { if (d.hidden) { raf = F.off(frame); clearFlecks(); if (TIP) TIP.el.classList.remove('y-on'); } });
     if (W.ResizeObserver && d.querySelector('main')) { var ro = new ResizeObserver(function () { if (!scrolling) relay(); }); ro.observe(d.querySelector('main')); offs.push(function () { ro.disconnect(); }); }
   }
   function stop() {
     live = false;
     offs.forEach(function (f) { f(); }); offs = [];
     timers.forEach(clearTimeout); timers = []; clearTimeout(idleT);
-    cancelAnimationFrame(raf); raf = 0; cancelAnimationFrame(selRaf); selRaf = 0; cancelAnimationFrame(focRaf); focRaf = 0;
-    if (TIP && TIP.raf) cancelAnimationFrame(TIP.raf);
+    raf = F.off(frame); selRaf = F.off(paintSel); focRaf = F.off(placeFocus);
+    if (TIP && TIP.raf) F.off(tipTail);
     clearFlecks(); clearSel();
     anims.slice().forEach(function (a) { try { a.cancel(); } catch (e) {} }); anims = [];
     made.forEach(drop); made = [];
@@ -455,7 +480,7 @@
     [].forEach.call(d.querySelectorAll('.y-tug, .y-puff, .y-sink, .y-tag, .y-wound, .y-wraphost, .y-selhost'), function (e) { e.classList.remove('y-tug', 'y-puff', 'y-sink', 'y-tag', 'y-wound', 'y-wraphost', 'y-selhost'); });
     [].forEach.call(d.querySelectorAll('[data-y-from]'), function (e) { e.removeAttribute('data-y-from'); });
     r.classList.remove('y-live', 'y-sjs', 'y-fine', 'y-needle-on');
-    T = H = TIP = FOC = SEL = null; focEl = null; tugged = null; sunk = null; lastPin = null; scrubs = []; bounds = []; flecks = []; down = null; scrolling = false; speed = 0;
+    T = H = TIP = FOC = SEL = null; focEl = null; tugged = null; sunk = null; lastPin = null; lastDim = null; scrubs = []; bounds = []; flecks = []; down = null; scrolling = false; speed = 0;
   }
   function sync() {
     var w = wanted();
@@ -463,6 +488,8 @@
   }
   new MutationObserver(sync).observe(r, { attributes: true, attributeFilter: ['data-look', 'class', 'data-motion'] });
   if (mqReduce.addEventListener) mqReduce.addEventListener('change', sync);
+  // back/forward cache: the page comes back as it was left, maybe mid-scroll or mid-press; start clean, nothing replayed
+  W.addEventListener('pageshow', function (e) { if (e.persisted && live) { stop(); sync(); } });
   W.__yarnAccent = { free: ambientFree, claim: claim }; // the material block below asks before it moves anything
   W.__yarnLiveState = function () { return { live: live, sda: SDA, made: made.length, listeners: offs.length, anims: anims.length, flecks: flecks.length, accent: acc.name }; };
   sync();
@@ -482,6 +509,7 @@
   var d = document, r = d.documentElement, W = window;
   if (W.__yarnMat || !d.addEventListener) return;
   W.__yarnMat = 1;
+  var F = W.__yarnFrame;
   var NS = 'http://www.w3.org/2000/svg';
   var mqReduce = matchMedia('(prefers-reduced-motion: reduce)');
   var mqFine = matchMedia('(hover: hover) and (pointer: fine)');
@@ -665,7 +693,7 @@
   /* ---------- on, off ---------- */
   var sT = 0, rT = 0, ro = null;
   function onScroll() {
-    if (!chk) chk = requestAnimationFrame(check);
+    if (!chk) chk = F.on(check);
     clearTimeout(sT); sT = setTimeout(function () { centre(); verify(); }, 150);
   }
   function matStart() {
@@ -683,7 +711,7 @@
   function matStop() {
     mat = false;
     offs.forEach(function (f) { f(); }); offs = [];
-    clearTimeout(sT); clearTimeout(rT); cancelAnimationFrame(chk); chk = 0; clearTimeout(qT); qT = 0; queue = [];
+    clearTimeout(sT); clearTimeout(rT); chk = F.off(check); clearTimeout(qT); qT = 0; queue = [];
     mmade.forEach(drop); mmade = []; marks = {};
     if (centred) centred.classList.remove('y-clear'); centred = null;
     [].forEach.call(d.querySelectorAll('.y-clear'), function (e) { e.classList.remove('y-clear'); });
@@ -720,15 +748,23 @@
   sync();
 })();
 
-/* ===== Yarn & Felt fluid (Nov 20 2026): the page hangs like soft fabric =====
-   Ryan: "making the pages super fluid with the style". Felt and cotton patches hang on their stitches:
-   - at rest each one sways a hair on its top stitches (a Web Animation of the `rotate` property, compositor only,
-     amplitude sized so no corner moves more than 2 px; played only while the patch is on screen);
+/* ===== Yarn & Felt fluid (Nov 20 2026; polish pass the same day): the page hangs like soft fabric =====
+   Ryan: "making the pages super fluid with the style", then "the highest level of polish in every sense".
+   Felt and cotton patches hang on their stitches:
    - scroll gives them weight: they trail the scroll a few px, swing a hair sideways and settle with a springy bounce
-     (the inline `translate` property, from one spring loop that runs only while something is still moving);
+     (the inline `translate` property, from the look's one frame loop, running only while something still moves);
+     a jump (anchor, Home/End, a restored scroll) is not a fling, so nothing trails it; rubber-band overscroll is ignored;
+   - when a scroll comes to rest, the patches in view swing on their top stitches and come to rest (a Web Animation of
+     the `rotate` property, compositor only, no corner moving more than 2 px, still in about 9 s), and now and then a
+     draught passes through the hanging cloth while the page is left alone; at rest nothing is turned, so text is crisp;
+     a new swing always starts from where the old one is, so it never jumps;
    - the felt dents under a mouse or a finger (a shaded hollow behind the words, in a .y-dent span), and the patch
-     drifts a hair with the pointer; a press pulls it down on its stitches and lets it spring back;
-   - keyboard focus on a patch bobs it once; headings' stitch rows pull taut on hover or touch and slacken (CSS).
+     drifts a hair with the pointer; a press pulls it down on its stitches and lets it spring back; a press that turns
+     into a drag (selecting text) lets the patch go at once;
+   - keyboard focus on a patch bobs it once; headings' stitch rows pull taut on hover or touch and slacken (CSS);
+   - while a film plays on screen, the swinging calms (what is swinging comes to rest, a new swing is half as big) and
+     no draught comes;
+   - on the way out, only the title of the page being opened keeps its shared name, so the rest go down with the page.
    style.css ("Yarn & Felt fluid") holds the page-to-page drape and the rules for the classes set here. It switches on
    only while the default look is worn with motion on and reduced motion off, puts .y-flu on the root, and removes
    every listener, element, class, inline property and animation it added the moment that stops being true.
@@ -737,46 +773,68 @@
 (function () {
   'use strict';
   var d = document, r = d.documentElement, W = window;
-  if (W.__yarnFlu || !d.addEventListener || !W.requestAnimationFrame) return;
+  if (W.__yarnFlu || !d.addEventListener || !W.requestAnimationFrame || !W.__yarnFrame) return;
   W.__yarnFlu = 1;
+  var F = W.__yarnFrame;
   var mqReduce = matchMedia('(prefers-reduced-motion: reduce)');
   var mqSmall = matchMedia('(pointer: coarse), (max-width: 620px)');
   var SWAY = '.card, .principle, .band, .band3 > div, .method > li, .fact, .chart-card, .repo-card, .tblock'; // site.js's seamed patches, minus .flow li (its reveal owns `translate`) and .readme (long reading)
   var HEADS = '.section-head h2, .group-h, .prose > h2';
+
+  /* ---------- the motion tokens: every hanging patch moves by these and only these ---------- */
+  var M = {
+    trail: 0.11,             // px a patch trails per px/frame of scroll, times its weight
+    cap: 6, capSmall: 4,     // the most it trails (px), wide screens and phones
+    side: 3,                 // the most it swings sideways (px); phones 0 (the margin strand is 18 px away)
+    k: 0.05, c: 0.11,        // the hanging spring, up and down: stiffness and damping per 60 Hz frame
+    kx: 0.035, cx: 0.09,     // the same, sideways
+    hold: 1.6, let: 0.5,     // a press pulls a patch down 1.6 px (rounded to whole device pixels); letting go throws it up
+    bob: 0.9,                // keyboard focus nudges it down this fast
+    jump: 0.8,               // one frame's scroll over 0.8 of the window is a jump, not a fling: nothing trails it
+    drag: 6,                 // a press that moves more than 6 px is a drag (selecting text): the patch is let go
+    corner: 2,               // the swing moves no corner of a patch more than 2 px
+    maxDeg: 0.32,            // and never turns it more than this
+    period: [2600, 3700],    // one swing there and back (ms), per patch
+    decay: 2500,             // the swing loses two thirds of its reach every 2.5 s ...
+    still: 9000,             // ... and is gone after 9 s (the last 15 % eases to exactly 0)
+    breeze: [15000, 24000],  // a draught through the hanging cloth now and then, while the page is left alone
+    breezeK: 0.35, breezeGap: 140 // how hard it pushes, and its delay from one patch to the next, left to right
+  };
+
   var live = false, offs = [], made = [], anims = [], timers = [], items = [], byEl = null, io = null;
-  var raf = 0, lastT = 0, sy = 0, sv = 0, quiet = 0, frames = 0, hover = null, taut = null;
+  var raf = 0, lastT = 0, sy = 0, sv = 0, quiet = 0, stillF = 0, frames = 0, hover = null, taut = null, maxY = 0, peak = 0, pdir = 1;
+  var bz = 0, mT = 0, filmOn = false, dpr = 1;
 
   function wanted() { return !r.hasAttribute('data-look') && r.classList.contains('motion') && !mqReduce.matches; }
   function on(t, type, fn, opt) { t.addEventListener(type, fn, opt); offs.push(function () { t.removeEventListener(type, fn, opt); }); }
   function later(fn, ms) { var t = setTimeout(fn, ms); timers.push(t); return t; }
   function clamp(x, a, b) { return x < a ? a : x > b ? b : x; }
   function drop(e) { if (e && e.parentNode) e.parentNode.removeChild(e); }
+  function now() { return performance.now(); }
   function item(t) { // the hanging patch an event target is in
     if (!byEl || !t || !t.closest) return null;
     var e = t.closest(SWAY);
     while (e && !byEl.has(e)) e = e.parentElement && e.parentElement.closest(SWAY);
     return e ? byEl.get(e) : null;
   }
+  function px(v) { return Math.round(v * dpr) / dpr; } // a held offset lands on whole device pixels, so its words stay crisp
 
-  /* ---------- the patches: found once (and again when the page grows), each with its own weight and phase ---------- */
+  /* ---------- the patches: found once (and again when the page grows), each with its own weight and swing ---------- */
+  function reach(it) { // how far the swing may turn this patch: it pivots on its top edge, so the far bottom corner moves most
+    var q = it.el.getBoundingClientRect(), w = q.width, h = q.height;
+    it.A = w && h ? Math.min(M.maxDeg, (M.corner / Math.sqrt(w * w / 4 + h * h)) * 57.2958) : 0;
+    if (it.A < 0.05) it.A = 0;
+  }
   function scan() {
     var list = [].slice.call(d.querySelectorAll(SWAY)), small = mqSmall.matches;
     list.forEach(function (el, i) {
       if (byEl.has(el)) return;
       for (var p = el.parentElement; p; p = p.parentElement) if (byEl.has(p) || (p.matches && p.matches(SWAY))) return; // outer patch only
-      var q = el.getBoundingClientRect(), w = q.width, h = q.height;
-      if (!w || !h) return;
-      var it = { el: el, i: i, y: 0, vy: 0, x: 0, vx: 0, hold: 0, ty: 0, vis: false, set: false, dent: null, sway: null,
-        wt: (0.75 + ((i * 37) % 11) / 20) * (small ? 0.7 : 1), side: i % 2 ? 1 : -1 };
-      // the sway pivots on the top edge, so the far bottom corner moves most: keep it within 2 px
-      var reach = Math.sqrt(w * w / 4 + h * h), A = Math.min(0.32, (2 / reach) * 57.2958);
-      if (A >= 0.05 && el.animate) {
-        try {
-          var a = el.animate([{ rotate: (-A).toFixed(3) + 'deg' }, { rotate: A.toFixed(3) + 'deg' }],
-            { duration: 6200 + ((i * 1370) % 3400), iterations: Infinity, direction: 'alternate', easing: 'ease-in-out', delay: -((i * 2311) % 6000) });
-          a.pause(); anims.push(a); it.sway = a;
-        } catch (e) {}
-      }
+      if (!el.getClientRects().length) return;
+      var it = { el: el, i: i, y: 0, vy: 0, x: 0, vx: 0, hold: 0, vis: false, set: false, dent: null, sw: null, anim: null, A: 0,
+        wt: (0.75 + ((i * 37) % 11) / 20) * (small ? 0.7 : 1), side: i % 2 ? 1 : -1,
+        per: M.period[0] + ((i * 1370) % (M.period[1] - M.period[0])) };
+      reach(it);
       el.classList.add('y-hang');
       byEl.set(el, it); items.push(it);
       if (io) io.observe(el);
@@ -786,31 +844,87 @@
     es.forEach(function (en) {
       var it = byEl && byEl.get(en.target); if (!it) return;
       it.vis = en.isIntersecting;
-      if (it.sway) { if (it.vis && !d.hidden) it.sway.play(); else it.sway.pause(); }
-      if (!it.vis) { it.y = it.vy = it.x = it.vx = 0; it.hold = 0; if (it.set) { it.el.style.removeProperty('translate'); it.set = false; } }
+      if (!it.vis) { unswing(it); it.y = it.vy = it.x = it.vx = 0; it.hold = 0; if (it.set) { it.el.style.removeProperty('translate'); it.set = false; } }
     });
   }
 
-  /* ---------- the spring loop: runs while the scroll moves or a patch is still swinging, then stops ---------- */
-  function kick() { if (!raf && !d.hidden) { lastT = 0; raf = requestAnimationFrame(tick); } }
+  /* ---------- the swing: a damped sway on the top stitches, sampled into one compositor animation ----------
+     angle(e) = fall(e) * (a cos(w e) + b sin(w e)): a is where the patch is turned now (so a new swing starts from
+     there, without a jump), b the new push. When it ends the `rotate` property is gone and the words sit square. */
+  function angleAt(s, e) {
+    if (e <= 0) return s.a; if (e >= M.still) return 0;
+    var w = 2 * Math.PI * e / s.per, k = Math.exp(-e / M.decay), tail = e > M.still * 0.85 ? (M.still - e) / (M.still * 0.15) : 1;
+    return k * (s.a * Math.cos(w) + s.b * Math.sin(w)) * tail * tail * (3 - 2 * tail);
+  }
+  function angleNow(it) { return it.sw ? angleAt(it.sw, now() - it.sw.t0) : 0; }
+  function unswing(it) { if (it.anim) { try { it.anim.cancel(); } catch (e) {} } it.anim = null; it.sw = null; }
+  function swing(it, k, dir, delay) {
+    if (!it.A || !it.vis || !it.el.animate || d.hidden) return;
+    if (filmOn) k *= 0.5; // a film playing nearby: the cloth answers the reader, but softly
+    var had = !!it.anim, wait = had ? 0 : delay || 0; // a swing already going is taken on from where it is, at once
+    var a = had ? angleNow(it) : 0, room = Math.sqrt(Math.max(0, it.A * it.A - a * a));
+    var s = { a: a, b: (dir || it.side) * Math.min(it.A * k, room), per: it.per, t0: now() + wait };
+    if (Math.abs(s.a) + Math.abs(s.b) < 0.01) return;
+    var kf = [], n = 48, j;
+    for (j = 0; j <= n; j++) kf.push({ rotate: angleAt(s, M.still * j / n).toFixed(4) + 'deg' });
+    kf[n].rotate = '0deg';
+    unswing(it);
+    var an;
+    try { an = it.el.animate(kf, { duration: M.still, delay: wait, easing: 'linear' }); } catch (e) { return; }
+    it.anim = an; it.sw = s; anims.push(an);
+    an.onfinish = an.oncancel = function () { var i = anims.indexOf(an); if (i >= 0) anims.splice(i, 1); if (it.anim === an) { it.anim = null; it.sw = null; } };
+  }
+  function calmDown(it) { // a quick, soft stop from wherever it is (a film started)
+    if (!it.anim) return;
+    var a = angleNow(it); unswing(it);
+    if (Math.abs(a) < 0.005 || !it.el.animate) return;
+    try { var an = it.el.animate([{ rotate: a.toFixed(4) + 'deg' }, { rotate: '0deg' }], { duration: 600, easing: 'cubic-bezier(.3, .6, .25, 1)' }); anims.push(an); an.onfinish = an.oncancel = function () { var i = anims.indexOf(an); if (i >= 0) anims.splice(i, 1); }; } catch (e) {}
+  }
+  function swingAll(k, dir) { for (var i = 0; i < items.length; i++) if (items[i].vis) swing(items[i], k, dir * items[i].side, 0); }
+
+  /* a draught now and then while the page is left alone: the patches in view swing a little, left to right */
+  function breezeLater() { clearTimeout(bz); bz = later(breeze, M.breeze[0] + Math.random() * (M.breeze[1] - M.breeze[0])); }
+  function breeze() {
+    var acc = W.__yarnAccent;
+    if (!live) return;
+    if (!d.hidden && !filmOn && !raf && (!acc || acc.free())) {
+      var vis = items.filter(function (it) { return it.vis && !it.anim && it.A; });
+      vis.map(function (it) { return { it: it, x: it.el.getBoundingClientRect().left }; }).sort(function (p, q) { return p.x - q.x; })
+        .forEach(function (p, j) { swing(p.it, M.breezeK, 1, j * M.breezeGap); });
+    }
+    breezeLater();
+  }
+
+  /* ---------- the spring loop (one of the look's frame jobs): runs while the scroll moves or a patch is still moving ---------- */
+  function kick() {
+    if (raf || d.hidden) return;
+    lastT = 0; maxY = Math.max(0, r.scrollHeight - innerHeight); // read once as the loop starts, never inside it
+    raf = F.on(tick);
+  }
   function tick(t) {
     raf = 0;
     var f = lastT ? clamp((t - lastT) / 16.667, 0.25, 3) : 1; lastT = t;
-    var y = W.scrollY || 0, v = (y - sy) / f; sy = y;
-    var dv = v - sv; sv = v;
-    var small = mqSmall.matches, cap = small ? 4 : 6, xcap = small ? 0 : 3, busy = Math.abs(v) > 0.05; // phones: no sideways swing (the margin strand is 18 px away)
+    var y = clamp(W.scrollY || 0, 0, maxY || 1e9), dy = y - sy; sy = y; // rubber-band overscroll is not a scroll
+    if (Math.abs(dy) > innerHeight * M.jump) dy = 0;                    // a jump is not a fling: nothing trails it
+    var v = dy / f, dv = v - sv; sv = v;
+    if (Math.abs(v) > Math.abs(peak)) { peak = v; } if (v) { pdir = v > 0 ? 1 : -1; stillF = 0; }
+    else if (peak && ++stillF === 4) { swingNow(); } // the scroll has stopped (4 frames without a move): the cloth swings as it is caught
+    var small = mqSmall.matches, cap = small ? M.capSmall : M.cap, xcap = small ? 0 : M.side, busy = Math.abs(v) > 0.05;
     for (var k = 0; k < items.length; k++) {
       var it = items[k]; if (!it.vis) continue;
       // fabric trails the way the page is moving, by its weight, and swings a hair sideways when the scroll changes
-      var target = clamp(v * 0.11 * it.wt, -cap, cap) + it.hold;
+      var target = clamp(v * M.trail * it.wt, -cap, cap) + it.hold;
       it.vx += clamp(-dv * 0.05 * it.wt * it.side, -0.6, 0.6) * f;
-      var ay = -0.05 * (it.y - target) - 0.11 * it.vy, ax = -0.035 * it.x - 0.09 * it.vx;
+      var ay = -M.k * (it.y - target) - M.c * it.vy, ax = -M.kx * it.x - M.cx * it.vx;
       it.vy += ay * f; it.vx += ax * f;
       it.y = clamp(it.y + it.vy * f, -cap - 1, cap + 2); it.x = clamp(it.x + it.vx * f, -xcap, xcap); if (!xcap) it.vx = 0;
       var still = Math.abs(it.y - it.hold) < 0.04 && Math.abs(it.vy) < 0.02 && Math.abs(it.x) < 0.04 && Math.abs(it.vx) < 0.02;
       if (still && !it.hold) {
         it.y = it.vy = it.x = it.vx = 0;
         if (it.set) { it.el.style.removeProperty('translate'); it.set = false; }
+      } else if (still) { // held: sits exactly on the press depth, on whole device pixels
+        it.y = it.hold; it.vy = it.x = it.vx = 0;
+        it.el.style.setProperty('translate', '0px ' + it.hold + 'px'); it.set = true;
       } else {
         busy = true;
         it.el.style.setProperty('translate', it.x.toFixed(2) + 'px ' + it.y.toFixed(2) + 'px'); it.set = true;
@@ -818,8 +932,14 @@
     }
     frames++;
     quiet = busy ? 0 : quiet + 1;
-    if (quiet < 3 && !d.hidden) raf = requestAnimationFrame(tick); else { sv = 0; lastT = 0; }
+    if (quiet < 3 && !d.hidden) raf = F.on(tick);
+    else { // all at rest (a scroll too short to reach the 4 still frames swings now)
+      if (peak) swingNow();
+      sv = 0; lastT = 0; breezeLater();
+      clearTimeout(mT); mT = setTimeout(onMedia, 0); // is a film still on screen? (read after this frame, not in it)
+    }
   }
+  function swingNow() { if (Math.abs(peak) > 1.5) swingAll(clamp(Math.abs(peak) / 30, 0.3, 1), pdir); peak = 0; }
   function onScroll() { kick(); }
 
   /* ---------- the felt dents under the pointer ---------- */
@@ -842,52 +962,87 @@
   function dentOff(it) { if (it && it.dent) it.dent.classList.remove('y-on', 'y-deep', 'y-follow'); }
   function onMove(e) {
     if (e.pointerType !== 'mouse' && !e.buttons) return;
+    if (held && downAt && Math.hypot(e.clientX - downAt.x, e.clientY - downAt.y) > M.drag) letGo(false); // a drag, not a press
     var it = item(e.target);
-    if (it !== hover) { dentOff(hover); hover = it; }
+    if (it !== hover) { if (hover) { dentOff(hover); swing(hover, 0.45, -hover.side, 0); } hover = it; } // brushed past: it swings
     if (!it) return;
     dentAt(it, e);
     // the patch drifts a hair the way the pointer brushes it
     var mx = e.movementX || 0, my = e.movementY || 0;
     if (mx || my) { it.vx += clamp(mx * 0.012, -0.25, 0.25); it.vy += clamp(my * 0.008, -0.2, 0.2); kick(); }
   }
-  function onLeave(e) { if (!e.relatedTarget || !item(e.relatedTarget)) { dentOff(hover); hover = null; } }
+  function onLeave(e) { if (!e.relatedTarget || !item(e.relatedTarget)) { if (hover) { dentOff(hover); swing(hover, 0.45, -hover.side, 0); } hover = null; } }
 
   /* ---------- press: pulled down on its stitches, then let go ---------- */
-  var held = null;
+  var held = null, downAt = null;
+  function letGo(bounce) {
+    var it = held; held = null; downAt = null; if (!it) return null;
+    it.hold = 0; if (bounce) { it.vy -= M.let; swing(it, 0.6, it.side, 0); } kick();
+    if (it.dent) it.dent.classList.remove('y-deep');
+    return it;
+  }
   function onDown(e) {
     var t = e.target;
     var h = t && t.closest && t.closest(HEADS); // a heading's stitch row pulls taut under a finger
     if (h && e.pointerType !== 'mouse') { if (taut) taut.classList.remove('y-taut'); taut = h; h.classList.add('y-taut'); }
     var it = item(t); if (!it) return;
-    held = it; it.hold = 1.6; kick();
+    if (held && held !== it) letGo(false);
+    held = it; downAt = { x: e.clientX, y: e.clientY }; it.hold = px(M.hold); kick();
     dentAt(it, e); if (it.dent) it.dent.classList.add('y-deep');
     if (e.pointerType !== 'mouse') hover = it;
   }
   function onUp(e) {
     if (taut) { var h = taut; taut = null; later(function () { h.classList.remove('y-taut'); }, 260); }
-    if (held) { var it = held; held = null; it.hold = 0; it.vy -= 0.5; kick(); if (it.dent) it.dent.classList.remove('y-deep'); if (e.pointerType !== 'mouse') { dentOff(it); if (hover === it) hover = null; } }
+    var it = letGo(e.type === 'pointerup');
+    if (it && e.pointerType !== 'mouse') { dentOff(it); if (hover === it) hover = null; }
   }
   function onKeyClick(e) {
     if (e.detail !== 0) return;
     var it = item(e.target); if (!it) return;
-    it.hold = 1.6; kick(); later(function () { it.hold = 0; it.vy -= 0.5; kick(); }, 150);
+    it.hold = px(M.hold); kick(); later(function () { it.hold = 0; it.vy -= M.let; swing(it, 0.6, it.side, 0); kick(); }, 150);
   }
   function onFocusIn(e) {
     var t = e.target; if (!t || !t.matches) return;
     try { if (!t.matches(':focus-visible')) return; } catch (x) { return; }
     var it = item(t); if (!it) return;
-    it.vy += 0.9; it.vx += 0.25 * it.side; kick();
+    it.vy += M.bob; it.vx += 0.25 * it.side; kick(); swing(it, 0.4, it.side, 0);
   }
 
+  /* ---------- a film playing: the cloth around it calms ---------- */
+  function onMedia() { // a film counts while it plays on screen (site.js plays the films only while they are in view)
+    var any = [].some.call(d.querySelectorAll('video'), function (v) { if (v.paused || v.ended) return false; var q = v.getBoundingClientRect(); return q.bottom > 0 && q.top < innerHeight; });
+    if (any === filmOn) return;
+    filmOn = any; r.classList.toggle('y-filmon', any);
+    if (any) items.forEach(calmDown); else breezeLater();
+  }
+
+  /* ---------- leaving: only the title of the page being opened keeps its shared name ----------
+     The home page names every card title (t-<page>); one leaving for paper-grader.html keeps t-paper-grader and drops
+     the others, so they go down with the page under the drape instead of floating over it. Put back if the page is
+     shown again from the back/forward cache. */
+  function onSwap(e) {
+    var to = e.viewTransition && e.activation && e.activation.entry && e.activation.entry.url; if (!to) return;
+    var file = '';
+    try { file = new URL(to).pathname.split('/').pop().replace(/\.html$/, '') || 'index'; } catch (x) { return; }
+    var named = [].filter.call(d.querySelectorAll('[style*="view-transition-name"]'), function (el) { return /^t-/.test(el.style.viewTransitionName); });
+    if (named.length < 2) return; // a project page has only its own title, and the home page has its card: keep it
+    named.forEach(function (el) {
+      var n = el.style.viewTransitionName;
+      if (n !== 't-' + file) { el.setAttribute('data-y-vtn', n); el.style.viewTransitionName = 'none'; }
+    });
+  }
+  function names() { [].forEach.call(d.querySelectorAll('[data-y-vtn]'), function (el) { el.style.viewTransitionName = el.getAttribute('data-y-vtn'); el.removeAttribute('data-y-vtn'); }); }
+
   /* ---------- on, off ---------- */
-  var scanT = 0;
+  var scanT = 0, rsT = 0;
   function start() {
     live = true; byEl = new Map(); items = [];
+    dpr = Math.min(2, W.devicePixelRatio || 1);
     r.classList.add('y-flu');
-    sy = W.scrollY || 0; sv = 0;
+    sy = clamp(W.scrollY || 0, 0, 1e9); sv = 0; peak = 0;
     if ('IntersectionObserver' in W) io = new IntersectionObserver(onSeen, { rootMargin: '40px 0px' });
     scan();
-    if (!io) items.forEach(function (it) { it.vis = true; if (it.sway) it.sway.play(); });
+    if (!io) items.forEach(function (it) { it.vis = true; });
     on(W, 'scroll', onScroll, { passive: true });
     on(d, 'pointermove', onMove, { passive: true });
     on(d, 'pointerout', onLeave, { passive: true });
@@ -896,35 +1051,43 @@
     on(d, 'pointercancel', onUp, { passive: true });
     on(d, 'click', onKeyClick, true);
     on(d, 'focusin', onFocusIn);
+    on(d, 'play', onMedia, true); on(d, 'pause', onMedia, true); on(d, 'ended', onMedia, true);
+    on(W, 'pageswap', onSwap);
     on(W, 'load', scan);
+    on(W, 'resize', function () { clearTimeout(rsT); rsT = setTimeout(function () { if (!live) return; dpr = Math.min(2, W.devicePixelRatio || 1); items.forEach(function (it) { unswing(it); reach(it); }); }, 250); }, { passive: true });
     on(d, 'visibilitychange', function () {
-      if (d.hidden) { cancelAnimationFrame(raf); raf = 0; items.forEach(function (it) { if (it.sway) it.sway.pause(); }); }
-      else items.forEach(function (it) { if (it.sway && it.vis) it.sway.play(); });
+      if (d.hidden) { raf = F.off(tick); lastT = 0; peak = 0; items.forEach(function (it) { unswing(it); it.y = it.vy = it.x = it.vx = 0; it.hold = 0; if (it.set) { it.el.style.removeProperty('translate'); it.set = false; } }); }
+      else { sy = clamp(W.scrollY || 0, 0, 1e9); breezeLater(); }
     });
     if (W.ResizeObserver && d.querySelector('main')) {
       var ro = new ResizeObserver(function () { clearTimeout(scanT); scanT = setTimeout(function () { if (live) scan(); }, 300); });
       ro.observe(d.querySelector('main')); offs.push(function () { ro.disconnect(); });
     }
+    onMedia();
+    breezeLater();
   }
   function stop() {
     live = false;
     offs.forEach(function (f) { f(); }); offs = [];
-    timers.forEach(clearTimeout); timers = []; clearTimeout(scanT);
-    cancelAnimationFrame(raf); raf = 0;
+    timers.forEach(clearTimeout); timers = []; clearTimeout(scanT); clearTimeout(rsT); clearTimeout(bz); bz = 0; clearTimeout(mT);
+    raf = F.off(tick);
     if (io) { io.disconnect(); io = null; }
-    anims.forEach(function (a) { try { a.cancel(); } catch (e) {} }); anims = [];
+    anims.slice().forEach(function (a) { try { a.cancel(); } catch (e) {} }); anims = [];
     made.forEach(drop); made = [];
     items.forEach(function (it) { it.el.style.removeProperty('translate'); it.el.classList.remove('y-hang'); });
     [].forEach.call(d.querySelectorAll('.y-taut'), function (e) { e.classList.remove('y-taut'); });
-    items = []; byEl = null; hover = held = taut = null;
-    r.classList.remove('y-flu');
+    names();
+    r.classList.remove('y-flu', 'y-filmon');
+    items = []; byEl = null; hover = held = taut = downAt = null; filmOn = false; peak = 0;
   }
   function sync() { var w = wanted(); if (w && !live) start(); else if (!w && live) stop(); }
   new MutationObserver(sync).observe(r, { attributes: true, attributeFilter: ['data-look', 'class', 'data-motion'] });
   if (mqReduce.addEventListener) mqReduce.addEventListener('change', sync);
+  // back/forward cache: the page comes back as it was left (maybe mid-swing or mid-press): start clean, names put back
+  W.addEventListener('pageshow', function (e) { if (!e.persisted) return; names(); if (live) { stop(); sync(); } });
   W.__yarnFluState = function () {
-    var moving = 0, playing = 0; items.forEach(function (it) { if (it.set) moving++; if (it.sway && it.sway.playState === 'running') playing++; });
-    return { live: live, hang: items.length, swaying: anims.length, playing: playing, moving: moving, dents: made.length, listeners: offs.length, frames: frames, loop: !!raf };
+    var moving = 0, playing = 0, vis = 0; items.forEach(function (it) { if (it.set) moving++; if (it.anim && it.anim.playState === 'running') playing++; if (it.vis) vis++; });
+    return { live: live, hang: items.length, vis: vis, reach: items.map(function (it) { return +it.A.toFixed(3); }), swaying: anims.length, playing: playing, moving: moving, dents: made.length, listeners: offs.length, frames: frames, loop: !!raf, film: filmOn, asked: F.asked() };
   };
   sync();
 })();
