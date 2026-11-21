@@ -30,9 +30,8 @@ var LOOK_ROWS = [
   ["cel",   "Cel & Tide",      ["#5078ff", "#101b4d"],    ["#0963e0", "#f2f2f2"],    true],
   ["paint", "Paint & Meadow",  ["#dcc2a6", "#18373e"],    ["#d9d5b9", "#0275a0"],    true],
   ["dots",  "Dots & Panels",   ["#f6f0dc", "#272015"],    ["#f6f0dc", "#c8321e"],    true],
-  /* studio: films false until video/film-<page>-studio.mp4 + img/film-<page>-studio.jpg are copied in from
-     _tools/studio-films/out/ (all 16 pages); then flip the last value to true. Dark only: the same colour both ways. */
-  ["studio", "Studio",         ["#08090c", "#08090c"],    ["#08090c", "#8b7bff"],    false]
+  /* studio: dark only, the same colour both ways. Films: video/film-<page>-studio.mp4 + img/film-<page>-studio.jpg (from _tools/studio-films/out/). */
+  ["studio", "Studio",         ["#08090c", "#08090c"],    ["#08090c", "#8b7bff"],    true]
 ];
 
 /* To try a look without changing anything, add ?look=<key> (?look=wash, ?look=cel, ?look=yarn ...) to any page address.
