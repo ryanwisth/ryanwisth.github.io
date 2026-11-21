@@ -891,7 +891,7 @@
     r.classList.add('c-live');
     sy = psy = W.scrollY || 0;
     if (mqFine.matches) r.classList.add('cl-fine');
-    threadSetup(); scrubSetup(); heroSetup(); boundsSetup(); dotSetup(); sparkSetup(); endSetup(); flSetup();
+    threadSetup(); scrubSetup(); heroSetup(); boundsSetup(); /* immerse: the sun-ball follower is gone; the cursor is a real CSS cursor (look-cel.css) */ sparkSetup(); endSetup(); flSetup();
     on(W, 'scroll', onScroll, { passive: true });
     on(W, 'scroll', focusFollow, { passive: true });
     on(W, 'resize', relay, { passive: true });
