@@ -1420,7 +1420,7 @@ html[data-look="cel"] {
   --im-foam: #ffffff; --im-foam-2: rgba(255, 255, 255, .5);
   --im-wood: #e6d3a8; --im-wood-sh: #8c7459; --im-wood-ink: #18264f; --im-drift: #d8c39a; --im-drift-sh: #846b52;
   --im-pebble: #dcdcd4; --im-pebble-sh: #867970; --im-stone: #d3d6cf; --im-stone-sh: #81766f;
-  --im-pool: #d3f0f0; --im-pool-sh: #81837f; --im-rock: #696e7a; --im-rock-sh: #403c41; --im-sand: #c5c69d;
+  --im-pool: #e2f6f4; --im-pool-sh: #8a8782; --im-rock: #696e7a; --im-rock-sh: #403c41; --im-sand: #c5c69d;
   --im-glass: #9fd8cf; --im-glass-sh: #61766f; --im-cork: #a57d46; --im-chart: #f7efd9; --im-chart-grid: rgba(9, 99, 224, .13);
   --im-plank: url("img/cel/plank.svg"); --im-link: #0963e0; --im-sel: #c4efe8; --im-focus: #18264f; --im-caret: #0963e0;
   --im-bubble: #bdeaf7; --im-bubble-sh: #738183;
@@ -1485,13 +1485,15 @@ html[data-look="cel"] .topbar {
 }
 html[data-look="cel"] .topbar::before,
 html[data-look="cel"] .topbar::after {
-  content: ""; position: absolute; top: 0; bottom: -4px; width: 12px; pointer-events: none; z-index: 0;
-  background: url("img/cel/rope.svg") 0 0 / 12px 9px repeat-y;
+  content: ""; position: absolute; top: 0; bottom: -4px; height: auto; width: 12px; pointer-events: none; z-index: 0;
+  background: url("img/cel/rope.svg") 0 0 / 12px 9px repeat-y; filter: none; border: 0; box-shadow: none;
 }
-html[data-look="cel"] .topbar::before { left: 22px; }
-html[data-look="cel"] .topbar::after { right: 22px; }
+html[data-look="cel"] .topbar::before { left: 22px; right: auto; }
+html[data-look="cel"] .topbar::after { right: 22px; left: auto; }
 html[data-look="cel"] .topbar > .wrap { position: relative; z-index: 1; }
 html[data-look="cel"] :is(.brand, .topnav a, .topnav a:hover) { color: var(--im-wood-ink); }
+/* the name is burnt into one wide board (no joints under its letters) */
+html[data-look="cel"] .topbar .brand { background: var(--im-wood); box-shadow: none; padding-right: 10px; margin-right: -10px; }
 /* nav links: painted signs nailed to the boards (sail cloth, a nail each side, the shade lip below) */
 html[data-look="cel"] .topnav a:not(.theme-toggle),
 html[data-look="cel"] .topnav a:not(.theme-toggle):hover {
@@ -1509,7 +1511,7 @@ html[data-look="cel"] .topnav a:not(.theme-toggle):active { translate: 0 2px; }
 html[data-look="cel"] .look-pick .look-pick-btn,
 html[data-look="cel"]:root:root .look-pick.lp-swatch .look-pick-btn {
   border-color: transparent; color: #18264f; border-radius: 999px 14px 14px 999px;
-  background: linear-gradient(90deg, transparent calc(100% - 9px), var(--im-cork) calc(100% - 9px)), linear-gradient(var(--im-glass) 55%, var(--im-glass-sh) 55%);
+  background: linear-gradient(90deg, transparent calc(100% - 9px), var(--im-cork) calc(100% - 9px)), var(--im-glass);
   box-shadow: var(--sun-lip-s) 0 var(--im-glass-sh), 4px 8px 10px -4px var(--c-drop-cloud);
 }
 html[data-look="cel"][data-theme="dark"] .look-pick .look-pick-btn,
@@ -1563,11 +1565,12 @@ html[data-look="cel"] :is(.ticks:not(.ok) li, .prose li)::before {
 html[data-look="cel"] .flow li::before { --l: var(--im-pebble); --s: var(--im-pebble-sh); border-radius: 52% 48% 46% 54% / 56% 50% 50% 44%; color: var(--c-text); }
 html[data-look="cel"] .flow li.key::before { --l: #52aabd; --s: #325d63; color: #18264f; }
 
-/* C11. code: the terminal is a tide pool (clear water, sand on its floor, a rock rim whose inner wall away from the sun is
-   in shade); inline code a pebble */
+/* C11. code: the terminal is a tide pool (clear water, sand on its floor, a rock rim: the panel's padding painted rock, the
+   water clipped inside it); inline code a pebble */
 html[data-look="cel"]:root:root .term {
-  background: var(--cm-sheen), linear-gradient(transparent calc(100% - 16px), var(--im-sand) calc(100% - 16px)), var(--cm-paint), var(--im-pool);
-  box-shadow: inset 0 0 0 5px var(--im-rock), inset 3px 4px 0 5px var(--im-rock-sh), 0 5px 0 -1px var(--im-foam), 12px 18px 28px -10px var(--c-drop-sea);
+  background: var(--cm-sheen), linear-gradient(transparent calc(100% - 14px), var(--im-sand) calc(100% - 14px)), var(--cm-paint), linear-gradient(var(--im-pool), var(--im-pool)), var(--im-rock);
+  background-clip: border-box, content-box, border-box, content-box, border-box; background-origin: border-box, content-box, border-box, content-box, border-box;
+  box-shadow: 0 5px 0 -1px var(--im-foam), 12px 18px 28px -10px var(--c-drop-sea);
 }
 html[data-look="cel"] :not(pre) > code {
   padding: .04em .45em .1em; border-radius: .7em .55em .75em .5em; color: var(--c-text); background: var(--im-pebble);
