@@ -982,3 +982,170 @@ html[data-look="paint"] .skip-link { background: #1b3b2e; color: #fbf6ed; }
 html[data-look="paint"].pm-live .pm-tuft { transition: transform var(--pm-d-sway) var(--pm-e-settle), opacity .6s ease; }
 html[data-look="paint"].pm-live :is(.pm-shade, .pm-dapple) { transition: opacity .9s ease; }
 @starting-style { html[data-look="paint"].pm-live :is(.pm-tuft, .pm-shade, .pm-dapple) { opacity: 0; } }
+
+/* ================= immersion pass (Nov 20; briefs _tools/fluid/IMMERSE-paint.md + IMMERSE-BRIEF.md) =================
+   The time of day is the theme. Palette by hour (every new edge, glow and shade below takes its colour from these):
+     afternoon (light): lit #f7d48a, glow #f2b45e, shade lilac #6e6aa8 (never grey), ground #d9d5b9, ink #1b3b2e
+     dusk (dark):       lit #e9b98a, glow #ffcf7a (the fireflies' colour), shade indigo #1c2448, ground #19343b, ink #f3ede2
+   Everything here is static styling (it holds under reduced motion and Pause motion); only the hover growth of strokes and
+   the ring's glow are transitions, on the polish pass's tokens. Nothing here runs at rest. */
+html[data-look="paint"] {
+  --pm-h-lit: 247, 212, 138; --pm-h-glow: 242, 180, 94; --pm-h-shade: 110, 106, 168;
+  --pm-cur: url("img/paint/cursor-leaf.svg") 2 2, auto;
+  --pm-cur-p: url("img/paint/cursor-seed.svg") 3 3, pointer;
+  --pm-cur-t: url("img/paint/cursor-blade.svg") 16 16, text;
+  --pm-stem: url("img/paint/stem.svg"); --pm-stem-leaf: url("img/paint/stem-leaf.svg");
+  --pm-uline: url("img/paint/uline.svg"); --pm-dry: url("img/paint/dry.svg"); --pm-stones: url("img/paint/stones.svg"); --pm-pebble: url("img/paint/pebble.svg");
+  --pm-hour: url("img/paint/sun.svg");
+  caret-color: #1b3b2e; accent-color: #7f9a4c; -webkit-tap-highlight-color: rgba(247, 212, 138, .32);
+}
+html[data-look="paint"][data-theme="dark"] {
+  --pm-h-lit: 233, 185, 138; --pm-h-glow: 255, 207, 122; --pm-h-shade: 28, 36, 72;
+  --pm-cur: url("img/paint/cursor-leaf-dusk.svg") 2 2, auto;
+  --pm-cur-p: url("img/paint/cursor-seed-dusk.svg") 3 3, pointer;
+  --pm-cur-t: url("img/paint/cursor-blade-dusk.svg") 16 16, text;
+  --pm-stem: url("img/paint/stem-night.svg"); --pm-stem-leaf: url("img/paint/stem-leaf-night.svg");
+  --pm-uline: url("img/paint/uline-night.svg"); --pm-dry: url("img/paint/dry-night.svg"); --pm-stones: url("img/paint/stones-night.svg"); --pm-pebble: url("img/paint/pebble-night.svg");
+  --pm-hour: url("img/paint/moon.svg");
+  caret-color: #f3ede2; accent-color: #9bb37e; -webkit-tap-highlight-color: rgba(255, 207, 122, .22);
+}
+@media (prefers-color-scheme: dark) {
+  html[data-look="paint"]:not([data-theme="light"]) {
+    --pm-h-lit: 233, 185, 138; --pm-h-glow: 255, 207, 122; --pm-h-shade: 28, 36, 72;
+    --pm-cur: url("img/paint/cursor-leaf-dusk.svg") 2 2, auto;
+    --pm-cur-p: url("img/paint/cursor-seed-dusk.svg") 3 3, pointer;
+    --pm-cur-t: url("img/paint/cursor-blade-dusk.svg") 16 16, text;
+    --pm-stem: url("img/paint/stem-night.svg"); --pm-stem-leaf: url("img/paint/stem-leaf-night.svg");
+    --pm-uline: url("img/paint/uline-night.svg"); --pm-dry: url("img/paint/dry-night.svg"); --pm-stones: url("img/paint/stones-night.svg"); --pm-pebble: url("img/paint/pebble-night.svg");
+    --pm-hour: url("img/paint/moon.svg");
+    caret-color: #f3ede2; accent-color: #9bb37e; -webkit-tap-highlight-color: rgba(255, 207, 122, .22);
+  }
+}
+
+/* A. the mouse: a painted leaf; over anything that acts, a dandelion seed head; over words, a painted grass blade.
+   At dusk each picks up a faint warm glow edge (the dusk files). Real CSS cursors, never a JS follower. */
+html[data-look="paint"], html[data-look="paint"] body { cursor: var(--pm-cur); }
+html[data-look="paint"] :is(p, li, dd, dt, h1, h2, h3, h4, figcaption, blockquote, pre, td, th, .hero-sub, .note, small, b, em, strong) { cursor: var(--pm-cur-t); }
+html[data-look="paint"] :is(a, button, summary, label, select, [role="button"], .look-menu li, .vid-toggle, .vid-sound, .motion-toggle),
+html[data-look="paint"] :is(a, button, summary, label, [role="button"], .look-menu li) * { cursor: var(--pm-cur-p); }
+html[data-look="paint"] :is(input, textarea) { cursor: var(--pm-cur-t); }
+
+/* the scrollbar: a painted stem with one leaf at its head, standing in a strip of meadow ground, on every inner scroller (the
+   terminal, wide figures). The page's own scrollbar keeps the system's overlay behaviour (a styled root scrollbar would force a
+   12 px gutter on a Mac and push the 100vw painted bands sideways) and takes the stem's green on the ground's colour. */
+html[data-look="paint"] { scrollbar-color: #7f9a4c #d9d5b9; }
+html[data-look="paint"][data-theme="dark"] { scrollbar-color: #8fb0a2 #19343b; }
+@media (prefers-color-scheme: dark) { html[data-look="paint"]:not([data-theme="light"]) { scrollbar-color: #8fb0a2 #19343b; } }
+html[data-look="paint"] body * { scrollbar-color: auto; }
+html[data-look="paint"] ::-webkit-scrollbar { width: 12px; height: 12px; }
+html[data-look="paint"] ::-webkit-scrollbar-track { background: var(--pm-ground-m) 0 0 / 300px 300px, var(--pm-ground-c); }
+html[data-look="paint"] ::-webkit-scrollbar-thumb { border: 0; background: var(--pm-stem-leaf) center top / 12px 18px no-repeat, var(--pm-stem) center 14px / 12px calc(100% - 14px) no-repeat; }
+html[data-look="paint"] ::-webkit-scrollbar-thumb:horizontal { background: var(--pm-stem) center / 100% 100% no-repeat; }
+html[data-look="paint"] ::-webkit-scrollbar-corner { background: var(--pm-ground-c); }
+
+/* D. the hour's light over the meadow ground (fixed, behind everything; compositor only): by afternoon the sun is low on the
+   right, so the ground warms from there and cools to a lilac shade on the far left; at dusk the last warm light lies low on
+   the right horizon and the rest of the sky's colour goes indigo. Boards and words are untouched. */
+html[data-look="paint"]::after {
+  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(70% 60% at 104% 8%, rgba(var(--pm-h-lit), .34), rgba(var(--pm-h-lit), .12) 45%, rgba(var(--pm-h-lit), 0) 75%),
+    radial-gradient(60% 80% at -6% 100%, rgba(var(--pm-h-shade), .14), rgba(var(--pm-h-shade), 0) 70%);
+}
+html[data-look="paint"][data-theme="dark"]::after {
+  background:
+    radial-gradient(60% 40% at 104% 100%, rgba(var(--pm-h-lit), .16), rgba(var(--pm-h-lit), 0) 72%),
+    radial-gradient(80% 70% at 0% 0%, rgba(var(--pm-h-shade), .4), rgba(var(--pm-h-shade), 0) 70%);
+}
+@media (prefers-color-scheme: dark) {
+  html[data-look="paint"]:not([data-theme="light"])::after {
+    background:
+      radial-gradient(60% 40% at 104% 100%, rgba(var(--pm-h-lit), .16), rgba(var(--pm-h-lit), 0) 72%),
+      radial-gradient(80% 70% at 0% 0%, rgba(var(--pm-h-shade), .4), rgba(var(--pm-h-shade), 0) 70%);
+  }
+}
+
+/* B. edges: the hour reaches the boards through the ground under them (a coloured bleed, below), never a box shadow */
+/* a watercolour bleed where a board meets the ground: a soft coloured pool under its foot (behind it, in the ground) */
+html[data-look="paint"] :is(.more-g, .band, .fact, .chart-card, .repo-card, .pager a)::after,
+html[data-look="paint"] .card.lead::before {
+  content: ""; position: absolute; z-index: -1; left: 6%; right: 4%; bottom: -16px; height: 30px; pointer-events: none; display: block;
+  border: 0; border-radius: 0; box-shadow: none; transform: none; rotate: none; opacity: 1; inset-inline: 6% 4%; top: auto;
+  background: radial-gradient(closest-side, rgba(var(--pm-h-shade), .3), rgba(var(--pm-h-shade), .12) 60%, rgba(var(--pm-h-shade), 0)),
+              radial-gradient(40% 60% at 80% 40%, rgba(var(--pm-h-glow), .22), rgba(var(--pm-h-glow), 0));
+  filter: none;
+}
+html[data-look="paint"] :is(.more-g, .band, .fact, .chart-card, .repo-card, .pager a, .card.lead) { position: relative; }
+
+/* the film: its board mount keeps the sun edge; a few grass tips rise over the mount's foot between the two controls */
+html[data-look="paint"] .film .shot::after {
+  content: ""; position: absolute; z-index: 1; left: max(36%, 180px); right: 72px; bottom: 2px; height: 24px; pointer-events: none;
+  background: var(--pm-tuft) 0 100% / 44px 24px repeat-x; border: 0; box-shadow: none; opacity: .95;
+}
+/* thumbnails as paintings: a painted cream mat round each, the white of a paper capture warmed to the board's paper */
+html[data-look="paint"] .card .thumb-wrap { border: 0 solid transparent; border-image: var(--pm-t-cream) 40 / 10px / 6px stretch; border-radius: 0; background: #22382f; }
+html[data-look="paint"] .card .thumb-wrap.ink { background: #fbf4e6; }
+html[data-look="paint"] .card .thumb-wrap :is(img, .thumb) { background: transparent; }
+html[data-look="paint"] video, html[data-look="paint"] .film .shot video { background: #1d3229; border-radius: 0; }
+html[data-look="paint"] .card .thumb-wrap.phone { border-radius: 0; }
+
+/* the look picker and the theme switch: a painted sun by afternoon, a painted moon at dusk; the picker a cream tag whose
+   arrow is a seed, its list a painted board. Box sizes stay exactly as the shared bar sets them. */
+html[data-look="paint"] .topnav .theme-toggle { background: var(--pm-hour) center / 30px 30px no-repeat; }
+html[data-look="paint"] .look-pick-btn {
+  border-color: transparent; border-radius: 0; background: none; color: var(--pm-tag-ink); font-family: var(--display);
+  border-image: var(--pm-t-cream) 40 fill / 13px stretch;
+}
+html[data-look="paint"] .look-pick-btn::after { border: 0; width: 10px; height: 9px; margin-top: 0; background: var(--pm-seed) center / 8px 9px no-repeat; rotate: 180deg; }
+html[data-look="paint"] .look-pick-btn[aria-expanded="true"]::after { border: 0; rotate: 0deg; }
+html[data-look="paint"] .look-menu { border-color: transparent; border-radius: 0; background: var(--lp-bg); background-clip: padding-box; border-image: var(--pm-board) 56 fill / 22px / 5px 5px 7px 8px stretch; box-shadow: none; }
+html[data-look="paint"] .look-menu li { border-radius: 11px 5px 10px 6px / 7px 10px 6px 9px; }
+/* the skip link: a painted paper slip */
+html[data-look="paint"] .skip-link { background: none; color: #1b3b2e; border: 0 solid transparent; border-radius: 0; border-image: url("img/paint/tag-cream.webp") 40 fill / 13px stretch; }
+
+/* the focus ring glows in the hour's light round the painted ring (the 3 px ring stays: it is the visible edge) */
+html[data-look="paint"] :is(a, button, summary, video, input, select, textarea, [tabindex]):focus-visible,
+html[data-look="paint"] :is(.fact, .chart-card, .prose:not(.case-head), .flow li, .band3 > div, .repo-card, .pager a, .shot:not(.film .shot), .back, .kicker):focus-visible {
+  outline-color: var(--pm-under); border-radius: 9px 4px 10px 5px / 5px 10px 4px 9px;
+  box-shadow: 0 0 0 7px rgba(var(--pm-h-glow), .3), 0 0 18px 8px rgba(var(--pm-h-glow), .28);
+}
+
+/* C. headings: section and body titles sit on a dry-brush swash of sunlight where the brush started (behind the lower half of the first words) */
+html[data-look="paint"] :is(.section-head h2, .band h2, .prose:not(.case-head) h2) {
+  background-image: var(--pm-dry); background-repeat: no-repeat; background-position: -.15em calc(100% - .05em); background-size: 4.6em .42em;
+}
+
+/* links in running words: a painted stroke underline (warm, with brush start and stop) that a grass-green stroke grows over on
+   hover; no browser underline anywhere. (:root matches the lively layer's specificity, so this wins as the later rule.) */
+html[data-look="paint"]:root :is(.hero-sub, .hero-mail, footer.site, .prose p, .prose li, .prose dd, .pager-contact, figcaption, .note) a:not(.btn) {
+  text-decoration: none; padding-bottom: 3px;
+  background-image: var(--pm-stroke), var(--pm-uline); background-repeat: no-repeat; background-position: left 100%, left 100%; background-size: 0% 7px, 100% 4px;
+}
+html[data-look="paint"]:root :is(.hero-sub, .hero-mail, footer.site, .prose p, .prose li, .prose dd, .pager-contact, figcaption, .note) a:not(.btn):is(:hover, :focus-visible) { background-size: 100% 7px, 100% 4px; text-decoration: none; }
+html[data-look="paint"]:root :is(.hero-sub, .hero-mail, footer.site, .prose p, .prose li, .prose dd, .pager-contact, figcaption, .note) a:not(.btn):active { background-size: 100% 9px, 100% 4px; }
+html[data-look="paint"]:root .topnav a { text-decoration: none; padding-bottom: 3px; background-image: var(--pm-stroke); background-repeat: no-repeat; background-position: left 100%; background-size: 0% 7px; }
+html[data-look="paint"]:root .topnav a:is(:hover, :focus-visible) { text-decoration: none; background-size: 100% 7px; }
+@media (prefers-reduced-motion: no-preference) {
+  html[data-look="paint"].motion:root :is(.hero-sub, .hero-mail, footer.site, .prose p, .prose li, .prose dd, .pager-contact, figcaption, .note) a:not(.btn),
+  html[data-look="paint"].motion:root .topnav a { transition: background-size var(--pm-d-stroke) var(--pm-e-settle); }
+}
+
+/* stat figures: painted numerals on a flat stone */
+html[data-look="paint"] .fact b { background: var(--pm-pebble) center / 100% 100% no-repeat; padding: .05em .38em .1em; margin-left: -.38em; border-radius: 0; }
+/* the pager: two boards on a worn path of stepping stones */
+html[data-look="paint"] .pager { background: var(--pm-stones) 0 50% / 120px 26px repeat-x; }
+/* the small table: a painted grid with uneven lines; the head row a strip of sunlit earth board */
+html[data-look="paint"] .minis th { background: var(--pm-bar-c) var(--pm-bar) center / 100% 100% no-repeat; color: var(--pm-ink); border: 0; }
+html[data-look="paint"] .minis td { background-image: var(--pm-uline); background-repeat: no-repeat; background-position: 0 100%; background-size: 100% 2px; }
+
+/* the footer: wildflowers along the foot of the tall grass (the fireflies at dusk are the lively layer's, unchanged) */
+html[data-look="paint"] footer.site { background: url("img/paint/flowers.svg") 0 100% / 420px 44px repeat-x, var(--pm-foot) center top / cover no-repeat, var(--pm-ground-c); }
+
+/* the 404: an empty patch of meadow with one dandelion */
+html[data-look="paint"] body.case main:not(:has(> :not(.case-head, .thread))) { position: relative; min-height: 340px; }
+html[data-look="paint"] body.case main:not(:has(> :not(.case-head, .thread)))::after {
+  content: ""; position: absolute; right: max(8%, 24px); bottom: 0; width: 96px; height: 160px; pointer-events: none;
+  background: url("img/paint/dandelion.svg") center bottom / contain no-repeat;
+}
+/* the light and dark hour: the theme-free bits that must not stay neutral */
+html[data-look="paint"] hr { border: 0; height: 6px; background: var(--pm-uline) center / 100% 100% no-repeat; }
