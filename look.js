@@ -190,6 +190,19 @@ var LOOK_ROWS = [
     try { now = sessionStorage.getItem("look") || localStorage.getItem("look") || SITE_LOOK; } catch (er) {}
     if (LOOKS.indexOf(now) >= 0 && now !== look) location.reload();   // a reload does not re-apply ?look= over the later pick
   });
+  /* Page-change direction, for each look's own page transition (polish pass, Nov 20 2026). On the incoming page:
+     html[data-nav] = back | forward | reload, and the same word is added to the cross-document view transition's types,
+     so a sheet can write html:active-view-transition-type(back)::view-transition-new(root) { ... } to play in reverse.
+     Here in the head script so the listener is in before the first render, as pagereveal requires. */
+  addEventListener("pagereveal", function (e) {
+    var a = window.navigation && navigation.activation, dir = "forward";
+    if (a) {
+      if (a.navigationType === "reload") dir = "reload";
+      else if (a.navigationType === "traverse" && a.from && a.entry && a.entry.index < a.from.index) dir = "back";
+    }
+    root.setAttribute("data-nav", dir);
+    try { if (e.viewTransition && e.viewTransition.types) e.viewTransition.types.add(dir); } catch (er) {}
+  });
   if (!LOOK_SWITCH) return;
 
   /* The picker: a button that names the look being worn, and a list of every look. Built from here (no markup in the
