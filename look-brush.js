@@ -44,7 +44,7 @@
   function claim(name, ms) { acc.name = name; acc.until = now() + ms; clearPetals(); }
 
   /* ---------- the scroll frame: one rAF per frame while scrolling, nothing at rest ---------- */
-  var raf = 0, sy = 0, psy = 0, pt = 0, speed = 0, idleT = 0, scrolling = false, sDirty = false;
+  var raf = 0, sy = 0, psy = 0, pt = 0, speed = 0, idleT = 0, relT = 0, scrolling = false, sDirty = false;
   function onScroll() { sDirty = true; kick(); } // the scroll frame now runs inside the one fluid loop (below)
   function frame(t) {
     raf = 0;
@@ -86,6 +86,7 @@
     if (ds === T.d) return;
     T.d = ds; T.P = []; T.N = []; T.k = -1; T.built = -2;
     var L = 0; try { L = ds ? T.line.getTotalLength() : 0; } catch (e) {}
+    if (!(L > 0)) { T.Wd = new Float32Array(0); T.Dr = new Uint8Array(0); return; } // an empty line (not drawn yet): nothing to sample
     var n = Math.floor(L / STEP), i, p;
     for (i = 0; i <= n; i++) { p = T.line.getPointAtLength(i * STEP); T.P.push(p.x, p.y); }
     for (i = 0; i <= n; i++) {
@@ -189,7 +190,7 @@
   function boundary(dir) {
     var k = index(); if (k === cur) return;
     cur = k;
-    if (!ambientFree() || petals.length >= 2 || now() - lastPetal < 500) return;
+    if (!ambientFree() || petals.length >= 2 || now() - lastPetal < 500 || (FL.playing.length && filmOnScreen())) return;
     lastPetal = now();
     var col = d.querySelector('main .wrap, main .prose') || d.querySelector('main'), left = col ? col.getBoundingClientRect().left : 20;
     var x = clamp(left - 26 + Math.random() * 10, 2, Math.max(2, left - 12)), vh = innerHeight;
@@ -247,7 +248,14 @@
     if (row) { row.classList.add('b-tap'); later(function () { row.classList.remove('b-tap'); }, 1800); } // 14
     inkDrop(e.clientX, e.clientY);                 // 9
   }
-  function onKeyClick(e) { if (e.detail === 0 && e.target.closest) { var s = e.target.closest('.btn.primary, .demo-poster .play'); if (s) print(s); } }
+  function onKeyClick(e) {
+    if (e.detail !== 0 || !e.target.closest) return;
+    var s = e.target.closest('.btn.primary, .demo-poster .play'); if (s) print(s);
+    // Enter or Space on a focused link or button throws the same ink a click does (keyboard only: a script's .click() has no focus frame)
+    var a = e.target.closest('a[href], button, summary'); if (!a || !live || !r.classList.contains('b-kbd') || d.activeElement !== a) return;
+    var q = a.getBoundingClientRect(); if (q.bottom < 0 || q.top > innerHeight) return;
+    flick(q.left + Math.min(q.width - 6, 18), q.top + q.height / 2, -.6, false); push(a, 0, 3.2);
+  }
   // 7: the seal leaves a faint red print where it was pressed, which fades in about a second
   function print(el) {
     claim('print', 1100);
@@ -595,7 +603,10 @@
      - a pointer brushing across a sheet ruffles it; a press dips it; a tap or click flicks ink from the brush tip.
      Visibility is kept by an IntersectionObserver, so the loop never reads layout. */
   var SHEETS = ':is(.card, .band, .method > li, .fact, .chart-card, .repo-card, .band3 > div, .pager a, .term, .paper, .film .shot)';
-  var FL = { raf: 0, y: 0, t: 0, v: 0, vis: [], io: null, rod: null, grain: null, ph: 0, spin: 0, rodOn: false, rodT: 0, still: 0, flick: null };
+  var FL = { raf: 0, y: 0, t: 0, v: 0, vis: [], io: null, rod: null, grain: null, ph: 0, spin: 0, rodOn: false, rodT: 0, still: 0, flicks: [], fading: null, lastFlick: null, playing: [] };
+  /* polish: the motion vocabulary, shared with look-brush.css (--b-lay, --b-lift, --snap, --spring; .24/.34/.46 s).
+     One spring for every sheet (pull K, damping D, at rest below REST), one curve and length for every thrown mark. */
+  var MO = { K: .11, D: .2, REST: .06, LAY: 'cubic-bezier(.2,.85,.35,1)', MARK: 860, ROD_HOLD: 450, FLICKS: 2 };
   function kick() { if (!FL.raf && !d.hidden && live) FL.raf = requestAnimationFrame(loop); }
   function loop(t) {
     FL.raf = 0;
@@ -649,10 +660,10 @@
     var tgt = clamp(FL.v * 5, -10, 10);
     for (var i = 0; i < FL.vis.length; i++) {
       var s = FL.vis[i];
-      s.vy += ((tgt - s.y) * .11 - s.vy * .2) * f; s.vx += (-s.x * .11 - s.vx * .2) * f;
+      s.vy += ((tgt - s.y) * MO.K - s.vy * MO.D) * f; s.vx += (-s.x * MO.K - s.vx * MO.D) * f;
       s.y += s.vy * f; s.x += s.vx * f;
       s.y = clamp(s.y, -12, 12); s.x = clamp(s.x, -12, 12);
-      if (Math.abs(s.y) + Math.abs(s.vy) + Math.abs(s.x) + Math.abs(s.vx) < .06 && !moving) { calm(s); continue; }
+      if (Math.abs(s.y) + Math.abs(s.vy) + Math.abs(s.x) + Math.abs(s.vx) < MO.REST && !moving) { calm(s); continue; }
       busy = true; s.on = true;
       var fy = s.y.toFixed(1), fx = s.x.toFixed(1); // written only when it changes by a tenth of a pixel: each write restyles the sheet
       if (fy !== s.wy) { s.wy = fy; s.el.style.setProperty('--b-fy', fy); }
@@ -664,7 +675,7 @@
       FL.ph = (FL.ph + FL.spin * dt * .9) % 24; if (FL.ph < 0) FL.ph += 24;
       FL.grain.style.transform = 'translate3d(0,' + (FL.ph - 24).toFixed(2) + 'px,0)';
       if (moving) FL.still = t;
-      var want = t - FL.still < 450;
+      var want = t - FL.still < MO.ROD_HOLD;
       if (want !== FL.rodOn) { FL.rodOn = want; FL.rod.classList.toggle('b-on', want); }
       if (want || Math.abs(FL.spin) > .005) busy = true;
     }
@@ -672,12 +683,18 @@
   }
   // a tap or click flicks ink from the brush: a tapered flick and a spray of drops thrown one way, that land and dry
   function flick(x, y, ang, big) {
-    if (FL.flick) drop(FL.flick);
-    var g = FL.flick = mk('i', 'b-flick', d.body), n = big ? 6 : 4, a0 = ang;
+    // pooled: at most MO.FLICKS in the air; the oldest is not cut off but dries away fast (no jump, no pile-up on spam)
+    while (FL.flicks.length >= MO.FLICKS) {
+      var o = FL.flicks.shift();
+      if (FL.fading) drop(FL.fading); FL.fading = o; // one drying away at a time, so spam never shows more than three
+      (function (o) { var fa = o.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 140, fill: 'forwards' }); fa.onfinish = function () { drop(o); if (FL.fading === o) FL.fading = null; }; })(o);
+    }
+    var g = mk('i', 'b-flick', d.body), n = big ? 6 : 4, a0 = ang;
+    FL.flicks.push(g); FL.lastFlick = { x: x, y: y, t: now() };
     g.style.left = x.toFixed(0) + 'px'; g.style.top = y.toFixed(0) + 'px';
     var st = mk('i', 'b-flick-s', g); st.style.rotate = (a0 * 180 / Math.PI).toFixed(0) + 'deg';
     st.animate([{ scale: '0 1', opacity: 1 }, { scale: '1 1', opacity: 1, offset: .35 }, { scale: '1 1', opacity: 1, offset: .7 }, { scale: '1 1', opacity: 0 }],
-      { duration: 820, easing: 'cubic-bezier(.2,.85,.35,1)', fill: 'both' });
+      { duration: MO.MARK - 40, easing: MO.LAY, fill: 'both' });
     for (var i = 0; i < n; i++) {
       var a = a0 + (Math.random() - .5) * .9, dist = (big ? 26 : 18) + Math.random() * (big ? 34 : 22), sz = 2.5 + Math.random() * (i ? 4.5 : 6);
       var p = mk('i', 'b-flick-d' + (i === 1 ? ' b-v' : ''), g);
@@ -689,9 +706,9 @@
         { transform: 'translate(-50%,-50%) translate(' + tx.toFixed(1) + 'px,' + ty.toFixed(1) + 'px) scale(1,1)', opacity: 1, offset: .34 },
         { transform: 'translate(-50%,-50%) translate(' + tx.toFixed(1) + 'px,' + ty.toFixed(1) + 'px) scale(1,1)', opacity: 1, offset: .72 },
         { transform: 'translate(-50%,-50%) translate(' + tx.toFixed(1) + 'px,' + ty.toFixed(1) + 'px) scale(1,1)', opacity: 0 }
-      ], { duration: 860, easing: 'cubic-bezier(.15,.8,.3,1)', fill: 'both', delay: i * 12 });
+      ], { duration: MO.MARK, easing: MO.LAY, fill: 'both', delay: i * 12 });
     }
-    later(function () { drop(g); if (FL.flick === g) FL.flick = null; }, 950);
+    later(function () { drop(g); var k = FL.flicks.indexOf(g); if (k >= 0) FL.flicks.splice(k, 1); }, MO.MARK + 90);
   }
   var lastMv = { x: 0, y: 0, dx: 1, dy: -1 };
   function fluidMove(e) { // a mouse brushing across a sheet ruffles it, in the direction it travelled
@@ -707,6 +724,8 @@
   }
   function fluidUp(e, dn) { // after onUp's checks: a tap (touch) or a click (mouse) flicks ink
     if (!dn || Math.hypot(e.clientX - dn.x, e.clientY - dn.y) > 10 || now() - dn.t > 600) return;
+    var lf = FL.lastFlick; if (lf && now() - lf.t < 350 && Math.hypot(e.clientX - lf.x, e.clientY - lf.y) < 24) return; // a double click selects a word: one flick, not two
+    var sl = W.getSelection && getSelection(); if (sl && !sl.isCollapsed) return; // text being selected: the brush stays out of the way
     var ang;
     if (e.pointerType === 'mouse') { ang = Math.atan2(lastMv.dy, lastMv.dx); if (Math.hypot(lastMv.dx, lastMv.dy) < 2) ang = -.6; }
     else ang = -.6 + (e.clientX > innerWidth / 2 ? -2 : 0) + (Math.random() - .5) * .5; // a finger flicks up and away from the near edge
@@ -722,7 +741,31 @@
   function fluidOff() {
     if (FL.raf) cancelAnimationFrame(FL.raf); FL.raf = 0;
     sheetsOff();
-    FL.rod = FL.grain = FL.flick = null; FL.rodOn = false; FL.spin = 0; FL.t = 0;
+    FL.flicks.forEach(drop); FL.flicks = []; drop(FL.fading); FL.fading = null; FL.lastFlick = null;
+    FL.playing.forEach(function (v) { var c = v.closest && v.closest('.b-hush'); if (c) c.classList.remove('b-hush'); }); FL.playing = [];
+    FL.rod = FL.grain = null; FL.rodOn = false; FL.spin = 0; FL.t = 0;
+  }
+  // polish: everything to rest at once, with no motion (tab hidden, page leaving or going into the back/forward cache,
+  // page shown again from it): no half-flexed sheet, raised rod, thrown ink or falling petal is ever frozen or replayed
+  function restNow() {
+    if (FL.raf) cancelAnimationFrame(FL.raf); FL.raf = 0; sDirty = false;
+    FL.vis.forEach(calm); FL.v = FL.spin = 0; FL.t = 0; FL.y = W.scrollY || 0;
+    if (FL.rod) { FL.rodOn = false; FL.rod.classList.add('b-now'); FL.rod.classList.remove('b-on'); FL.rod.offsetWidth; FL.rod.classList.remove('b-now'); }
+    FL.flicks.forEach(drop); FL.flicks = []; drop(FL.fading); FL.fading = null;
+    clearPetals(); if (lastDrop) { drop(lastDrop); lastDrop = null; }
+    if (scrolling) { clearTimeout(idleT); rest(); }
+    if (TIP) { if (TIP.raf) cancelAnimationFrame(TIP.raf); TIP.raf = 0; TIP.len = TIP.vx = TIP.vy = 0; TIP.el.style.setProperty('--tl', '0px'); }
+  }
+  // 14 a playing film: its own sheet stops swaying, and no petal falls while a film plays on screen
+  function filmPlay(e) {
+    var v = e.target; if (!v || v.tagName !== 'VIDEO') return;
+    var i = FL.playing.indexOf(v), on = e.type === 'play' || e.type === 'playing';
+    if (on && i < 0) FL.playing.push(v); else if (!on && i >= 0) FL.playing.splice(i, 1);
+    var c = v.closest('.b-fl') || v.closest('.film, .demo-poster'); if (c) c.classList.toggle('b-hush', on);
+  }
+  function filmOnScreen() {
+    for (var i = 0; i < FL.playing.length; i++) { var q = FL.playing[i].getBoundingClientRect(); if (q.bottom > 0 && q.top < innerHeight) return true; }
+    return false;
   }
 
   /* ---------- on, off ---------- */
@@ -738,7 +781,11 @@
     [].forEach.call(d.querySelectorAll('.card, .band, .figure, .film, .repo-card, .pager'), function (el) { if (!el.classList.contains('in')) el.classList.add('b-ur'); });
     on(W, 'scroll', onScroll, { passive: true });
     on(W, 'scroll', focusFollow, { passive: true });
-    on(W, 'resize', relay, { passive: true });
+    on(W, 'resize', function () { clearTimeout(relT); relT = setTimeout(relay, 140); }, { passive: true }); // a drag-resize relays once, when it pauses
+    on(W, 'pagehide', restNow); on(W, 'pageswap', restNow);
+    on(W, 'pageshow', function (e) { if (e.persisted) { restNow(); relay(); } });
+    on(d, 'play', filmPlay, true); on(d, 'playing', filmPlay, true); on(d, 'pause', filmPlay, true); on(d, 'ended', filmPlay, true);
+    [].forEach.call(d.querySelectorAll('video'), function (v) { if (!v.paused) filmPlay({ target: v, type: 'play' }); });
     on(W, 'load', relay);
     on(d, 'pointerdown', onDown, { passive: true });
     on(d, 'pointerup', onUp, { passive: true });
@@ -754,19 +801,19 @@
     on(d, 'pointermove', fluidMove, { passive: true });
     on(d, 'focusout', function () { setTimeout(function () { if (d.activeElement !== focEl) focusOff(); }, 0); });
     on(mqDark, 'change', function () { sceneNoSun(); micaSetup(); });
-    on(d, 'visibilitychange', function () { if (d.hidden) { cancelAnimationFrame(raf); raf = 0; if (FL.raf) cancelAnimationFrame(FL.raf); FL.raf = 0; clearPetals(); if (TIP) TIP.el.classList.remove('b-on'); } });
+    on(d, 'visibilitychange', function () { if (d.hidden) { cancelAnimationFrame(raf); raf = 0; restNow(); if (TIP) { TIP.shown = false; TIP.el.classList.remove('b-on'); } } });
   }
   function stop() {
     live = false;
     offs.forEach(function (f) { f(); }); offs = [];
-    timers.forEach(clearTimeout); timers = []; clearTimeout(idleT);
+    timers.forEach(clearTimeout); timers = []; clearTimeout(idleT); clearTimeout(relT);
     cancelAnimationFrame(raf); raf = 0; fluidOff();
     if (TIP && TIP.raf) cancelAnimationFrame(TIP.raf);
     clearPetals(); clearSel();
     wets.slice().forEach(function (a) { a.cancel(); }); wets = []; wetScrub.forEach(function (el) { el.__bw = null; }); wetScrub = []; MICA = null;
     made.forEach(drop); made = [];
     styled.forEach(function (el) { ['--b-p', '--b-sa', '--b-ph', '--b-fx', '--b-fy', '--b-sun-y', '--b-mist-y', '--b-hill-y', '--b-scene-x', '--b-es', '--b-sx', '--b-cx', '--b-cy'].forEach(function (k) { el.style.removeProperty(k); }); }); styled = [];
-    [].forEach.call(d.querySelectorAll('.b-coat, .b-soak, .b-tap, .b-enso, .b-selhost, .b-ur'), function (e) { e.classList.remove('b-coat', 'b-soak', 'b-tap', 'b-enso', 'b-selhost', 'b-ur'); });
+    [].forEach.call(d.querySelectorAll('.b-coat, .b-soak, .b-tap, .b-enso, .b-selhost, .b-ur, .b-hush'), function (e) { e.classList.remove('b-coat', 'b-soak', 'b-tap', 'b-enso', 'b-selhost', 'b-ur', 'b-hush'); });
     [].forEach.call(d.querySelectorAll('[data-b-from]'), function (e) { e.removeAttribute('data-b-from'); });
     r.classList.remove('b-live', 'b-scr', 'b-sjs', 'b-fine', 'b-tip-on', 'b-kbd', 'b-sun-out');
     T = H = TIP = FOC = SEL = null; [].forEach.call(d.querySelectorAll('.b-cseal.b-new'), function (e) { e.classList.remove('b-new'); }); focEl = null; coated = null; scrubs = []; bounds = []; petals = []; lastDrop = null; scrolling = false;
