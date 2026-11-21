@@ -34,8 +34,8 @@
 
 <main id="main">
   <div class="prose case-head">
-    <a class="back" href="index.html#work">&larr; All projects</a>
-    <p class="kicker">AI research &middot; every fact has a source</p>
+    <a class="back" href="index.html#work"><span class="hx-x">&larr; </span>All projects</a>
+    <p class="kicker">AI research<span class="hx-x"> &middot;</span><span class="hx-alt">:</span> every fact has a source</p>
     <h1 style="view-transition-name: t-evidence-pipeline">A family tree built only from real records</h1>
   </div>
 
@@ -67,7 +67,20 @@
     </dl>
   </div>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-evidence-pipeline.jpg" width="960" height="540" aria-label="Narrated film, 42 seconds" aria-describedby="film-script-text"><source src="video/film-evidence-pipeline.mp4" type="video/mp4"></video></span><figcaption>The project in 42 seconds, narrated. Press ♪ for sound.</figcaption></figure>
+  <!-- hx-log: the Version History look's changelog. Built by _tools/history/stamp.mjs from this page's own lede, method list and Problem/Result, with dates from git; edit those parts, then re-run. Every other look hides it. -->
+  <section class="hx-log" aria-label="Changelog">
+    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-19">19 November 2026</time>.</p>
+    <dl>
+      <div><dt>Problem</dt><dd>Online family trees copy each other. So two trees agreeing is not proof; often it is the same mistake copied twice.</dd></div>
+      <div><dt>Built</dt><dd>A research workflow for a family tree. AI helpers suggest additions. Free code checks what it can. A second AI tries to disprove each one. Accepted facts go into a permanent record that is only ever added to.</dd></div>
+      <div><dt>My rules</dt><dd><ul><li>AI suggests; code checks</li><li>A second AI tries to disprove</li><li>Nothing is deleted</li></ul></dd></div>
+      <div><dt>AI wrote</dt><dd>most of the code</dd></div>
+      <div><dt>I tested</dt><dd><ul><li>Runs start to finish offline with one command</li><li>Merged 423 people into 420: none lost a fact</li><li>Every original line survives</li></ul></dd></div>
+      <div><dt>Now</dt><dd>Three research rounds on a private family tree in September 2026. Every accepted fact quotes an original record. In round 1, &ldquo;skeptic&rdquo; AIs, told to hunt for mistakes, rejected 31 statements from a quick first pass and 3 of 147 from a careful one, so weak guesses never reached the tree. By round 3, moving checks into simple code brought AI use down to about 57k tokens (the units AI use is billed in) per research target.</dd></div>
+    </dl>
+  </section>
+  <!-- /hx-log -->
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-evidence-pipeline.jpg" width="960" height="540" aria-label="Narrated film, 42 seconds" aria-describedby="film-script-text"><source src="video/film-evidence-pipeline.mp4" type="video/mp4"></video></span><figcaption>The project in 42 seconds, narrated. <span class="hx-x">Press ♪ for sound.</span><span class="hx-alt">It starts muted.</span></figcaption></figure>
   <details class="film-script"><summary>Read the script</summary><p id="film-script-text">A research workflow adds facts to a family tree only when they quote a real record. Online trees copy each other, so two trees agreeing is often one mistake, copied twice. AI suggests additions. Free code checks what it can. A skeptic AI hunts for mistakes. Skeptic AIs rejected 31 weak guesses before they reached the tree. A made-up test family merged from 423 people to 420. None lost a fact. Three research rounds ran in September 2026. Every fact quotes its record. Details and code are below.</p></details>
 
   <div class="prose case-part">
@@ -139,11 +152,11 @@
 
     <div class="repo-card">
       <p><b>ryanwisth/genealogy-evidence-pipeline</b>The code, with its real status and limits.</p>
-      <a class="btn primary" href="https://github.com/ryanwisth/genealogy-evidence-pipeline">See the code on GitHub &rarr;</a>
+      <a class="btn primary" href="https://github.com/ryanwisth/genealogy-evidence-pipeline">See the code on GitHub<span class="hx-x"> &rarr;</span></a>
     </div>
     <nav class="pager" aria-label="More projects">
-      <a class="prev" href="checking-ai-work.html"><small>&larr; Previous</small>Making AI work easy to check</a>
-      <a class="next" href="claim-ledger.html"><small>Next &rarr;</small>A fact-checking routine that stopped slipping</a>
+      <a class="prev" href="checking-ai-work.html"><small><span class="hx-x">&larr; </span>Previous</small>Making AI work easy to check</a>
+      <a class="next" href="claim-ledger.html"><small>Next<span class="hx-x"> &rarr;</span></small>A fact-checking routine that stopped slipping</a>
     </nav>
     <p class="pager-contact"><a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></p>
   </div>
@@ -152,7 +165,7 @@
 <footer class="site">
   <div class="wrap">
     <span>Every number on this page comes from the project&rsquo;s own notes.</span>
-    <span>&copy; Ryan Wisth &middot; <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
+    <span>&copy; Ryan Wisth<span class="hx-x"> &middot;</span><span class="hx-alt">,</span> <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
   </div>
 </footer>
 <script src="site.js"></script>

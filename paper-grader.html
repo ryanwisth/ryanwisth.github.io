@@ -34,8 +34,8 @@
 
 <main id="main">
   <div class="prose case-head">
-    <a class="back" href="index.html#work">&larr; All projects</a>
-    <p class="kicker">AI on my own devices &middot; working out how a screen draws</p>
+    <a class="back" href="index.html#work"><span class="hx-x">&larr; </span>All projects</a>
+    <p class="kicker">AI on my own devices<span class="hx-x"> &middot;</span><span class="hx-alt">:</span> working out how a screen draws</p>
     <h1 style="view-transition-name: t-paper-grader">AI feedback, handwritten onto a <span style="white-space: nowrap">paper tablet</span></h1>
   </div>
 
@@ -60,7 +60,20 @@
     </dl>
   </div>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-paper-grader.jpg" width="960" height="540" aria-label="Narrated film, 40 seconds" aria-describedby="film-script-text"><source src="video/film-paper-grader.mp4" type="video/mp4"></video></span><figcaption>The project in 40 seconds, narrated. Press ♪ for sound.</figcaption></figure>
+  <!-- hx-log: the Version History look's changelog. Built by _tools/history/stamp.mjs from this page's own lede, method list and Problem/Result, with dates from git; edit those parts, then re-run. Every other look hides it. -->
+  <section class="hx-log" aria-label="Changelog">
+    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-19">19 November 2026</time>.</p>
+    <dl>
+      <div><dt>Problem</dt><dd>Getting feedback on handwritten work usually means retyping it or taking a photo. And only the maker&rsquo;s own locked code can draw on the tablet&rsquo;s screen.</dd></div>
+      <div><dt>Built</dt><dd>Two projects on one reMarkable Paper Pro, a tablet that feels like writing on paper. Press a Grade button, and an AI checks the handwritten work on the page, then writes its notes back onto it in pen strokes. Separately, I worked out how the tablet&rsquo;s color screen draws, well enough to draw on it with my own code.</dd></div>
+      <div><dt>My rules</dt><dd><ul><li>Never change the student&rsquo;s writing</li><li>Runs only when the button is tapped</li><li>Look before changing anything</li></ul></dd></div>
+      <div><dt>AI wrote</dt><dd>most of the code and analysis</dd></div>
+      <div><dt>I tested</dt><dd><ul><li>Every equation checked by a program before it is written</li><li>Used for real on the tablet, 24 pages at a time</li><li>314 files pass their built-in error checks</li></ul></dd></div>
+      <div><dt>Now</dt><dd>Built and used on the tablet in August 2026. Before, feedback meant retyping or a photo. Now I tap Grade, and within seconds the page shows a verdict, the mistake crossed out, and the next steps, in handwriting-style ink, up to 24 pages at a time. Every equation is checked by a program first, and the student&rsquo;s own writing is changed 0 times. All 314 of the screen&rsquo;s drawing files were decoded and pass their error checks. My own code then drew on the color screen in three modes, from 11 steps (about 0.13 s) for fast black-and-white to 86 (about 1 s) for full color.</dd></div>
+    </dl>
+  </section>
+  <!-- /hx-log -->
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-paper-grader.jpg" width="960" height="540" aria-label="Narrated film, 40 seconds" aria-describedby="film-script-text"><source src="video/film-paper-grader.mp4" type="video/mp4"></video></span><figcaption>The project in 40 seconds, narrated. <span class="hx-x">Press ♪ for sound.</span><span class="hx-alt">It starts muted.</span></figcaption></figure>
   <details class="film-script"><summary>Read the script</summary><p id="film-script-text">Tap Grade on a paper tablet, and an AI writes its notes back onto the page in pen strokes. Getting feedback on handwritten work usually means retyping it, or taking a photo. Tap Grade. A program checks every equation first. Then the notes appear in handwriting-style ink. Up to 24 pages are graded at once, from one button press. The student’s own writing is never changed. The AI can add notes, never remove. Built and used on the tablet in August 2026. Feedback on the page, within seconds. Details and code are below.</p></details>
 
   <div class="prose case-part">
@@ -160,15 +173,15 @@
 
     <div class="repo-card">
       <p><b>ryanwisth/remarkable-paper-grader</b>The grader&rsquo;s code, with its real status and limits.</p>
-      <a class="btn primary" href="https://github.com/ryanwisth/remarkable-paper-grader">See the code on GitHub &rarr;</a>
+      <a class="btn primary" href="https://github.com/ryanwisth/remarkable-paper-grader">See the code on GitHub<span class="hx-x"> &rarr;</span></a>
     </div>
     <div class="repo-card">
       <p><b>ryanwisth/paper-pro-display-re</b>The screen research code, with its real status and limits.</p>
-      <a class="btn primary" href="https://github.com/ryanwisth/paper-pro-display-re">See the code on GitHub &rarr;</a>
+      <a class="btn primary" href="https://github.com/ryanwisth/paper-pro-display-re">See the code on GitHub<span class="hx-x"> &rarr;</span></a>
     </div>
     <nav class="pager" aria-label="More projects">
-      <a class="prev" href="mcp-servers.html"><small>&larr; Previous</small>Giving the AI on my laptop tools to use</a>
-      <a class="next" href="family-tree-3d.html"><small>Next &rarr;</small>A 3D family tree that opens from one file</a>
+      <a class="prev" href="mcp-servers.html"><small><span class="hx-x">&larr; </span>Previous</small>Giving the AI on my laptop tools to use</a>
+      <a class="next" href="family-tree-3d.html"><small>Next<span class="hx-x"> &rarr;</span></small>A 3D family tree that opens from one file</a>
     </nav>
     <p class="pager-contact"><a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></p>
   </div>
@@ -177,7 +190,7 @@
 <footer class="site">
   <div class="wrap">
     <span>Every number on this page comes from the two projects&rsquo; own notes.</span>
-    <span>&copy; Ryan Wisth &middot; <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
+    <span>&copy; Ryan Wisth<span class="hx-x"> &middot;</span><span class="hx-alt">,</span> <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
   </div>
 </footer>
 <script src="site.js"></script>

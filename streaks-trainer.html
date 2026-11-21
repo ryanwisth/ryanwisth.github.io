@@ -34,8 +34,8 @@
 
 <main id="main">
   <div class="prose case-head">
-    <a class="back" href="index.html#work">&larr; All projects</a>
-    <p class="kicker">Things I use &middot; the study method built into the app</p>
+    <a class="back" href="index.html#work"><span class="hx-x">&larr; </span>All projects</a>
+    <p class="kicker">Things I use<span class="hx-x"> &middot;</span><span class="hx-alt">:</span> the study method built into the app</p>
     <h1 style="view-transition-name: t-streaks-trainer">A study app where one wrong answer resets your streak</h1>
   </div>
 
@@ -46,7 +46,7 @@
     <figcaption>One session: a practice plan with chosen targets, two right answers, a wrong one that resets the streak, and the required note. The circle is the recording&rsquo;s pointer.</figcaption>
       </figure>
       <div class="facts">
-        <div class="fact"><b>10 &middot; 10 &middot; 5</b><span>in a row to clear easy, medium and hard</span></div>
+        <div class="fact"><b>10<i class="hx-x"> &middot;</i><i class="hx-alt">,</i> 10<i class="hx-x"> &middot;</i><i class="hx-alt">,</i> 5</b><span>in a row to clear easy, medium and hard</span></div>
         <div class="fact"><b>1 wrong answer</b><span>or one guess resets the streak to zero</span></div>
         <div class="fact"><b>66</b><span>sample questions, every answer checked by a program</span></div>
       </div>
@@ -60,7 +60,20 @@
     </dl>
   </div>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-streaks-trainer.jpg" width="960" height="540" aria-label="Narrated film, 39 seconds" aria-describedby="film-script-text"><source src="video/film-streaks-trainer.mp4" type="video/mp4"></video></span><figcaption>The project in 39 seconds, narrated. Press ♪ for sound.</figcaption></figure>
+  <!-- hx-log: the Version History look's changelog. Built by _tools/history/stamp.mjs from this page's own lede, method list and Problem/Result, with dates from git; edit those parts, then re-run. Every other look hides it. -->
+  <section class="hx-log" aria-label="Changelog">
+    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-19">19 November 2026</time>.</p>
+    <dl>
+      <div><dt>Problem</dt><dd>A percent score hides weak spots: 80% on a topic can mean you know it, or that you guess well.</dd></div>
+      <div><dt>Built</dt><dd>A study app for any multiple-choice subject. You work one topic at a time, easy to hard, and one wrong answer resets your streak.</dd></div>
+      <div><dt>My rules</dt><dd><ul><li>The app enforces the rules</li><li>A guess does not count</li><li>No repeats</li></ul></dd></div>
+      <div><dt>AI wrote</dt><dd>most of the code</dd></div>
+      <div><dt>I tested</dt><dd><ul><li>Every main step tried from start to finish</li><li>Every sample answer checked by a program</li><li>Tested by using the app</li></ul></dd></div>
+      <div><dt>Now</dt><dd>A working app that enforces streaks: 10, 10 and 5 right in a row on easy, medium and hard. Any wrong answer or guess resets the count to zero, and a short written note is required before the next question. It comes with 66 sample questions, every answer checked by a program. It runs from two files plus Python 3.9, and nothing leaves the computer.</dd></div>
+    </dl>
+  </section>
+  <!-- /hx-log -->
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-streaks-trainer.jpg" width="960" height="540" aria-label="Narrated film, 39 seconds" aria-describedby="film-script-text"><source src="video/film-streaks-trainer.mp4" type="video/mp4"></video></span><figcaption>The project in 39 seconds, narrated. <span class="hx-x">Press ♪ for sound.</span><span class="hx-alt">It starts muted.</span></figcaption></figure>
   <details class="film-script"><summary>Read the script</summary><p id="film-script-text">A study app for any multiple-choice subject, where one wrong answer resets your streak. A percent score hides weak spots. 80% can mean you know it, or that you guess well. Work from easy to hard. A guess resets the streak, like a wrong answer. Each break needs a written note. 10 right in a row clears easy, then 10 on medium, and 5 on hard. 66 sample questions come with it, every answer checked by a program. A working app, and nothing leaves the computer. Every break gets a written note. Details and code are below.</p></details>
 
   <div class="prose case-part">
@@ -132,11 +145,11 @@
 
     <div class="repo-card">
       <p><b>ryanwisth/streaks-trainer</b>The code, with its real status and limits.</p>
-      <a class="btn primary" href="https://github.com/ryanwisth/streaks-trainer">See the code on GitHub &rarr;</a>
+      <a class="btn primary" href="https://github.com/ryanwisth/streaks-trainer">See the code on GitHub<span class="hx-x"> &rarr;</span></a>
     </div>
     <nav class="pager" aria-label="More projects">
-      <a class="prev" href="practice-engine.html"><small>&larr; Previous</small>A study app built around mistakes</a>
-      <a class="next" href="safari-dark-mode.html"><small>Next &rarr;</small>Dark mode for any website in Safari</a>
+      <a class="prev" href="practice-engine.html"><small><span class="hx-x">&larr; </span>Previous</small>A study app built around mistakes</a>
+      <a class="next" href="safari-dark-mode.html"><small>Next<span class="hx-x"> &rarr;</span></small>Dark mode for any website in Safari</a>
     </nav>
     <p class="pager-contact"><a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></p>
   </div>
@@ -145,7 +158,7 @@
 <footer class="site">
   <div class="wrap">
     <span>Every number on this page comes from the project&rsquo;s own notes.</span>
-    <span>&copy; Ryan Wisth &middot; <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
+    <span>&copy; Ryan Wisth<span class="hx-x"> &middot;</span><span class="hx-alt">,</span> <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
   </div>
 </footer>
 <script src="site.js"></script>

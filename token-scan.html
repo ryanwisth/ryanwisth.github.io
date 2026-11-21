@@ -34,8 +34,8 @@
 
 <main id="main">
   <div class="prose case-head">
-    <a class="back" href="index.html#work">&larr; All projects</a>
-    <p class="kicker">AI costs &middot; find the cause, then cut</p>
+    <a class="back" href="index.html#work"><span class="hx-x">&larr; </span>All projects</a>
+    <p class="kicker">AI costs<span class="hx-x"> &middot;</span><span class="hx-alt">:</span> find the cause, then cut</p>
     <h1 style="view-transition-name: t-token-scan">Finding where my AI spending went</h1>
   </div>
 
@@ -76,7 +76,20 @@
     </dl>
   </div>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-token-scan.jpg" width="960" height="540" aria-label="Narrated film, 43 seconds" aria-describedby="film-script-text"><source src="video/film-token-scan.mp4" type="video/mp4"></video></span><figcaption>The project in 43 seconds, narrated. Press ♪ for sound.</figcaption></figure>
+  <!-- hx-log: the Version History look's changelog. Built by _tools/history/stamp.mjs from this page's own lede, method list and Problem/Result, with dates from git; edit those parts, then re-run. Every other look hides it. -->
+  <section class="hx-log" aria-label="Changelog">
+    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-19">19 November 2026</time>.</p>
+    <dl>
+      <div><dt>Problem</dt><dd>Every AI call costs tokens, the units AI use is billed in. The usage meter shows a total, not a cause. When a week&rsquo;s allowance ran out early, I needed to know what used it up.</dd></div>
+      <div><dt>Built</dt><dd>Claude Code is Anthropic’s AI coding assistant. Six small scripts read its logs and show where the usage went: by project, AI model, day, chat and tool.</dd></div>
+      <div><dt>My rules</dt><dd><ul><li>One number to compare everything</li><li>Count each step once</li><li>One question per script</li></ul></dd></div>
+      <div><dt>AI wrote</dt><dd>the code</dd></div>
+      <div><dt>I tested</dt><dd><ul><li>Used in a real weekly spending review</li><li>Findings turned into enforced rules</li></ul></dd></div>
+      <div><dt>Now</dt><dd>Six scans turned a bare total on the meter into causes I could fix. 482 of 662 AI helpers ran as the heavy default type: 53.8k tokens in the first step, against 16k to 20k for lighter types. And 39% of cache reads (the AI re-reading text it saved earlier) came during long stretches with nobody typing, which a check on each message never saw. Each finding became a rule in my spending guard.</dd></div>
+    </dl>
+  </section>
+  <!-- /hx-log -->
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-token-scan.jpg" width="960" height="540" aria-label="Narrated film, 43 seconds" aria-describedby="film-script-text"><source src="video/film-token-scan.mp4" type="video/mp4"></video></span><figcaption>The project in 43 seconds, narrated. <span class="hx-x">Press ♪ for sound.</span><span class="hx-alt">It starts muted.</span></figcaption></figure>
   <details class="film-script"><summary>Read the script</summary><p id="film-script-text">Six small scripts read an AI assistant’s logs, and show where the usage went. The usage meter shows a total, not a cause. A week’s allowance ran out early. The AI’s own logs are read. Each script answers one question, in a simple table. 482 of 662 AI helpers ran as the heavy default type. Its first step took 53.8k tokens: up to 3.4 times the cost, before any work. Used for a real weekly spending review in November 2026. Each finding became a rule. Details and code are below.</p></details>
 
   <div class="prose case-part">
@@ -139,11 +152,11 @@
 
     <div class="repo-card">
       <p><b>ryanwisth/claude-code-token-scan</b>The code, with its real status and limits.</p>
-      <a class="btn primary" href="https://github.com/ryanwisth/claude-code-token-scan">See the code on GitHub &rarr;</a>
+      <a class="btn primary" href="https://github.com/ryanwisth/claude-code-token-scan">See the code on GitHub<span class="hx-x"> &rarr;</span></a>
     </div>
     <nav class="pager" aria-label="More projects">
-      <a class="prev" href="pinball-study.html"><small>&larr; Previous</small>A study set up so it could prove me wrong</a>
-      <a class="next" href="token-guard.html"><small>Next &rarr;</small>Spending rules an AI can&rsquo;t skip</a>
+      <a class="prev" href="pinball-study.html"><small><span class="hx-x">&larr; </span>Previous</small>A study set up so it could prove me wrong</a>
+      <a class="next" href="token-guard.html"><small>Next<span class="hx-x"> &rarr;</span></small>Spending rules an AI can&rsquo;t skip</a>
     </nav>
     <p class="pager-contact"><a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></p>
   </div>
@@ -152,7 +165,7 @@
 <footer class="site">
   <div class="wrap">
     <span>Every figure on this page comes from the project notes of claude-code-token-scan and claude-code-token-guard.</span>
-    <span>&copy; Ryan Wisth &middot; <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
+    <span>&copy; Ryan Wisth<span class="hx-x"> &middot;</span><span class="hx-alt">,</span> <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
   </div>
 </footer>
 <script src="site.js"></script>

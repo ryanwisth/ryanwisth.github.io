@@ -29,7 +29,7 @@
   });
 
   // "On this page": a case page's sections as a short list (studio pass, Nov 21 2026). Built on every case page, shown
-  // only by a look that asks for it: style.css hides .case-toc, look-studio.css shows it beside the text on wide screens.
+  // only by a look that asks for it: style.css hides .case-toc, look-history.css shows it beside the text on wide screens.
   // It appears once the wide summary at the top has scrolled away (.case-toc.on), and marks the section being read (a.on).
   (function () {
     var main = d.getElementById('main'), hs = [].slice.call(d.querySelectorAll('main > .prose > h2'));
@@ -48,7 +48,8 @@
     function mark() {
       raf = 0;
       if (getComputedStyle(nav).display === 'none') return;
-      nav.classList.toggle('on', !gate || gate.getBoundingClientRect().bottom < 96);
+      var g = gate; while (g && g.previousElementSibling && getComputedStyle(g).display === 'none') g = g.previousElementSibling; // a look may hide the part before the write-up
+      nav.classList.toggle('on', !g || g.getBoundingClientRect().bottom < 96);
       var cur = 0; for (var i = 0; i < hs.length; i++) if (hs[i].getBoundingClientRect().top < innerHeight * 0.45) cur = i;
       links.forEach(function (a, i) { a.classList.toggle('cur', i === cur); if (i === cur) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
     }
@@ -277,7 +278,7 @@
   // for the default look, which carries no data-look). One is fetched only while its look is worn and reduced motion
   // is not asked for, and again if the look changes to it. Each script switches itself off when its look is taken off.
   var jsBase = (d.currentScript && d.currentScript.src || '').replace(/site\.js[^\/]*$/, '');
-  var LIVE = { yarn: 1, wash: 1, brush: 1, cel: 1, paint: 1, dots: 1, studio: 1 };
+  var LIVE = { yarn: 1, wash: 1, brush: 1, cel: 1, paint: 1, dots: 1, history: 1 };
   function lookJs() {
     var k = r.getAttribute('data-look') || 'yarn';
     if (reduce || !jsBase || !LIVE[k] || d.getElementById('look-' + k + '-js')) return;

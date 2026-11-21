@@ -34,8 +34,8 @@
 
 <main id="main">
   <div class="prose case-head">
-    <a class="back" href="index.html#work">&larr; All projects</a>
-    <p class="kicker">Honest research &middot; predictions written down first</p>
+    <a class="back" href="index.html#work"><span class="hx-x">&larr; </span>All projects</a>
+    <p class="kicker">Honest research<span class="hx-x"> &middot;</span><span class="hx-alt">:</span> predictions written down first</p>
     <h1 style="view-transition-name: t-pinball-study">A study set up so it could prove me wrong</h1>
   </div>
 
@@ -54,7 +54,7 @@
       </figure>
       <div class="facts">
         <div class="fact"><b>9</b><span>predictions locked before any result; none held, and the study says so</span></div>
-        <div class="fact"><b>79 &rarr; 94</b><span>real tables tested, then retested on the larger set</span></div>
+        <div class="fact"><b>79 <i class="hx-x">&rarr;</i><i class="hx-alt">to</i> 94</b><span>real tables tested, then retested on the larger set</span></div>
         <div class="fact"><b>5%</b><span>better than guessing the average rating: too small to use, and called a failure</span></div>
       </div>
     </div>
@@ -67,7 +67,20 @@
     </dl>
   </div>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-pinball-study.jpg" width="960" height="540" aria-label="Narrated film, 42 seconds" aria-describedby="film-script-text"><source src="video/film-pinball-study.mp4" type="video/mp4"></video></span><figcaption>The project in 42 seconds, narrated. Press ♪ for sound.</figcaption></figure>
+  <!-- hx-log: the Version History look's changelog. Built by _tools/history/stamp.mjs from this page's own lede, method list and Problem/Result, with dates from git; edit those parts, then re-run. Every other look hides it. -->
+  <section class="hx-log" aria-label="Changelog">
+    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-19">19 November 2026</time>.</p>
+    <dl>
+      <div><dt>Problem</dt><dd>The goal was to score a new pinball table before anyone has played it, by learning what sets well-rated tables apart, without fooling myself with measures that fit by chance.</dd></div>
+      <div><dt>Built</dt><dd>A research tool that converts pinball table designs into one format, measures their shape, plays them with simulated players at four skill levels, and tests whether any of that predicts how much people enjoy a table.</dd></div>
+      <div><dt>My rules</dt><dd><ul><li>Predictions before results</li><li>Year and maker always counted</li><li>Trust only what holds up</li></ul></dd></div>
+      <div><dt>AI wrote</dt><dd>the code and ran the experiments</dd></div>
+      <div><dt>I tested</dt><dd><ul><li>Each table predicted unseen, against guessing the average</li><li>Error ranges on two measures</li><li>Prediction fingerprints stored with the results</li></ul></dd></div>
+      <div><dt>Now</dt><dd>A clear &ldquo;no&rdquo;, with the test settled before the data came in. 9 predictions were locked with a digital fingerprint before any result, tested on 79 real tables and retested on 94, and none held. The best model&rsquo;s typical error was 0.425, against 0.448 for simply guessing the average rating. Year, maker and a few build details alone did as well, at 0.421. What a 2D simulator can measure does not predict how players rate a table.</dd></div>
+    </dl>
+  </section>
+  <!-- /hx-log -->
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-pinball-study.jpg" width="960" height="540" aria-label="Narrated film, 42 seconds" aria-describedby="film-script-text"><source src="video/film-pinball-study.mp4" type="video/mp4"></video></span><figcaption>The project in 42 seconds, narrated. <span class="hx-x">Press ♪ for sound.</span><span class="hx-alt">It starts muted.</span></figcaption></figure>
   <details class="film-script"><summary>Read the script</summary><p id="film-script-text">A research tool tests whether a pinball table’s design predicts how much people enjoy it. The main risk: trying many measures, and reporting the ones that happen to fit. Predictions are locked first. Simulated players try each table. Each one is predicted unseen. 9 predictions were locked before any result, then tested on 94 real tables. None held. The best model was 5% better than guessing. Too small to use. A clear no, with the test settled before the data came in. What a simulator can measure does not predict ratings. Details and code are below.</p></details>
 
   <div class="prose case-part">
@@ -142,11 +155,11 @@
 
     <div class="repo-card">
       <p><b>ryanwisth/pinball-fun-scorer</b>The code, with its real status and limits.</p>
-      <a class="btn primary" href="https://github.com/ryanwisth/pinball-fun-scorer">See the code on GitHub &rarr;</a>
+      <a class="btn primary" href="https://github.com/ryanwisth/pinball-fun-scorer">See the code on GitHub<span class="hx-x"> &rarr;</span></a>
     </div>
     <nav class="pager" aria-label="More projects">
-      <a class="prev" href="claim-ledger.html"><small>&larr; Previous</small>A fact-checking routine that stopped slipping</a>
-      <a class="next" href="token-scan.html"><small>Next &rarr;</small>Finding where my AI spending went</a>
+      <a class="prev" href="claim-ledger.html"><small><span class="hx-x">&larr; </span>Previous</small>A fact-checking routine that stopped slipping</a>
+      <a class="next" href="token-scan.html"><small>Next<span class="hx-x"> &rarr;</span></small>Finding where my AI spending went</a>
     </nav>
     <p class="pager-contact"><a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></p>
   </div>
@@ -155,7 +168,7 @@
 <footer class="site">
   <div class="wrap">
     <span>Every number on this page comes from the project&rsquo;s own notes.</span>
-    <span>&copy; Ryan Wisth &middot; <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
+    <span>&copy; Ryan Wisth<span class="hx-x"> &middot;</span><span class="hx-alt">,</span> <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
   </div>
 </footer>
 <script src="site.js"></script>

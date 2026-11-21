@@ -34,8 +34,8 @@
 
 <main id="main">
   <div class="prose case-head">
-    <a class="back" href="index.html#work">&larr; All projects</a>
-    <p class="kicker">Local AI &middot; private by design</p>
+    <a class="back" href="index.html#work"><span class="hx-x">&larr; </span>All projects</a>
+    <p class="kicker">Local AI<span class="hx-x"> &middot;</span><span class="hx-alt">:</span> private by design</p>
     <h1 style="view-transition-name: t-local-ai-stack">A private AI assistant on my laptop</h1>
   </div>
 
@@ -58,7 +58,7 @@
     <figcaption>The first run at each depth; repeat runs at depth 0 and depth 3 gave 13.6 and 32.1.</figcaption>
       </figure>
       <div class="facts">
-        <div class="fact"><b>13.7 &rarr; 37.5</b><span>tokens per second by guessing several tokens ahead: up to 2.7 times the normal speed of the same 27B model</span></div>
+        <div class="fact"><b>13.7 <i class="hx-x">&rarr;</i><i class="hx-alt">to</i> 37.5</b><span>tokens per second by guessing several tokens ahead: up to 2.7 times the normal speed of the same 27B model</span></div>
         <div class="fact"><b>26</b><span>toolkits the AI can use, all behind one door that needs a key</span></div>
         <div class="fact"><b>60 s</b><span>watchdog check: any part that stops is back up within a minute, with no one at the keyboard</span></div>
       </div>
@@ -72,7 +72,20 @@
     </dl>
   </div>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-local-ai-stack.jpg" width="960" height="540" aria-label="Narrated film, 41 seconds" aria-describedby="film-script-text"><source src="video/film-local-ai-stack.mp4" type="video/mp4"></video></span><figcaption>The project in 41 seconds, narrated. Press ♪ for sound.</figcaption></figure>
+  <!-- hx-log: the Version History look's changelog. Built by _tools/history/stamp.mjs from this page's own lede, method list and Problem/Result, with dates from git; edit those parts, then re-run. Every other look hides it. -->
+  <section class="hx-log" aria-label="Changelog">
+    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-19">19 November 2026</time>.</p>
+    <dl>
+      <div><dt>Problem</dt><dd>Online AI assistants send every message and file off the computer. Keeping it all at home means making the AI, its tools, search and voice run together on one laptop with limited memory.</dd></div>
+      <div><dt>Built</dt><dd>A written-up setup for running a private AI assistant entirely on one Mac: a 27B AI model (27 billion settings, a measure of its size), a chat window, about two dozen tools, voice, document reading and web search.</dd></div>
+      <div><dt>My rules</dt><dd><ul><li>Reachable only from this computer</li><li>A watchdog, because programs crash</li><li>Limit what the tools can touch</li></ul></dd></div>
+      <div><dt>AI wrote</dt><dd>most of the scripts that tie it together</dd></div>
+      <div><dt>I tested</dt><dd><ul><li>Speed measured on the laptop</li><li>Idle against real use: 37.5 and a typical 23.4</li><li>Checked what each part is open to</li></ul></dd></div>
+      <div><dt>Now</dt><dd>A private assistant running entirely on one 64 GB MacBook Pro, in regular use through September 2026. The 27B model went from 13.7 to as much as 37.5 tokens per second (the units AI use is billed in), 2.7 times its normal speed. 26 toolkits sit behind one locked door. Every part is reachable only from this computer. And a watchdog restarts anything that goes down within 60 seconds.</dd></div>
+    </dl>
+  </section>
+  <!-- /hx-log -->
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-local-ai-stack.jpg" width="960" height="540" aria-label="Narrated film, 41 seconds" aria-describedby="film-script-text"><source src="video/film-local-ai-stack.mp4" type="video/mp4"></video></span><figcaption>The project in 41 seconds, narrated. <span class="hx-x">Press ♪ for sound.</span><span class="hx-alt">It starts muted.</span></figcaption></figure>
   <details class="film-script"><summary>Read the script</summary><p id="film-script-text">A private AI assistant runs entirely on one laptop, with chat, tools, voice and web search. Online AI assistants send every message and file off the computer. Every part is reachable only from this computer. Its tools sit behind a locked door, and a watchdog restarts anything that crashes. The AI writes up to 2.7 times its normal speed. Every 60 seconds a watchdog checks. Any part that stops is back within a minute. It ran in regular use through September 2026. Private by design. Details and code are below.</p></details>
 
   <div class="prose case-part">
@@ -156,11 +169,11 @@
 
     <div class="repo-card">
       <p><b>ryanwisth/local-ai-stack</b>The code, with its real status and limits.</p>
-      <a class="btn primary" href="https://github.com/ryanwisth/local-ai-stack">See the code on GitHub &rarr;</a>
+      <a class="btn primary" href="https://github.com/ryanwisth/local-ai-stack">See the code on GitHub<span class="hx-x"> &rarr;</span></a>
     </div>
     <nav class="pager" aria-label="More projects">
-      <a class="prev" href="agent-runner.html"><small>&larr; Previous</small>Long AI jobs that check the bill first</a>
-      <a class="next" href="mcp-servers.html"><small>Next &rarr;</small>Giving the AI on my laptop tools to use</a>
+      <a class="prev" href="agent-runner.html"><small><span class="hx-x">&larr; </span>Previous</small>Long AI jobs that check the bill first</a>
+      <a class="next" href="mcp-servers.html"><small>Next<span class="hx-x"> &rarr;</span></small>Giving the AI on my laptop tools to use</a>
     </nav>
     <p class="pager-contact"><a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></p>
   </div>
@@ -169,7 +182,7 @@
 <footer class="site">
   <div class="wrap">
     <span>Every figure on this page comes from the project&rsquo;s own notes (its README).</span>
-    <span>&copy; Ryan Wisth &middot; <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
+    <span>&copy; Ryan Wisth<span class="hx-x"> &middot;</span><span class="hx-alt">,</span> <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
   </div>
 </footer>
 <script src="site.js"></script>

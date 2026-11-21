@@ -2579,8 +2579,9 @@ html:not([data-look]) .film-script > summary::before {
 
 /* === Studio pass (Nov 21 2026): structure every look shares ===
    The hero names who and what above the fold (.hero-who); a proof strip of numbers already on the page (.facts.proof,
-   drawn by each look as its own fact chips); parts only Studio shows (hero buttons, the "Featured" head, list
-   thumbnails, a case page's "On this page" list) are off here, so the other looks keep their layout. */
+   drawn by each look as its own fact chips); parts only the default look shows (hero buttons, the "Featured" head, list
+   thumbnails, a case page's "On this page" list; Studio first, Version History since) are off here, so the other looks
+   keep their layout. */
 .hero-who { margin: 0 0 10px; font: 700 13.5px/1.35 var(--label); letter-spacing: .02em; color: var(--muted); }
 .hero-who .hero-n { color: var(--sig-ink); margin-right: .45em; }
 .hero-ctas, .leads-head, .more-thumb, .case-toc { display: none; }
@@ -2595,3 +2596,12 @@ html:not([data-look]) .film-script > summary::before {
 .topbar .wrap > .look-pick { margin-left: 14px; }
 @media (max-width: 480px) { .topbar .wrap > .look-pick { margin-left: 6px; } }
 /* === end Studio pass structure === */
+
+/* === Version History pass (Nov 21 2026): parts only the history look shows ===
+   _tools/history/stamp.mjs writes them from each page's own words and git dates: a case page's changelog (.hx-log),
+   the home's "Updated" date (.hx-ver), the featured projects' added date and test lines (.hx-lead-log), the first-publish
+   line (.hx-since), and the history wording beside a middot, arrow or note sign (.hx-alt). Off in every other look,
+   so they draw exactly as before; .hx-x marks what history hides (the middot, the arrow, the note sign). */
+.hx-log, .hx-ver, .hx-lead-log, .hx-since, .hx-alt { display: none !important; }
+i.hx-x, i.hx-alt { font-style: inherit; }
+/* === end Version History pass === */

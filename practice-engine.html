@@ -34,8 +34,8 @@
 
 <main id="main">
   <div class="prose case-head">
-    <a class="back" href="index.html#work">&larr; All projects</a>
-    <p class="kicker">Things I use &middot; built around mistakes</p>
+    <a class="back" href="index.html#work"><span class="hx-x">&larr; </span>All projects</a>
+    <p class="kicker">Things I use<span class="hx-x"> &middot;</span><span class="hx-alt">:</span> built around mistakes</p>
     <h1 style="view-transition-name: t-practice-engine">A study app built around mistakes</h1>
   </div>
 
@@ -60,7 +60,20 @@
     </dl>
   </div>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-practice-engine.jpg" width="960" height="540" aria-label="Narrated film, 40 seconds" aria-describedby="film-script-text"><source src="video/film-practice-engine.mp4" type="video/mp4"></video></span><figcaption>The project in 40 seconds, narrated. Press ♪ for sound.</figcaption></figure>
+  <!-- hx-log: the Version History look's changelog. Built by _tools/history/stamp.mjs from this page's own lede, method list and Problem/Result, with dates from git; edit those parts, then re-run. Every other look hides it. -->
+  <section class="hx-log" aria-label="Changelog">
+    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-21">21 November 2026</time>.</p>
+    <dl>
+      <div><dt>Problem</dt><dd>Practicing by topic treats every wrong answer on &ldquo;percents&rdquo; the same. But most come from one root cause: adding two percent changes instead of multiplying them, or averaging times instead of adding rates.</dd></div>
+      <div><dt>Built</dt><dd>A study app that groups questions by the mistake they test, and practices each mistake until it is fixed, on time. Timed sets are graded on pacing as well as score.</dd></div>
+      <div><dt>My rules</dt><dd><ul><li>Practice the mistake, not the topic</li><li>Speed is part of mastery</li><li>A missed question is retired</li></ul></dd></div>
+      <div><dt>AI wrote</dt><dd>the code</dd></div>
+      <div><dt>I tested</dt><dd><ul><li>Every screen tested, from practice to progress</li><li>21 sample questions, each checked by a program</li><li>Used for my own study</li></ul></dd></div>
+      <div><dt>Now</dt><dd>A working app that practices each mistake until it is mastered: 3 correct, on-time answers in a row on 3 different questions. It checks again after 3, 7 and 21 days, so mastery has to last. It runs from 2 files plus Python 3.9, and loads anyone&rsquo;s own questions from a spreadsheet file.</dd></div>
+    </dl>
+  </section>
+  <!-- /hx-log -->
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-practice-engine.jpg" width="960" height="540" aria-label="Narrated film, 40 seconds" aria-describedby="film-script-text"><source src="video/film-practice-engine.mp4" type="video/mp4"></video></span><figcaption>The project in 40 seconds, narrated. <span class="hx-x">Press ♪ for sound.</span><span class="hx-alt">It starts muted.</span></figcaption></figure>
   <details class="film-script"><summary>Read the script</summary><p id="film-script-text">A study app practices each mistake until it is fixed. Practicing by topic treats every wrong answer the same. But most come from one root cause. Questions are grouped by mistake. Right answers must be on time. Mastery is checked again later. 3 right, on-time answers in a row, on 3 different questions, master a mistake. It checks again after 3, 7 and 21 days. One wrong answer reopens it. A working app, used for real study, that loads anyone’s own questions. So mastery has to last. Details and code are below.</p></details>
 
   <div class="prose case-part">
@@ -126,11 +139,11 @@
 
     <div class="repo-card">
       <p><b>ryanwisth/adaptive-drill-engine</b>The code, with its real status and limits.</p>
-      <a class="btn primary" href="https://github.com/ryanwisth/adaptive-drill-engine">See the code on GitHub &rarr;</a>
+      <a class="btn primary" href="https://github.com/ryanwisth/adaptive-drill-engine">See the code on GitHub<span class="hx-x"> &rarr;</span></a>
     </div>
     <nav class="pager" aria-label="More projects">
-      <a class="prev" href="slot.html"><small>&larr; Previous</small>Game Boy link play, with no cable</a>
-      <a class="next" href="streaks-trainer.html"><small>Next &rarr;</small>A study app where one wrong answer resets your streak</a>
+      <a class="prev" href="slot.html"><small><span class="hx-x">&larr; </span>Previous</small>Game Boy link play, with no cable</a>
+      <a class="next" href="streaks-trainer.html"><small>Next<span class="hx-x"> &rarr;</span></small>A study app where one wrong answer resets your streak</a>
     </nav>
     <p class="pager-contact"><a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></p>
   </div>
@@ -139,7 +152,7 @@
 <footer class="site">
   <div class="wrap">
     <span>Every number on this page comes from the project&rsquo;s own notes.</span>
-    <span>&copy; Ryan Wisth &middot; <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
+    <span>&copy; Ryan Wisth<span class="hx-x"> &middot;</span><span class="hx-alt">,</span> <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
   </div>
 </footer>
 <script src="site.js"></script>

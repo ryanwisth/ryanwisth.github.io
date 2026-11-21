@@ -34,8 +34,8 @@
 
 <main id="main">
   <div class="prose case-head">
-    <a class="back" href="index.html#work">&larr; All projects</a>
-    <p class="kicker">AI costs &middot; rules the AI can&rsquo;t ignore</p>
+    <a class="back" href="index.html#work"><span class="hx-x">&larr; </span>All projects</a>
+    <p class="kicker">AI costs<span class="hx-x"> &middot;</span><span class="hx-alt">:</span> rules the AI can&rsquo;t ignore</p>
     <h1 style="view-transition-name: t-token-guard">Spending rules an AI can&rsquo;t skip</h1>
   </div>
 
@@ -66,7 +66,20 @@
     </dl>
   </div>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-token-guard.jpg" width="960" height="540" aria-label="Narrated film, 43 seconds" aria-describedby="film-script-text"><source src="video/film-token-guard.mp4" type="video/mp4"></video></span><figcaption>The project in 43 seconds, narrated. Press ♪ for sound.</figcaption></figure>
+  <!-- hx-log: the Version History look's changelog. Built by _tools/history/stamp.mjs from this page's own lede, method list and Problem/Result, with dates from git; edit those parts, then re-run. Every other look hides it. -->
+  <section class="hx-log" aria-label="Changelog">
+    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-19">19 November 2026</time>.</p>
+    <dl>
+      <div><dt>Problem</dt><dd>Every step costs tokens, the units AI use is billed in. Spending rules written into my instructions did not hold: the AI agreed with them and broke them an hour later.</dd></div>
+      <div><dt>Built</dt><dd>Claude Code is Anthropic’s AI coding assistant, and it can hand parts of a job to AI helpers. Four automatic checks and nine cheaper kinds of helper stop it from using far more than the work needs.</dd></div>
+      <div><dt>My rules</dt><dd><ul><li>Check every step, not just my instructions</li><li>Two size limits, not one</li><li>Block the heavy default helper</li></ul></dd></div>
+      <div><dt>AI wrote</dt><dd>most of the code</dd></div>
+      <div><dt>I tested</dt><dd><ul><li>Each check measured in the next week&rsquo;s scan</li><li>15 sample cases, allowed and blocked</li></ul></dd></div>
+      <div><dt>Now</dt><dd>In daily use since October 2026. The checks block the waste my scans measured. That includes the 482 of 662 helpers that ran as the heavy default type: 53.8k tokens in the first step, against 16k to 20k. Every block says the fix, so the AI corrects itself without me stepping in.</dd></div>
+    </dl>
+  </section>
+  <!-- /hx-log -->
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-token-guard.jpg" width="960" height="540" aria-label="Narrated film, 43 seconds" aria-describedby="film-script-text"><source src="video/film-token-guard.mp4" type="video/mp4"></video></span><figcaption>The project in 43 seconds, narrated. <span class="hx-x">Press ♪ for sound.</span><span class="hx-alt">It starts muted.</span></figcaption></figure>
   <details class="film-script"><summary>Read the script</summary><p id="film-script-text">Automatic checks stop an AI assistant from using more than the work needs. Written rules did not hold. The AI agreed, then broke them an hour later. Each message is checked, then every step. Every block says the fix. 482 of 662 AI helpers ran as the heavy default type. Now blocked. Its first step takes 53.8k tokens. Lighter types, 16k to 20k. So the AI corrects itself. In daily use since October 2026. 4 checks, 9 lighter helper types. Details and code are below.</p></details>
 
   <div class="prose case-part">
@@ -148,11 +161,11 @@
 
     <div class="repo-card">
       <p><b>ryanwisth/claude-code-token-guard</b>The code, with its real status and limits.</p>
-      <a class="btn primary" href="https://github.com/ryanwisth/claude-code-token-guard">See the code on GitHub &rarr;</a>
+      <a class="btn primary" href="https://github.com/ryanwisth/claude-code-token-guard">See the code on GitHub<span class="hx-x"> &rarr;</span></a>
     </div>
     <nav class="pager" aria-label="More projects">
-      <a class="prev" href="token-scan.html"><small>&larr; Previous</small>Finding where my AI spending went</a>
-      <a class="next" href="agent-runner.html"><small>Next &rarr;</small>Long AI jobs that check the bill first</a>
+      <a class="prev" href="token-scan.html"><small><span class="hx-x">&larr; </span>Previous</small>Finding where my AI spending went</a>
+      <a class="next" href="agent-runner.html"><small>Next<span class="hx-x"> &rarr;</span></small>Long AI jobs that check the bill first</a>
     </nav>
     <p class="pager-contact"><a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></p>
   </div>
@@ -161,7 +174,7 @@
 <footer class="site">
   <div class="wrap">
     <span>Every figure on this page comes from the project&rsquo;s own notes (its README).</span>
-    <span>&copy; Ryan Wisth &middot; <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
+    <span>&copy; Ryan Wisth<span class="hx-x"> &middot;</span><span class="hx-alt">,</span> <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
   </div>
 </footer>
 <script src="site.js"></script>

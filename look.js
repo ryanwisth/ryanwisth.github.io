@@ -2,7 +2,7 @@
    every other look is style.css with look-<key>.css on top.
 
    TO SWITCH THE DEFAULT for every visitor, change the one word on the next line to a key from LOOK_ROWS. */
-var SITE_LOOK = "studio";
+var SITE_LOOK = "history";
 
 /* The "Style:" button in the top bar opens a list of every look; picking one switches the page to it.
    TO TAKE THAT BUTTON AWAY, change true to false on the next line (every look and ?look= keep working). */
@@ -30,8 +30,9 @@ var LOOK_ROWS = [
   ["cel",   "Cel & Tide",      ["#5078ff", "#101b4d"],    ["#0963e0", "#f2f2f2"],    true],
   ["paint", "Paint & Meadow",  ["#dcc2a6", "#18373e"],    ["#d9d5b9", "#0275a0"],    true],
   ["dots",  "Dots & Panels",   ["#f6f0dc", "#272015"],    ["#f6f0dc", "#c8321e"],    true],
-  /* studio: dark only, the same colour both ways. Films: video/film-<page>-studio.mp4 + img/film-<page>-studio.jpg (from _tools/studio-films/out/). */
-  ["studio", "Studio",         ["#08090c", "#08090c"],    ["#08090c", "#8b7bff"],    true]
+  /* history: light only, the same colour both ways (Nov 21 2026; replaced Studio, which git keeps). Films false: the yarn films
+     play in its frame until video/film-<page>-history.mp4 + img/film-<page>-history.jpg land from _tools/history-films/out/. */
+  ["history", "Version History", ["#e9ecef", "#e9ecef"],  ["#e9ecef", "#14594a"],    false]
 ];
 
 /* To try a look without changing anything, add ?look=<key> (?look=wash, ?look=cel, ?look=yarn ...) to any page address.
@@ -54,6 +55,8 @@ var LOOK_ROWS = [
     kept = sessionStorage.getItem("look") || localStorage.getItem("look");
   } catch (e) { if (m) kept = m[1]; }
   if (LOOKS.indexOf(kept) >= 0) look = kept;
+  /* a look that has since been retired (Studio, Nov 21 2026) is forgotten, so the page wears the default */
+  else if (kept) try { sessionStorage.removeItem("look"); localStorage.removeItem("look"); } catch (e) {}
 
   var root = document.documentElement;
   /* The look sheets sit beside this script. Resolved from the script's own address, so 404.html (served at any depth) finds them. */
@@ -249,7 +252,7 @@ var LOOK_ROWS = [
     } catch (e) {}
     location.reload();
   }
-  /* Studio pass (Nov 21 2026): the picker is its own small control at the right end of the top bar, after the nav
+  /* Studio pass (Nov 21 2026, kept for every look): the picker is its own small control at the right end of the top bar, after the nav
      (no longer one of the nav's links); it is still built once the nav's light/dark button is read. */
   function add() {
     var nav = document.querySelector(".topnav");

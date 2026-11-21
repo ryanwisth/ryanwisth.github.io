@@ -34,8 +34,8 @@
 
 <main id="main">
   <div class="prose case-head">
-    <a class="back" href="index.html#work">&larr; All projects</a>
-    <p class="kicker">AI tools &middot; safe limits when nobody is watching</p>
+    <a class="back" href="index.html#work"><span class="hx-x">&larr; </span>All projects</a>
+    <p class="kicker">AI tools<span class="hx-x"> &middot;</span><span class="hx-alt">:</span> safe limits when nobody is watching</p>
     <h1 style="view-transition-name: t-agent-runner">Long AI jobs that check the bill first</h1>
   </div>
 
@@ -60,7 +60,20 @@
     </dl>
   </div>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-agent-runner.jpg" width="960" height="540" aria-label="Narrated film, 40 seconds" aria-describedby="film-script-text"><source src="video/film-agent-runner.mp4" type="video/mp4"></video></span><figcaption>The project in 40 seconds, narrated. Press ♪ for sound.</figcaption></figure>
+  <!-- hx-log: the Version History look's changelog. Built by _tools/history/stamp.mjs from this page's own lede, method list and Problem/Result, with dates from git; edit those parts, then re-run. Every other look hides it. -->
+  <section class="hx-log" aria-label="Changelog">
+    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-19">19 November 2026</time>.</p>
+    <dl>
+      <div><dt>Problem</dt><dd>Long AI jobs are easier to hand off as written instructions than as a live chat. Running them with nobody watching raises three questions: which account pays, how to stop a run that goes over budget, and how to continue a job that does not finish in one round.</dd></div>
+      <div><dt>Built</dt><dd>A small tool that hands Claude, an AI assistant, a long job written out as instructions. It checks which account pays, caps the spending and the number of steps, and runs the job in fresh rounds until a &ldquo;done&rdquo; file appears.</dd></div>
+      <div><dt>My rules</dt><dd><ul><li>Who pays is checked, not assumed</li><li>Use the built-in budget</li><li>Stop on the first failure</li></ul></dd></div>
+      <div><dt>AI wrote</dt><dd>the code</dd></div>
+      <div><dt>I tested</dt><dd><ul><li>The who-pays check, in a live test</li><li>The account check, a fresh run and a restart, before the first real job</li></ul></dd></div>
+      <div><dt>Now</dt><dd>Ran real jobs of several rounds in October 2026, paid from my subscription by default since October 25, 2026. Every run confirms who pays before any work. Each round is capped at $20 by default. Rounds repeat until the &ldquo;done&rdquo; file appears, and the first failed round stops everything, with 0 retries.</dd></div>
+    </dl>
+  </section>
+  <!-- /hx-log -->
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-agent-runner.jpg" width="960" height="540" aria-label="Narrated film, 40 seconds" aria-describedby="film-script-text"><source src="video/film-agent-runner.mp4" type="video/mp4"></video></span><figcaption>The project in 40 seconds, narrated. <span class="hx-x">Press ♪ for sound.</span><span class="hx-alt">It starts muted.</span></figcaption></figure>
   <details class="film-script"><summary>Read the script</summary><p id="film-script-text">A small tool runs long AI jobs with nobody watching, and checks who pays before any work. A forgotten payment key quietly wins, so an unwatched run could bill the wrong account. Who pays is checked first. Each round works under a budget, and rounds repeat until the job is done. Each round is capped at $20 by default. 2 ways to pay. A mismatch stops the run before any work. It ran real jobs of several rounds in October 2026. The first failure stops the run, so a person looks before more is spent. Details and code are below.</p></details>
 
   <div class="prose case-part">
@@ -121,11 +134,11 @@
 
     <div class="repo-card">
       <p><b>ryanwisth/agent-sdk-runner</b>The code, with its real status and limits.</p>
-      <a class="btn primary" href="https://github.com/ryanwisth/agent-sdk-runner">See the code on GitHub &rarr;</a>
+      <a class="btn primary" href="https://github.com/ryanwisth/agent-sdk-runner">See the code on GitHub<span class="hx-x"> &rarr;</span></a>
     </div>
     <nav class="pager" aria-label="More projects">
-      <a class="prev" href="token-guard.html"><small>&larr; Previous</small>Spending rules an AI can&rsquo;t skip</a>
-      <a class="next" href="local-ai-stack.html"><small>Next &rarr;</small>A private AI assistant on my laptop</a>
+      <a class="prev" href="token-guard.html"><small><span class="hx-x">&larr; </span>Previous</small>Spending rules an AI can&rsquo;t skip</a>
+      <a class="next" href="local-ai-stack.html"><small>Next<span class="hx-x"> &rarr;</span></small>A private AI assistant on my laptop</a>
     </nav>
     <p class="pager-contact"><a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></p>
   </div>
@@ -134,7 +147,7 @@
 <footer class="site">
   <div class="wrap">
     <span>Every figure on this page comes from the project&rsquo;s own notes (its README).</span>
-    <span>&copy; Ryan Wisth &middot; <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
+    <span>&copy; Ryan Wisth<span class="hx-x"> &middot;</span><span class="hx-alt">,</span> <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
   </div>
 </footer>
 <script src="site.js"></script>

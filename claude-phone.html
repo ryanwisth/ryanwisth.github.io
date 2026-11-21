@@ -34,8 +34,8 @@
 
 <main id="main">
   <div class="prose case-head">
-    <a class="back" href="index.html#work">&larr; All projects</a>
-    <p class="kicker">Things I use every day &middot; private network</p>
+    <a class="back" href="index.html#work"><span class="hx-x">&larr; </span>All projects</a>
+    <p class="kicker">Things I use every day<span class="hx-x"> &middot;</span><span class="hx-alt">:</span> private network</p>
     <h1 style="view-transition-name: t-claude-phone">Claude Code, run from my iPhone</h1>
   </div>
 
@@ -60,7 +60,20 @@
     </dl>
   </div>
 
-  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-claude-phone.jpg" width="960" height="540" aria-label="Narrated film, 38 seconds" aria-describedby="film-script-text"><source src="video/film-claude-phone.mp4" type="video/mp4"></video></span><figcaption>The project in 38 seconds, narrated. Press ♪ for sound.</figcaption></figure>
+  <!-- hx-log: the Version History look's changelog. Built by _tools/history/stamp.mjs from this page's own lede, method list and Problem/Result, with dates from git; edit those parts, then re-run. Every other look hides it. -->
+  <section class="hx-log" aria-label="Changelog">
+    <p class="hx-when">Added <time datetime="2026-11-15">15 November 2026</time>. Last changed <time datetime="2026-11-21">21 November 2026</time>.</p>
+    <dl>
+      <div><dt>Problem</dt><dd>Claude Code often works for several minutes, then stops to ask me something. If I was away from the desk, the work just sat there waiting. I wanted to keep it moving from my phone, without sending my code through someone else&rsquo;s server.</dd></div>
+      <div><dt>Built</dt><dd>Claude Code is Anthropic&rsquo;s AI coding assistant, and it does real work on my Mac. It reads and edits files, runs commands, writes code, and stops to ask me questions along the way. Normally that happens in an app on the desk. Anthropic has its own ways to reach Claude Code from a phone, but they did not fit how I work, so I built a private app for my iPhone that shows every Claude Code chat as it happens and lets me answer, steer or start work from anywhere, while the Mac keeps doing the work. Only my own devices can reach it.</dd></div>
+      <div><dt>My rules</dt><dd><ul><li>Built by me, on my own network</li><li>Show the chats I already have</li><li>A reply continues the same chat</li></ul></dd></div>
+      <div><dt>AI wrote</dt><dd>the code</dd></div>
+      <div><dt>I tested</dt><dd><ul><li>Fake requests turned away, tested again after the last change</li><li>A real reply landed in the same chat</li></ul></dd></div>
+      <div><dt>Now</dt><dd>Before, work waited until I was back at the desk. Now I reply from the phone and the answer starts in 6 seconds. I use it every day to watch each chat live, tap answers, start new work, and get a notification when Claude finishes or needs me. 12 of the 16 desktop features I prioritized work on the phone and are tested. The app is never on the public internet.</dd></div>
+    </dl>
+  </section>
+  <!-- /hx-log -->
+  <figure class="figure case-film"><span class="shot"><video data-auto data-sound controls muted loop playsinline preload="none" poster="img/film-claude-phone.jpg" width="960" height="540" aria-label="Narrated film, 38 seconds" aria-describedby="film-script-text"><source src="video/film-claude-phone.mp4" type="video/mp4"></video></span><figcaption>The project in 38 seconds, narrated. <span class="hx-x">Press ♪ for sound.</span><span class="hx-alt">It starts muted.</span></figcaption></figure>
   <details class="film-script"><summary>Read the script</summary><p id="film-script-text">Claude Code, an AI assistant that does real work on a Mac, run from a private iPhone app. It often works for minutes, then stops to ask something. Away from the desk, the work just sat there. Each chat is watched live. An answer is one tap, while the Mac keeps doing the work. 12 of 16 desktop features work on the phone, each one tested. A reply from the phone starts the answer in 6 seconds. It is used every day, and it is never on the public internet. So the work keeps moving, from anywhere. Details are below.</p></details>
 
   <div class="prose case-part">
@@ -168,8 +181,8 @@
     </ul>
 
     <nav class="pager" aria-label="More projects">
-      <a class="prev" href="family-tree-3d.html"><small>&larr; Previous</small>A 3D family tree that opens from one file</a>
-      <a class="next" href="slot.html"><small>Next &rarr;</small>Game Boy link play, with no cable</a>
+      <a class="prev" href="family-tree-3d.html"><small><span class="hx-x">&larr; </span>Previous</small>A 3D family tree that opens from one file</a>
+      <a class="next" href="slot.html"><small>Next<span class="hx-x"> &rarr;</span></small>Game Boy link play, with no cable</a>
     </nav>
     <p class="pager-contact"><a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></p>
   </div>
@@ -178,7 +191,7 @@
 <footer class="site">
   <div class="wrap">
     <span>Every number on this page comes from the project&rsquo;s own notes and code.</span>
-    <span>&copy; Ryan Wisth &middot; <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
+    <span>&copy; Ryan Wisth<span class="hx-x"> &middot;</span><span class="hx-alt">,</span> <a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></span>
   </div>
 </footer>
 <script src="site.js"></script>
