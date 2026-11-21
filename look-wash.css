@@ -752,3 +752,112 @@ html[data-look="wash"].wm-touch :is(.shot, .demo-poster, .card .thumb-wrap):is(.
     html[data-look="wash"].motion.w-live .w-salt.w-r::after { background-position: 0 740px; }
   }
 }
+
+/* ---------- fluid (Nov 20): the page is wet paper ----------
+   Ryan's word: the pages should feel alive and fluid in the look's own material. For this look the material is wet
+   paper: content blooms in as ink spreading into a damp sheet, the washes breathe, the scroll drags the wet pigment and
+   it sloshes back and settles, a tap drops ink that blooms and feathers, and leaving a page floods it with ink that
+   drains away over the next one. Text never moves: only washes, swatches and added marks do.
+   1 page to page: cross-document view transition; look-wash.js puts a drop of ink (.w-flood, view-transition-name
+     w-flood) where the page was pressed just before it is left; the next page floods the window with it and drains it
+   2 at rest: the section washes, the swatches under cards and captures, and the band breathe (slow, phase-offset
+     filter: opacity, paler only); two damp patches drift in the margins (.w-damp)
+   3 scroll: the washes lag the pull and slosh back (--w-dy, written by look-wash.js); blocks arrive as an ink bloom
+     with an irregular edge (three lobes of a mask growing at different rates), not a fade-up
+   4 pointer and touch: a tap (or a click on bare paper) drops ink that blooms, feathers and dries (.w-tapb)
+   5 focus and press: the focus ring is laid wet and dries to ink (look-wash.js); a pressed card soaks its swatch, a
+     pressed link or tab takes a deeper wash
+   Under reduced motion or Pause motion: none of it (the script is not running, and every rule below needs .motion or
+   .w-live inside "no-preference"); the view transition is an instant swap. */
+@property --w-dy { syntax: "<length>"; inherits: false; initial-value: 0px; }
+html[data-look="wash"] { --w-iblend: multiply; --w-damp-a: 7%; }
+@media (prefers-color-scheme: dark) { html[data-look="wash"]:not([data-theme="light"]) { --w-iblend: screen; --w-damp-a: 9%; } }
+html[data-look="wash"][data-theme="dark"] { --w-iblend: screen; --w-damp-a: 9%; }
+
+@keyframes wash-breathe { 0% { filter: opacity(1); } 50% { filter: opacity(.8); } 100% { filter: opacity(.93); } }
+@keyframes wash-damp { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(-4vw, 3vh) scale(1.08); } }
+@keyframes wash-inkin {
+  0% { opacity: 0; -webkit-mask-image: var(--w-lobes); mask-image: var(--w-lobes); -webkit-mask-size: 0% 0%, 0% 0%, 0% 0%; mask-size: 0% 0%, 0% 0%, 0% 0%; }
+  8% { opacity: 1; }
+  40% { -webkit-mask-size: 118% 104%, 52% 64%, 30% 40%; mask-size: 118% 104%, 52% 64%, 30% 40%; }
+  72% { -webkit-mask-size: 214% 196%, 176% 168%, 132% 150%; mask-size: 214% 196%, 176% 168%, 132% 150%; }
+  99% { opacity: 1; -webkit-mask-image: var(--w-lobes); mask-image: var(--w-lobes); -webkit-mask-size: 330% 320%, 320% 330%, 320% 320%; mask-size: 330% 320%, 320% 330%, 320% 320%; }
+  100% { opacity: 1; -webkit-mask-image: none; mask-image: none; }
+}
+@keyframes wash-inkdrop { 0% { scale: .12; opacity: 1; } 35% { opacity: 1; } 75% { opacity: .75; } 100% { scale: 1; opacity: 0; } }
+@keyframes wash-inkcore { 0% { scale: .5; opacity: 1; } 55% { scale: 1.5; opacity: .5; } 100% { scale: 1.9; opacity: 0; } }
+@keyframes wash-vt-flood {
+  0% { transform: scale(.5); opacity: .92; animation-timing-function: cubic-bezier(.25, .7, .35, 1); }
+  48% { transform: scale(34); opacity: .9; animation-timing-function: cubic-bezier(.4, 0, .6, 1); }
+  100% { transform: scale(40); opacity: 0; }
+}
+@keyframes wash-vt-out { 0%, 38% { opacity: 1; filter: blur(0); } 62%, 100% { opacity: 0; filter: blur(2px); } }
+@keyframes wash-vt-in { 0%, 38% { opacity: 0; } 62%, 100% { opacity: 1; } }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* 1. page to page: the drop of ink left where the page was pressed floods the window, then drains over the new page */
+  html[data-look="wash"]:not([data-motion="paused"])::view-transition-old(root) { animation: wash-vt-out .56s linear both; }
+  html[data-look="wash"]:not([data-motion="paused"])::view-transition-new(root) { animation: wash-vt-in .56s linear both; }
+  html[data-look="wash"]:not([data-motion="paused"])::view-transition-group(w-flood) { animation-duration: .56s; z-index: 2147483001; }
+  html[data-look="wash"]:not([data-motion="paused"])::view-transition-old(w-flood) { animation: wash-vt-flood .56s both; }
+  /* the drop itself, on the page being left (it shows only for the moment the next page takes to arrive) */
+  html[data-look="wash"].motion.w-live .w-flood { --c: color-mix(in srgb, var(--w-fh, var(--w-blue)) 80%, var(--ink)); --c2: color-mix(in srgb, var(--c) 86%, transparent); position: fixed; z-index: 2147483001; width: 160px; height: 160px; margin: -80px 0 0 -80px; pointer-events: none; view-transition-name: w-flood;
+    background: radial-gradient(closest-side, var(--c) 0 50%, color-mix(in srgb, var(--c) 90%, var(--ink)) 57%, var(--c2) 59%, transparent 63%),
+      radial-gradient(closest-side, var(--c2) 0 50%, transparent 72%) 2% 12% / 52% 50% no-repeat,
+      radial-gradient(closest-side, var(--c2) 0 50%, transparent 72%) 98% 94% / 50% 56% no-repeat,
+      radial-gradient(closest-side, var(--c2) 0 46%, transparent 70%) 94% 4% / 38% 36% no-repeat,
+      radial-gradient(closest-side, var(--c2) 0 46%, transparent 70%) 6% 96% / 34% 40% no-repeat; }
+
+  /* 2. at rest: the washes breathe, each on its own slow beat (the pigment pales a little as the sheet dries and comes back
+     as it takes up water again: never stronger than the wash as drawn, and never moving its edge, so no word's contrast
+     is ever below the still page's); damp patches drift under the paper in the margins */
+  html[data-look="wash"].motion.w-live.w-drag body :is(.section, .band, .shot, .term, .paper, .figure, .duo figure, .sum-vis, .card .thumb-wrap)::before { --w-dy: inherit; translate: 0 var(--w-dy); }
+  html[data-look="wash"].motion.w-live.w-drag body .card .thumb-wrap::before { animation: wash-breathe 17s ease-in-out infinite alternate; animation-composition: add; }
+  html[data-look="wash"].motion.w-live.w-drag body .card:nth-child(3n+2) .thumb-wrap::before { animation-duration: 21s; animation-delay: -7s; }
+  html[data-look="wash"].motion.w-live.w-drag body .card:nth-child(3n) .thumb-wrap::before { animation-duration: 19s; animation-delay: -13s; }
+  html[data-look="wash"].motion.w-live.w-drag.w-sjs body .section::before { animation: wash-breathe 23s ease-in-out infinite alternate; animation-composition: add; }
+  html[data-look="wash"].motion.w-live.w-drag.w-sjs body :is(.shot, .term, .paper, .figure, .duo figure, .sum-vis, .band)::before { animation: wash-breathe 19s ease-in-out -5s infinite alternate; animation-composition: add; }
+  @supports (animation-timeline: view()) {
+    html[data-look="wash"].motion.w-live.w-drag body .section::before { animation: wash-flood linear both, wash-breathe 23s ease-in-out infinite alternate; animation-timeline: --w-fl, auto; animation-range: cover 0% cover 55vh, normal; animation-composition: replace, add; }
+    html[data-look="wash"].motion.w-live.w-drag body .section:nth-of-type(even)::before { animation-duration: auto, 27s; animation-delay: 0s, -11s; }
+    html[data-look="wash"].motion.w-live.w-drag body :is(.shot, .term, .paper, .figure:has(> img.narrow), .duo figure, .sum-vis:has(> .shot.phone), .band)::before { animation: wash-flood linear both, wash-breathe 19s ease-in-out -5s infinite alternate; animation-timeline: --w-fl, auto; animation-range: cover 0% cover 50vh, normal; animation-composition: replace, add; }
+  }
+  html[data-look="wash"].motion.w-live .w-damp { position: fixed; inset: -12vh -12vw; z-index: -1; pointer-events: none;
+    background: radial-gradient(38vmax 26vmax at 22% 30%, color-mix(in srgb, var(--w-blue) var(--w-damp-a), transparent), transparent 70%),
+      radial-gradient(30vmax 22vmax at 78% 72%, color-mix(in srgb, var(--w-violet, var(--w-blue)) var(--w-damp-a), transparent), transparent 70%);
+    -webkit-mask: linear-gradient(90deg, #000 calc(50vw - 600px), transparent calc(50vw - 540px), transparent calc(50vw + 540px), #000 calc(50vw + 600px)) 12vw 0 / 100vw 100% no-repeat;
+    mask: linear-gradient(90deg, #000 calc(50vw - 600px), transparent calc(50vw - 540px), transparent calc(50vw + 540px), #000 calc(50vw + 600px)) 12vw 0 / 100vw 100% no-repeat;
+    animation: wash-damp 48s ease-in-out infinite alternate; }
+  /* (the patches stay in the margins, clear of the column of text, so no word's contrast changes) */
+
+  /* 3. blocks arrive as ink spreading into damp paper: three lobes of a soft mask grow at different rates, so the edge
+     runs out unevenly; no rise, no fade-up (the wash rules above slid them up 12 px) */
+  html[data-look="wash"].motion .reveal { transform: none; }
+  html[data-look="wash"].motion .reveal.in { --w-lobes: radial-gradient(closest-side, #000 52%, rgba(0, 0, 0, .55) 78%, transparent), radial-gradient(closest-side, #000 50%, rgba(0, 0, 0, .5) 76%, transparent), radial-gradient(closest-side, #000 48%, rgba(0, 0, 0, .5) 74%, transparent);
+    -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; mask-clip: no-clip; -webkit-mask-position: 24% 30%, 74% 44%, 42% 82%; mask-position: 24% 30%, 74% 44%, 42% 82%;
+    animation: wash-inkin 1.15s cubic-bezier(.3, .55, .3, 1) var(--d, 0ms) both; }
+  html[data-look="wash"].motion .reveal.in:nth-child(even) { -webkit-mask-position: 70% 26%, 22% 58%, 60% 86%; mask-position: 70% 26%, 22% 58%, 60% 86%; }
+  html[data-look="wash"].motion :is(.section-head, .group-h).reveal.in { animation: none; -webkit-mask-image: none; mask-image: none; }
+
+  /* 4. a tap drops ink: a dark core that lands and spreads, a pale stain with a darker dried rim, and a feathered edge
+     (a fine fringe of fibres the pigment runs out along); multiplied into the paper by day, lit on the night sky */
+  html[data-look="wash"].motion.w-live .w-tapb { --c: var(--w-ih, var(--w-blue)); width: 92px; height: 92px; margin: -46px 0 0 -46px; mix-blend-mode: var(--w-iblend); rotate: var(--w-ir, 0deg);
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--c) 40%, transparent) 0 16%, color-mix(in srgb, var(--c) 26%, transparent) 44%, color-mix(in srgb, var(--c) 18%, transparent) 56%, color-mix(in srgb, var(--c) 62%, transparent) 63%, transparent 70%),
+      radial-gradient(closest-side, color-mix(in srgb, var(--c) 32%, transparent) 0 40%, transparent 66%) 100% 0 / 46% 46% no-repeat;
+    -webkit-mask: radial-gradient(closest-side, #000 0 54%, transparent 62%), repeating-conic-gradient(from 4deg, #000 0 1.6deg, rgba(0, 0, 0, .45) 3deg, transparent 4.4deg 7.5deg, #000 8.4deg 9.2deg, transparent 10.5deg 13deg);
+    mask: radial-gradient(closest-side, #000 0 54%, transparent 62%), repeating-conic-gradient(from 4deg, #000 0 1.6deg, rgba(0, 0, 0, .45) 3deg, transparent 4.4deg 7.5deg, #000 8.4deg 9.2deg, transparent 10.5deg 13deg);
+    animation: wash-inkdrop 1s cubic-bezier(.15, .65, .3, 1) both; }
+  html[data-look="wash"].motion.w-live .w-tapb::before { content: ""; position: absolute; inset: 34%; border-radius: 50%;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--c) 66%, var(--ink)) 0 46%, color-mix(in srgb, var(--c) 50%, transparent) 76%, transparent);
+    animation: wash-inkcore .9s cubic-bezier(.2, .6, .3, 1) both; }
+
+  /* 5. press: a pressed card soaks its swatch; a pressed link, tab or page link takes a deeper wash at once */
+  html[data-look="wash"].motion.w-live .card:active .thumb-wrap::before { inset: -26px -33px -10px; opacity: calc(var(--swatch-o) + .22); transition-duration: .35s; }
+  html[data-look="wash"].motion.w-live :is(.pager a, .groupnav a):active { background-color: color-mix(in srgb, var(--hue, var(--w-blue)) 16%, var(--bg)); transition-duration: .08s; }
+  html[data-look="wash"].motion.w-live :is(.hero-sub, footer.site, .prose, .lede, .hero-mail) a:not(.btn, .back, .card, nav *):active {
+    background-image: linear-gradient(color-mix(in srgb, var(--hue) 22%, transparent), color-mix(in srgb, var(--hue) 50%, transparent)); background-repeat: no-repeat; background-size: 100% .9em; background-position: 0 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-look="wash"]::view-transition-group(*), html[data-look="wash"]::view-transition-old(*), html[data-look="wash"]::view-transition-new(*) { animation: none; }
+}
+html[data-look="wash"][data-motion="paused"]::view-transition-group(*), html[data-look="wash"][data-motion="paused"]::view-transition-old(*), html[data-look="wash"][data-motion="paused"]::view-transition-new(*) { animation: none; }
