@@ -2121,3 +2121,65 @@ html:not([data-look]).y-mat .y-merit .ym-st { fill: none; stroke: var(--ys); str
 html:not([data-look]).y-mat .y-merit .ym-mk { fill: none; stroke: var(--felt-ink); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
 html:not([data-look]).y-mat .y-merit .ym-dot { fill: var(--felt-ink); }
 /* === end Yarn & Felt material === */
+
+/* fluid-yarn:start */
+/* === Yarn & Felt fluid (Nov 20 2026): the page hangs like soft fabric ===
+   Ryan: "making the pages super fluid with the style". Every rule is scoped html:not([data-look]) (the default look),
+   so no other look is touched. look-yarn.js ("Yarn & Felt fluid" block) sets .y-flu on the root with motion on and
+   reduced motion off, .y-hang on each hanging patch, .y-dent spans, .y-taut on a touched heading; it writes only the
+   `rotate` (a Web Animation) and `translate` properties of a patch. Page to page: the next page is draped down over
+   the last one from the top bar, its hem rippling, and settles with a little bounce; the top bar stays put. */
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-look]):not([data-motion="paused"]) .topbar { view-transition-name: y-bar; }
+  html:not([data-look]):not([data-motion="paused"])::view-transition-old(root),
+  html:not([data-look]):not([data-motion="paused"])::view-transition-new(root) { mix-blend-mode: normal; }
+  html:not([data-look]):not([data-motion="paused"])::view-transition-old(root) { animation: y-drape-under .52s cubic-bezier(.4, 0, .6, 1) both; }
+  html:not([data-look]):not([data-motion="paused"])::view-transition-new(root) { animation: y-drape-in .52s cubic-bezier(.3, .6, .25, 1) both; }
+  html:not([data-look]):not([data-motion="paused"])::view-transition-group(y-bar) { animation-duration: .3s; }
+}
+@keyframes y-drape-in {
+  0% { clip-path: polygon(0 0, 100% 0, 100% -3%, 87.5% -.6%, 75% -3%, 62.5% -.6%, 50% -3%, 37.5% -.6%, 25% -3%, 12.5% -.6%, 0 -3%); translate: 0 -18px; }
+  55% { clip-path: polygon(0 0, 100% 0, 100% 64%, 87.5% 61.6%, 75% 64%, 62.5% 61.6%, 50% 64%, 37.5% 61.6%, 25% 64%, 12.5% 61.6%, 0 64%); translate: 0 2px; }
+  80% { translate: 0 -1.5px; }
+  100% { clip-path: polygon(0 0, 100% 0, 100% 104%, 87.5% 106.4%, 75% 104%, 62.5% 106.4%, 50% 104%, 37.5% 106.4%, 25% 104%, 12.5% 106.4%, 0 104%); translate: 0 0; }
+}
+@keyframes y-drape-under { to { translate: 0 12px; filter: brightness(.9); } }
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-look])::view-transition-group(*), html:not([data-look])::view-transition-old(*), html:not([data-look])::view-transition-new(*) { animation: none !important; }
+}
+html:not([data-look])[data-motion="paused"]::view-transition-group(*),
+html:not([data-look])[data-motion="paused"]::view-transition-old(*),
+html:not([data-look])[data-motion="paused"]::view-transition-new(*) { animation: none !important; }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* a patch hangs from its top stitches: the sway, the puff and the press all pivot there */
+  html:not([data-look]).y-flu .y-hang { transform-origin: 50% 0; }
+
+  /* the felt dents where it is pointed at or pressed: a shaded hollow with a hair of light on its lower lip,
+     behind the words (the patch is isolated, the span sits at z -1) */
+  html:not([data-look]).y-flu .y-dent { position: absolute; inset: 0; z-index: -1; border-radius: inherit; overflow: clip; pointer-events: none; }
+  html:not([data-look]).y-flu .y-dent i {
+    position: absolute; left: -70px; top: -70px; width: 140px; height: 140px; border-radius: 50%;
+    opacity: 0; scale: .6; translate: -200px -200px;
+    background:
+      radial-gradient(closest-side at 50% 60%, transparent 70%, color-mix(in srgb, #fff 16%, transparent) 86%, transparent),
+      radial-gradient(closest-side at 50% 45%, var(--shade-2), color-mix(in srgb, var(--shade-2) 45%, transparent) 55%, transparent);
+    transition: opacity .4s ease, scale .5s var(--spring);
+  }
+  html:not([data-look]).y-flu .y-dent.y-follow i { transition: translate .28s cubic-bezier(.2, .7, .3, 1), opacity .4s ease, scale .5s var(--spring); }
+  html:not([data-look]).y-flu .y-dent.y-on i { opacity: 1; scale: 1; }
+  html:not([data-look]).y-flu .y-dent.y-deep i { scale: .8; background:
+      radial-gradient(closest-side at 50% 62%, transparent 68%, color-mix(in srgb, #fff 20%, transparent) 85%, transparent),
+      radial-gradient(closest-side at 50% 44%, var(--shade), color-mix(in srgb, var(--shade-2) 60%, transparent) 55%, transparent); }
+  @media (pointer: coarse), (max-width: 620px) { html:not([data-look]).y-flu .y-dent i { left: -50px; top: -50px; width: 100px; height: 100px; } }
+
+  /* a heading's stitch row is pulled taut under the pointer or a finger, and slackens with a little give */
+  html:not([data-look]).y-flu main :is(.section-head h2, .group-h, .prose > h2)::after { transition: scale .6s var(--spring); }
+  html:not([data-look]).y-flu main .y-taut::after { scale: 1.012 .62; }
+  @media (hover: hover) and (pointer: fine) {
+    html:not([data-look]).y-flu main :is(.section-head h2, .group-h, .prose > h2):hover::after { scale: 1.012 .62; }
+  }
+}
+html:not([data-look])[data-motion="paused"] .y-dent { display: none; }
+/* === end Yarn & Felt fluid === */
+/* fluid-yarn:end */
