@@ -353,8 +353,7 @@
   function tipSetup() {
     if (!mqFine.matches) return;
     TIP = { el: mk('i', 'y-needle', d.body), x: -99, y: -99, vx: 0, vy: 0, t: 0, len: 0, ang: 0, raf: 0, shown: false };
-    TIP.el.appendChild(d.createElement('b'));
-    r.classList.add('y-needle-on');
+    // immersion pass: the needle itself is the real CSS cursor now (img/yarn/cursor-*.svg); only its thread trails here
   }
   function tipMove(e) {
     if (!TIP || e.pointerType !== 'mouse') return;
