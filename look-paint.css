@@ -859,3 +859,65 @@ html[data-look="paint"] .linechart .y-ply { display: none; }
 @media (prefers-reduced-motion: no-preference) {
   html[data-look="paint"].motion .in .g-dots i, html[data-look="paint"].motion .in .g-dots i.x, html[data-look="paint"].motion .in .g-box i { animation: none; }
 }
+
+/* ================= fluid pass (Nov 20; brief _tools/fluid/BRIEF.md): the page is a meadow in wind =================
+   look-paint.js moves the boards (rotate and translate, inline, only while they move; origin at their foot) and sets each
+   board's gust delay --pm-gd on the grass clock. Everything here is under .pm-live (motion on, look worn) except the page
+   change, which is CSS only and is switched off by reduced motion and by "Pause motion". */
+html[data-look="paint"].pm-live .pm-board { transform-origin: 50% 100%; }
+html[data-look="paint"].pm-live .pm-spr { will-change: rotate, translate; }
+/* the grass at every board's foot bends as the gust passes (lead cards: their two tufts; other boards: two small ones) */
+@keyframes pm-tuftgust { 0%, 57% { rotate: 0deg; } 60% { rotate: 7deg; } 64% { rotate: 15deg; } 69% { rotate: 5deg; } 72% { rotate: -2deg; } 76%, 100% { rotate: 0deg; } }
+html[data-look="paint"].pm-live .pm-tuft { animation: pm-tuftgust 7s cubic-bezier(.4, 0, .4, 1) var(--pm-gd, 0ms) infinite; }
+html[data-look="paint"] .pm-tuft.pm-ft { width: 32px; height: 22px; bottom: -10px; }
+html[data-look="paint"] .pm-tuft.pm-ft.l { left: 10px; }
+html[data-look="paint"] .pm-tuft.pm-ft.r { right: 8px; }
+/* cloud shadows and leaf light drift on at rest: the paint moves to an inner layer that slides (compositor only); the
+   outer layer keeps its mask, blend and scroll offset. Clouds go with the wind, left to right, about 12 px a second. */
+html[data-look="paint"].pm-live .pm-shade { background: none; overflow: hidden; }
+html[data-look="paint"].pm-live .pm-shade > .pm-drift {
+  position: absolute; top: 0; bottom: 0; left: 0; width: calc(100% + 1560px); pointer-events: none;
+  background: radial-gradient(closest-side, rgba(38, 74, 92, .3), rgba(38, 74, 92, 0)) 0 0 / 520px 150px repeat-x,
+    radial-gradient(closest-side, rgba(38, 74, 92, .22), rgba(38, 74, 92, 0)) 260px 46px / 780px 170px repeat-x;
+  background-position-x: var(--pm-shx, 0px), calc(var(--pm-shx, 0px) * .7 + 260px);
+  animation: pm-cloud 130s linear infinite;
+}
+@keyframes pm-cloud { from { translate: -1560px 0; } to { translate: 0 0; } }
+html[data-look="paint"].pm-live .pm-dapple { background: none; overflow: hidden; }
+html[data-look="paint"].pm-live .pm-dapple > .pm-drift {
+  position: absolute; inset: -40px; pointer-events: none;
+  background: radial-gradient(9px 7px, rgba(255, 226, 150, .75), rgba(255, 226, 150, 0)) var(--pm-lx, 0px) var(--pm-ly, 0px) / 58px 46px,
+    radial-gradient(6px 5px, rgba(255, 236, 170, .6), rgba(255, 236, 170, 0)) calc(var(--pm-lx, 0px) * -.8 + 23px) calc(var(--pm-ly, 0px) * .6 + 17px) / 41px 37px;
+  animation: pm-leaflight 9s ease-in-out infinite alternate;
+}
+@keyframes pm-leaflight { 0% { translate: 0 0; } 45% { translate: 11px 4px; } 100% { translate: 19px -3px; } }
+/* the pointer parts the grass: two clumps under it lean apart (look-paint.js moves and opens them) */
+.pm-wake { position: fixed; left: -22px; top: -10px; z-index: 4; width: 44px; height: 26px; pointer-events: none; opacity: 0; transition: opacity .45s ease; }
+.pm-wake.pm-on { opacity: .95; }
+.pm-wake > i { position: absolute; bottom: 0; width: 22px; height: 26px; transform-origin: 50% 100%; background: var(--pm-tuft) 0 100% / 44px 26px no-repeat; }
+.pm-wake > i + i { left: 22px; background-position: 100% 100%; }
+html[data-look="paint"][data-theme="dark"] .pm-wake > i { filter: brightness(.5) saturate(.7); }
+@media (prefers-color-scheme: dark) { html[data-look="paint"]:not([data-theme="light"]) .pm-wake > i { filter: brightness(.5) saturate(.7); } }
+/* a press: the board or control sinks a hair into the meadow (scale, so it adds to the hover lift); petals scatter */
+html[data-look="paint"].pm-live :is(.card, .btn, .pager a, .back) { transition: transform .2s var(--pop), scale .16s ease-out; }
+html[data-look="paint"].pm-live :is(.card, .btn, .pager a, .back):active { scale: .985; }
+.pm-petal { position: absolute; left: 0; top: 0; width: 10px; height: 10px; pointer-events: none; z-index: 5; will-change: transform; background: var(--pm-petal) center / 100% 100% no-repeat; }
+html[data-look="paint"] {
+  --pm-petal: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M1.5 8.6C1 5 3.4 1.6 8.4 1.2c.6 4.2-2.6 7.6-6.9 7.4z' fill='%23f7efd6'/%3E%3Cpath d='M1.5 8.6C3 6.4 5 4.4 8.4 1.2 7.6 5 5 8 1.5 8.6z' fill='%23ead7a6'/%3E%3Cpath d='M1.5 8.6l1.6-1.5' stroke='%23d9a95a' stroke-width='1.1' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+/* 1. page to page: a wind sweep. The new page comes in behind a ragged painted edge that runs left to right with flecks of
+   paint blown ahead of it; the old page drifts downwind and goes. The top bar stays put. 0.56 s. */
+html[data-look="paint"] .topbar { view-transition-name: pm-bar; }
+@keyframes pm-vt-out { 0% { translate: 0 0; opacity: 1; } 55% { opacity: 1; } 100% { translate: 28px -4px; opacity: 0; } }
+@keyframes pm-vt-in { from { -webkit-mask-position: 100% 0; mask-position: 100% 0; translate: -14px 0; } to { -webkit-mask-position: 0 0; mask-position: 0 0; translate: 0 0; } }
+html[data-look="paint"]::view-transition-old(root) { animation: pm-vt-out .5s cubic-bezier(.45, 0, .7, 1) both; }
+html[data-look="paint"]::view-transition-new(root) {
+  animation: pm-vt-in .56s cubic-bezier(.3, .55, .3, 1) both;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 100' preserveAspectRatio='none'%3E%3Cpath d='M0 0H140C146 6 139 12 147 18S141 30 149 37 142 49 150 56 143 69 151 76 144 88 152 100H0z'/%3E%3Cg%3E%3Cellipse cx='150' cy='9' rx='7' ry='3' transform='rotate(-14 150 9)'/%3E%3Cellipse cx='156' cy='27' rx='8' ry='2.6' transform='rotate(-10 156 27)'/%3E%3Cellipse cx='152' cy='45' rx='6' ry='3' transform='rotate(-18 152 45)'/%3E%3Cellipse cx='158' cy='63' rx='8' ry='2.8' transform='rotate(-8 158 63)'/%3E%3Cellipse cx='154' cy='82' rx='7' ry='3' transform='rotate(-15 154 82)'/%3E%3Cellipse cx='166' cy='16' rx='4' ry='1.6' transform='rotate(-12 166 16)'/%3E%3Cellipse cx='170' cy='52' rx='4.5' ry='1.5' transform='rotate(-9 170 52)'/%3E%3Cellipse cx='168' cy='91' rx='4' ry='1.6' transform='rotate(-14 168 91)'/%3E%3Cellipse cx='181' cy='34' rx='2.6' ry='1' transform='rotate(-10 181 34)'/%3E%3Cellipse cx='186' cy='71' rx='2.4' ry='1' transform='rotate(-16 186 71)'/%3E%3Cellipse cx='194' cy='5' rx='1.8' ry='.8'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 300% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 100' preserveAspectRatio='none'%3E%3Cpath d='M0 0H140C146 6 139 12 147 18S141 30 149 37 142 49 150 56 143 69 151 76 144 88 152 100H0z'/%3E%3Cg%3E%3Cellipse cx='150' cy='9' rx='7' ry='3' transform='rotate(-14 150 9)'/%3E%3Cellipse cx='156' cy='27' rx='8' ry='2.6' transform='rotate(-10 156 27)'/%3E%3Cellipse cx='152' cy='45' rx='6' ry='3' transform='rotate(-18 152 45)'/%3E%3Cellipse cx='158' cy='63' rx='8' ry='2.8' transform='rotate(-8 158 63)'/%3E%3Cellipse cx='154' cy='82' rx='7' ry='3' transform='rotate(-15 154 82)'/%3E%3Cellipse cx='166' cy='16' rx='4' ry='1.6' transform='rotate(-12 166 16)'/%3E%3Cellipse cx='170' cy='52' rx='4.5' ry='1.5' transform='rotate(-9 170 52)'/%3E%3Cellipse cx='168' cy='91' rx='4' ry='1.6' transform='rotate(-14 168 91)'/%3E%3Cellipse cx='181' cy='34' rx='2.6' ry='1' transform='rotate(-10 181 34)'/%3E%3Cellipse cx='186' cy='71' rx='2.4' ry='1' transform='rotate(-16 186 71)'/%3E%3Cellipse cx='194' cy='5' rx='1.8' ry='.8'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 300% 100% no-repeat;
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-look="paint"]::view-transition-group(*), html[data-look="paint"]::view-transition-old(*), html[data-look="paint"]::view-transition-new(*) { animation: none !important; }
+}
+html[data-look="paint"][data-motion="paused"]::view-transition-group(*), html[data-look="paint"][data-motion="paused"]::view-transition-old(*), html[data-look="paint"][data-motion="paused"]::view-transition-new(*) { animation: none !important; }
+html[data-look="paint"] .pm-tuft.pm-ft.pm-off { display: none; }

@@ -8,7 +8,8 @@
    The guardrails (the same as Brush & Scroll's):
    - one moving accent at a time: the ambient ones (a gust's leaves, the leaf that lands) wait while one the reader caused
      (a puff of seeds) is showing, and are cleared by it;
-   - scroll-driven movement stops when the scroll stops; wind in the grass (CSS) is the only constant;
+   - scroll-driven movement stops when the scroll stops; the constant motion is the wind (the grass, the gust through the
+     boards and the tufts at their feet, cloud shadows and leaf light drifting: the fluid pass, Nov 20, section at the end);
    - decoration only: every element is aria-hidden, takes no clicks, and never moves layout;
    - words never sit on moving light: the moving light (leaf light, the sun on a card, fireflies, stars, cloud shadows) is
      kept to the painted world and to the boards' edge ring, never under a line of text;
@@ -53,19 +54,20 @@
   function clearFlying() { flying.slice().forEach(function (e) { e.getAnimations().forEach(function (a) { a.cancel(); }); drop(e); }); flying = []; }
 
   /* ---------- the one frame: scroll work and pointer work share a single requestAnimationFrame ---------- */
-  var raf = 0, dirtyScroll = false, dirtyPtr = false, sy = 0, psy = 0, pt = 0, speed = 0, idleT = 0, windT = 0, scrolling = false;
+  var raf = 0, vs = 0, dirtyScroll = false, dirtyPtr = false, sy = 0, psy = 0, pt = 0, speed = 0, idleT = 0, windT = 0, scrolling = false;
   function need() { if (!raf && !d.hidden) raf = requestAnimationFrame(frame); }
   function onScroll() { dirtyScroll = true; need(); }
   function frame(t) {
     raf = 0; frames++;
     if (dirtyScroll) { dirtyScroll = false; scrollFrame(t); }
     if (dirtyPtr) { dirtyPtr = false; if (flyStep()) dirtyPtr = true; }
-    if (dirtyScroll || dirtyPtr) need();
+    var sp = sway(t);
+    if (dirtyScroll || dirtyPtr || sp) need();
   }
   function scrollFrame(t) {
     sy = W.scrollY || 0;
     var dt = Math.max(8, t - (pt || t - 16)), v = Math.abs(sy - psy) / dt, dir = sy > psy ? 1 : sy < psy ? -1 : 0;
-    speed = speed * .6 + v * .4; psy = sy; pt = t;
+    speed = speed * .6 + v * .4; vs = vs * .6 + (sy - psy) / dt * .4; psy = sy; pt = t;
     if (!scrolling && dir) startMove();
     if (speed > .9) { r.classList.add('pm-windy'); clearTimeout(windT); windT = 0; } // 1. faster scrolling raises the wind
     depth(); path(); stars();
@@ -74,7 +76,7 @@
   }
   function startMove() { scrolling = true; if (FP) FP.th.classList.add('pm-moving'); lift(); }
   function rest() {
-    scrolling = false; speed = 0; pt = 0;
+    scrolling = false; speed = 0; vs = 0; pt = 0; need(); // the boards settle back in the next frames
     if (FP) FP.th.classList.remove('pm-moving');
     clearTimeout(windT); windT = setTimeout(function () { r.classList.remove('pm-windy'); }, 900); // 8. the grass comes to rest
     later(settle, 220);
@@ -94,6 +96,9 @@
     if (leads) shades.push(mk('i', 'pm-layer pm-shade pm-band', leads));
     if (chead) shades.push(mk('i', 'pm-layer pm-shade pm-band pm-band-c', chead));
     if (!night()) [].forEach.call(d.querySelectorAll('.leads .card.lead, main > .case-head + .sum .fact'), function (c) { mk('i', 'pm-layer pm-dapple', c, c.firstChild); });
+  }
+  function shadeDrift() { // the cloud shadows and the leaf light drift on at rest: each gets an inner layer the CSS moves
+    [].forEach.call(d.querySelectorAll('.pm-shade, .pm-dapple'), function (e) { e.appendChild(d.createElement('i')).className = 'pm-drift'; });
   }
   function depth() {
     var vh = W.innerHeight;
@@ -264,13 +269,20 @@
   var down = null;
   function onDown(e) {
     down = { x: e.clientX, y: e.clientY, t: now() };
-    if (e.pointerType !== 'mouse') { var c = e.target.closest && e.target.closest('.leads .card.lead'); if (c) { c.classList.add('pm-sun'); later(function () { c.classList.remove('pm-sun'); }, 1400); } }
+    if (e.pointerType !== 'mouse') { var c = e.target.closest && e.target.closest('.leads .card.lead'); if (c) { c.classList.add('pm-sun'); later(function () { c.classList.remove('pm-sun'); }, 1400); }
+      var bc = e.target.closest && e.target.closest('.pm-board'), b = bc && bc.__pmb;
+      if (b && b.w) { var pu = push = { b: b, v: clamp((e.clientX - b.l - b.w / 2) / (b.w / 2), -1, 1), touch: true }; later(function () { if (push === pu) push = null; need(); }, 450); need(); }
+      if (WK) { ptr.x = e.clientX; ptr.y = e.clientY; ptr.t = now(); chk = ptr.t; ptr.ok = openGround(ptr.x, ptr.y); WK.sp = 1.2; dirtyPtr = true; need(); } }
   }
   function onUp(e) {
     if (!down || Math.hypot(e.clientX - down.x, e.clientY - down.y) > 8 || now() - down.t > 600) { down = null; return; }
     down = null;
-    if (!e.target.closest || e.target.closest('a, button, input, select, textarea, summary, video, label, p, h1, h2, h3, h4, li, b, span, .card, .band, .more-g, .shot, .method, .topbar, details, .prose:not(.case-head), .fact, .chart-card, .flow, .term, .paper, .figure img, .legend, dl, figcaption, svg')) return;
+    if (!e.target.closest) return;
+    var ctl = e.target.closest('a, button, summary, label');
+    if (ctl) { scatter(e.pageX, e.pageY, 4); return; } // 5. a press: petals scatter from the point
+    if (e.target.closest('a, button, input, select, textarea, summary, video, label, p, h1, h2, h3, h4, li, b, span, .card, .band, .more-g, .shot, .method, .topbar, details, .prose:not(.case-head), .fact, .chart-card, .flow, .term, .paper, .figure img, .legend, dl, figcaption, svg')) return;
     puff(e.pageX, e.pageY);
+    if (!night()) scatter(e.pageX, e.pageY, 2, true); // and two painted petals ride out with the seeds
   }
   function puff(x, y) {
     claim(1500);
@@ -300,6 +312,12 @@
     if (!kbd) { focusOff(); return; }
     focEl = t; if (!FOC) FOC = mk('i', 'pm-focus', d.body);
     placeFocus(); FOC.classList.add('pm-on');
+    if (FOC.animate) FOC.animate([{ rotate: '-2.5deg' }, { rotate: '1deg', offset: .45 }, { rotate: '0deg' }], { duration: 650, easing: 'ease-out' });
+  }
+  function onKey(e) {
+    if ((e.key !== 'Enter' && e.key !== ' ') || !focEl || !FOC || d.activeElement !== focEl) return;
+    if (FOC.animate) FOC.animate([{ scale: '1' }, { scale: '.94', offset: .35 }, { scale: '1' }], { duration: 320, easing: 'ease-out' });
+    var b = focEl.getBoundingClientRect(); scatter(b.left + b.width / 2 + W.scrollX, b.top + W.scrollY + 4, 3);
   }
   function placeFocus() {
     if (!focEl || !FOC) return; var b = focEl.getBoundingClientRect(), p = 15;
@@ -333,14 +351,30 @@
     return true;
   }
   function onMove(e) {
-    if (!FLY.length || !night()) return;
-    ptr.x = e.clientX; ptr.y = e.clientY; ptr.t = now(); dirtyPtr = true; need();
+    var t = now();
+    if (WK) { var dd = Math.hypot(e.clientX - ptr.x, e.clientY - ptr.y), dtt = Math.max(8, t - ptr.t); WK.sp = WK.sp * .7 + clamp(dd / dtt, 0, 4) * .3; }
+    ptr.x = e.clientX; ptr.y = e.clientY; ptr.t = t; dirtyPtr = true;
+    if (t - chk > 120) { chk = t; ptr.ok = openGround(ptr.x, ptr.y); } // hit-tested here, in the event, never inside the frame
+    if (e.pointerType === 'mouse') { // a board leans away from where the pointer is over it
+      var c = e.target.closest && e.target.closest('.pm-board'), b = c && c.__pmb;
+      if (b && b.w) push = { b: b, v: clamp((e.clientX - b.l - b.w / 2) / (b.w / 2), -1, 1) }; else if (push && !push.touch) push = null;
+    }
+    need();
   }
   function flyStep() {
-    if (!FLY.length) return false;
+    if (!FLY.length && !WK) return false;
     var t = now();
-    if (t - chk > 120) { chk = t; ptr.ok = night() && openGround(ptr.x, ptr.y); }
-    var moving = false;
+    var moving = false, nt = night(), fresh = t - ptr.t < 1400;
+    if (WK) { // the grass parts under the pointer: wider while it moves fast, standing back up as it slows, gone 1.4 s after
+      WK.sp *= .94;
+      var ta = fresh && ptr.ok ? 6 + clamp(WK.sp * 16, 0, 24) : 0;
+      WK.ang += (ta - WK.ang) * .18;
+      if (Math.abs(ta - WK.ang) > .2) moving = true;
+      WK.e.style.transform = 'translate(' + ptr.x.toFixed(1) + 'px,' + ptr.y.toFixed(1) + 'px)';
+      WK.a.style.transform = 'rotate(' + (-WK.ang).toFixed(1) + 'deg)'; WK.b.style.transform = 'rotate(' + WK.ang.toFixed(1) + 'deg)';
+      WK.e.classList.toggle('pm-on', fresh && ptr.ok);
+    }
+    if (!nt) { FLY.forEach(function (f) { f.e.classList.remove('pm-on'); }); return moving || fresh; }
     FLY.forEach(function (f, i) {
       var tx = ptr.x + Math.cos(t / 900 + f.ph) * (22 + 8 * i), ty = ptr.y + Math.sin(t / 700 + f.ph) * (16 + 6 * i) - 10;
       if (!f.x) { f.x = tx; f.y = ty; }
@@ -350,18 +384,139 @@
       f.e.classList.toggle('pm-on', ptr.ok);
     });
     // they drift while the pointer moves and a moment after; then they hold still and fade
-    if (t - ptr.t > 1400) { FLY.forEach(function (f) { f.e.classList.remove('pm-on'); }); return false; }
+    if (t - ptr.t > 1400) { FLY.forEach(function (f) { f.e.classList.remove('pm-on'); }); if (WK) WK.e.classList.remove('pm-on'); return moving; }
     return moving || t - ptr.t < 1400;
   }
 
+
+  /* ================= fluid pass (Nov 20, Ryan: "the pages should feel alive and fluid", brief _tools/fluid/BRIEF.md) =========
+     The whole page is a meadow in wind. Every board stands in the meadow on a spring rooted at its foot (origin bottom
+     centre) and is moved by one wind field, in this one frame:
+     - the gust: the same 7 s clock as the grass fringes (read once from their CSS animation), so a gust bends the hero band,
+       then each hill band a beat later, and the boards in it lean a hair as it passes, left to right across the screen;
+     - scroll is a gust: speed leans every board on screen, and the boards lag the page a little (inertia) and settle;
+     - a board arriving on screen is blown in from upwind and settles (never a fade-up);
+     - the pointer: a board leans away from where the pointer is (a touch pushes it).
+     The lean is held to 1.8 px at a board's top corner and boards taller than two windows do not lean, so words being read move
+     at most a couple of pixels; at rest every inline value is taken off again, so words render crisp and still.
+     Between gusts the frame sleeps (one timer wakes it for the next gust of a board on screen). */
+  var BOARDS = '.leads .card.lead, .more-g, main ol.method, main .band, .fact, .chart-card, .term, main > .prose:not(.case-head), .pager a';
+  var BD = [], bio = null, ro = null, cyc0 = 0, CYC = 7000, gustT = 0, push = null, armed = false, swLast = 0;
+  var K = 70, C = 2 * Math.sqrt(70) * .8; // a spring a little under critical: settles in about 0.6 s with no visible bounce
+  function gustClock() { // phase of the grass's gust (an animation with no delay: the hero band's, or a case page's first band)
+    cyc0 = now();
+    try { var as = d.getAnimations(); for (var i = 0; i < as.length; i++) { var a = as[i];
+      if (/^pm-gust/.test(a.animationName || '') && a.currentTime != null && !(a.effect.getTiming().delay > 0)) { cyc0 = now() - a.currentTime; break; } } } catch (e) {}
+  }
+  function boardsSetup() {
+    var els = [].slice.call(d.querySelectorAll(BOARDS));
+    els = els.filter(function (e) { return !els.some(function (o) { return o !== e && o.contains(e); }); }); // no board inside another
+    gustClock();
+    var tc = now();
+    els.forEach(function (el) {
+      var b = { el: el, r: 0, vr: 0, x: 0, vx: 0, y: 0, vy: 0, on: false, top: 0, h: 0, l: 0, w: 0, amax: 0, delay: 0, tc: tc, seen: false };
+      el.__pmb = b; el.classList.add('pm-board'); BD.push(b);
+      // grass tufts at the board's foot bend in the gust (the lead cards have theirs already); only where the board is
+      // already positioned, so nothing about its layout changes
+      if (!el.matches('.card.lead') && getComputedStyle(el).position !== 'static') b.tf = [mk('i', 'pm-layer pm-tuft pm-ft l', el), mk('i', 'pm-layer pm-tuft pm-ft r', el)];
+    });
+    boardsMeasure();
+    if (W.IntersectionObserver) {
+      bio = new IntersectionObserver(function (en) {
+        en.forEach(function (x) { var b = x.target.__pmb; if (!b || !x.isIntersecting || b.seen) return; b.seen = true; if (armed && !d.hidden) arrive(b); });
+        armed = true;
+      }, { rootMargin: '0px 0px -6% 0px' });
+      BD.forEach(function (b) { bio.observe(b.el); });
+      offs.push(function () { bio.disconnect(); bio = null; });
+    }
+    if (W.ResizeObserver) { var roT = 0; ro = new ResizeObserver(function () { clearTimeout(roT); roT = setTimeout(function () { if (live) { boardsMeasure(); need(); } }, 200); }); ro.observe(d.body); offs.push(function () { ro.disconnect(); ro = null; clearTimeout(roT); }); }
+  }
+  function boardsMeasure() {
+    var words = null, syy = W.scrollY || 0, vw = r.clientWidth || 1, vh = W.innerHeight, hosts = [], h0 = leads || d.querySelector('main > .case-head + .sum');
+    if (h0) hosts.push(h0.getBoundingClientRect().top + syy);
+    sections.forEach(function (s) { hosts.push(s.getBoundingClientRect().top + syy); });
+    BD.forEach(function (b) {
+      var q = b.el.getBoundingClientRect(), k = 0;
+      b.top = q.top + syy - b.y; b.h = q.height; b.l = q.left - b.x; b.w = q.width;
+      b.amax = q.height > vh * 2 ? 0 : Math.min(.5, 1.8 / Math.max(q.height, q.width / 2, 1) * 57.3);
+      hosts.forEach(function (ht, i) { if (ht <= b.top + 100) k = i; });
+      b.delay = Math.min(k, 2) * 900 + clamp((b.l + b.w / 2) / vw, 0, 1) * 350; // a beat per band down the page, and left to right
+      // the tufts' CSS gust runs on the same clock: its delay is counted from when the tufts were made
+      prop(b.el, '--pm-gd', (cyc0 + b.delay - b.tc).toFixed(0) + 'ms');
+      if (b.tf) tuftsClear(b, words || (words = wordRects()));
+    });
+  }
+  function wordRects() { // every visible line of words, link and picture on the page (read at measure time, never in the frame)
+    var out = [], tw = d.createTreeWalker(d.querySelector('main') || d.body, NodeFilter.SHOW_TEXT), n, rg = d.createRange();
+    while ((n = tw.nextNode())) { if (!/\S/.test(n.nodeValue) || (n.parentNode.checkVisibility && !n.parentNode.checkVisibility())) continue; rg.selectNodeContents(n); var rs = rg.getClientRects(); for (var i = 0; i < rs.length; i++) out.push(rs[i]); }
+    [].forEach.call(d.querySelectorAll('main :is(a:not(.pm-board), button, summary, img, video)'), function (e) { out.push(e.getBoundingClientRect()); });
+    return out;
+  }
+  function tuftsClear(b, words) { // a tuft stands only where no word, link or picture is within 3 px of it
+    b.tf.forEach(function (t) {
+      t.classList.remove('pm-off'); var c = t.getBoundingClientRect();
+      var hit = words.some(function (n) { return n.right > c.left - 3 && n.left < c.right + 3 && n.bottom > c.top - 3 && n.top < c.bottom + 3; });
+      t.classList.toggle('pm-off', hit);
+    });
+  }
+  function arrive(b) { b.x = -9; b.vx = 0; b.r = -b.amax * 2.2; b.vr = 0; need(); }
+  function gustAt(b, tn) { var u = (((tn - cyc0 - b.delay) % CYC) + CYC) % CYC; u = (u - 4100) / 1500; return u > 0 && u < 1 ? Math.pow(Math.sin(Math.PI * u), 2) : 0; }
+  function untilGust(b, tn) { var u = (((tn - cyc0 - b.delay) % CYC) + CYC) % CYC; return (4100 - u + CYC) % CYC; }
+  function restB(b) {
+    b.r = b.vr = b.x = b.vx = b.y = b.vy = 0;
+    if (b.on) { b.on = false; b.el.classList.remove('pm-spr'); b.el.style.removeProperty('rotate'); b.el.style.removeProperty('translate'); }
+  }
+  function sway() {
+    if (!BD.length || d.hidden) return false;
+    var tn = now(), dt = clamp((tn - (swLast || tn - 16)) / 1000, .004, .05), vh = W.innerHeight, busy = false, next = 1e9;
+    swLast = tn;
+    var wind = clamp(speed / 2.2, 0, 1), lag = clamp(vs * 1.4, -2.4, 2.4);
+    for (var i = 0; i < BD.length; i++) {
+      var b = BD[i];
+      if (b.top - sy > vh + 40 || b.top + b.h - sy < -40) { if (b.on) restB(b); continue; }
+      var g = gustAt(b, tn), p = push && push.b === b ? push.v : 0;
+      var tr = b.amax * (.8 * g + .9 * wind - .7 * p), tx = b.amax ? .8 * (g + wind) : 0, ty = b.amax ? lag : 0;
+      b.vr += (K * (tr - b.r) - C * b.vr) * dt; b.r += b.vr * dt;
+      b.vx += (K * (tx - b.x) - C * b.vx) * dt; b.x += b.vx * dt;
+      b.vy += (K * (ty - b.y) - C * b.vy) * dt; b.y += b.vy * dt;
+      var still = !tr && !tx && !ty && Math.abs(b.r) < .002 && Math.abs(b.vr) < .01 && Math.abs(b.x) < .04 && Math.abs(b.vx) < .2 && Math.abs(b.y) < .04 && Math.abs(b.vy) < .2;
+      if (still) { restB(b); next = Math.min(next, untilGust(b, tn)); continue; }
+      busy = true;
+      if (!b.on) { b.on = true; b.el.classList.add('pm-spr'); }
+      b.el.style.rotate = b.r.toFixed(3) + 'deg'; b.el.style.translate = b.x.toFixed(2) + 'px ' + b.y.toFixed(2) + 'px';
+    }
+    clearTimeout(gustT); gustT = 0;
+    if (!busy) { swLast = 0; if (next < 1e9) gustT = setTimeout(function () { gustT = 0; if (live) need(); }, Math.max(16, next - 8)); }
+    return busy;
+  }
+
+  /* the pointer parts the grass: where it moves over open ground (and where a finger lands there), two clumps of grass part
+     under it, more the faster it goes, and stand back up when it stops */
+  var WK = null;
+  function wakeSetup() { WK = { e: mk('i', 'pm-wake', d.body), ang: 0, sp: 0, lx: 0, ly: 0, lt: 0 }; WK.a = d.createElement('i'); WK.b = d.createElement('i'); WK.e.appendChild(WK.a); WK.e.appendChild(WK.b); }
+
+  /* a press: a few painted petals (by night, seeds) scatter downwind from the point */
+  function scatter(x, y, n, keep) {
+    if (!keep) claim(1300);
+    var nt = night();
+    for (var i = 0; i < n; i++) {
+      var e = mk('i', nt ? 'pm-seed pm-sc' : 'pm-petal', d.body), a = -Math.PI / 2 + .35 + (i - (n - 1) / 2) * .55 + (Math.random() - .5) * .3, dist = 26 + 22 * Math.random();
+      e.style.left = (x - 5) + 'px'; e.style.top = (y - 5) + 'px';
+      fly(e, [{ transform: 'translate(0,0) rotate(0)', opacity: 0 }, { opacity: 1, offset: .12 },
+        { transform: 'translate(' + (Math.cos(a) * dist + 22).toFixed(0) + 'px,' + (Math.sin(a) * dist - 6 + 14).toFixed(0) + 'px) rotate(' + (120 + 90 * i) + 'deg)', opacity: 0 }],
+        { duration: 1000 + 250 * Math.random(), easing: 'cubic-bezier(.2,.6,.4,1)' });
+    }
+  }
+
   /* ---------- on, off ---------- */
-  function relay() { if (FP) { FP.d = null; path(); } boundsSetup(); depth(); placeFocus(); }
+  function relay() { if (FP) { FP.d = null; path(); } boundsSetup(); depth(); placeFocus(); boardsMeasure(); need(); }
   function start() {
     live = true; frames = 0;
     r.classList.add('pm-live');
     sy = psy = W.scrollY || 0;
     depthSetup(); pathSetup(); boundsSetup(); cardsSetup(); glintSetup(); starsSetup(); flySetup();
-    depth(); stars();
+    shadeDrift(); boardsSetup(); wakeSetup();
+    depth(); stars(); need();
     on(W, 'scroll', onScroll, { passive: true });
     on(W, 'scroll', placeFocus, { passive: true });
     on(W, 'resize', relay, { passive: true });
@@ -373,18 +528,20 @@
     on(d, 'pointerout', onOut, { passive: true });
     on(d, 'pointermove', onMove, { passive: true });
     on(d, 'focusin', onFocusIn);
+    on(d, 'keydown', onKey);
     on(d, 'focusout', function () { setTimeout(function () { if (d.activeElement !== focEl) focusOff(); }, 0); });
-    on(d, 'visibilitychange', function () { if (d.hidden) { cancelAnimationFrame(raf); raf = 0; dirtyScroll = dirtyPtr = false; clearFlying(); FLY.forEach(function (f) { f.e.classList.remove('pm-on'); }); } });
+    on(d, 'visibilitychange', function () { if (d.hidden) { cancelAnimationFrame(raf); raf = 0; dirtyScroll = dirtyPtr = false; clearFlying(); FLY.forEach(function (f) { f.e.classList.remove('pm-on'); }); BD.forEach(restB); clearTimeout(gustT); gustT = 0; swLast = 0; } else need(); });
   }
   function stop() {
     live = false;
     offs.forEach(function (f) { f(); }); offs = [];
-    timers.forEach(clearTimeout); timers = []; clearTimeout(idleT); clearTimeout(windT);
+    timers.forEach(clearTimeout); timers = []; clearTimeout(idleT); clearTimeout(windT); clearTimeout(gustT); gustT = 0;
+    BD.forEach(function (b) { restB(b); b.el.classList.remove('pm-board'); delete b.el.__pmb; }); BD = []; push = null; armed = false; swLast = 0; WK = null; vs = 0;
     cancelAnimationFrame(raf); raf = 0; dirtyScroll = dirtyPtr = false;
     clearFlying(); if (landed) { drop(landed); landed = null; }
     made.forEach(drop); made = [];
     styled.forEach(function (el) { if (el.style.getPropertyValue('--pm-pos')) el.style.removeProperty('position');
-      ['--pm-sy', '--pm-cx', '--pm-cy', '--pm-hy', '--pm-shx', '--pm-lx', '--pm-ly', '--pm-pos'].forEach(function (k) { el.style.removeProperty(k); }); }); styled = [];
+      ['--pm-sy', '--pm-cx', '--pm-cy', '--pm-hy', '--pm-shx', '--pm-lx', '--pm-ly', '--pm-pos', '--pm-gd'].forEach(function (k) { el.style.removeProperty(k); }); }); styled = [];
     [].forEach.call(d.querySelectorAll('.pm-sun, .pm-glint, .pm-moving'), function (e) { e.classList.remove('pm-sun', 'pm-glint', 'pm-moving'); });
     [].forEach.call(d.querySelectorAll('[data-pm-from]'), function (e) { e.removeAttribute('data-pm-from'); });
     r.classList.remove('pm-live', 'pm-windy');
