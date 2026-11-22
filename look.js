@@ -35,7 +35,9 @@ var LOOK_ROWS = [
   ["paint", "Paint & Meadow",  ["#dcc2a6", "#18373e"],    ["#d9d5b9", "#0275a0"],    true],
   ["dots",  "Dots & Panels",   ["#f6f0dc", "#272015"],    ["#f6f0dc", "#c8321e"],    true],
   /* history: light and dark (dark added Nov 21 2026; replaced Studio, which git keeps). Films: video/film-<page>-history.mp4 + img/film-<page>-history.jpg from _tools/history-films/out/ (the light twins in both settings). */
-  ["history", "Studio",          ["#e9ecef", "#34332f"],  ["#e9ecef", "#14594a"],    true]
+  ["history", "Studio",          ["#e9ecef", "#34332f"],  ["#e9ecef", "#14594a"],    true],
+  /* gouache: sample (Nov 21 2026), home first. No films yet (false); look-gouache.js paints the field under the page. */
+  ["gouache", "Gouache & Shape", ["#f4d7da", "#0b378d"],  ["#f4d7da", "#195fbf"],    false]
 ];
 
 /* To try a look without changing anything, add ?look=<key> (?look=wash, ?look=mini, ?look=yarn ...) to any page address.
@@ -80,8 +82,8 @@ var LOOK_ROWS = [
       sheet.rel = "stylesheet"; sheet.href = BASE + "look-" + look + ".css"; sheet.setAttribute("blocking", "render");
       head.appendChild(sheet);
     } else document.write('<link rel="stylesheet" href="' + BASE + 'look-' + look + '.css">');
-    if (look === "mini") {                         // the ground under the page: drawn once, never moving, so loaded with or without motion
-      var mjs = document.createElement("script"); mjs.src = BASE + "look-mini.js"; mjs.async = true;
+    if (look === "mini" || look === "gouache") {   // the ground under the page: drawn once, never moving, so loaded with or without motion
+      var mjs = document.createElement("script"); mjs.src = BASE + "look-" + look + ".js"; mjs.async = true;
       (head || document.documentElement).appendChild(mjs);
     }
     var metas = document.querySelectorAll('meta[name="theme-color"]');
