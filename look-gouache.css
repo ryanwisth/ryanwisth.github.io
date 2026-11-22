@@ -555,7 +555,7 @@ html[data-look="gouache"]:not(#_) .theme-toggle:not([hidden]), html[data-look="g
   html[data-look="gouache"]:not(#_) :is(.leads-head, .section-head) h2 { font-size: 32px; }
 }
 
-/* the film mount: a light panel on the hub disc; this look's own calm poster until its films exist */
+/* the film mount: a light panel on the hub disc (its own gouache film twins play here since Nov 22) */
 html[data-look="gouache"]:not(#_) .hero-film { background: var(--gq-mount); color: var(--gq-mount-ink); border-radius: 3px; }
 html[data-look="gouache"]:not(#_) .hero-film :is(.film-cap, .film-script, .film-script p) { color: var(--gq-mount-ink); }
 html[data-look="gouache"]:not(#_) .hero-film .film-script summary { color: var(--gq-mount-link); }

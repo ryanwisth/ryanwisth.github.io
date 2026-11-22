@@ -36,8 +36,8 @@ var LOOK_ROWS = [
   ["dots",  "Dots & Panels",   ["#f6f0dc", "#272015"],    ["#f6f0dc", "#c8321e"],    true],
   /* history: light and dark (dark added Nov 21 2026; replaced Studio, which git keeps). Films: video/film-<page>-history.mp4 + img/film-<page>-history.jpg from _tools/history-films/out/ (the light twins in both settings). */
   ["history", "Studio",          ["#e9ecef", "#34332f"],  ["#e9ecef", "#14594a"],    true],
-  /* gouache: sample (Nov 21 2026), home first. No films yet (false); look-gouache.js paints the field under the page. */
-  ["gouache", "Gouache & Shape", ["#f4d7da", "#0b378d"],  ["#f4d7da", "#195fbf"],    false]
+  /* gouache: every page (Nov 21 2026); look-gouache.js paints the field under the page. Films (Nov 22): video/film-<page>-gouache.mp4 + img/film-<page>-gouache.jpg from pf-gouache/out/gouache/. */
+  ["gouache", "Gouache & Shape", ["#f4d7da", "#0b378d"],  ["#f4d7da", "#195fbf"],    true]
 ];
 
 /* To try a look without changing anything, add ?look=<key> (?look=wash, ?look=mini, ?look=yarn ...) to any page address.

@@ -430,22 +430,12 @@
     r.classList.add('gq-drawn');
   }
 
-  /* the home film, while this look has no film twins: its own calm poster, and it waits for a press (no auto-play of the
-     yarn film inside this look). Once gouache twins exist (films true in LOOK_ROWS), this step is removed. */
-  function poster() {
-    var v = d.querySelector('.lead-hero .hero-film video'); if (!v || !on() || v.dataset.gqPoster) return;
-    v.dataset.gqPoster = '1'; v.dataset.held = '1';
-    v.setAttribute('poster', BASE + 'img/gouache/poster-index' + (night() ? '-night' : '') + '.jpg');
-    if (!v.paused) { v.pause(); try { v.currentTime = 0; } catch (e) {} }
-    var box = v.parentNode; if (box && box.classList) box.classList.add('paused');
-  }
-
   var tm = 0, lastW = 0, lastH = 0;
   function soon(ms) { clearTimeout(tm); tm = setTimeout(function () { draw(); }, ms == null ? 120 : ms); }
   function start() {
-    poster(); draw(); lastW = r.clientWidth; lastH = d.body ? d.body.scrollHeight : 0;
+    draw(); lastW = r.clientWidth; lastH = d.body ? d.body.scrollHeight : 0;
     if (d.fonts && d.fonts.ready) d.fonts.ready.then(function () { soon(0); });
-    addEventListener('load', function () { poster(); soon(0); });
+    addEventListener('load', function () { soon(0); });
     addEventListener('resize', function () { if (r.clientWidth !== lastW) { lastW = r.clientWidth; soon(); } });
     if (W.ResizeObserver) new ResizeObserver(function () { var h = d.body.scrollHeight; if (Math.abs(h - lastH) > 2) { lastH = h; soon(); } }).observe(d.body);
     if (W.MutationObserver) new MutationObserver(function () { soon(0); }).observe(r, { attributes: true, attributeFilter: ['data-theme', 'data-look'] });
