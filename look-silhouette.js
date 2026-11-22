@@ -2,7 +2,7 @@
    Nothing is drawn at run time: the SVGs below were cut once by _tools/silhouette/sil-art.mjs (a crane, three carts, a gate
    arm on its post, a tree; no people, no creatures). They are inline so the hinged parts can turn on their pins (CSS, motion
    only). Home: the stage window beside the headline (a wide set and a separate small set for phones), a small gate scene in
-   the featured head, the footer frieze, and this look's own calm poster on the site film (held, not autoplayed, while the
+   the featured head and in every case page's head (the same art, the gate lifts once on load), the footer frieze, and this look's own calm poster on the site film (held, not autoplayed, while the
    look has no films of its own). Every scene is aria-hidden. */
 (function () {
   /* art:start (baked by _tools/silhouette/sil-art.mjs) */
@@ -32,6 +32,8 @@
         io.observe(head);
       } else head.classList.add("sil-in");
     }
+    var ch = document.querySelector("body.case main > .case-head");
+    if (ch && !ch.querySelector(".sil-head")) ch.appendChild(el("span", "sil-head", ART.head));
     var foot = document.querySelector("footer.site");
     if (foot && !foot.querySelector(".sil-frieze")) foot.appendChild(el("div", "sil-frieze", ART.frieze));
     var v = document.querySelector(".lead-hero .hero-film video");
