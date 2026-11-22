@@ -31,7 +31,10 @@ var LOOK_ROWS = [
   ["paint", "Paint & Meadow",  ["#dcc2a6", "#18373e"],    ["#d9d5b9", "#0275a0"],    true],
   ["dots",  "Dots & Panels",   ["#f6f0dc", "#272015"],    ["#f6f0dc", "#c8321e"],    true],
   /* history: light and dark (dark added Nov 21 2026; replaced Studio, which git keeps). Films: video/film-<page>-history.mp4 + img/film-<page>-history.jpg from _tools/history-films/out/ (the light twins in both settings). */
-  ["history", "Studio",          ["#e9ecef", "#34332f"],  ["#e9ecef", "#14594a"],    true]
+  ["history", "Studio",          ["#e9ecef", "#34332f"],  ["#e9ecef", "#14594a"],    true],
+  /* mini: option stills only (Nov 21 2026), not yet picked. Three ways to map the page onto a top-down pixel world, ?mv=a|b|c
+     (a overworld, b menus and text boxes, c tiny scale). look-mini.js paints the ground; it is loaded below, not by site.js. */
+  ["mini",  "Mini World",      ["#5cd04c", "#2a2238"],    ["#5cd04c", "#2a2238"],    false]
 ];
 
 /* To try a look without changing anything, add ?look=<key> (?look=wash, ?look=cel, ?look=yarn ...) to any page address.
@@ -72,6 +75,13 @@ var LOOK_ROWS = [
       sheet.rel = "stylesheet"; sheet.href = BASE + "look-" + look + ".css"; sheet.setAttribute("blocking", "render");
       head.appendChild(sheet);
     } else document.write('<link rel="stylesheet" href="' + BASE + 'look-' + look + '.css">');
+    if (look === "mini") {                         // which of the three option stills: ?mv=a|b|c, kept for the tab
+      var mvm = /[?&]mv=([abc])\b/.exec(location.search), mvk = null;
+      try { if (mvm) sessionStorage.setItem("mv", mvm[1]); mvk = sessionStorage.getItem("mv"); } catch (e) { if (mvm) mvk = mvm[1]; }
+      root.setAttribute("data-mv", mvk || "a");
+      var mjs = document.createElement("script"); mjs.src = BASE + "look-mini.js"; mjs.async = true;
+      (head || document.documentElement).appendChild(mjs);
+    }
     var metas = document.querySelectorAll('meta[name="theme-color"]');
     if (TINT[look]) for (var i = 0; i < metas.length; i++) metas[i].content = TINT[look][/dark/.test(metas[i].media) ? 1 : 0];
   }
