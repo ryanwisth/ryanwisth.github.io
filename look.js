@@ -35,7 +35,10 @@ var LOOK_ROWS = [
   ["paint", "Paint & Meadow",  ["#dcc2a6", "#18373e"],    ["#d9d5b9", "#0275a0"],    true],
   ["dots",  "Dots & Panels",   ["#f6f0dc", "#272015"],    ["#f6f0dc", "#c8321e"],    true],
   /* history: light and dark (dark added Nov 21 2026; replaced Studio, which git keeps). Films: video/film-<page>-history.mp4 + img/film-<page>-history.jpg from _tools/history-films/out/ (the light twins in both settings). */
-  ["history", "Studio",          ["#e9ecef", "#34332f"],  ["#e9ecef", "#14594a"],    true]
+  ["history", "Studio",          ["#e9ecef", "#34332f"],  ["#e9ecef", "#14594a"],    true],
+  /* backdrop: sample (Nov 21 2026), home first; Ryan picked option B, "Matte plate". No films yet (false): the yarn films play,
+     the home film under the look's own painted poster (look-backdrop.js, loaded below). */
+  ["backdrop", "Backdrop & Spotlight", ["#423630", "#3c324b"], ["#554437", "#a02a26"], false]
 ];
 
 /* To try a look without changing anything, add ?look=<key> (?look=wash, ?look=mini, ?look=yarn ...) to any page address.
@@ -80,8 +83,8 @@ var LOOK_ROWS = [
       sheet.rel = "stylesheet"; sheet.href = BASE + "look-" + look + ".css"; sheet.setAttribute("blocking", "render");
       head.appendChild(sheet);
     } else document.write('<link rel="stylesheet" href="' + BASE + 'look-' + look + '.css">');
-    if (look === "mini") {                         // the ground under the page: drawn once, never moving, so loaded with or without motion
-      var mjs = document.createElement("script"); mjs.src = BASE + "look-mini.js"; mjs.async = true;
+    if (look === "mini" || look === "backdrop") {  // mini: the ground under the page; backdrop: the home film's poster. Never moving, so loaded with or without motion
+      var mjs = document.createElement("script"); mjs.src = BASE + "look-" + look + ".js"; mjs.async = true;
       (head || document.documentElement).appendChild(mjs);
     }
     var metas = document.querySelectorAll('meta[name="theme-color"]');
