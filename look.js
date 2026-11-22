@@ -94,6 +94,12 @@ var LOOK_ROWS = [
       var mjs = document.createElement("script"); mjs.src = BASE + "look-" + look + ".js"; mjs.async = true;
       (head || document.documentElement).appendChild(mjs);
     }
+    if (look === "history") {                      // Studio's Inspector lays the page out, so it loads with or without motion; the page is
+      var hjs = document.createElement("script"); // held hidden until it has (html.vh-ready), with a fail-safe. Its id keeps site.js from loading it twice.
+      hjs.id = "look-history-js"; hjs.src = BASE + "look-history.js"; hjs.async = true;
+      (head || document.documentElement).appendChild(hjs);
+      setTimeout(function () { root.classList.add("vh-ready"); }, 2500);
+    }
     var metas = document.querySelectorAll('meta[name="theme-color"]');
     if (TINT[look]) for (var i = 0; i < metas.length; i++) metas[i].content = TINT[look][/dark/.test(metas[i].media) ? 1 : 0];
   }

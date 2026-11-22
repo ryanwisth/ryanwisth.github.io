@@ -20,7 +20,7 @@
 /* ---------- tokens ---------- */
 html[data-look="history"]:not(#_) {
   --vh-field: #e9ecef; --vh-ink: #14171c; --vh-panel: #ffffff; --vh-muted: #5e6672; --vh-green: #14594a; --vh-line: #d3d8dd; --vh-tint: #dce9e4;
-  --vh-bad: #9b2c1f; --vh-warn: #7a4a00; --vh-scroll: #b9c0c7; --vh-tt: "Dark";
+  --vh-bad: #9b2c1f; --vh-warn: #7a4a00; --vh-scroll: #b9c0c7; --vh-tt: "Dark"; --vh-edge: #c6cdd3;
   --vh-plate-w: 0px; --vh-plate-pad: 0px; --vh-plate-bg: var(--vh-tint);
   --vh-head: "Familjen Grotesk", "Atkinson Hyperlegible Next", sans-serif;
   --vh-body: "Atkinson Hyperlegible Next", sans-serif;
@@ -57,7 +57,7 @@ html[data-look="history"]:not(#_) {
 @media (prefers-color-scheme: dark) {
   html[data-look="history"]:not(#_):not([data-theme="light"]) {
     --vh-field: #34332f; --vh-ink: #ecebe6; --vh-panel: #3e3d38; --vh-muted: #b8b4ac; --vh-green: #8cc7b1; --vh-line: #5c5a54; --vh-tint: #3a4641;
-    --vh-bad: #efa293; --vh-warn: #e0b56e; --vh-scroll: #6a6862; --vh-tt: "Light";
+    --vh-bad: #efa293; --vh-warn: #e0b56e; --vh-scroll: #6a6862; --vh-tt: "Light"; --vh-edge: #5c5a54;
     --vh-plate-w: 1px; --vh-plate-pad: 6px; --vh-plate-bg: var(--vh-panel);
     --bg: #34332f; --bg-soft: #34332f; --text: #ecebe6; --muted: #b8b4ac; --faint: #b8b4ac; --line: #5c5a54;
     --card: #3e3d38; --ink: #ecebe6; --accent: #8cc7b1; --accent-2: #8cc7b1; --accent-soft: #3a4641; --mark-ink: #34332f;
@@ -71,7 +71,7 @@ html[data-look="history"]:not(#_) {
 }
 html[data-look="history"]:not(#_)[data-theme="dark"] {
   --vh-field: #34332f; --vh-ink: #ecebe6; --vh-panel: #3e3d38; --vh-muted: #b8b4ac; --vh-green: #8cc7b1; --vh-line: #5c5a54; --vh-tint: #3a4641;
-  --vh-bad: #efa293; --vh-warn: #e0b56e; --vh-scroll: #6a6862; --vh-tt: "Light";
+  --vh-bad: #efa293; --vh-warn: #e0b56e; --vh-scroll: #6a6862; --vh-tt: "Light"; --vh-edge: #5c5a54;
   --vh-plate-w: 1px; --vh-plate-pad: 6px; --vh-plate-bg: var(--vh-panel);
   --bg: #34332f; --bg-soft: #34332f; --text: #ecebe6; --muted: #b8b4ac; --faint: #b8b4ac; --line: #5c5a54;
   --card: #3e3d38; --ink: #ecebe6; --accent: #8cc7b1; --accent-2: #8cc7b1; --accent-soft: #3a4641; --mark-ink: #34332f;
@@ -473,24 +473,11 @@ html[data-look="history"]:not(#_) .case-toc { display: none; }
   html[data-look="history"]:not(#_) .topnav a { font-size: 14px; }
 }
 
-/* ---------- motion: everything still, except the one load moment ---------- */
+/* ---------- motion: everything still (the Inspector's one crossfade is in its own block below) ---------- */
 html[data-look="history"]:not(#_) body *:not(.look-pick, .look-pick *), html[data-look="history"]:not(#_) body *:not(.look-pick, .look-pick *)::before, html[data-look="history"]:not(#_) body *:not(.look-pick, .look-pick *)::after { animation: none; transition: none; }
 html[data-look="history"]:not(#_) .reveal, html[data-look="history"]:not(#_).motion .reveal, html[data-look="history"]:not(#_).motion .reveal.in { opacity: 1; transform: none; translate: none; scale: none; filter: none; clip-path: none; }
 html[data-look="history"]:not(#_).motion .reveal :is(.bars i, .track i, .flow li, .band3 > div, .ln, .legend li, img, video) { opacity: 1; transform: none; scale: none; clip-path: none; }
 html[data-look="history"]:not(#_)::view-transition-group(*), html[data-look="history"]:not(#_)::view-transition-old(*), html[data-look="history"]:not(#_)::view-transition-new(*) { animation: none; }
-/* the changelog rows (and the home's five numbers) write in once, left to right, one after another (look-history.js
-   keeps it to the first visit of each page in a tab); nothing else moves. Never under reduced motion or "Pause motion". */
-@media (prefers-reduced-motion: no-preference) {
-  html[data-look="history"]:not(#_).motion:not(.hx-seen) :is(.hx-log .hx-when, .hx-log dl > div, .facts.proof .fact, main:not(:has(> .hx-log)) > .case-head h1) { animation: hx-type .42s steps(14, end) both; animation-delay: calc(var(--hx-i, 0) * 130ms + 120ms); }
-  html[data-look="history"]:not(#_) :is(.hx-log dl > div, .facts.proof .fact):nth-child(1) { --hx-i: 1; }
-  html[data-look="history"]:not(#_) :is(.hx-log dl > div, .facts.proof .fact):nth-child(2) { --hx-i: 2; }
-  html[data-look="history"]:not(#_) :is(.hx-log dl > div, .facts.proof .fact):nth-child(3) { --hx-i: 3; }
-  html[data-look="history"]:not(#_) :is(.hx-log dl > div, .facts.proof .fact):nth-child(4) { --hx-i: 4; }
-  html[data-look="history"]:not(#_) :is(.hx-log dl > div, .facts.proof .fact):nth-child(5) { --hx-i: 5; }
-  html[data-look="history"]:not(#_) :is(.hx-log dl > div, .facts.proof .fact):nth-child(6) { --hx-i: 6; }
-  html[data-look="history"]:not(#_) :is(.hx-log dl > div, .facts.proof .fact):nth-child(7) { --hx-i: 7; }
-}
-@keyframes hx-type { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
 
 /* print: dark ink on white, like every look */
 @media print {
@@ -502,3 +489,253 @@ html[data-look="history"]:not(#_)::view-transition-group(*), html[data-look="his
   html[data-look="history"]:not(#_) :is(.hx-log, .chart-card, .repo-card, .card) { border: 1px solid CanvasText; }
 }
 html[data-look="history"]:not(#_) :is(.method > li, .pills span, .band, .flow li, .chart-card, .band3 > div, .term, .repo-card, .fact, .tblock, .readme, .group-h, .principle, .card, .pager a, .shot, .paper, .split > *):not(:focus-visible) { outline: 0; }
+
+/* =====================================================================================================================
+   THE INSPECTOR (Ryan's pick "B: Inspector", Nov 21 2026; built from option B of _tools/studio-deep, which git keeps at
+   7e3e35d). look-history.js re-lays every page as a tool: an app toolbar; on home a canvas of plates with a sticky
+   inspector showing the record of what is selected (a 1 px green frame with four square handles, .vh-sel); on case pages
+   the write-up as a document canvas with the project's inspector beside it. html[data-look="history"]:not(#_):not(#_) carries two ids so it beats the base
+   rules above, which stay as the fallback when the script cannot run. Colours are the --vh-* tokens, so light and dark
+   both draw; one extra neutral, --vh-edge (#c6cdd3 light, the #5c5a54 hairline dark), for pane, plate and row edges.
+   The one motion: the inspector crossfades a new record in 120 ms (hx-fade-*), never under reduced motion.
+   ===================================================================================================================== */
+html[data-look="history"]:not(#_):not(.vh-ready) body { visibility: hidden; }
+html[data-look="history"]:not(#_):not(#_) ::selection { background: var(--vh-green); color: var(--on-sig); }
+html[data-look="history"]:not(#_):not(#_) :focus-visible { outline: 2px solid var(--vh-green); outline-offset: 3px; }
+
+/* ---------- the toolbar: one panel strip, the name, the version tag, the nav as tool buttons, Dark/Light, the picker ---------- */
+html[data-look="history"]:not(#_):not(#_) .topbar.vh-tool { position: sticky; top: 0; z-index: 30; background: var(--vh-panel); border-bottom: 1px solid var(--vh-edge); }
+html[data-look="history"]:not(#_):not(#_) .vh-tool .wrap { max-width: 1360px; padding: 0 32px; min-height: 56px; display: flex; align-items: center; gap: 18px; flex-wrap: nowrap; }
+html[data-look="history"]:not(#_):not(#_) .vh-tool .brand { display: inline-flex; align-items: center; font: 700 18px/1 var(--vh-head); letter-spacing: -.01em; color: var(--vh-ink); }
+html[data-look="history"]:not(#_):not(#_) .vh-tool .hx-ver { display: inline-block !important; height: 26px; line-height: 24px; box-sizing: border-box; padding: 0 8px; border: 1px solid var(--vh-edge); border-radius: 4px; font: 400 14px/24px var(--vh-body); color: var(--vh-green); white-space: nowrap; }
+html[data-look="history"]:not(#_):not(#_) .vh-tool .topnav { gap: 4px; margin-left: auto; }
+html[data-look="history"]:not(#_):not(#_) .vh-tool .topnav a { display: inline-flex; align-items: center; height: 32px; padding: 0 10px; border: 1px solid transparent; border-radius: 4px; font: 400 15px/1 var(--vh-body); color: var(--vh-ink); text-decoration: none; }
+html[data-look="history"]:not(#_):not(#_) .vh-tool .topnav a:hover { border-color: var(--vh-edge); background: var(--vh-field); color: var(--vh-ink); text-decoration: none; }
+html[data-look="history"]:not(#_):not(#_) .vh-tool .theme-toggle:not([hidden]) { margin: 0 0 0 6px; height: 32px; min-height: 32px; border-color: var(--vh-edge); background: var(--vh-panel); }
+html[data-look="history"]:not(#_):not(#_) .vh-tool .theme-toggle:hover { border-color: var(--vh-ink); color: var(--vh-ink); }
+html[data-look="history"]:not(#_):not(#_) .vh-tool .look-pick-btn { height: 32px; min-height: 32px; padding: 0 10px; background: var(--vh-panel); border: 1px solid var(--vh-edge); border-radius: 4px; font: 400 15px/1 var(--vh-body); color: var(--vh-ink); }
+html[data-look="history"]:not(#_):not(#_) .vh-tool .look-pick-btn:hover, html[data-look="history"]:not(#_):not(#_) .vh-tool .look-pick-btn[aria-expanded="true"] { border-color: var(--vh-ink); }
+html[data-look="history"]:not(#_):not(#_) .vh-tool .look-pick-k { color: var(--vh-muted); }
+
+/* ---------- films: every film in the inspector is its media slot; buttons sit under the frame as small tool buttons ---------- */
+html[data-look="history"]:not(#_):not(#_) .vh-film { margin: 0; }
+html[data-look="history"]:not(#_):not(#_) .vh-frame { position: relative; border-radius: 6px; overflow: hidden; aspect-ratio: 16 / 9; background: var(--vh-plate-bg); border: var(--vh-plate-w) solid var(--vh-line); padding: var(--vh-plate-pad); }
+html[data-look="history"]:not(#_):not(#_) .vh-frame video { display: block; width: 100%; height: 100%; object-fit: cover; cursor: pointer; border-radius: 0; }
+html[data-look="history"]:not(#_):not(#_) .vh-insp :is(.hero-film, .case-film) { margin: 0; padding: 0; background: none; border: 0; max-width: none; width: auto; }
+html[data-look="history"]:not(#_):not(#_) .vh-insp :is(.hero-film, .case-film) .shot { background: none; border: 0; border-radius: 0; overflow: visible; padding: 0; }
+html[data-look="history"]:not(#_):not(#_) .vh-insp :is(.hero-film, .case-film) .shot video { box-sizing: border-box; border-radius: 6px; background: var(--vh-plate-bg); border: var(--vh-plate-w) solid var(--vh-line); padding: var(--vh-plate-pad); }
+html[data-look="history"]:not(#_):not(#_) .vh-insp :is(.film-cap, .case-film figcaption) { margin: 8px 0 0; font-size: 14px; color: var(--vh-muted); }
+html[data-look="history"]:not(#_):not(#_) .vh-insp .film-script { margin: 2px 0 0; padding: 0; }
+html[data-look="history"]:not(#_):not(#_) .vh-insp .film-script summary { font-size: 14px; }
+html[data-look="history"]:not(#_):not(#_) .vh-insp .film-script[open] p { font-size: 15px; max-width: none; }
+html[data-look="history"]:not(#_):not(#_) :is(.vh-ctl, .vh-insp .vid-bar, .vh-inline .vid-bar) { position: static; display: flex; justify-content: flex-start; gap: 6px; margin: 8px 0 0; padding: 0; background: none; }
+html[data-look="history"]:not(#_):not(#_) :is(.vh-ctl button, .vid-bar button) { position: static; display: inline-flex; align-items: center; height: 30px; min-height: 30px; padding: 0 10px; margin: 0; border: 1px solid var(--vh-edge); border-radius: 4px; background: var(--vh-panel); color: var(--vh-ink); font: 400 14px/1 var(--vh-body); cursor: pointer; }
+html[data-look="history"]:not(#_):not(#_) .vid-bar :is(.vid-sound, .vid-toggle) { font-size: 0; }
+html[data-look="history"]:not(#_):not(#_) :is(.vh-ctl button, .vid-bar button):hover { border-color: var(--vh-ink); background: var(--vh-panel); }
+html[data-look="history"]:not(#_):not(#_) :is(.vh-ctl, .vid-bar) button[aria-pressed="true"].vh-snd, html[data-look="history"]:not(#_):not(#_) .vid-bar .vid-sound[aria-pressed="true"] { border-color: var(--vh-green); color: var(--vh-green); }
+
+/* ---------- the inspector ---------- */
+html[data-look="history"]:not(#_):not(#_) .vh-insp { position: sticky; top: 76px; align-self: start; margin-top: 20px; background: var(--vh-panel); border: 1px solid var(--vh-edge); }
+html[data-look="history"]:not(#_):not(#_) .vh-insp-in { position: relative; }
+html[data-look="history"]:not(#_):not(#_) .vh-rec { position: relative; padding: 0 22px 22px; }
+html[data-look="history"]:not(#_):not(#_) .vh-rec.vh-out { position: absolute; left: 0; right: 0; top: 0; animation: hx-fade-out .12s linear both; }
+html[data-look="history"]:not(#_):not(#_) .vh-rec.vh-in { animation: hx-fade-in .12s linear both; }
+@keyframes hx-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes hx-fade-out { from { opacity: 1; } to { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { html[data-look="history"]:not(#_):not(#_) .vh-rec { animation: none !important; } }
+html[data-look="history"]:not(#_):not(#_) .vh-ihead { margin: 0 -22px 16px; padding: 13px 22px 12px; border-bottom: 1px solid var(--vh-edge); }
+html[data-look="history"]:not(#_):not(#_) .vh-crumb { margin: 0; font: 400 14px/1.35 var(--vh-body); color: var(--vh-muted); }
+html[data-look="history"]:not(#_):not(#_) .vh-crumb time { white-space: nowrap; }
+html[data-look="history"]:not(#_):not(#_) .vh-title { margin: 4px 0 0; font: 600 22px/1.15 var(--vh-head); letter-spacing: -.016em; color: var(--vh-ink); }
+html[data-look="history"]:not(#_):not(#_) .vh-title a { color: var(--vh-ink); text-decoration: none; }
+html[data-look="history"]:not(#_):not(#_) .vh-title a:hover { color: var(--vh-green); text-decoration: underline; text-underline-offset: 4px; }
+html[data-look="history"]:not(#_):not(#_) :is(.vh-rows, .vh-brief) { margin: 16px 0 0; display: grid; grid-template-columns: 96px minmax(0, 1fr); column-gap: 0; border-top: 1px solid var(--vh-edge); }
+html[data-look="history"]:not(#_):not(#_) :is(.vh-rows, .vh-brief) > div { display: contents; }
+html[data-look="history"]:not(#_):not(#_) :is(.vh-rows, .vh-brief) :is(dt, dd) { margin: 0; padding: 9px 0; border-bottom: 1px solid var(--vh-edge); }
+html[data-look="history"]:not(#_):not(#_) :is(.vh-rows, .vh-brief) dt { padding-right: 14px; font: 400 14.5px/1.4 var(--vh-body); color: var(--vh-muted); }
+html[data-look="history"]:not(#_):not(#_) :is(.vh-rows, .vh-brief) dd { font-size: 15px; line-height: 1.45; color: var(--vh-ink); }
+html[data-look="history"]:not(#_):not(#_) :is(.vh-rows, .vh-brief) ul { margin: 0; padding: 0; list-style: none; }
+html[data-look="history"]:not(#_):not(#_) :is(.vh-rows, .vh-brief) li { margin: 0; }
+html[data-look="history"]:not(#_):not(#_) :is(.vh-rows, .vh-brief) li + li { margin-top: 4px; }
+html[data-look="history"]:not(#_):not(#_) .vh-links { margin: 14px 0 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 15px; }
+html[data-look="history"]:not(#_):not(#_) .vh-links .hx-x { display: none !important; }
+html[data-look="history"]:not(#_):not(#_) .vh-facts { margin: 16px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--vh-edge); }
+html[data-look="history"]:not(#_):not(#_) .vh-facts li { padding: 9px 0; border-bottom: 1px solid var(--vh-edge); font-size: 15px; line-height: 1.45; color: var(--vh-ink); }
+html[data-look="history"]:not(#_):not(#_) .vh-facts b { font: 700 15.5px/1.45 var(--vh-head); color: var(--vh-green); margin-right: .2em; }
+html[data-look="history"]:not(#_):not(#_) .vh-facts b :is(small, .fit, span) { font: inherit; color: inherit; }
+html[data-look="history"]:not(#_):not(#_) .vh-facts b i { font-style: normal; }
+html[data-look="history"]:not(#_):not(#_) .vh-result { margin: 14px 0 0; font-size: 15.5px; line-height: 1.5; color: var(--vh-ink); }
+
+/* ---------- home: two panes ---------- */
+html[data-look="history"]:not(#_):not(#_) .vh-wrap { max-width: 1360px; padding: 0 32px; }
+html[data-look="history"]:not(#_):not(#_) .vh-app { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 40px; align-items: start; }
+html[data-look="history"]:not(#_):not(#_) .vh-canvas { position: relative; min-width: 0; padding: 0 0 24px; }
+html[data-look="history"]:not(#_):not(#_) .vh-obj { position: relative; }
+html[data-look="history"]:not(#_):not(#_) .vh-hero { max-width: 700px; margin: 44px 0 0 -20px; padding: 20px 24px 22px 20px; }
+html[data-look="history"]:not(#_):not(#_) .vh-hero:focus { outline: 0; }
+html[data-look="history"]:not(#_):not(#_) .vh-hero h1 { margin: 0; max-width: 13ch; font: 600 clamp(42px, 4.9vw, 68px)/.98 var(--vh-head); letter-spacing: -.035em; color: var(--vh-ink); }
+html[data-look="history"]:not(#_):not(#_) .vh-hero h1 .grad { color: inherit; background: none; }
+html[data-look="history"]:not(#_):not(#_) .vh-hero .hero-sub { margin: 26px 0 0; max-width: 36em; font-size: 18px; line-height: 1.55; color: var(--vh-ink); }
+html[data-look="history"]:not(#_):not(#_) .vh-hero .hero-mail { margin: 14px 0 0; font-size: 17px; }
+html[data-look="history"]:not(#_):not(#_) .vh-sec { padding: 40px 0 0; scroll-margin-top: 72px; }
+html[data-look="history"]:not(#_):not(#_) .vh-sec > h2 { margin: 0 0 16px; font: 600 24px/1.2 var(--vh-head); letter-spacing: -.012em; color: var(--vh-ink); }
+
+/* the selection: one frame, four square handles, moved by the script (no animation) */
+html[data-look="history"]:not(#_):not(#_) .vh-sel { position: absolute; z-index: 4; pointer-events: none; }
+html[data-look="history"]:not(#_):not(#_) .vh-sel[hidden] { display: none; }
+html[data-look="history"]:not(#_):not(#_) .vh-sel::before { content: ""; position: absolute; inset: -4px; border: 1px solid var(--vh-green); }
+html[data-look="history"]:not(#_):not(#_) .vh-sel i { position: absolute; width: 7px; height: 7px; box-sizing: border-box; background: var(--vh-panel); border: 1px solid var(--vh-green); }
+html[data-look="history"]:not(#_):not(#_) .vh-sel i:nth-child(1) { top: -7px; left: -7px; }
+html[data-look="history"]:not(#_):not(#_) .vh-sel i:nth-child(2) { top: -7px; right: -7px; }
+html[data-look="history"]:not(#_):not(#_) .vh-sel i:nth-child(3) { bottom: -7px; right: -7px; }
+html[data-look="history"]:not(#_):not(#_) .vh-sel i:nth-child(4) { bottom: -7px; left: -7px; }
+
+/* plates: panel, edge; hover = the edge darkens; selected = the green edge under the frame; never a lift */
+html[data-look="history"]:not(#_):not(#_) .vh-plate { position: relative; background: var(--vh-panel); border: 1px solid var(--vh-edge); }
+html[data-look="history"]:not(#_):not(#_) .vh-plate:hover { border-color: var(--vh-ink); }
+html[data-look="history"]:not(#_):not(#_) .vh-plate.vh-cur { border-color: var(--vh-green); }
+html[data-look="history"]:not(#_):not(#_) .vh-pname { margin: 0; font: 600 22px/1.15 var(--vh-head); letter-spacing: -.014em; }
+html[data-look="history"]:not(#_):not(#_) .vh-pname a { color: var(--vh-ink); text-decoration: none; }
+html[data-look="history"]:not(#_):not(#_) .vh-pname a::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+html[data-look="history"]:not(#_):not(#_) .vh-pname a:hover { color: var(--vh-green); }
+html[data-look="history"]:not(#_):not(#_) .vh-pk { margin: 0 0 6px; font-size: 14.5px; line-height: 1.3; color: var(--vh-muted); }
+html[data-look="history"]:not(#_):not(#_) .vh-pwhat { margin: 8px 0 0; font-size: 16px; line-height: 1.5; color: var(--vh-ink); }
+html[data-look="history"]:not(#_):not(#_) .vh-stars { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 16px; }
+html[data-look="history"]:not(#_):not(#_) .vh-star0 { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+html[data-look="history"]:not(#_):not(#_) .vh-star .vh-poster { align-self: start; margin: 14px; border-radius: 6px; overflow: hidden; background: var(--vh-field); }
+html[data-look="history"]:not(#_):not(#_) .vh-star0 .vh-poster { margin: 16px 0 16px 16px; }
+html[data-look="history"]:not(#_):not(#_) :is(.vh-poster, .vh-thumb) img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
+html[data-look="history"]:not(#_):not(#_) .vh-star .vh-ptext { padding: 2px 18px 20px; }
+html[data-look="history"]:not(#_):not(#_) .vh-star0 .vh-ptext { padding: 22px 22px 22px 24px; align-self: center; }
+html[data-look="history"]:not(#_):not(#_) .vh-star0 .vh-pname { font-size: 30px; line-height: 1.05; letter-spacing: -.022em; }
+html[data-look="history"]:not(#_):not(#_) .vh-star1 .vh-pname { font-size: 24px; }
+html[data-look="history"]:not(#_):not(#_) .vh-group { margin: 0 0 22px; }
+html[data-look="history"]:not(#_):not(#_) .vh-gname { margin: 0 0 8px; font: 600 16px/1.3 var(--vh-head); color: var(--vh-green); }
+html[data-look="history"]:not(#_):not(#_) .vh-list { margin: 0; padding: 0; list-style: none; display: block; }
+html[data-look="history"]:not(#_):not(#_) .vh-row { display: grid; grid-template-columns: 112px minmax(0, 1fr) auto; gap: 16px; align-items: center; padding: 10px 14px 10px 10px; margin-top: -1px; }
+html[data-look="history"]:not(#_):not(#_) .vh-row:hover, html[data-look="history"]:not(#_):not(#_) .vh-row.vh-cur { z-index: 2; }
+html[data-look="history"]:not(#_):not(#_) .vh-thumb { border-radius: 4px; overflow: hidden; background: var(--vh-field); }
+html[data-look="history"]:not(#_):not(#_) .vh-row .vh-pname { font-size: 18px; line-height: 1.2; }
+html[data-look="history"]:not(#_):not(#_) .vh-row .vh-pwhat { margin: 2px 0 0; font-size: 15px; line-height: 1.4; color: var(--vh-muted); }
+html[data-look="history"]:not(#_):not(#_) .vh-pdate { margin: 0; font-size: 14px; color: var(--vh-muted); white-space: nowrap; }
+html[data-look="history"]:not(#_):not(#_) :is(.vh-more, .vh-inline) { display: none; }
+html[data-look="history"]:not(#_):not(#_) .vh-how .how2 { display: block; margin: 0; }
+html[data-look="history"]:not(#_):not(#_) .vh-how .method { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 4fr); gap: 0; margin: 0; padding: 0; list-style: none; background: var(--vh-panel); border: 1px solid var(--vh-edge); }
+html[data-look="history"]:not(#_):not(#_) .vh-how .method > li { padding: 18px 20px 20px; font-size: 17px; background: none; border: 0; }
+html[data-look="history"]:not(#_):not(#_) .vh-how .method > li + li { border-left: 1px solid var(--vh-edge); }
+html[data-look="history"]:not(#_):not(#_) .vh-how .method .who { font: 600 22px/1.2 var(--vh-head); margin: 0 0 4px; }
+html[data-look="history"]:not(#_):not(#_) .vh-how .method > li > p, html[data-look="history"]:not(#_):not(#_) .vh-how .method .pills span { font-size: 17px; }
+html[data-look="history"]:not(#_):not(#_) .vh-close { padding: 40px 0 0; }
+html[data-look="history"]:not(#_):not(#_) .vh-close .band { margin: 0; padding: 26px 24px 28px; background: var(--vh-green); color: var(--on-sig); border: 0; }
+html[data-look="history"]:not(#_):not(#_) .vh-close .band h2 { margin: 0; max-width: 22em; font: 600 26px/1.2 var(--vh-head); color: var(--on-sig); }
+html[data-look="history"]:not(#_):not(#_) .vh-close .band .ctas { margin: 16px 0 0; gap: 8px; }
+html[data-look="history"]:not(#_):not(#_) .vh-close .btn { display: inline-flex; align-items: center; height: 34px; padding: 0 12px; border: 1px solid var(--on-sig); border-radius: 4px; background: none; color: var(--on-sig); text-decoration: none; font-size: 15.5px; }
+html[data-look="history"]:not(#_):not(#_) .vh-close .btn.primary { background: var(--on-sig); color: var(--vh-green); }
+html[data-look="history"]:not(#_):not(#_) .vh-close .btn:hover { background: var(--on-sig); color: var(--vh-ink); }
+html[data-look="history"]:not(#_):not(#_) .vh-close :focus-visible { outline-color: var(--on-sig); }
+
+/* ---------- footer: a quiet status strip ---------- */
+html[data-look="history"]:not(#_):not(#_) footer.site { margin: 40px 0 0; padding: 18px 0 40px; border-top: 1px solid var(--vh-edge); }
+html[data-look="history"]:not(#_):not(#_) footer.site .wrap { max-width: 1360px; padding: 0 32px; font-size: 14px; }
+html[data-look="history"]:not(#_):not(#_) .motion-toggle { display: inline-flex; align-items: center; height: 30px; padding: 0 10px; border: 1px solid var(--vh-edge); border-radius: 4px; background: var(--vh-panel); color: var(--vh-ink); text-decoration: none; font-size: 14px; }
+html[data-look="history"]:not(#_):not(#_) .motion-toggle:hover { border-color: var(--vh-ink); }
+
+/* ---------- case pages: the document canvas and the project's inspector ---------- */
+html[data-look="history"]:not(#_):not(#_) body.case main { display: block; max-width: 1360px; margin: 0 auto; padding: 0 32px; }
+html[data-look="history"]:not(#_):not(#_) body.case main::before { content: none; }
+html[data-look="history"]:not(#_):not(#_) .vh-capp { display: grid; grid-template-columns: minmax(0, 1fr) 380px; grid-template-areas: "head insp" "doc insp"; grid-template-rows: auto 1fr; column-gap: 48px; align-items: start; }
+html[data-look="history"]:not(#_):not(#_) .vh-chead { grid-area: head; padding: 48px 0 0; max-width: 760px; }
+html[data-look="history"]:not(#_):not(#_) .vh-chead .back { display: inline; font: 400 15px/1.4 var(--vh-body); color: var(--vh-green); }
+html[data-look="history"]:not(#_):not(#_) .vh-chead .kicker { margin: 14px 0 0; font: 400 15px/1.4 var(--vh-body); color: var(--vh-muted); }
+html[data-look="history"]:not(#_):not(#_) .vh-chead h1 { margin: 10px 0 0; max-width: 16ch; font: 600 clamp(36px, 4.4vw, 58px)/1 var(--vh-head); letter-spacing: -.03em; color: var(--vh-ink); }
+html[data-look="history"]:not(#_):not(#_) .vh-brief { margin: 28px 0 0; grid-template-columns: 82px minmax(0, 1fr); max-width: 720px; }
+html[data-look="history"]:not(#_):not(#_) .vh-brief dd { font-size: 16.5px; line-height: 1.55; }
+html[data-look="history"]:not(#_):not(#_) .vh-doc { grid-area: doc; min-width: 0; }
+html[data-look="history"]:not(#_):not(#_) .vh-doc > :is(.case-part, .sum-method) { display: none; }
+html[data-look="history"]:not(#_):not(#_) .vh-doc > .sum:not(.sum-method) { margin: 48px 0 0; padding: 0; max-width: 760px; background: none; border: 0; }
+html[data-look="history"]:not(#_):not(#_) .vh-doc > .prose:not(.case-head) { width: 100%; max-width: 720px; margin: 64px 0 0; padding: 0; }
+html[data-look="history"]:not(#_):not(#_) .vh-doc > .prose:not(.case-head) + .prose { margin-top: 56px; }
+html[data-look="history"]:not(#_):not(#_) .vh-doc > .figure { width: 100%; max-width: 760px; margin: 28px 0 0; padding: 0; background: none; border: 0; }
+html[data-look="history"]:not(#_):not(#_) .vh-doc > img.narrow { display: block; max-width: 100%; margin: 28px 0 0; }
+html[data-look="history"]:not(#_):not(#_) .vh-doc .prose h2 { scroll-margin-top: 76px; }
+html[data-look="history"]:not(#_):not(#_) .vh-doc .shot .bar em { white-space: normal; min-width: 0; }
+html[data-look="history"]:not(#_):not(#_) .vh-cinsp { grid-area: insp; margin-top: 48px; }
+html[data-look="history"]:not(#_):not(#_) .vh-cinsp .vh-media { margin: 0; }
+html[data-look="history"]:not(#_):not(#_) .vh-cinsp .vh-rows { grid-template-columns: 96px minmax(0, 1fr); }
+html[data-look="history"]:not(#_):not(#_) .vh-cinsp .vh-rows dt { font: 400 14.5px/1.4 var(--vh-body); color: var(--vh-muted); }
+html[data-look="history"]:not(#_):not(#_) .vh-cinsp .vh-rows dd { margin: 0; }
+html[data-look="history"]:not(#_):not(#_) .vh-cinsp .vh-rows dd ul { padding: 0; }
+html[data-look="history"]:not(#_):not(#_) .vh-cinsp .vh-links .btn { all: unset; color: var(--vh-green); text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 3px; cursor: pointer; }
+html[data-look="history"]:not(#_):not(#_) .vh-cinsp .vh-links a { color: var(--vh-green); }
+html[data-look="history"]:not(#_):not(#_) .vh-cinsp .vh-links a:hover { color: var(--vh-ink); }
+html[data-look="history"]:not(#_):not(#_) .vh-cinsp .case-toc { position: static; display: grid; gap: 6px; visibility: visible; width: auto; margin: 18px -22px 0; padding: 14px 22px 0; border: 0; border-top: 1px solid var(--vh-edge); font-size: 15px; line-height: 1.35; left: auto; top: auto; }
+html[data-look="history"]:not(#_):not(#_) .vh-cinsp .case-toc p { margin: 0 0 4px; font: 400 14.5px/1.4 var(--vh-body); color: var(--vh-muted); text-transform: none; letter-spacing: 0; }
+html[data-look="history"]:not(#_):not(#_) .vh-cinsp .case-toc a { position: relative; padding-left: 12px; color: var(--vh-ink); text-decoration: none; }
+html[data-look="history"]:not(#_):not(#_) .vh-cinsp .case-toc a:hover { color: var(--vh-green); text-decoration: underline; }
+html[data-look="history"]:not(#_):not(#_) .vh-cinsp .case-toc a.cur { color: var(--vh-green); }
+html[data-look="history"]:not(#_):not(#_) .vh-cinsp .case-toc a.cur::before { content: ""; position: absolute; left: 0; top: 2px; bottom: 2px; width: 2px; background: var(--vh-green); }
+html[data-look="history"]:not(#_):not(#_) .vh-cinsp .case-toc .toc-gh { display: none; }
+html[data-look="history"]:not(#_):not(#_) .vh-toc-btn { display: inline-flex; align-items: center; height: 32px; padding: 0 10px; border: 1px solid var(--vh-edge); border-radius: 4px; background: var(--vh-panel); color: var(--vh-ink); font: 400 14.5px/1 var(--vh-body); cursor: pointer; }
+html[data-look="history"]:not(#_):not(#_) .vh-toc-btn:hover, html[data-look="history"]:not(#_):not(#_) .vh-toc-btn[aria-expanded="true"] { border-color: var(--vh-ink); }
+html[data-look="history"]:not(#_):not(#_) .vh-cinsp .case-toc[hidden] { display: none; }
+html[data-look="history"]:not(#_):not(#_) .vh-toc { margin: 16px -22px 0; padding: 12px 22px 0; border-top: 1px solid var(--vh-edge); }
+html[data-look="history"]:not(#_):not(#_) .vh-toc .case-toc { margin: 10px 0 0; padding: 0; border: 0; }
+html[data-look="history"]:not(#_):not(#_) .vh-toc .case-toc p { display: none; }
+html[data-look="history"]:not(#_):not(#_) .vh-capp-empty { grid-template-areas: "head insp"; min-height: 50vh; }
+html[data-look="history"]:not(#_):not(#_) .vh-empty .vh-blank { margin: 0; font-size: 15.5px; color: var(--vh-muted); }
+
+/* ---------- phones and narrow windows: no inspector on home (each plate opens its record inline); on case pages the
+   record sits under the title, its outline folded under "On this page" ---------- */
+@media (max-width: 959px) {
+  html[data-look="history"]:not(#_):not(#_) .vh-tool .wrap { padding: 8px 20px; flex-wrap: wrap; gap: 8px 12px; }
+  html[data-look="history"]:not(#_):not(#_) .vh-tool .topnav { order: 3; flex-basis: 100%; margin-left: -10px; }
+  html[data-look="history"]:not(#_):not(#_) .vh-tool .topnav .hide-sm { display: none; }
+  html[data-look="history"]:not(#_):not(#_) .vh-tool .look-pick { margin-left: auto; order: 2; }
+  html[data-look="history"]:not(#_):not(#_) .vh-tool .hx-ver { order: 1; }
+  html[data-look="history"]:not(#_):not(#_) .vh-tool .theme-toggle:not([hidden]) { margin-left: auto; }
+  html[data-look="history"]:not(#_):not(#_) .topbar.vh-tool { position: static; }
+  html[data-look="history"]:not(#_):not(#_) :is(.vh-wrap, body.case main) { padding: 0 20px; }
+  html[data-look="history"]:not(#_):not(#_) .vh-app { grid-template-columns: minmax(0, 1fr); }
+  html[data-look="history"]:not(#_):not(#_) .vh-app > .vh-insp { display: none; }
+  html[data-look="history"]:not(#_):not(#_) .vh-sel { display: none; }
+  html[data-look="history"]:not(#_):not(#_) .vh-hero { margin: 24px 0 0; padding: 16px 0 24px; }
+  html[data-look="history"]:not(#_):not(#_) .vh-pname a:focus-visible { outline: 0; }
+  html[data-look="history"]:not(#_):not(#_) .vh-pname a:focus-visible::after { outline: 2px solid var(--vh-green); outline-offset: 3px; }
+  html[data-look="history"]:not(#_):not(#_) .vh-sitespot .vh-site { padding: 0 16px 16px; background: var(--vh-panel); border: 1px solid var(--vh-edge); }
+  html[data-look="history"]:not(#_):not(#_) .vh-sitespot .vh-ihead { margin: 0 -16px 14px; padding: 12px 16px 10px; }
+  html[data-look="history"]:not(#_):not(#_) :is(.vh-stars, .vh-star0) { grid-template-columns: minmax(0, 1fr); }
+  html[data-look="history"]:not(#_):not(#_) .vh-star0 .vh-poster { margin: 14px 14px 0; }
+  html[data-look="history"]:not(#_):not(#_) .vh-star0 .vh-ptext { padding: 14px 18px 4px; }
+  html[data-look="history"]:not(#_):not(#_) .vh-star .vh-ptext { padding-bottom: 4px; }
+  html[data-look="history"]:not(#_):not(#_) .vh-row { grid-template-columns: 88px minmax(0, 1fr); padding: 10px 12px 4px 10px; align-items: start; }
+  html[data-look="history"]:not(#_):not(#_) .vh-pdate { display: none; }
+  html[data-look="history"]:not(#_):not(#_) .vh-more { display: inline-flex; position: relative; z-index: 2; align-items: center; height: 32px; margin: 6px 18px 14px; padding: 0 10px; border: 1px solid var(--vh-edge); border-radius: 4px; background: var(--vh-panel); color: var(--vh-ink); font: 400 14.5px/1 var(--vh-body); cursor: pointer; }
+  html[data-look="history"]:not(#_):not(#_) .vh-more:hover { border-color: var(--vh-ink); }
+  html[data-look="history"]:not(#_):not(#_) .vh-row .vh-more { grid-column: 2; justify-self: start; margin: 6px 0 8px; }
+  html[data-look="history"]:not(#_):not(#_) .vh-inline[data-open] { display: block; position: relative; z-index: 2; border-top: 1px solid var(--vh-edge); }
+  html[data-look="history"]:not(#_):not(#_) .vh-row .vh-inline[data-open] { grid-column: 1 / -1; margin: 0 -12px 0 -10px; }
+  html[data-look="history"]:not(#_):not(#_) .vh-inline .vh-rec { padding: 0 16px 18px; }
+  html[data-look="history"]:not(#_):not(#_) .vh-inline .vh-ihead { margin: 0 -16px 14px; padding: 12px 16px 10px; }
+  html[data-look="history"]:not(#_):not(#_) .vh-how .method { grid-template-columns: minmax(0, 1fr); }
+  html[data-look="history"]:not(#_):not(#_) .vh-how .method > li + li { border-left: 0; border-top: 1px solid var(--vh-edge); }
+  html[data-look="history"]:not(#_):not(#_) footer.site .wrap { padding: 0 20px; }
+  html[data-look="history"]:not(#_):not(#_) :is(.vh-capp, .vh-capp-empty) { grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "insp" "doc"; }
+  html[data-look="history"]:not(#_):not(#_) .vh-chead { padding-top: 32px; }
+  html[data-look="history"]:not(#_):not(#_) .vh-cinsp { position: static; margin-top: 24px; }
+  html[data-look="history"]:not(#_):not(#_) .vh-cinsp .vh-rec { padding: 0 16px 16px; }
+  html[data-look="history"]:not(#_):not(#_) .vh-cinsp .vh-ihead { margin: 0 -16px 14px; padding: 12px 16px 10px; }
+  html[data-look="history"]:not(#_):not(#_) .vh-toc { margin: 16px -16px 0; padding: 12px 16px 0; }
+  html[data-look="history"]:not(#_):not(#_) .vh-brief { grid-template-columns: minmax(0, 1fr); }
+  html[data-look="history"]:not(#_):not(#_) .vh-brief dt { padding-bottom: 0; border-bottom: 0; }
+  html[data-look="history"]:not(#_):not(#_) .vh-brief dd { padding-top: 2px; }
+  html[data-look="history"]:not(#_):not(#_) .vh-doc > .sum:not(.sum-method) { margin-top: 40px; }
+  html[data-look="history"]:not(#_):not(#_) .vh-doc > .prose:not(.case-head) { margin-top: 52px; }
+}
+@media (max-width: 480px) {
+  html[data-look="history"]:not(#_):not(#_) .vh-rows, html[data-look="history"]:not(#_):not(#_) .vh-cinsp .vh-rows { grid-template-columns: 84px minmax(0, 1fr); }
+}
+@media print {
+  html[data-look="history"]:not(#_) body { visibility: visible !important; }
+  html[data-look="history"]:not(#_):not(#_) .vh-insp { position: static; }
+  html[data-look="history"]:not(#_):not(#_) .vh-sel, html[data-look="history"]:not(#_):not(#_) .topbar.vh-tool { display: none; }
+}
