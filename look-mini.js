@@ -1,15 +1,15 @@
-/* Mini World (Nov 21 2026, option stills): a top-down, three-quarter-view pixel world drawn behind the page.
-   look-mini.css draws every panel (stone tablets, wooden signs, text boxes, books, leaves) from the 1x tiles in img/mini/;
-   this paints the ground they sit on, once, onto one <canvas> at art scale (1 art pixel = 3 CSS px, 2 on phones),
-   shown with image-rendering: pixelated. It never moves: it is redrawn only when the page's size changes.
-     option a  the overworld: grass, a sand path that winds down the margins and crosses between sections, cliffs
-               (lit lip, shaded earth face, stone stairs) where each section steps down, bushes, trees, tall grass,
-               flowers, rocks, a pond by the footer, and a soft shadow under every tablet and sign.
-     option b  draws nothing here (its quiet field is one CSS tile).
-     option c  the tiny scale: soil seen from a hero's height, giant grass blades, clover, fallen leaves, an acorn,
-               pebbles, and a pencil lying across the gaps between sections.
-   Every shape is drawn by the code below. No people or creatures, only ground and objects.
-   look.js loads this file whenever the page wears data-look="mini" (it draws, it does not animate). */
+/* Mini World (Nov 21 2026): the ground under the page, a top-down, three-quarter-view pixel field.
+   look-mini.css draws every object the page's parts become (stone tablets, wooden notice boards) from 1x tiles in
+   img/mini/; this paints the field they stand on, once, onto one <canvas> at art scale (1 art pixel = 3 CSS px, 2 on
+   phones), shown with image-rendering: pixelated. It never moves; it is redrawn only when the page's size, the light/dark
+   setting or the look changes.
+   What it paints: grass with tufts; a sand path that winds down the margins (on phones it keeps a lane of its own down
+   the left edge, never under the panels) and crosses wherever the page moves on; a cliff at each crossing (lit lip,
+   shaded earth face, stone stairs where the path goes down); trees along the top, bushes, tall grass, flowers, rocks,
+   a pond near the footer; and a solid shadow under every tablet and board. Night (the dark setting) is the same field
+   under a moonlit tint. Every shape is drawn by the code below: ground and objects only, no people or creatures.
+   look.js loads this file whenever the page wears data-look="mini", with or without reduced motion (it draws, it does
+   not animate). */
 (function () {
   'use strict';
   var d = document, r = d.documentElement, W = window;
@@ -123,134 +123,74 @@
       }
     }
   }
-  function drawA() {
+  /* the parts of the page that are objects on the field (look-mini.css frames each one) */
+  var OBJ = '.topbar .wrap, .lead-hero h1, .hero-sub, .hero-mail, .hero-film, .facts, .leads-head h2, .leads > .card, .lead-wrap, .section-head h2, .more-g, ' +
+    '.method > li, .band, footer.site .wrap, .case-head, main .figure, main > .prose, .hx-log, .repo-card, .pager a, .case-toc';
+  function night() {
+    var t = r.getAttribute('data-theme');
+    return t === 'dark' || (t !== 'light' && W.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+  }
+  function drawField() {
     rect(0, 0, AW, AH, '#5cd04c');
     for (var y = 6; y < AH; y += 9) for (var x = (y * 7) % 11; x < AW; x += 13) if (rnd() < .55) tuft(x + ri(0, 5), y + ri(0, 4), '#3aa94a', '#9ae86c');
     for (var i = 0; i < AW * AH / 90; i++) px(ri(0, AW), ri(0, AH), rnd() < .5 ? '#7cdc5a' : '#48bc48');
-    var panels = boxes('.topbar .wrap, .lead-hero h1, .hero-film, .facts.proof, .leads-head h2, .leads > .card, .lead-wrap, .section-head h2, .more-g, .method > li, .band, footer.site .wrap');
-    var secs = ['.lead-hero', '#work', '#how', 'footer.site'].map(function (s) { var e = d.querySelector(s); return e ? box(e) : null; });
-    var wrap = d.querySelector('main .wrap'), wb = wrap ? box(wrap) : { x: 0, w: AW };
-    var mL = Math.max(8, Math.floor(wb.x / 2)), mR = Math.min(AW - 8, Math.ceil(wb.x + wb.w + (AW - wb.x - wb.w) / 2));
-    if (wb.x < 20) { mL = 6; mR = AW - 6; }
-    // the path: down the left margin, across in each gap between sections, down the other side
-    var pts = [[mR, 0], [mR, secs[0] ? secs[0].y + 8 : 40]], side = 1, cliffs = [];
-    for (i = 1; i < secs.length; i++) {
-      if (!secs[i]) continue;
-      var gy = secs[i].y - 18;
-      var cur = side ? mR : mL, nxt = side ? mL : mR;
-      pts.push([cur, gy]); pts.push([nxt, gy]);
-      cliffs.push([gy + 5, Math.round((cur + nxt) / 2)]);
-      side = 1 - side;
+    var panels = boxes(OBJ).filter(function (b) { return b.w > 2 && b.h > 2; });
+    var phone = AW * PX <= 620;
+    // the content column: the widest run of objects; the margins either side of it carry the path
+    var left = AW, right = 0;
+    panels.forEach(function (b) { if (b.w < AW * .9) { left = Math.min(left, b.x); right = Math.max(right, b.x + b.w); } });
+    if (left >= right) { left = 10; right = AW - 10; }
+    var lane = phone ? 9 : 13;
+    var mL = phone ? Math.max(5, Math.floor(left / 2)) : Math.max(8, Math.floor(left / 2));
+    var mR = phone ? mL : Math.min(AW - 8, Math.ceil(right + (AW - right) / 2));
+    // gaps between bands of objects: where the page moves on, the ground steps down a cliff and the path crosses
+    var sorted = panels.slice().sort(function (a, b) { return a.y - b.y; }), bands = [];
+    sorted.forEach(function (b) { var last = bands[bands.length - 1]; if (last && b.y <= last.y1 + 2) last.y1 = Math.max(last.y1, b.y + b.h); else bands.push({ y0: b.y, y1: b.y + b.h }); });
+    var cliffs = [], lastC = -1e9, topY = bands.length ? bands[0].y1 : 40;
+    for (i = 1; i < bands.length; i++) {
+      var gap = bands[i].y0 - bands[i - 1].y1;
+      if (gap >= 22 && bands[i - 1].y1 > topY && bands[i - 1].y1 - lastC > (phone ? 220 : 160)) { var cy = bands[i - 1].y1 + Math.floor((gap - 13) / 2) + 2; cliffs.push(cy); lastC = cy; }
     }
+    var pts = [[mR, 0]], side = 1;
+    cliffs.forEach(function (cy) {
+      var cur = side ? mR : mL, nxt = phone ? mL : (side ? mL : mR);
+      pts.push([cur, cy - 7]); pts.push([nxt, cy - 7]); pts.push([nxt, cy + 14]);
+      if (!phone) side = 1 - side;
+    });
     pts.push([side ? mR : mL, AH + 10]);
-    sandPath(pts, wb.x < 20 ? 9 : 13);
-    for (i = 0; i < cliffs.length; i++) cliff(0, AW, cliffs[i][0], cliffs[i][1]);
-    // a soft shadow under every tablet and sign
+    sandPath(pts, lane);
+    var stairs = [];
+    cliffs.forEach(function (cy, k) { var cur = phone ? mL : (k % 2 === 0 ? mL : mR); stairs.push(cur); cliff(0, AW, cy, cur); });
     panels.forEach(function (b) { rect(b.x + 2, b.y + b.h, b.w - 1, 2, 'rgba(16,44,28,.28)'); rect(b.x + b.w, b.y + 2, 2, b.h, 'rgba(16,44,28,.2)'); });
     function free(x, y, s) {
       if (hits(panels, x, y, s + 3)) return false;
       for (var j = 0; j < pts.length - 1; j++) {
-        var a = pts[j], b = pts[j + 1];
-        if (x > Math.min(a[0], b[0]) - 10 - s && x < Math.max(a[0], b[0]) + 10 + s && y > Math.min(a[1], b[1]) - 10 - s && y < Math.max(a[1], b[1]) + 10 + s) return false;
+        var a = pts[j], b = pts[j + 1], h = (lane >> 1) + 3 + s;
+        if (x > Math.min(a[0], b[0]) - h && x < Math.max(a[0], b[0]) + h && y > Math.min(a[1], b[1]) - h && y < Math.max(a[1], b[1]) + h) return false;
       }
-      for (j = 0; j < cliffs.length; j++) if (y > cliffs[j][0] - s - 3 && y < cliffs[j][0] + 14 + s) return false;
+      for (j = 0; j < cliffs.length; j++) if (y > cliffs[j] - s - 3 && y < cliffs[j] + 14 + s) return false;
       return true;
     }
-    // the hedge of trees along the top edge, then the scatter
     for (x = -6; x < AW + 10; x += ri(15, 22)) tree(x, ri(-6, 0), ri(10, 14));
     for (var n = 0; n < AW * AH / 700; n++) {
       x = ri(0, AW); y = ri(26, AH); var k = rnd();
       if (k < .28) { if (free(x, y, 7)) bush(x, y, ri(5, 7)); }
-      else if (k < .38) { if (free(x, y, 16) && (x < wb.x - 4 || x > wb.x + wb.w + 4)) tree(x, y, ri(12, 16)); }
+      else if (k < .38) { if (free(x, y, 16) && (x < left - 4 || x > right + 4)) tree(x, y, ri(12, 16)); }
       else if (k < .52) { if (free(x, y, 9)) tallGrass(x - 8, y - 5, ri(14, 22), ri(9, 13)); }
       else if (k < .62) { if (free(x, y, 4)) rock(x, y, ri(3, 4)); }
       else { if (free(x, y, 3)) { flower(x, y); if (rnd() < .6) flower(x + ri(3, 6), y + ri(-2, 3)); } }
     }
-    var f = secs[3];
-    if (f) { var px0 = wb.x > 60 ? AW - Math.floor(wb.x / 2) : AW - 30; pond(px0, f.y - 30, Math.min(26, Math.max(14, wb.x / 2 - 6)), 9); }
-  }
-
-  /* ------------------------------------------------------------ option c: the tiny scale */
-  function blade(x, y, w, h, lean) {
-    // a giant grass blade standing up out of the soil, lit on its left edge
-    for (var yy = 0; yy < h; yy++) {
-      var t = yy / h, ww = Math.max(1, Math.round(w * Math.min(1, (t * 1.6)))), xx = x + Math.round(lean * (1 - t) * (1 - t) * h * .25);
-      rect(xx - 1, y + yy, ww + 2, 1, K);
-      rect(xx, y + yy, ww, 1, '#3f9e4a');
-      rect(xx, y + yy, Math.max(1, ww >> 2), 1, '#8ee07a');
-      if (ww > 3) rect(xx + ww - 1, y + yy, 1, 1, '#2c7440');
-      if (ww > 5) px(xx + (ww >> 1), y + yy, '#5fc06a');
+    var foot = d.querySelector('footer.site');
+    if (foot && !phone && AW - right > 40) { var fb = box(foot); pond(AW - Math.floor((AW - right) / 2) - 4, fb.y - 34, Math.min(26, Math.floor((AW - right) / 2) - 8), 9); }
+    if (night()) {
+      // after dark: one moonlit tint over the whole field (multiply keeps every pixel's step and outline)
+      g.globalCompositeOperation = 'multiply'; rect(0, 0, AW, AH, '#3d4f8c'); g.globalCompositeOperation = 'source-over';
+      for (i = 0; i < AW * AH / 2600; i++) { x = ri(0, AW); y = ri(0, AH); if (!hits(panels, x, y, 2)) { px(x, y, '#d8e4ff'); } }
     }
-    rect(x - 1, y + h, w + 2, 2, 'rgba(40,24,8,.3)');
-  }
-  function giantLeaf(cx, cy, rx, ry, tone) {
-    var P = tone === 'o' ? ['#f6b45a', '#e8893a', '#b8582a'] : tone === 'y' ? ['#fbe07a', '#efc03e', '#b88a24'] : ['#a6ee6a', '#5fc84a', '#2f8a3a'];
-    shadowOval(cx + 3, cy + 3, rx, ry);
-    blob(cx, cy, rx, ry, function (dx, dy, edge) {
-      if (edge) return K;
-      if (Math.abs(dy) < 0.07) return P[2];
-      var v = Math.abs((dx * 2.2) - Math.abs(dy) * 1.6);
-      if ((Math.round(dx * rx) % 6 === 0) && Math.abs(dy) < 0.8 && v < 3) return P[2];
-      return (dy < -0.2 && dx < 0.2) ? P[0] : P[1];
-    });
-    rect(cx + rx - 1, cy, 6, 1, K); rect(cx + rx - 1, cy - 1, 6, 1, P[2]);
-  }
-  function acorn(x, y, s) {
-    shadowOval(x + 2, y + s + 2, s + 2, 3);
-    blob(x, y + 3, s, s + 2, function (dx, dy, edge) { if (edge) return K; var l = dx + dy; return l < -0.7 ? '#f0b070' : l < 0.3 ? '#c8803e' : '#8e5226'; });
-    blob(x, y - 3, s + 2, s - 3, function (dx, dy, edge) { if (edge) return K; if (dy > 0.5) return null; return ((Math.round(dx * 9) + Math.round(dy * 9)) % 2) ? '#7a4f2a' : '#a0703e'; });
-    rect(x - 1, y - s - 2, 2, 3, '#5a3a1e'); px(x - 2, y - s - 2, K);
-  }
-  function clover(x, y, s) {
-    shadowOval(x + 2, y + 2, s * 2, s);
-    [[-s + 1, -s + 2], [s - 1, -s + 2], [0, s - 1]].forEach(function (o) {
-      blob(x + o[0], y + o[1], s, s - 1, function (dx, dy, edge) { if (edge) return K; return dx + dy < -0.6 ? '#a6ee6a' : '#4fb456'; });
-    });
-    px(x, y, '#2c7440');
-  }
-  function pebble(x, y, s) { rock(x, y, s); }
-  function pencil(y, x0, x1) {
-    rect(x0, y + 9, x1 - x0, 2, 'rgba(40,24,8,.3)');
-    rect(x0, y - 1, x1 - x0 - 14, 1, K); rect(x0, y + 8, x1 - x0 - 14, 1, K);
-    var body = ['#ffe27a', '#f2c230', '#f2c230', '#dca21e', '#dca21e', '#f2c230', '#c88a1a', '#a8701a'];
-    for (var i = 0; i < 8; i++) rect(x0 + 10, y + i, x1 - x0 - 24, 1, body[i]);
-    rect(x0, y, 7, 8, '#f08a9a'); rect(x0, y, 7, 2, '#ffc0c8'); rect(x0 + 7, y, 3, 8, '#c0c0c8'); rect(x0 + 8, y, 1, 8, '#ecedf4');
-    rect(x0 - 1, y, 1, 8, K);
-    for (i = 0; i < 14; i++) { var top = Math.round(i * 4 / 14), h = 8 - top * 2; var xx = x1 - 14 + i; rect(xx, y + top, 1, h, i > 9 ? '#3a3a44' : '#f0c890'); px(xx, y + top - 1, K); px(xx, y + top + h, K); }
-  }
-  function drawC() {
-    rect(0, 0, AW, AH, '#c8a463');
-    for (var i = 0; i < AW * AH / 22; i++) { var x = ri(0, AW), y = ri(0, AH), k = rnd(); px(x, y, k < .45 ? '#ad8a4c' : k < .8 ? '#dcbc7c' : '#8e6c38'); }
-    for (i = 0; i < AW * AH / 1400; i++) { x = ri(0, AW); y = ri(0, AH); rect(x, y, 2, 1, '#e8d09a'); px(x, y + 1, '#8e6c38'); }
-    var panels = boxes('.topbar, .lead-hero h1, .hero-film, .facts.proof, .leads-head h2, .leads > .card, .lead-wrap, .section-head h2, .more-g, .method > li, .band, footer.site .wrap');
-    panels.forEach(function (b) { rect(b.x + 3, b.y + b.h, b.w - 2, 3, 'rgba(40,24,8,.28)'); rect(b.x + b.w, b.y + 3, 3, b.h, 'rgba(40,24,8,.2)'); });
-    var wrap = d.querySelector('main .wrap'), wb = wrap ? box(wrap) : { x: 0, w: AW };
-    var secs = ['#work', '#how', 'footer.site'].map(function (s) { var e = d.querySelector(s); return e ? box(e) : null; });
-    function free(x, y, s) { return !hits(panels, x, y, s + 2); }
-    // giant objects in the open soil
-    // giant things: a leaf longer than a card, an acorn as tall as a heading, sand grains the size of pebbles
-    function freeR(x, y, rx, ry) { for (var i = 0; i < panels.length; i++) { var p = panels[i]; if (x + rx > p.x - 2 && x - rx < p.x + p.w + 2 && y + ry > p.y - 2 && y - ry < p.y + p.h + 2) return false; } return true; }
-    for (var n = 0; n < AW * AH / 260; n++) {
-      x = ri(0, AW); y = ri(30, AH); var k2 = rnd(), rx, ry;
-      if (k2 < .12) { rx = ri(38, 60); ry = ri(16, 24); if (freeR(x, y, 10, 8)) giantLeaf(x, y, rx, ry, ['o', 'y', 'g'][ri(0, 2)]); }
-      else if (k2 < .2) { rx = ri(14, 20); if (freeR(x, y, 6, 6)) acorn(x, y, rx); }
-      else if (k2 < .32) { rx = ri(12, 16); if (freeR(x, y, rx * 2 + 2, rx * 2)) clover(x, y, rx); }
-      else if (k2 < .7) { rx = ri(4, 9); if (freeR(x, y, rx + 2, rx + 2)) pebble(x, y, rx); }
-    }
-    // grass blades rising along both edges
-    var edgeW = Math.max(10, wb.x - 2);
-    for (y = 10; y < AH; y += ri(40, 80)) {
-      var h = ri(90, 220), bw = ri(10, 16);
-      blade(ri(-6, Math.max(2, edgeW - bw - 4)), y, bw, h, ri(-4, 4));
-      blade(AW - ri(bw, Math.max(bw + 2, edgeW)), y + ri(0, 30), bw, h, ri(-4, 4));
-    }
-    // a pencil lying across each gap between sections
-    for (i = 0; i < secs.length; i++) if (secs[i]) pencil(secs[i].y - 16, Math.max(4, wb.x - 30), Math.min(AW - 4, wb.x + wb.w + 30));
   }
 
   function draw() {
-    var mv = r.getAttribute('data-mv') || 'a';
-    if (r.getAttribute('data-look') !== 'mini' || mv === 'b') { if (box0) box0.style.display = 'none'; return; }
+    if (r.getAttribute('data-look') !== 'mini') { if (box0) box0.style.display = 'none'; return; }
     PX = innerWidth <= 620 ? 2 : 3;
     var foot = d.querySelector('footer.site'), bottom = foot ? foot.getBoundingClientRect().bottom + scrollY : d.body.scrollHeight;
     var w = Math.ceil(r.clientWidth / PX), h = Math.ceil(bottom / PX) + 2;
@@ -258,17 +198,19 @@
     box0.style.display = ''; box0.style.height = (h * PX) + 'px';
     cv.width = AW = w; cv.height = AH = h; cv.style.width = (w * PX) + 'px'; cv.style.height = (h * PX) + 'px';
     g = cv.getContext('2d'); g.imageSmoothingEnabled = false; seed = 20261121;
-    if (mv === 'c') drawC(); else drawA();
+    drawField();
   }
   var tm = 0, lastW = -1, lastH = -1;
   function soon() { clearTimeout(tm); tm = setTimeout(function () { var bw = r.clientWidth, bh = d.body.offsetHeight; if (bw === lastW && bh === lastH) return; lastW = bw; lastH = bh; draw(); }, 120); }
+  function again() { lastW = -1; soon(); }
   function start() {
     draw(); lastW = r.clientWidth; lastH = d.body.offsetHeight;
     if (W.ResizeObserver) new ResizeObserver(soon).observe(d.body);
     addEventListener('resize', soon);
-    if (d.fonts && d.fonts.ready) d.fonts.ready.then(function () { lastW = -1; soon(); });
-    addEventListener('load', function () { lastW = -1; soon(); });
-    new MutationObserver(function () { lastW = -1; soon(); }).observe(r, { attributes: true, attributeFilter: ['data-look', 'data-mv'] });
+    if (d.fonts && d.fonts.ready) d.fonts.ready.then(again);
+    addEventListener('load', again);
+    new MutationObserver(again).observe(r, { attributes: true, attributeFilter: ['data-look', 'data-theme'] });
+    if (W.matchMedia) { var mq = matchMedia('(prefers-color-scheme: dark)'); if (mq.addEventListener) mq.addEventListener('change', again); }
   }
   if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', start); else start();
 })();

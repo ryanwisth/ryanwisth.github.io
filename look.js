@@ -27,17 +27,18 @@ var LOOK_ROWS = [
   ["yarn",  "Yarn & Felt",     null,                      ["#fbeedd", "#cf3f68"],    false],
   ["wash",  "Ink & Wash",      ["#f5f1ea", "#0f1730"],    ["#f5f1ea", "#b84a63"],    true],
   ["brush", "Brush & Scroll",  ["#efe5cf", "#141a33"],    ["#efe5cf", "#c23b22"],    true],
-  ["cel",   "Cel & Tide",      ["#5078ff", "#101b4d"],    ["#0963e0", "#f2f2f2"],    true],
+  /* mini replaced cel (Cel & Tide) on Ryan's word, Nov 21 2026 (his pick: option A, the overworld map). look-cel.css,
+     look-cel.js and img/cel/ stay on disk, unloaded; ?look=cel and a stored "cel" open mini (RENAMED, just below the list).
+     Mini has no films of its own (false): the yarn films play, in the look's stone frame. look-mini.js paints the ground;
+     look.js loads it (below), not site.js. */
+  ["mini",  "Mini World",      ["#5cd04c", "#1d3a3a"],    ["#5cd04c", "#2a2238"],    false],
   ["paint", "Paint & Meadow",  ["#dcc2a6", "#18373e"],    ["#d9d5b9", "#0275a0"],    true],
   ["dots",  "Dots & Panels",   ["#f6f0dc", "#272015"],    ["#f6f0dc", "#c8321e"],    true],
   /* history: light and dark (dark added Nov 21 2026; replaced Studio, which git keeps). Films: video/film-<page>-history.mp4 + img/film-<page>-history.jpg from _tools/history-films/out/ (the light twins in both settings). */
-  ["history", "Studio",          ["#e9ecef", "#34332f"],  ["#e9ecef", "#14594a"],    true],
-  /* mini: option stills only (Nov 21 2026), not yet picked. Three ways to map the page onto a top-down pixel world, ?mv=a|b|c
-     (a overworld, b menus and text boxes, c tiny scale). look-mini.js paints the ground; it is loaded below, not by site.js. */
-  ["mini",  "Mini World",      ["#5cd04c", "#2a2238"],    ["#5cd04c", "#2a2238"],    false]
+  ["history", "Studio",          ["#e9ecef", "#34332f"],  ["#e9ecef", "#14594a"],    true]
 ];
 
-/* To try a look without changing anything, add ?look=<key> (?look=wash, ?look=cel, ?look=yarn ...) to any page address.
+/* To try a look without changing anything, add ?look=<key> (?look=wash, ?look=mini, ?look=yarn ...) to any page address.
    That choice lasts for that browser tab (so two tabs can show two looks side by side).
    A pick from the list is remembered by that browser for later visits. */
 (function () {
@@ -48,7 +49,10 @@ var LOOK_ROWS = [
     if (row[2]) TINT[key] = row[2];
     if (row[4] && r0 > 0) TWINS[key] = true;
   }
-  var look = SITE_LOOK, m = new RegExp("[?&]look=(" + LOOKS.join("|") + ")\\b").exec(location.search), kept = null;
+  /* retired keys that now open another look: an old address or a stored pick is carried over, never dropped */
+  var RENAMED = { cel: "mini" };
+  var look = SITE_LOOK, m = new RegExp("[?&]look=(" + LOOKS.concat(Object.keys(RENAMED)).join("|") + ")\\b").exec(location.search), kept = null;
+  if (m && RENAMED[m[1]]) m = [m[0], RENAMED[m[1]]];
   var nav0 = window.performance && performance.getEntriesByType && performance.getEntriesByType("navigation")[0];
   var backward = !!(nav0 && nav0.type === "back_forward");
   try {
@@ -56,6 +60,7 @@ var LOOK_ROWS = [
     if (m && !((backward || (nav0 && nav0.type === "reload")) && sessionStorage.getItem("look"))) sessionStorage.setItem("look", m[1]);
     kept = sessionStorage.getItem("look") || localStorage.getItem("look");
   } catch (e) { if (m) kept = m[1]; }
+  if (kept && RENAMED[kept]) { kept = RENAMED[kept]; try { if (sessionStorage.getItem("look")) sessionStorage.setItem("look", kept); if (localStorage.getItem("look")) localStorage.setItem("look", kept); } catch (e) {} }
   if (LOOKS.indexOf(kept) >= 0) look = kept;
   /* a look that has since been retired (Studio, Nov 21 2026) is forgotten, so the page wears the default */
   else if (kept) try { sessionStorage.removeItem("look"); localStorage.removeItem("look"); } catch (e) {}
@@ -75,10 +80,7 @@ var LOOK_ROWS = [
       sheet.rel = "stylesheet"; sheet.href = BASE + "look-" + look + ".css"; sheet.setAttribute("blocking", "render");
       head.appendChild(sheet);
     } else document.write('<link rel="stylesheet" href="' + BASE + 'look-' + look + '.css">');
-    if (look === "mini") {                         // which of the three option stills: ?mv=a|b|c, kept for the tab
-      var mvm = /[?&]mv=([abc])\b/.exec(location.search), mvk = null;
-      try { if (mvm) sessionStorage.setItem("mv", mvm[1]); mvk = sessionStorage.getItem("mv"); } catch (e) { if (mvm) mvk = mvm[1]; }
-      root.setAttribute("data-mv", mvk || "a");
+    if (look === "mini") {                         // the ground under the page: drawn once, never moving, so loaded with or without motion
       var mjs = document.createElement("script"); mjs.src = BASE + "look-mini.js"; mjs.async = true;
       (head || document.documentElement).appendChild(mjs);
     }
