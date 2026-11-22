@@ -1689,3 +1689,294 @@ html[data-look="cel"] main > section.section {
     linear-gradient(var(--im-foam-2), var(--im-foam-2)) 0 26px / 100% 3px no-repeat;
 }
 /* immerse-3-cel:end */
+
+/* ==========================================================================================================================
+   DIORAMA (Nov 21 2026, Ryan's pick "A" of three option stills; HANDOFF "Cel & Tide deep overhaul").
+   The page is a deep stage. Behind it, a world in planes that scroll at their own rates (look-cel.js moves them; without
+   the script, or with reduced motion, they stand still and the depth still reads): sky, haze, a cel cloud bank, far islands,
+   the horizon sea and a near sea with its white net on a real perspective plane, two near islands. In front, every panel
+   and control is a SOLID: lit top face, its front face in shade paint, one hard step, and a hard cast shadow lower right.
+   One sun, upper left. Shade paint = lit x #9c8c86. A panel standing on the world casts a #9c8c86 MULTIPLY, so its shadow
+   is always "the surface under it x #9c8c86"; a small solid on a panel casts that panel's own shade paint.
+   Everything below is scoped html[data-look="cel"]:root:root:root so it sits over the older rules of this file.
+   Art: img/cel/deep/*-day.svg and *-night.svg, made by _tools/cel-deep/assets.mjs.
+   ========================================================================================================================== */
+html[data-look="cel"] {
+  --dk-sh: #9c8c86; --dk-rise: 0px; --dk-ny: 0px; --dk-hz0: 72vh; --dk-hz: calc(var(--dk-hz0) - var(--dk-rise));
+  --dk-sky: #5078ff; --dk-haze1: #749fff; --dk-haze2: #99c8ff; --dk-haze: #a3d2ff; --dk-far-sea: #4474fa; --dk-mid-sea: #1466e5; --dk-sea: #0963e0;
+  --dk-net: #ffffff; --dk-net-o: .92;
+  --dk-panel: #f2f2f2; --dk-panel-s: #94847f; --dk-cloth: #f7efd9; --dk-cloth-s: #978372; --dk-inner: #fbf6e8; --dk-inner-s: #998677;
+  --dk-text: #18264f; --dk-muted: #2a3558; --dk-kick: #6a3a20;
+  --dk-on-world: #ffffff; --dk-letter-s: #9c8c86; --dk-wash: rgba(10, 0, 0, .45);
+  --dk-yel: #ffef10; --dk-yel-s: #9c8308; --dk-teal: #2f7f91; --dk-teal-s: #1d464c; --dk-sand: #c5c69d; --dk-foam: #ffffff;
+  --dk-focus: #18264f;
+  --dk-clouds: url("img/cel/deep/clouds-day.svg"); --dk-far: url("img/cel/deep/far-day.svg");
+  --dk-isle: url("img/cel/deep/isle-day.svg"); --dk-isle2: url("img/cel/deep/isle2-day.svg");
+  --dk-body: "Atkinson Hyperlegible Next", system-ui, sans-serif;
+}
+@font-face { font-family: "Atkinson Hyperlegible Next"; src: url("fonts/AtkinsonHyperlegibleNext.ttf") format("truetype"); font-weight: 200 800; font-display: swap; }
+/* night: the same diorama under a night sky; panels navy with pale words; controls keep their day paints (lamps) */
+@media (prefers-color-scheme: dark) {
+  html[data-look="cel"]:not([data-theme="light"]) {
+    --dk-sky: #101b4d; --dk-haze1: #16245e; --dk-haze2: #1d2f70; --dk-haze: #26397c; --dk-far-sea: #13286e; --dk-mid-sea: #0b2a70; --dk-sea: #062a73;
+    --dk-net: #b9cdf5; --dk-net-o: .38;
+    --dk-panel: #18234f; --dk-panel-s: #0e1329; --dk-cloth: #1f2b5b; --dk-cloth-s: #111830; --dk-inner: #24315f; --dk-inner-s: #141b33;
+    --dk-text: #eef1fb; --dk-muted: #d3daf0; --dk-kick: #f7bf47; --dk-on-world: #eef1fb; --dk-letter-s: #918f9c; --dk-wash: rgba(0, 0, 10, .55);
+    --dk-teal: #2f7f91; --dk-sand: #46525d; --dk-foam: #b9cdf5; --dk-focus: #ffef10;
+    --dk-clouds: url("img/cel/deep/clouds-night.svg"); --dk-far: url("img/cel/deep/far-night.svg");
+    --dk-isle: url("img/cel/deep/isle-night.svg"); --dk-isle2: url("img/cel/deep/isle2-night.svg");
+  }
+}
+html[data-look="cel"][data-theme="dark"] {
+  --dk-sky: #101b4d; --dk-haze1: #16245e; --dk-haze2: #1d2f70; --dk-haze: #26397c; --dk-far-sea: #13286e; --dk-mid-sea: #0b2a70; --dk-sea: #062a73;
+  --dk-net: #b9cdf5; --dk-net-o: .38;
+  --dk-panel: #18234f; --dk-panel-s: #0e1329; --dk-cloth: #1f2b5b; --dk-cloth-s: #111830; --dk-inner: #24315f; --dk-inner-s: #141b33;
+  --dk-text: #eef1fb; --dk-muted: #d3daf0; --dk-kick: #f7bf47; --dk-on-world: #eef1fb; --dk-letter-s: #918f9c; --dk-wash: rgba(0, 0, 10, .55);
+  --dk-teal: #2f7f91; --dk-sand: #46525d; --dk-foam: #b9cdf5; --dk-focus: #ffef10;
+  --dk-clouds: url("img/cel/deep/clouds-night.svg"); --dk-far: url("img/cel/deep/far-night.svg");
+  --dk-isle: url("img/cel/deep/isle-night.svg"); --dk-isle2: url("img/cel/deep/isle2-night.svg");
+}
+
+/* ---------- the world ---------- */
+html[data-look="cel"]:root:root:root { background: var(--dk-sky); overflow-x: clip; }
+html[data-look="cel"]:root:root:root body { background: transparent; font-family: var(--dk-body); overflow-x: clip; position: relative; isolation: isolate !important; z-index: auto; }
+/* sky, haze and sea: one fixed plane under the whole page (inside <body>'s group, so the shadows can multiply onto it) */
+html[data-look="cel"]:root:root:root body::after {
+  content: ""; position: fixed; inset: 0; z-index: -4; pointer-events: none; width: auto; height: auto; transform: none; opacity: 1; animation: none;
+  background: linear-gradient(var(--dk-sky) 0, var(--dk-sky) calc(var(--dk-hz) - 90px), var(--dk-haze1) calc(var(--dk-hz) - 40px), var(--dk-haze2) calc(var(--dk-hz) - 8px), var(--dk-haze) var(--dk-hz),
+    var(--dk-far-sea) calc(var(--dk-hz) + 1px), var(--dk-far-sea) calc(var(--dk-hz) + 14px), var(--dk-mid-sea) calc(var(--dk-hz) + 40px), var(--dk-sea) calc(var(--dk-hz) + 58px));
+}
+/* the near sea's net on a plane laid in perspective from the horizon toward us; it slides as the page scrolls */
+html[data-look="cel"]:root:root:root main { position: static; z-index: auto; isolation: auto; background: none; padding-bottom: 0; }
+html[data-look="cel"]:root:root:root main::before {
+  content: ""; position: fixed; z-index: -3; left: -1600px; right: -1600px; top: var(--dk-hz); bottom: auto; width: auto; height: 560px; pointer-events: none;
+  transform-origin: 50% 0; transform: perspective(520px) rotateX(68deg); animation: none; filter: none; border: 0; border-radius: 0; box-shadow: none;
+  background: var(--dk-net); opacity: var(--dk-net-o);
+  -webkit-mask: url("img/cel/net.webp") 0 var(--dk-ny) / 300px 300px repeat, linear-gradient(transparent 40px, #000 260px); -webkit-mask-composite: source-in;
+  mask: url("img/cel/net.webp") 0 var(--dk-ny) / 300px 300px repeat, linear-gradient(transparent 40px, #000 260px); mask-composite: intersect;
+}
+/* clouds, far islands and two near islands: one fixed plane, each picture moved at its own rate */
+html[data-look="cel"]:root:root:root main::after {
+  content: ""; position: fixed; z-index: -2; inset: 0; width: auto; height: auto; pointer-events: none; animation: none; filter: none; transform: none; opacity: 1;
+  border: 0; border-radius: 0; box-shadow: none; -webkit-mask: none; mask: none;
+  background:
+    var(--dk-isle) right -60px top calc(var(--dk-hz0) - 260px - var(--dk-rise) * 1.9) / 560px 330px no-repeat,
+    var(--dk-isle2) left 3% top calc(var(--dk-hz0) - 120px - var(--dk-rise) * 1.35) / 300px 190px no-repeat,
+    var(--dk-far) 0 calc(var(--dk-hz) - 70px) / 2400px 70px repeat-x,
+    var(--dk-clouds) 0 calc(var(--dk-hz0) - 300px - var(--dk-rise) * .45) / 2400px 300px repeat-x;
+}
+@media (max-width: 620px) {
+  html[data-look="cel"]:root:root:root main::after {
+    background: var(--dk-isle) right -200px top calc(var(--dk-hz0) - 200px - var(--dk-rise) * 1.9) / 400px 236px no-repeat,
+      var(--dk-far) 0 calc(var(--dk-hz) - 50px) / 1700px 50px repeat-x, var(--dk-clouds) -200px calc(var(--dk-hz0) - 200px - var(--dk-rise) * .45) / 1600px 200px repeat-x;
+  }
+}
+/* today's painted layers and moving extras that the diorama replaces */
+html[data-look="cel"]:root:root:root :is(.thread, .guide, .cf-sea, .cf-wake, .cl-spark) { display: none !important; }
+html[data-look="cel"]:root:root:root :is(.hero, .hero-one, .hero .wrap, .section, .section .wrap, .case-head, footer.site .wrap, .leads)::before,
+html[data-look="cel"]:root:root:root :is(.hero, .hero-one, .hero .wrap, .section, .section .wrap, footer.site .wrap, .leads)::after,
+html[data-look="cel"]:root:root:root .case-head::after { content: none; }
+/* nothing between a panel and the world starts its own stacking group, or the multiply would have nothing to darken */
+html[data-look="cel"]:root:root:root :is(main .wrap, main section, .case, .hero, .hero-one, .leads, .lead-wrap, .more, .how2, .method, .facts, .sum-top, main figure, .duo, ol.flow, .more-g ul) {
+  z-index: auto; isolation: auto; transform: none; filter: none; opacity: 1; will-change: auto; contain: none; backdrop-filter: none; background: none; box-shadow: none; }
+
+/* ---------- type ---------- */
+html[data-look="cel"]:root:root:root :is(p, li, dd, dt, figcaption, summary, td, th, .lead-what) { font-family: inherit; }
+html[data-look="cel"]:root:root:root :is(h1, h2, h3, h4, .brand, .group-h, .lead-k, .method .who, .btn, .badge, .topnav a, .pills span, .kicker) { font-family: var(--display); letter-spacing: 0; text-transform: none; }
+html[data-look="cel"]:root:root:root .hx-x { display: none !important; }
+html[data-look="cel"]:root:root:root .hx-alt { display: inline !important; }
+html[data-look="cel"]:root:root:root :is(h1, h2, h3, h4, .fact b, .grad) { background: none; -webkit-background-clip: border-box; background-clip: border-box; -webkit-text-fill-color: currentColor; }
+html[data-look="cel"]:root:root:root :is(h1, h2, h3, h4)::before { content: none; }
+
+/* ---------- the solids ---------- */
+/* a panel on the world: lit face, front face in shade, a #9c8c86 multiply cast lower right. --lit/--side paints,
+   --th front face, --cx/--cy how far the shadow falls, --rad corners. Defaults have no weight, so any panel can set its own. */
+:where(html[data-look="cel"]) :where(.hero-film, .hero-sub, .card.lead, .fact, .more-g, .method > li, .band, .case-head, .prose, .chart-card, main .shot:not(.hero-film .shot), .term, .paper, .legend, main > .film-script > :not(summary),
+  .flow > li, .figure > figcaption, .duo > figure, .topbar > .wrap, footer.site > .wrap) {
+  --lit: var(--dk-panel); --side: var(--dk-panel-s); --th: 12px; --cx: 18px; --cy: 26px; --rad: 10px; }
+html[data-look="cel"]:root:root:root :is(.hero-film, .hero-sub, .card.lead, .fact, .more-g, .method > li, .band, .case-head, .prose, .chart-card, main .shot:not(.hero-film .shot), .term, .paper, .legend, main > .film-script > :not(summary),
+  .flow > li, .figure > figcaption, .duo > figure, .topbar > .wrap) {
+  position: relative; z-index: auto; isolation: auto; transform: none; filter: none; opacity: 1; will-change: auto; animation: none; contain: none; backdrop-filter: none;
+  background: var(--lit); border: 0; outline: 0; border-radius: var(--rad); color: var(--dk-text);
+  box-shadow: 0 var(--th) 0 0 var(--side); text-shadow: none;
+}
+html[data-look="cel"]:root:root:root :is(.hero-film, .hero-sub, .card.lead, .fact, .more-g, .method > li, .band, .case-head, .prose, .chart-card, main .shot:not(.hero-film .shot), .term, .paper, .legend, main > .film-script > :not(summary),
+  .flow > li, .figure > figcaption, .duo > figure, .topbar > .wrap)::after {
+  content: ""; display: block; position: absolute; z-index: -1; left: var(--cx); top: var(--cy); right: auto; bottom: auto; width: 100%; height: calc(100% + var(--th));
+  border: 0; border-radius: var(--rad); background: var(--dk-sh); mix-blend-mode: multiply; pointer-events: none; opacity: 1; transform: none; filter: none;
+  box-shadow: none; -webkit-mask: none; mask: none; animation: none; clip-path: none; margin: 0; min-width: 0; min-height: 0; max-width: none; max-height: none;
+}
+html[data-look="cel"]:root:root:root :is(.hero-film, .hero-sub, .card.lead, .fact, .more-g, .method > li, .band, .case-head, .prose, .figure > .chart-card, .figure > .term,
+  .figure > figcaption, .duo > figure, .topbar > .wrap)::before { content: none; }
+/* sail-cloth panels */
+html[data-look="cel"]:root:root:root :is(.fact, .more-g, .figure > figcaption, .flow > li) { --lit: var(--dk-cloth); --side: var(--dk-cloth-s); }
+html[data-look="cel"]:root:root:root .flow > li.key { --lit: var(--dk-yel); --side: var(--dk-yel-s); color: #18264f; }
+html[data-look="cel"]:root:root:root .flow > li.key * { color: #18264f; }
+/* words on a panel take the panel's ink */
+html[data-look="cel"]:root:root:root :is(.hero-film, .hero-sub, .card.lead, .fact, .more-g, .method > li, .case-head, .prose, .chart-card, .term, .paper, .legend, main > .film-script > :not(summary), .flow > li:not(.key), .figure > figcaption, .duo > figure)
+  :is(h1, h2, h3, h4, p, li, dt, dd, b, strong, span:not([class*="hx"]):not(.mark), em, figcaption, .who, .kicker, .lede, .sub, .lab, .val) { color: var(--dk-text); text-shadow: none; }
+html[data-look="cel"]:root:root:root :is(.lead-k, .kicker, .card.lead .lead-k) { color: var(--dk-kick) !important; background: none; box-shadow: none; padding: 0; }
+html[data-look="cel"]:root:root:root :is(.hero-film, .card.lead, .prose, .more-g, .figure > figcaption) a:not(.btn):not(.back):not(.badge):not(.prev):not(.next) { color: var(--dk-text); }
+
+/* a small solid on a panel (controls, chips, the repo card, the pager): its own lit and shade paint, and a hard shadow in
+   the panel's shade paint */
+:where(html[data-look="cel"]) :where(.btn, .badge, .back, .film-script summary, .vid-sound, .pills span, .hero-mail a, .pager a, .repo-card, .band3 > div, .theme-toggle, .look-pick-btn, .skip-link, .motion-toggle) {
+  --lit: var(--dk-yel); --side: var(--dk-yel-s); --on: var(--dk-panel-s); --th: 5px; }
+html[data-look="cel"]:root:root:root :is(.btn, .badge, .back, .film-script summary, .vid-sound, .pills span, .hero-mail a, .pager a, .repo-card, .band3 > div, .theme-toggle, .look-pick-btn, .skip-link) {
+  position: relative; background: var(--lit); color: #18264f; border: 0; outline-offset: 4px; border-radius: 8px; text-shadow: none; filter: none; backdrop-filter: none;
+  box-shadow: 0 var(--th) 0 0 var(--side), 7px calc(var(--th) + 7px) 0 0 var(--on); transition: transform .12s, box-shadow .12s; -webkit-text-fill-color: currentColor; background-image: none;
+}
+html[data-look="cel"]:root:root:root :is(.btn, .badge, .back, .film-script summary, .vid-sound, .pills span, .hero-mail a, .pager a, .theme-toggle, .look-pick-btn) * { color: inherit; }
+html[data-look="cel"]:root:root:root :is(.btn, .badge, .back, .film-script summary, .vid-sound, .pager a, .theme-toggle, .look-pick-btn, .hero-mail a):hover { transform: translateY(-2px); box-shadow: 0 calc(var(--th) + 2px) 0 0 var(--side), 9px calc(var(--th) + 11px) 0 0 var(--on); }
+html[data-look="cel"]:root:root:root :is(.btn, .badge, .back, .film-script summary, .vid-sound, .pager a, .theme-toggle, .look-pick-btn, .hero-mail a):active { transform: translateY(var(--th)); box-shadow: 0 0 0 0 var(--side), 3px 3px 0 0 var(--on); }
+html[data-look="cel"]:root:root:root :is(.repo-card, .pager a, .band3 > div, .back, .look-pick-btn) { --lit: var(--dk-inner); --side: var(--dk-inner-s); color: var(--dk-text); }
+html[data-look="cel"]:root:root:root :is(.repo-card, .pager a, .band3 > div) * { color: var(--dk-text); }
+html[data-look="cel"]:root:root:root :is(.repo-card, .pager a) { --th: 8px; border-radius: 10px; }
+html[data-look="cel"]:root:root:root .repo-card .btn { --on: var(--dk-inner-s); }
+html[data-look="cel"]:root:root:root .repo-card .btn:not(#dk-boost), html[data-look="cel"]:root:root:root .repo-card .btn:not(#dk-boost) * { color: #18264f; }
+html[data-look="cel"]:root:root:root :is(.pills span) { --th: 4px; padding: 3px 9px; }
+html[data-look="cel"]:root:root:root :is(.repo-card, .pager a, .band3 > div)::before, html[data-look="cel"]:root:root:root :is(.repo-card, .pager a, .band3 > div)::after { content: none; }
+html[data-look="cel"]:root:root:root .btn.primary { --lit: var(--dk-yel); --side: var(--dk-yel-s); color: #18264f; }
+/* on the world itself (the top bar, the phone menu) the small solids cast the near-black wash */
+html[data-look="cel"]:root:root:root .topbar :is(.theme-toggle, .look-pick-btn) { --on: var(--dk-panel-s); }
+
+/* keyboard focus: a ring that reads on lit and shade paint alike, on every solid and link */
+html[data-look="cel"]:root:root:root :focus-visible { outline: 3px solid var(--dk-focus) !important; outline-offset: 4px !important; }
+html[data-look="cel"]:root:root:root .card.lead:focus-visible { outline-offset: 6px !important; }
+
+/* ---------- the top bar: a long slab floating under the sky. It is sticky (its own group), so its cast shadow is the
+   near-black wash, within a few units of "surface x #9c8c86" on sky and sea ---------- */
+html[data-look="cel"]:root:root:root .topbar { position: sticky; top: 0; z-index: 30; background: none; border: 0; box-shadow: none; padding: 12px 16px 0; backdrop-filter: none; }
+html[data-look="cel"]:root:root:root .topbar::before, html[data-look="cel"]:root:root:root .topbar::after { content: none; }
+html[data-look="cel"]:root:root:root .topbar > .wrap { --th: 9px; --cx: 14px; --cy: 18px; max-width: 1180px; padding: 10px 18px; min-height: 0; }
+html[data-look="cel"]:root:root:root .topbar > .wrap::after { background: var(--dk-wash); mix-blend-mode: normal; }
+html[data-look="cel"]:root:root:root .topbar :is(.brand, .topnav a:not(.look-pick-btn)) { color: var(--dk-text); background: none; box-shadow: none; border: 0; text-shadow: none; }
+html[data-look="cel"]:root:root:root .topnav a { padding: 6px 10px; border-radius: 6px; }
+html[data-look="cel"]:root:root:root .topnav a:hover { background: var(--dk-yel); color: #18264f; box-shadow: 0 4px 0 var(--dk-yel-s); }
+html[data-look="cel"]:root:root:root .look-menu { background: var(--dk-panel); color: var(--dk-text); border: 0; border-radius: 10px; box-shadow: 0 8px 0 var(--dk-panel-s), 14px 22px 0 var(--dk-wash); backdrop-filter: none; }
+html[data-look="cel"]:root:root:root .look-menu * { color: var(--dk-text); }
+html[data-look="cel"]:root:root:root body.case::before { box-shadow: none; }
+
+/* ---------- words standing on the world: solid letters (front face in shade paint) with the wash as their shadow ---------- */
+html[data-look="cel"]:root:root:root :is(.hero h1, .hero-who, .leads-head h2, .section-head h2) {
+  color: var(--dk-on-world); background: none; box-shadow: none; padding: 0;
+  text-shadow: 0 1px 0 var(--dk-letter-s), 0 2px 0 var(--dk-letter-s), 0 3px 0 var(--dk-letter-s), 0 4px 0 var(--dk-letter-s), 0 5px 0 var(--dk-letter-s),
+    8px 13px 0 var(--dk-wash), 9px 14px 0 var(--dk-wash); }
+html[data-look="cel"]:root:root:root :is(.hero h1, .hero-who, .leads-head h2, .section-head h2) * { color: inherit; }
+html[data-look="cel"]:root:root:root .hero h1 { text-shadow: 0 1px 0 var(--dk-letter-s), 0 2px 0 var(--dk-letter-s), 0 3px 0 var(--dk-letter-s), 0 4px 0 var(--dk-letter-s), 0 5px 0 var(--dk-letter-s), 0 6px 0 var(--dk-letter-s), 0 7px 0 var(--dk-letter-s), 11px 17px 0 var(--dk-wash); }
+html[data-look="cel"]:root:root:root .section-head { background: none; box-shadow: none; }
+html[data-look="cel"]:root:root:root .section-head::before, html[data-look="cel"]:root:root:root .section-head::after { content: none; }
+
+/* ---------- home ---------- */
+html[data-look="cel"]:root:root:root .hero-n { display: none; }
+html[data-look="cel"]:root:root:root .hero { padding: 54px 0 40px; background: none; }
+html[data-look="cel"]:root:root:root .hero .wrap, html[data-look="cel"]:root:root:root .section .wrap { max-width: 1140px; }
+html[data-look="cel"]:root:root:root .hero-one { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); column-gap: 52px; row-gap: 22px; align-items: start; padding: 0; border-radius: 0; max-width: none; }
+html[data-look="cel"]:root:root:root .hero-one > * { grid-column: 1; margin: 0; }
+html[data-look="cel"]:root:root:root .hero-who { font: 700 19px/1.3 var(--display); }
+html[data-look="cel"]:root:root:root .hero h1 { font-size: clamp(38px, 5.4vw, 70px); line-height: 1.02; font-weight: 900; }
+html[data-look="cel"]:root:root:root .hero-film { grid-column: 2; grid-row: 1 / span 5; margin: 0; padding: 12px 12px 14px; --th: 18px; --cx: 26px; --cy: 36px; --rad: 14px; }
+html[data-look="cel"]:root:root:root :is(.hero-film .shot, .figure > .shot video, .figure > .shot img) { border-radius: 6px; }
+html[data-look="cel"]:root:root:root .hero-film .shot { display: block; overflow: hidden; box-shadow: none; border: 0; outline: 0; background: none; }
+html[data-look="cel"]:root:root:root .hero-film .shot::before, html[data-look="cel"]:root:root:root .hero-film .shot::after { content: none; }
+html[data-look="cel"]:root:root:root .hero-film .film-cap { color: var(--dk-text); margin: 10px 4px 0; }
+html[data-look="cel"]:root:root:root .hero-sub { padding: 18px 22px; font-size: 18px; line-height: 1.5; --th: 10px; --cx: 16px; --cy: 22px; }
+html[data-look="cel"]:root:root:root .hero-mail { display: block; }
+html[data-look="cel"]:root:root:root .hero-mail a { display: inline-block; padding: 9px 16px; font: 750 17px/1.2 var(--display); text-decoration: none; --on: var(--dk-wash); }
+html[data-look="cel"]:root:root:root .leads-head { display: block; margin: 70px 0 22px; }
+html[data-look="cel"]:root:root:root .leads-head .kick { display: none; }
+html[data-look="cel"]:root:root:root :is(.leads-head h2, .section-head h2) { font-size: clamp(30px, 3.6vw, 46px); font-weight: 900; }
+html[data-look="cel"]:root:root:root .leads { display: grid; grid-template-columns: 1fr 1fr; gap: 64px 48px; margin: 0; }
+html[data-look="cel"]:root:root:root .leads > :first-child { grid-column: 1 / -1; }
+html[data-look="cel"]:root:root:root .lead-wrap { display: block; position: relative; margin: 0; padding: 0; }
+html[data-look="cel"]:root:root:root .lead-wrap > .card.lead { width: auto; margin: 0; height: 100%; box-sizing: border-box; }
+html[data-look="cel"]:root:root:root .lead-wrap > .badge-link { position: absolute; z-index: 3; left: 22px; top: -12px; right: auto; bottom: auto; width: auto; margin: 0; --on: var(--dk-wash); }
+html[data-look="cel"]:root:root:root .card.lead { --th: 14px; --cx: 22px; --cy: 32px; --rad: 12px; display: grid; grid-template-columns: 1fr; gap: 0; padding: 14px; overflow: visible; }
+html[data-look="cel"]:root:root:root .leads > .card.lead:first-child { grid-template-columns: 1.05fr 1fr; column-gap: 26px; align-items: start; }
+html[data-look="cel"]:root:root:root .card.lead .thumb-wrap { position: relative; display: block; border-radius: 6px; overflow: hidden; background: #dfe6ec; box-shadow: none; border: 0; margin: 0; }
+/* the picture is set INTO the slab: the rim casts a hard shade along its top and left inside edge */
+html[data-look="cel"]:root:root:root .card.lead .thumb-wrap::after { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit; background: none; z-index: 1;
+  box-shadow: inset 9px 11px 0 0 rgba(156, 140, 134, .9); mix-blend-mode: multiply; }
+html[data-look="cel"]:root:root:root .card.lead .thumb { display: block; width: 100%; height: auto; max-height: 300px; object-fit: cover; }
+html[data-look="cel"]:root:root:root .card.lead .body { padding: 14px 6px 6px; background: none; box-shadow: none; }
+html[data-look="cel"]:root:root:root .card.lead h4 { font-size: 26px; line-height: 1.12; margin: 4px 0 10px; }
+html[data-look="cel"]:root:root:root .card.lead :is(.lead-what, .lead-role) { font-size: 16px; line-height: 1.5; color: var(--dk-muted); }
+html[data-look="cel"]:root:root:root .card.lead:hover { transform: none; }
+html[data-look="cel"]:root:root:root .facts { display: flex; flex-wrap: wrap; gap: 34px 30px; margin: 72px 0 20px; padding: 0; }
+html[data-look="cel"]:root:root:root .fact { flex: 1 1 180px; padding: 16px 18px; --th: 10px; --cx: 14px; --cy: 20px; }
+html[data-look="cel"]:root:root:root .fact b, html[data-look="cel"]:root:root:root .fact b * { color: var(--dk-text); background: none; box-shadow: none; }
+html[data-look="cel"]:root:root:root #work { padding-top: 90px; background: none; }
+html[data-look="cel"]:root:root:root .more { display: grid; grid-template-columns: 1fr 1fr; gap: 56px 44px; }
+html[data-look="cel"]:root:root:root .more-g { --th: 14px; --cx: 22px; --cy: 30px; padding: 18px 20px; margin: 0; }
+html[data-look="cel"]:root:root:root .more-g .group-h { background: none; box-shadow: none; padding: 0; font-size: 22px; }
+html[data-look="cel"]:root:root:root .more-g .group-h::before, html[data-look="cel"]:root:root:root .more-g .group-h::after { content: none; }
+html[data-look="cel"]:root:root:root .more-g li a { background: none; box-shadow: none; }
+html[data-look="cel"]:root:root:root .more-g li a span { color: var(--dk-muted); }
+html[data-look="cel"]:root:root:root #how { padding-top: 90px; background: none; }
+/* the method: three plinths stepping up toward the light, in order */
+html[data-look="cel"]:root:root:root .method { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; align-items: end; padding: 0; }
+html[data-look="cel"]:root:root:root .method > li { padding: 18px 20px; }
+html[data-look="cel"]:root:root:root .method > li:nth-child(1) { --th: 14px; }
+html[data-look="cel"]:root:root:root .method > li:nth-child(2) { --th: 30px; --cy: 44px; margin-bottom: 16px; }
+html[data-look="cel"]:root:root:root .method > li:nth-child(3) { --th: 46px; --cy: 62px; margin-bottom: 32px; }
+html[data-look="cel"]:root:root:root .method .codelines i { box-shadow: none; }
+html[data-look="cel"]:root:root:root .band { margin-top: 80px; padding: 26px 28px; --lit: var(--dk-teal); --side: var(--dk-teal-s); --th: 16px; --cx: 24px; --cy: 34px; }
+html[data-look="cel"]:root:root:root .band h2 { font-size: 30px; color: #ffffff; text-shadow: 0 3px 0 var(--dk-teal-s); }
+html[data-look="cel"]:root:root:root .band .btn { --on: var(--dk-teal-s); }
+html[data-look="cel"]:root:root:root .band .btn:not(.primary) { --lit: #f4f4f2; --side: #958580; }
+
+/* ---------- case pages ---------- */
+html[data-look="cel"]:root:root:root .case-head { --th: 16px; --cx: 24px; --cy: 34px; --rad: 14px; padding: 26px 32px 30px; margin-top: 40px; }
+html[data-look="cel"]:root:root:root .case-head h1 { font-weight: 900; text-shadow: none; }
+html[data-look="cel"]:root:root:root .prose { --cx: 20px; --cy: 28px; }
+html[data-look="cel"]:root:root:root .prose:not(.case-head) { box-shadow: 0 var(--th) 0 0 var(--side); }
+html[data-look="cel"]:root:root:root .prose > h2 { background: none; box-shadow: none; padding: 0; color: var(--dk-text); }
+html[data-look="cel"]:root:root:root .prose > h2::after { content: none; }
+html[data-look="cel"]:root:root:root :is(.chart-card, .term, .paper, .legend) { --th: 14px; --cx: 22px; --cy: 30px; }
+html[data-look="cel"]:root:root:root main .shot:not(.hero-film .shot) { --lit: var(--dk-panel); padding: 10px; --th: 16px; --cx: 24px; --cy: 34px; --rad: 14px; overflow: visible; }
+html[data-look="cel"]:root:root:root main .shot:not(.hero-film .shot) > :is(img, video, .demo-poster) { display: block; border-radius: 6px; }
+html[data-look="cel"]:root:root:root main .shot :is(.cm-water) { display: none; }
+html[data-look="cel"]:root:root:root .figure > figcaption { display: block; width: fit-content; max-width: 100%; margin: 30px 0 0; padding: 8px 14px; --th: 7px; --cx: 10px; --cy: 14px; --rad: 8px; font-size: 15px; }
+html[data-look="cel"]:root:root:root .term { --lit: var(--dk-inner); --side: var(--dk-inner-s); }
+html[data-look="cel"]:root:root:root .term pre, html[data-look="cel"]:root:root:root .term .bar { background: none; box-shadow: none; }
+html[data-look="cel"]:root:root:root .flow > li { --th: 10px; --cx: 14px; --cy: 20px; }
+html[data-look="cel"]:root:root:root .duo > figure { padding: 10px; --th: 12px; }
+html[data-look="cel"]:root:root:root .duo > figure .tagline { --lit: var(--dk-teal); background: var(--dk-teal); color: #ffffff; box-shadow: 0 4px 0 var(--dk-teal-s); border-radius: 6px; }
+html[data-look="cel"]:root:root:root .back { --th: 5px; --on: var(--dk-panel-s); padding: 8px 14px; }
+html[data-look="cel"]:root:root:root .chart-card .bigfig, html[data-look="cel"]:root:root:root .chart-card .bigfig * { background: none; -webkit-text-fill-color: currentColor; }
+
+/* ---------- the shore the page ends on: a sand slab with its foam edge ---------- */
+html[data-look="cel"]:root:root:root footer.site { margin-top: 120px; background: var(--dk-sand); color: var(--dk-text); box-shadow: 0 -14px 0 0 var(--dk-foam); border: 0; position: relative; }
+html[data-look="cel"]:root:root:root footer.site::before, html[data-look="cel"]:root:root:root footer.site::after { content: none; }
+html[data-look="cel"]:root:root:root footer.site :is(a, span, button, time, p) { color: var(--dk-text); }
+html[data-look="cel"]:root:root:root footer.site .motion-toggle { --on: rgba(0, 0, 0, .25); }
+
+/* ---------- phones ---------- */
+@media (max-width: 760px) {
+  html[data-look="cel"]:root:root:root .hero-one { grid-template-columns: minmax(0, 1fr); row-gap: 18px; }
+  html[data-look="cel"]:root:root:root .hero-one > * { grid-column: 1; grid-row: auto; }
+  html[data-look="cel"]:root:root:root :is(.leads, .more, .method) { grid-template-columns: minmax(0, 1fr); }
+  html[data-look="cel"]:root:root:root .leads > * { grid-column: 1; }
+  html[data-look="cel"]:root:root:root .leads > .card.lead:first-child { grid-template-columns: minmax(0, 1fr); }
+  html[data-look="cel"]:root:root:root .method > li { margin: 0; --th: 12px; --cy: 20px; }
+  html[data-look="cel"]:root:root:root .hero { padding-top: 34px; }
+  html[data-look="cel"]:root:root:root .hero h1 { font-size: 38px; }
+  html[data-look="cel"]:root:root:root :is(.hero-film, .card.lead, .more-g, .band, .case-head, .prose, .chart-card, main .shot:not(.hero-film .shot), .term, .paper, .legend, main > .film-script > :not(summary), .method > li) { --cx: 10px; --cy: 18px; --th: 10px; }
+  html[data-look="cel"]:root:root:root .topbar { padding: 8px 8px 0; }
+  html[data-look="cel"]:root:root:root .topbar > .wrap { --cx: 6px; --cy: 12px; padding: 8px 10px; }
+  html[data-look="cel"]:root:root:root .case-head { padding: 20px 18px 22px; }
+}
+/* small data labels and chips on panels: yellow slabs with navy words by day and by night (lamps) */
+html[data-look="cel"]:root:root:root body :is(.hero-film, .card.lead, .method > li, .prose, .case-head, .more-g, .fact, .chart-card, .term, .paper, .legend, .flow > li, .figure > figcaption, .duo > figure, .topbar, .band)
+  :is(.lead-go, .pills span, .who, .brief dt, .tagline):not(#dk-boost) {
+  background: var(--dk-yel); color: #18264f; -webkit-text-fill-color: currentColor; box-shadow: 0 4px 0 0 var(--dk-yel-s); border: 0; text-shadow: none; background-image: none; }
+html[data-look="cel"]:root:root:root body :is(.hero-film, .card.lead, .method > li, .prose, .case-head, .more-g, .fact, .chart-card, .term, .paper, .legend, .flow > li, .figure > figcaption, .duo > figure, .topbar, .band)
+  :is(.lead-go, .pills span, .who, .brief dt, .tagline):not(#dk-boost) * { color: inherit; }
+html[data-look="cel"]:root:root:root body .duo > figure .tagline { background: #52aabd; box-shadow: 0 4px 0 0 #325d63; }
+html[data-look="cel"]:root:root:root body .topbar .mark { color: #18264f; -webkit-text-fill-color: currentColor; }
+/* the film's script, open on a case page: a cloth panel under its button; the button on the world casts the wash */
+html[data-look="cel"]:root:root:root main > .film-script > :not(summary) { --lit: var(--dk-cloth); --side: var(--dk-cloth-s); padding: 16px 20px; margin-top: 22px; }
+html[data-look="cel"]:root:root:root :is(main > .film-script, .hero-mail, .lead-wrap) > :is(summary, a) { --on: var(--dk-wash); }
+/* a panel inside a panel (a chart card in a chart grid) keeps its front face; its shadow falls behind the outer one */
+html[data-look="cel"]:root:root:root body ol.flow { background: none; box-shadow: none; border: 0; }
+/* diorama:end */
