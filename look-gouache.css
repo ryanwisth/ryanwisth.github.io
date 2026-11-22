@@ -599,3 +599,26 @@ html[data-look="gouache"]:not(#_) footer.site :is(a, .motion-toggle, p, span) { 
 @keyframes gq-flick { 0% { opacity: 1; } 37% { opacity: 0; } 58% { opacity: 1; } 81% { opacity: 0; } 100% { opacity: 1; } }
 
 /* no mask support: nothing here needs it (the cut edges are painted); scripts off: yarn, as for every look */
+
+/* case pages (roll-out): words that sit on a section field (captions, the summary numbers) take the light words of a
+   deep member; look-gouache.js marks them .gq-on when it lays a field under them (never a panel's own words) */
+html[data-look="gouache"]:not(#_) .gq-on, html[data-look="gouache"]:not(#_) .gq-on * { color: var(--gq-on-deep) !important; }
+/* case head: Version History's panel behind the changelog and film is off (the changelog is hidden in this look); the
+   free corner under the title carries the painted world instead */
+html[data-look="gouache"]:not(#_) body.case main::before { content: none; }
+html[data-look="gouache"]:not(#_) .gq-on:focus-visible, html[data-look="gouache"]:not(#_) .gq-on :focus-visible { outline-color: var(--gq-focus-on-field); }
+
+/* figures on case pages (plan heading 7 map): meters track the pale member and fill its deep partner, square cut ends; a
+   cut is the family neighbour. Dots are small cut discs, the marked ones in the deep partner. Small tables: rows on
+   alternating light fields, no rules. */
+html[data-look="gouache"]:not(#_) .track { background: var(--gq-ground); }
+html[data-look="gouache"]:not(#_) .track i { background: var(--gq-btn); }
+html[data-look="gouache"]:not(#_) .track i.cut { background: var(--gq-btn2); }
+html[data-look="gouache"]:not(#_) .g-dots i { background: var(--gq-ground); border-radius: 3px 5px 4px 2px; }
+html[data-look="gouache"]:not(#_) .g-dots i.x { background: var(--gq-btn2); border-radius: 4px 2px 5px 3px; }
+html[data-look="gouache"]:not(#_) table.minis tr:nth-child(even) > :is(td, th) { background: var(--gq-ground); }
+html[data-look="gouache"]:not(#_) .film-script:not([open]) > p { display: none; }
+/* case films: the play buttons as on the home film (deep2 with light words), in both themes and at every width */
+html[data-look="gouache"]:not(#_) .case-film :is(.vid-sound, .vid-toggle), html[data-look="gouache"]:not(#_) .case-film :is(.vid-sound, .vid-toggle):hover { background: #2a3c97; color: #f3f7fc; }
+/* the paper sample and the narrow screenshot: no drawn edge (the pair rule); their edge is the field behind them */
+html[data-look="gouache"]:not(#_) .paper, html[data-look="gouache"]:not(#_) img.narrow { border: 0 !important; outline: 0 !important; box-shadow: none; }
