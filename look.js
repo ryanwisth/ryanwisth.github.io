@@ -38,9 +38,8 @@ var LOOK_ROWS = [
   ["history", "Studio",          ["#e9ecef", "#34332f"],  ["#e9ecef", "#14594a"],    true],
   /* gouache: every page (Nov 21 2026); look-gouache.js paints the field under the page. Films (Nov 22): video/film-<page>-gouache.mp4 + img/film-<page>-gouache.jpg from pf-gouache/out/gouache/. */
   ["gouache", "Gouache & Shape", ["#f4d7da", "#0b378d"],  ["#f4d7da", "#195fbf"],    true],
-  /* backdrop: sample (Nov 21 2026), home first; Ryan picked option B, "Matte plate". No films yet (false): the yarn films play,
-     the home film under the look's own painted poster (look-backdrop.js, loaded below). */
-  ["backdrop", "Backdrop & Spotlight", ["#423630", "#3c324b"], ["#554437", "#a02a26"], false]
+  /* backdrop: every page (Nov 21 2026), Ryan picked option B, "Matte plate"; all CSS. Films (Nov 22): video/film-<page>-backdrop.mp4 + img/film-<page>-backdrop.jpg from pf-backdrop/out/backdrop/. */
+  ["backdrop", "Backdrop & Spotlight", ["#423630", "#3c324b"], ["#554437", "#a02a26"], true]
 ];
 
 /* To try a look without changing anything, add ?look=<key> (?look=wash, ?look=mini, ?look=yarn ...) to any page address.
@@ -85,7 +84,7 @@ var LOOK_ROWS = [
       sheet.rel = "stylesheet"; sheet.href = BASE + "look-" + look + ".css"; sheet.setAttribute("blocking", "render");
       head.appendChild(sheet);
     } else document.write('<link rel="stylesheet" href="' + BASE + 'look-' + look + '.css">');
-    if (look === "mini" || look === "gouache" || look === "backdrop") {  // mini, gouache: the ground under the page; backdrop: the home film's poster. Never moving, so loaded with or without motion
+    if (look === "mini" || look === "gouache") {   // the ground under the page: drawn once, never moving, so loaded with or without motion
       var mjs = document.createElement("script"); mjs.src = BASE + "look-" + look + ".js"; mjs.async = true;
       (head || document.documentElement).appendChild(mjs);
     }
