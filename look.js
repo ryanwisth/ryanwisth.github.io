@@ -38,9 +38,8 @@ var LOOK_ROWS = [
   ["history", "Studio",          ["#e9ecef", "#34332f"],  ["#e9ecef", "#14594a"],    true],
   /* gouache: every page (Nov 21 2026); look-gouache.js paints the field under the page. Films (Nov 22): video/film-<page>-gouache.mp4 + img/film-<page>-gouache.jpg from pf-gouache/out/gouache/. */
   ["gouache", "Gouache & Shape", ["#f4d7da", "#0b378d"],  ["#f4d7da", "#195fbf"],    true],
-  /* hatch: sample (Nov 21 2026), home first. No films yet (false): the yarn films play; look-hatch.js gives the home
-     film this look's own calm poster. */
-  ["hatch", "Pen & Hatch",       ["#e3ddc8", "#264247"],  ["#e3ddc8", "#2a2725"],    false]
+  /* hatch: every page (Nov 22 2026). Films (Nov 22): video/film-<page>-hatch.mp4 + img/film-<page>-hatch.jpg from pf-hatch/out/hatch/. */
+  ["hatch", "Pen & Hatch",       ["#e3ddc8", "#264247"],  ["#e3ddc8", "#2a2725"],    true]
 ];
 
 /* To try a look without changing anything, add ?look=<key> (?look=wash, ?look=mini, ?look=yarn ...) to any page address.
@@ -85,7 +84,7 @@ var LOOK_ROWS = [
       sheet.rel = "stylesheet"; sheet.href = BASE + "look-" + look + ".css"; sheet.setAttribute("blocking", "render");
       head.appendChild(sheet);
     } else document.write('<link rel="stylesheet" href="' + BASE + 'look-' + look + '.css">');
-    if (look === "mini" || look === "gouache" || look === "hatch") {   // mini, gouache: the ground under the page, drawn once; hatch: the home film's poster
+    if (look === "mini" || look === "gouache") {   // the ground under the page: drawn once, never moving, so loaded with or without motion
       var mjs = document.createElement("script"); mjs.src = BASE + "look-" + look + ".js"; mjs.async = true;
       (head || document.documentElement).appendChild(mjs);
     }
