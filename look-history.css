@@ -659,6 +659,8 @@ html[data-look="history"]:not(#_):not(#_) .vh-doc > .figure { width: 100%; max-w
 html[data-look="history"]:not(#_):not(#_) .vh-doc > img.narrow { display: block; max-width: 100%; margin: 28px 0 0; }
 html[data-look="history"]:not(#_):not(#_) .vh-doc .prose h2 { scroll-margin-top: 76px; }
 html[data-look="history"]:not(#_):not(#_) .vh-doc .shot .bar em { white-space: normal; min-width: 0; }
+html[data-look="history"]:not(#_):not(#_) .vh-doc > .sum { grid-template-columns: minmax(0, 1fr); }
+html[data-look="history"]:not(#_):not(#_) .vh-doc .sum-top { min-width: 0; }
 html[data-look="history"]:not(#_):not(#_) .vh-cinsp { grid-area: insp; margin-top: 48px; }
 html[data-look="history"]:not(#_):not(#_) .vh-cinsp .vh-media { margin: 0; }
 html[data-look="history"]:not(#_):not(#_) .vh-cinsp .vh-rows { grid-template-columns: 96px minmax(0, 1fr); }
@@ -687,12 +689,8 @@ html[data-look="history"]:not(#_):not(#_) .vh-empty .vh-blank { margin: 0; font-
 /* ---------- phones and narrow windows: no inspector on home (each plate opens its record inline); on case pages the
    record sits under the title, its outline folded under "On this page" ---------- */
 @media (max-width: 959px) {
-  html[data-look="history"]:not(#_):not(#_) .vh-tool .wrap { padding: 8px 20px; flex-wrap: wrap; gap: 8px 12px; }
-  html[data-look="history"]:not(#_):not(#_) .vh-tool .topnav { order: 3; flex-basis: 100%; margin-left: -10px; }
-  html[data-look="history"]:not(#_):not(#_) .vh-tool .topnav .hide-sm { display: none; }
-  html[data-look="history"]:not(#_):not(#_) .vh-tool .look-pick { margin-left: auto; order: 2; }
-  html[data-look="history"]:not(#_):not(#_) .vh-tool .hx-ver { order: 1; }
-  html[data-look="history"]:not(#_):not(#_) .vh-tool .theme-toggle:not([hidden]) { margin-left: auto; }
+  html[data-look="history"]:not(#_):not(#_) .vh-tool .wrap { padding: 4px 20px 6px; flex-wrap: wrap; gap: 0 12px; }
+  html[data-look="history"]:not(#_):not(#_) .vh-tool .hx-ver { display: none !important; }
   html[data-look="history"]:not(#_):not(#_) .topbar.vh-tool { position: static; }
   html[data-look="history"]:not(#_):not(#_) :is(.vh-wrap, body.case main) { padding: 0 20px; }
   html[data-look="history"]:not(#_):not(#_) .vh-app { grid-template-columns: minmax(0, 1fr); }
@@ -738,4 +736,77 @@ html[data-look="history"]:not(#_):not(#_) .vh-empty .vh-blank { margin: 0; font-
   html[data-look="history"]:not(#_) body { visibility: visible !important; }
   html[data-look="history"]:not(#_):not(#_) .vh-insp { position: static; }
   html[data-look="history"]:not(#_):not(#_) .vh-sel, html[data-look="history"]:not(#_):not(#_) .topbar.vh-tool { display: none; }
+}
+
+/* =====================================================================================================================
+   Tightened (Ryan's pick, Nov 23 2026; the overlay in _shots/tighten-nov23/tight.js, built properly here).
+   Toolbar: name, Projects, How I work, GitHub, a filled "Email me"; Dark/Light, Style and "Pause motion" live in the footer.
+   Home: a smaller claim with three figures under it (the case pages' fact treatment, larger), three equal starter plates
+   (picture, kicker, title, one line, one figure, the whole plate a link), "How I build each one" under them.
+   ===================================================================================================================== */
+html[data-look="history"]:not(#_):not(#_) .vh-tool .topnav { gap: 2px; }
+html[data-look="history"]:not(#_):not(#_) .vh-tool .topnav a.vh-cta { margin-left: 8px; padding: 0 14px; border-color: var(--vh-green); background: var(--vh-green); color: var(--on-sig); font-weight: 600; }
+html[data-look="history"]:not(#_):not(#_) .vh-tool .topnav a.vh-cta:hover { border-color: var(--vh-ink); background: var(--vh-ink); color: var(--vh-panel); }
+
+/* the footer's tool group: Pause motion, Dark/Light, Style; the Style menu opens upward */
+html[data-look="history"]:not(#_):not(#_) footer.site .wrap { align-items: center; }
+html[data-look="history"]:not(#_):not(#_) .vh-ftools { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+html[data-look="history"]:not(#_):not(#_) .vh-ftools :is(.motion-toggle, .theme-toggle:not([hidden]), .look-pick-btn) { display: inline-flex; align-items: center; box-sizing: border-box; height: 32px; min-height: 32px; width: auto; margin: 0; padding: 0 10px; border: 1px solid var(--vh-edge); border-radius: 4px; background: var(--vh-panel); color: var(--vh-ink); font: 400 14px/1 var(--vh-body); cursor: pointer; }
+html[data-look="history"]:not(#_):not(#_) .vh-ftools .theme-toggle:not([hidden]) { font-size: 0; }
+html[data-look="history"]:not(#_):not(#_) .vh-ftools :is(.motion-toggle, .theme-toggle, .look-pick-btn):hover, html[data-look="history"]:not(#_):not(#_) .vh-ftools .look-pick-btn[aria-expanded="true"] { border-color: var(--vh-ink); color: var(--vh-ink); background: var(--vh-panel); }
+html[data-look="history"]:not(#_):not(#_) .vh-ftools .look-pick { position: relative; margin: 0; }
+html[data-look="history"]:not(#_):not(#_) .vh-ftools .look-pick-k { color: var(--vh-muted); }
+html[data-look="history"]:not(#_):not(#_) .vh-ftools .look-menu { top: auto; bottom: calc(100% + 6px); right: 0; left: auto; max-height: min(calc(100vh - 120px), 560px); overflow: auto; }
+
+/* home: the claim, smaller, with three figures */
+html[data-look="history"]:not(#_):not(#_) .vh-hero { max-width: 760px; margin-top: 0; padding-top: 12px; padding-bottom: 8px; }
+html[data-look="history"]:not(#_):not(#_) .vh-hero h1 { max-width: none; font-size: 42px; line-height: 1.08; letter-spacing: -.028em; }
+html[data-look="history"]:not(#_):not(#_) .vh-hero .hero-sub { margin-top: 10px; max-width: 62ch; font-size: 17px; line-height: 1.55; }
+html[data-look="history"]:not(#_):not(#_) .vh-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin: 12px 0 0; padding: 12px 0 0; list-style: none; border-top: 1px solid var(--vh-edge); }
+html[data-look="history"]:not(#_):not(#_) .vh-stats li { margin: 0; }
+html[data-look="history"]:not(#_):not(#_) .vh-stats b { display: block; font: 600 38px/1 var(--vh-head); letter-spacing: -.01em; color: var(--vh-green); white-space: nowrap; }
+html[data-look="history"]:not(#_):not(#_) .vh-stats b :is(small, span, i) { font: inherit; color: inherit; }
+html[data-look="history"]:not(#_):not(#_) .vh-stats span { display: block; margin: 6px 0 0; font-size: 15px; line-height: 1.4; color: var(--vh-muted); }
+
+/* the three to start with: equal plates in one row */
+html[data-look="history"]:not(#_):not(#_) #featured.vh-sec { padding-top: 6px; }
+html[data-look="history"]:not(#_):not(#_) #featured.vh-sec > h2 { margin-bottom: 12px; }
+html[data-look="history"]:not(#_):not(#_) .vh-stars { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+html[data-look="history"]:not(#_):not(#_) .vh-stars .vh-star { display: flex; flex-direction: column; grid-column: auto; padding: 12px; }
+html[data-look="history"]:not(#_):not(#_) .vh-stars .vh-star .vh-poster { margin: 0 0 10px; border-radius: 4px; aspect-ratio: 16 / 9; }
+html[data-look="history"]:not(#_):not(#_) .vh-stars .vh-poster img { height: 100%; }
+html[data-look="history"]:not(#_):not(#_) .vh-stars .vh-shot img { object-position: 50% 0; }
+html[data-look="history"]:not(#_):not(#_) .vh-stars .vh-star .vh-ptext { display: flex; flex-direction: column; flex: 1; padding: 0; }
+html[data-look="history"]:not(#_):not(#_) .vh-stars .vh-pk { margin: 0 0 4px; font-size: 14px; }
+html[data-look="history"]:not(#_):not(#_) .vh-stars .vh-star .vh-pname { font-size: 19px; line-height: 1.2; letter-spacing: -.012em; }
+html[data-look="history"]:not(#_):not(#_) .vh-stars .vh-pwhat { margin: 6px 0 0; font-size: 15px; line-height: 1.45; }
+html[data-look="history"]:not(#_):not(#_) .vh-pnum { margin: auto 0 0; padding: 10px 0 0; font-size: 14.5px; line-height: 1.35; color: var(--vh-muted); }
+html[data-look="history"]:not(#_):not(#_) .vh-pwhat + .vh-pnum { margin-top: 10px; border-top: 1px solid var(--vh-edge); }
+html[data-look="history"]:not(#_):not(#_) .vh-pnum b { margin-right: 6px; font: 600 22px/1 var(--vh-head); color: var(--vh-green); }
+html[data-look="history"]:not(#_):not(#_) .vh-how.vh-sec { padding-top: 36px; }
+
+@media (max-width: 959px) {
+  /* phones: row one the name and "Email me", row two Projects, How I work, GitHub; every target 44 px tall */
+  html[data-look="history"]:not(#_):not(#_) .vh-tool .topnav { display: contents; }
+  html[data-look="history"]:not(#_):not(#_) .vh-tool .brand { order: 1; min-height: 44px; }
+  html[data-look="history"]:not(#_):not(#_) .vh-tool .topnav a.vh-cta { order: 2; margin-left: auto; }
+  html[data-look="history"]:not(#_):not(#_) .vh-tool .wrap::after { content: ""; order: 3; flex-basis: 100%; height: 0; }
+  html[data-look="history"]:not(#_):not(#_) .vh-tool .topnav a:not(.vh-cta) { order: 4; margin-left: -10px; margin-right: 10px; }
+  html[data-look="history"]:not(#_):not(#_) .vh-tool .topnav a, html[data-look="history"]:not(#_):not(#_) .vh-tool .topnav a.hide-sm, html[data-look="history"]:not(#_):not(#_) .vh-tool .topnav a.nav-gh { display: inline-flex !important; height: 44px; }
+  html[data-look="history"]:not(#_):not(#_) .vh-hero { margin-top: 0; padding: 12px 0 8px; }
+  html[data-look="history"]:not(#_):not(#_) .vh-hero h1 { font-size: 32px; line-height: 1.1; }
+  html[data-look="history"]:not(#_):not(#_) .vh-hero .hero-sub { font-size: 16.5px; }
+  html[data-look="history"]:not(#_):not(#_) .vh-stats { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  html[data-look="history"]:not(#_):not(#_) .vh-stats li { display: grid; grid-template-columns: 64px minmax(0, 1fr); align-items: baseline; gap: 12px; }
+  html[data-look="history"]:not(#_):not(#_) .vh-stats b { font-size: 30px; }
+  html[data-look="history"]:not(#_):not(#_) .vh-stats span { margin: 0; }
+  html[data-look="history"]:not(#_):not(#_) .vh-stars { grid-template-columns: minmax(0, 1fr); }
+  html[data-look="history"]:not(#_):not(#_) .vh-stars .vh-star .vh-more { align-self: flex-start; margin: 10px 0 0; }
+  html[data-look="history"]:not(#_):not(#_) .vh-stars .vh-star .vh-inline[data-open] { margin: 10px -12px -12px; }
+  html[data-look="history"]:not(#_):not(#_) footer.site .wrap { align-items: flex-start; }
+  html[data-look="history"]:not(#_):not(#_) .vh-ftools { margin-left: 0; flex-wrap: wrap; }
+  html[data-look="history"]:not(#_):not(#_) .vh-ftools :is(.motion-toggle, .theme-toggle:not([hidden]), .look-pick-btn), html[data-look="history"]:not(#_):not(#_) .vh-more, html[data-look="history"]:not(#_):not(#_) .vh-toc-btn { height: 44px; min-height: 44px; }
+  html[data-look="history"]:not(#_):not(#_) .vh-ftools { position: relative; }
+  html[data-look="history"]:not(#_):not(#_) .vh-ftools .look-pick { position: static; }
+  html[data-look="history"]:not(#_):not(#_) .vh-ftools .look-menu { right: auto; left: 0; max-width: calc(100vw - 40px); }
 }

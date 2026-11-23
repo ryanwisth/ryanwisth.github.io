@@ -2,8 +2,12 @@
    Home, on wide screens: a canvas of plates (the claim, the three to start with large, the other 13 as rows) and a sticky
    inspector that shows the record of what is selected. Selection works like a design tool: the selected plate wears a
    1 px green outline with four square handles (one frame, .vh-sel, moved without animation). Pointing, Tab, and the up and
-   down arrows (while a plate has focus) move it; Escape goes back to the claim, which is selected at load and shows the
-   site's own record (its film and the five facts). Phones: no inspector; each plate opens its record inline.
+   down arrows (while a plate has focus) move it; Escape goes back to the claim, which shows the site's own record (its film
+   and the five facts). At load the first starter is selected, so the first screen shows a real project record.
+   Tightened (Ryan's pick, Nov 23 2026): the toolbar is name, Projects, How I work, GitHub and a filled "Email me"; Dark/Light,
+   the Style picker and "Pause motion" sit in the footer; the claim carries three figures from the facts list; the three
+   starters are equal plates (picture, kicker, title, one sentence of their own description, one figure from their own text);
+   "How I build each one" sits right under them. Phones: no inspector and no site record; each plate opens its record inline.
    Case pages: the write-up is a document canvas on the left; the project's inspector sits right and sticky (film, the
    result line, My rules / AI wrote / I tested, Added, its links, then "On this page" with the section in view marked).
    Phones: the record sits under the title, the outline folded under "On this page". 404: the toolbar and an empty inspector.
@@ -34,6 +38,14 @@
     'paper-grader': '2026-11-13', 'pinball-study': '2026-11-13', 'practice-engine': '2026-11-13', 'safari-dark-mode': '2026-11-13',
     'slot': '2026-11-21', 'streaks-trainer': '2026-11-13', 'token-guard': '2026-11-13', 'token-scan': '2026-11-13'
   };
+  var STARTER = {
+    'claude-phone':   { line: 1, shot: 'img/claude-phone.jpg', fig: '6 s', find: '6 seconds', cap: 'from my reply on the phone to the answer starting' },
+    'paper-grader':   { line: 1, shot: null, fig: '0', find: 'changed 0 times', cap: 'changes to the student\u2019s own writing' },
+    'family-tree-3d': { line: 0, shot: 'img/family-tree-3d.jpg', fig: '1 MB', find: 'about 1 MB', cap: 'one page with the whole tree, no internet needed' }
+  };
+  /* the hero's three figures, in this order, taken from the page's own facts list by their figures */
+  var HERO_FIGS = ['16', '\u2212\u2154', '13'];
+  function sentences(html) { var t = plain(html).replace(/\s+/g, ' ').trim(); return t.match(/[^.!?]+[.!?]+(\s|$)/g) || [t]; }
   var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   function dateHtml(iso) { if (!iso) return ''; var p = iso.split('-'); return '<time datetime="' + iso + '">' + (+p[2]) + ' ' + MONTHS[+p[1] - 1] + ' ' + p[0] + '</time>'; }
 
@@ -122,11 +134,35 @@
 
   run(function () {
     var main = q('main'), top = q('.topbar');
-    if (top) top.classList.add('vh-tool');
+    if (top) { top.classList.add('vh-tool'); toolbar(top); }
     if (!main) return;
     if (q('body.case')) { casePage(main); return; }
     if (q('.lead-hero')) homePage(main);
   });
+
+  /* ============ the toolbar (tightened, Ryan's pick Nov 23 2026): name, Projects, How I work, GitHub, "Email me" ============
+     The date tag leaves the toolbar (home keeps it as the site record's crumb); Dark/Light, the Style picker and "Pause motion"
+     move to the footer as one group of tool buttons. The picker is built by look.js while the page parses; if it arrives
+     later it is moved when it does. */
+  function toolbar(top) {
+    var mail = q('.topnav .nav-mail', top);
+    if (mail) { mail.textContent = 'Email me'; mail.classList.add('vh-cta'); }
+    var foot = q('footer.site .wrap');
+    if (!foot) return;
+    var tools = el('div', 'vh-ftools');
+    foot.appendChild(tools);
+    function gather() {
+      var tt = q('.theme-toggle', top), lp = q('.look-pick', top), mt = q('.motion-toggle', foot);
+      if (tt) tools.appendChild(tt);
+      if (mt && mt.parentNode !== tools) tools.insertBefore(mt, tools.firstChild);
+      if (lp) tools.appendChild(lp);
+      return !!lp;
+    }
+    if (!gather() && W.MutationObserver) {
+      var mo = new MutationObserver(function () { if (gather()) mo.disconnect(); });
+      mo.observe(top, { childList: true, subtree: true });
+    }
+  }
 
   /* ================================ home ================================ */
   function homePage(main) {
@@ -139,11 +175,12 @@
     qa('.leads a.card.lead').forEach(function (a) {
       var log = q('.hx-lead-log', a), page = a.getAttribute('href').replace(/\.html$/, ''), wrap = a.parentNode, tested = null;
       if (log) qa(':scope > div', log).forEach(function (dv) { if (q('dt', dv).textContent.trim() === 'I tested') tested = dv; });
-      var t = q('.hx-added time', a);
+      var t = q('.hx-added time', a), nowRow = log ? logRow(log, 'Now') : null;
       H.projects.push({
         page: page, href: a.getAttribute('href'), starter: true, group: q('.lead-k', a).innerHTML, name: q('h4', a).innerHTML,
         vt: q('h4', a).getAttribute('style') || '', what: q('.lead-what', a).innerHTML, rulesLabel: q('.lead-role b', a).innerHTML,
         rules: runs(q('.lead-role', a)), tested: items(tested), date: t ? t.getAttribute('datetime') : ADDED[page],
+        now: nowRow ? q('dd', nowRow).textContent : '',
         demo: wrap.classList.contains('lead-wrap') && q('.badge', wrap) ? { href: q('.badge', wrap).getAttribute('href'), text: q('.badge', wrap).textContent.trim() } : null
       });
     });
@@ -178,14 +215,19 @@
 
     /* the claim: a selectable object; selected at load, its record is the site's */
     var hero = el('section', 'vh-hero vh-obj'); hero.setAttribute('tabindex', '-1'); hero.setAttribute('aria-label', plain(H.h1.innerHTML));
-    hero.appendChild(H.h1); hero.appendChild(H.sub); hero.appendChild(H.mail);
+    hero.appendChild(H.h1); hero.appendChild(H.sub);
+    var hs3 = el('ul', 'vh-stats');
+    HERO_FIGS.forEach(function (fig) {
+      var f = H.facts.filter(function (x) { return plain(x.b).replace(/\s+/g, '') === fig; })[0];
+      if (f) hs3.appendChild(el('li', null, '<b>' + f.b + '</b><span>' + f.s + '</span>'));
+    });
+    if (hs3.children.length) hero.appendChild(hs3);
     cv.appendChild(hero);
+    if (H.ver) H.ver.remove();
     var site = el('div', 'vh-rec vh-site');
     site.appendChild(crumb([H.ver ? H.ver.innerHTML : ''], BRAND));
     site.appendChild(H.film);
     var fl = el('ul', 'vh-facts'); H.facts.forEach(function (f) { fl.appendChild(el('li', null, '<b>' + f.b + '</b> ' + f.s)); }); site.appendChild(fl);
-    var siteSpot = el('div', 'vh-sitespot');
-    cv.appendChild(siteSpot);
 
     function record(p) {
       var rec = el('div', 'vh-rec');
@@ -242,22 +284,29 @@
       plate.appendChild(b); plate.appendChild(spot);
     }
 
-    /* the three to start with: large plates, the newest widest */
+    /* the three to start with: three equal plates, the newest first; picture, kicker, title, one line, one figure */
     var fs = el('section', 'vh-sec'); fs.id = 'featured'; fs.appendChild(el('h2', null, H.featuredH.innerHTML));
     var stars = el('div', 'vh-stars');
     P.filter(function (p) { return p.starter; }).sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; }).forEach(function (p, i) {
       var pl = el('article', 'vh-plate vh-star vh-star' + i);
-      pl.appendChild(el('div', 'vh-poster', '<img src="img/film-' + p.page + '-history.jpg" alt="" width="960" height="540" loading="lazy">'));
+      var S = STARTER[p.page] || {}, shot = S.shot || 'img/film-' + p.page + '-history.jpg';
+      pl.appendChild(el('div', 'vh-poster' + (S.shot ? ' vh-shot' : ''), '<img src="' + shot + '" alt="" width="960" height="540"' + (i ? ' loading="lazy"' : '') + '>'));
       var tx = el('div', 'vh-ptext');
       tx.appendChild(el('p', 'vh-pk', p.group));
       var h = el('h3', 'vh-pname', '<a href="' + p.href + '">' + p.name + '</a>'); if (p.vt) h.setAttribute('style', p.vt); tx.appendChild(h);
-      if (i === 0) tx.appendChild(el('p', 'vh-pwhat', p.what));
+      var ss = sentences(p.what);
+      tx.appendChild(el('p', 'vh-pwhat', (ss[S.line || 0] || ss[0]).trim()));
+      var own = plain(p.what) + ' ' + p.now;
+      if (S.fig && own.indexOf(S.find) >= 0) tx.appendChild(el('p', 'vh-pnum', '<b>' + S.fig + '</b> ' + S.cap));
       pl.appendChild(tx);
       hook(pl, p.page, function () { return record(p); });
       opener(pl, p);
       stars.appendChild(pl);
     });
     fs.appendChild(stars); cv.appendChild(fs);
+    /* how each one is built: directly under the three to start with */
+    var hs = el('section', 'vh-sec vh-how'); hs.id = 'how'; hs.appendChild(el('h2', null, H.howH.innerHTML)); hs.appendChild(H.method);
+    cv.appendChild(hs);
 
     /* the other 13: rows, grouped as the page groups them */
     var ws = el('section', 'vh-sec'); ws.id = 'work'; ws.appendChild(el('h2', null, H.workH.innerHTML));
@@ -280,9 +329,7 @@
     });
     cv.appendChild(ws);
 
-    /* how each one is built, and the closing line */
-    var hs = el('section', 'vh-sec vh-how'); hs.id = 'how'; hs.appendChild(el('h2', null, H.howH.innerHTML)); hs.appendChild(H.method);
-    cv.appendChild(hs);
+    /* the closing line */
     var bs = el('section', 'vh-close'); bs.appendChild(H.band); cv.appendChild(bs);
     cv.appendChild(sel);
 
@@ -308,12 +355,14 @@
       select('site'); hero.focus();
     });
 
+    var first = P.filter(function (p) { return p.starter; }).sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; })[0];
     function place() {
       if (wide.matches) {
         if (site.parentNode !== box) { box.replaceChildren(); I.clear(); }
-        curKey = null; select('site');
+        curKey = null; select(first ? first.page : 'site');
       } else {
-        siteSpot.appendChild(site); I.clear(); box.replaceChildren(); curKey = null;
+        /* phones: the hero's three figures stand in for the site record (no film box under the claim) */
+        if (site.parentNode) site.remove(); I.clear(); box.replaceChildren(); curKey = null;
         objs.forEach(function (o) { o.node.classList.remove('vh-cur'); }); sel.hidden = true;
       }
     }
