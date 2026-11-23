@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Finding where my AI spending went | Ryan Wisth</title>
-<meta name="description" content="Small scripts that read my AI assistant&rsquo;s own logs and show where the usage went, so each cause of overspending could be found and fixed.">
+<meta name="description" content="Cost analysis for an AI coding agent, from its own logs. The usage meter shows a total, not a cause.">
 <meta property="og:title" content="Finding where my AI spending went | Ryan Wisth">
 <meta property="og:url" content="https://ryanwisth.github.io/token-scan.html">
-<meta property="og:description" content="Small scripts that read my AI assistant&rsquo;s own logs and show where the usage went, so each cause of overspending could be found and fixed.">
+<meta property="og:description" content="Cost analysis for an AI coding agent, from its own logs. The usage meter shows a total, not a cause.">
 <meta property="og:image" content="https://ryanwisth.github.io/img/card.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#f58fb0" media="(prefers-color-scheme: light)">
@@ -81,7 +81,7 @@
     <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-19">19 November 2026</time>.</p>
     <dl>
       <div><dt>Problem</dt><dd>Every AI call costs tokens, the units AI use is billed in. The usage meter shows a total, not a cause. When a week&rsquo;s allowance ran out early, I needed to know what used it up.</dd></div>
-      <div><dt>Built</dt><dd>Claude Code is Anthropic’s AI coding assistant. Six small scripts read its logs and show where the usage went: by project, AI model, day, chat and tool.</dd></div>
+      <div><dt>Built</dt><dd><b>Cost analysis for an AI coding agent, from its own logs.</b> The usage meter shows a total, not a cause. Six scripts read the agent&rsquo;s logs and found the causes: 482 of 662 helper agents running in the heaviest setup, and 39% of re-reading happening with nobody typing. Claude Code is Anthropic’s AI coding assistant. Six small scripts read its logs and show where the usage went: by project, AI model, day, chat and tool.</dd></div>
       <div><dt>My rules</dt><dd><ul><li>One number to compare everything</li><li>Count each step once</li><li>One question per script</li></ul></dd></div>
       <div><dt>AI wrote</dt><dd>the code</dd></div>
       <div><dt>I tested</dt><dd><ul><li>Used in a real weekly spending review</li><li>Findings turned into enforced rules</li></ul></dd></div>
@@ -93,7 +93,7 @@
   <details class="film-script"><summary>Read the script</summary><p id="film-script-text">Six small scripts read an AI assistant’s logs, and show where the usage went. The usage meter shows a total, not a cause. A week’s allowance ran out early. The AI’s own logs are read. Each script answers one question, in a simple table. 482 of 662 AI helpers ran as the heavy default type. Its first step took 53.8k tokens: up to 3.4 times the cost, before any work. Used for a real weekly spending review in November 2026. Each finding became a rule. Details and code are below.</p></details>
 
   <div class="prose case-part">
-    <p class="lede">Claude Code is Anthropic’s AI coding assistant. Six small scripts read its logs and show where the usage went: by project, AI model, day, chat and tool. My part: the questions, the rules and the testing. AI wrote the code.</p>
+    <p class="lede"><b>Cost analysis for an AI coding agent, from its own logs.</b> The usage meter shows a total, not a cause. Six scripts read the agent&rsquo;s logs and found the causes: 482 of 662 helper agents running in the heaviest setup, and 39% of re-reading happening with nobody typing. Claude Code is Anthropic’s AI coding assistant. Six small scripts read its logs and show where the usage went: by project, AI model, day, chat and tool. My part: the questions, the rules and the testing. AI wrote the code.</p>
   </div>
 
   <section class="sum sum-method" aria-label="How it was built">

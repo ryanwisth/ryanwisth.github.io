@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>A fact-checking routine that stopped slipping | Ryan Wisth</title>
-<meta name="description" content="A fact-checking routine for long AI-written reports. It was done by hand on 517 statements, reviewed for where it slipped, then rebuilt as a tool that enforces the rules.">
+<meta name="description" content="A fact-checker for AI-written reports. It splits a long report into single claims and checks them riskiest first.">
 <meta property="og:title" content="A fact-checking routine that stopped slipping | Ryan Wisth">
 <meta property="og:url" content="https://ryanwisth.github.io/claim-ledger.html">
-<meta property="og:description" content="A fact-checking routine for long AI-written reports. It was done by hand on 517 statements, reviewed for where it slipped, then rebuilt as a tool that enforces the rules.">
+<meta property="og:description" content="A fact-checker for AI-written reports. It splits a long report into single claims and checks them riskiest first.">
 <meta property="og:image" content="https://ryanwisth.github.io/img/card.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#f58fb0" media="(prefers-color-scheme: light)">
@@ -71,7 +71,7 @@
     <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-19">19 November 2026</time>.</p>
     <dl>
       <div><dt>Problem</dt><dd>A long research report written by AI sounds right and is wrong in places, and nobody can tell where by reading it. Rules given to the AI in the chat held at first, then slipped.</dd></div>
-      <div><dt>Built</dt><dd>A tool for fact-checking a long AI-written report one statement at a time, riskiest first, with a permanent record of every verdict.</dd></div>
+      <div><dt>Built</dt><dd><b>A fact-checker for AI-written reports.</b> It splits a long report into single claims and checks them riskiest first. Code, not the model, enforces that every claim gets a verdict, so it can&rsquo;t skip or get lazy late in a long job. It checked 517 statements in one report. A tool for fact-checking a long AI-written report one statement at a time, riskiest first, with a permanent record of every verdict.</dd></div>
       <div><dt>My rules</dt><dd><ul><li>Checklist in code, not in the chat</li><li>Riskiest first</li><li>Flag the AI checking its own notes</li></ul></dd></div>
       <div><dt>AI wrote</dt><dd>most of the code</dd></div>
       <div><dt>I tested</dt><dd><ul><li>546 entries rerun: matched the review done by hand</li><li>27 start-to-finish checks pass</li></ul></dd></div>
@@ -83,7 +83,7 @@
   <details class="film-script"><summary>Read the script</summary><p id="film-script-text">A tool fact-checks a long AI-written report, one statement at a time, riskiest first. AI reports sound right and are wrong in places. Rules given in the chat held at first, then slipped. Riskiest statements go first. Code enforces the checklist. Every verdict is kept in a log. 517 statements, checked and recorded in 29 batches. Problems found per first check fell from 27% to 7%, the sign for when to stop. In daily use since October 2026. The checklist cannot drift. Details and code are below.</p></details>
 
   <div class="prose case-part">
-    <p class="lede">A tool for fact-checking a long AI-written report one statement at a time, riskiest first, with a permanent record of every verdict. My part: the checklist rules, riskiest-first order and testing. AI wrote most of the code.</p>
+    <p class="lede"><b>A fact-checker for AI-written reports.</b> It splits a long report into single claims and checks them riskiest first. Code, not the model, enforces that every claim gets a verdict, so it can&rsquo;t skip or get lazy late in a long job. It checked 517 statements in one report. A tool for fact-checking a long AI-written report one statement at a time, riskiest first, with a permanent record of every verdict. My part: the checklist rules, riskiest-first order and testing. AI wrote most of the code.</p>
   </div>
 
   <section class="sum sum-method" aria-label="How it was built">

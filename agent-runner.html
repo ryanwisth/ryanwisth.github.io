@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Long AI jobs that check the bill first | Ryan Wisth</title>
-<meta name="description" content="A small tool that hands the AI Claude a long written job, checks which account pays first, caps the spending, and keeps going in fresh rounds until the job is done.">
+<meta name="description" content="A runner for long, unattended AI jobs with hard spending limits. It takes a job written as instructions and runs it in fresh rounds until a done file appears.">
 <meta property="og:title" content="Long AI jobs that check the bill first | Ryan Wisth">
 <meta property="og:url" content="https://ryanwisth.github.io/agent-runner.html">
-<meta property="og:description" content="A small tool that hands the AI Claude a long written job, checks which account pays first, caps the spending, and keeps going in fresh rounds until the job is done.">
+<meta property="og:description" content="A runner for long, unattended AI jobs with hard spending limits. It takes a job written as instructions and runs it in fresh rounds until a done file appears.">
 <meta property="og:image" content="https://ryanwisth.github.io/img/card.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#f58fb0" media="(prefers-color-scheme: light)">
@@ -65,7 +65,7 @@
     <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-19">19 November 2026</time>.</p>
     <dl>
       <div><dt>Problem</dt><dd>Long AI jobs are easier to hand off as written instructions than as a live chat. Running them with nobody watching raises three questions: which account pays, how to stop a run that goes over budget, and how to continue a job that does not finish in one round.</dd></div>
-      <div><dt>Built</dt><dd>A small tool that hands Claude, an AI assistant, a long job written out as instructions. It checks which account pays, caps the spending and the number of steps, and runs the job in fresh rounds until a &ldquo;done&rdquo; file appears.</dd></div>
+      <div><dt>Built</dt><dd><b>A runner for long, unattended AI jobs with hard spending limits.</b> It takes a job written as instructions and runs it in fresh rounds until a done file appears. Before any work it confirms which account pays, every round has a spending cap, and one failed round stops everything. A small tool that hands Claude, an AI assistant, a long job written out as instructions. It checks which account pays, caps the spending and the number of steps, and runs the job in fresh rounds until a &ldquo;done&rdquo; file appears.</dd></div>
       <div><dt>My rules</dt><dd><ul><li>Who pays is checked, not assumed</li><li>Use the built-in budget</li><li>Stop on the first failure</li></ul></dd></div>
       <div><dt>AI wrote</dt><dd>the code</dd></div>
       <div><dt>I tested</dt><dd><ul><li>The who-pays check, in a live test</li><li>The account check, a fresh run and a restart, before the first real job</li></ul></dd></div>
@@ -77,7 +77,7 @@
   <details class="film-script"><summary>Read the script</summary><p id="film-script-text">A small tool runs long AI jobs with nobody watching, and checks who pays before any work. A forgotten payment key quietly wins, so an unwatched run could bill the wrong account. Who pays is checked first. Each round works under a budget, and rounds repeat until the job is done. Each round is capped at $20 by default. 2 ways to pay. A mismatch stops the run before any work. It ran real jobs of several rounds in October 2026. The first failure stops the run, so a person looks before more is spent. Details and code are below.</p></details>
 
   <div class="prose case-part">
-    <p class="lede">A small tool that hands Claude, an AI assistant, a long job written out as instructions. It checks which account pays, caps the spending and the number of steps, and runs the job in fresh rounds until a &ldquo;done&rdquo; file appears. My part: the who-pays and spending rules, and the testing. AI wrote the code.</p>
+    <p class="lede"><b>A runner for long, unattended AI jobs with hard spending limits.</b> It takes a job written as instructions and runs it in fresh rounds until a done file appears. Before any work it confirms which account pays, every round has a spending cap, and one failed round stops everything. A small tool that hands Claude, an AI assistant, a long job written out as instructions. It checks which account pays, caps the spending and the number of steps, and runs the job in fresh rounds until a &ldquo;done&rdquo; file appears. My part: the who-pays and spending rules, and the testing. AI wrote the code.</p>
   </div>
 
   <section class="sum sum-method" aria-label="How it was built">

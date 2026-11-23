@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AI feedback, handwritten onto a paper tablet | Ryan Wisth</title>
-<meta name="description" content="Tap one button on a reMarkable paper tablet and an AI checks the handwritten work, then writes its notes on the page in pen strokes. Plus a careful look at how its color screen draws.">
+<meta name="description" content="An AI grader that writes back in handwriting. One tap sends a handwritten page to a vision model.">
 <meta property="og:title" content="AI feedback, handwritten onto a paper tablet | Ryan Wisth">
 <meta property="og:url" content="https://ryanwisth.github.io/paper-grader.html">
-<meta property="og:description" content="Tap one button on a reMarkable paper tablet and an AI checks the handwritten work, then writes its notes on the page in pen strokes. Plus a careful look at how its color screen draws.">
+<meta property="og:description" content="An AI grader that writes back in handwriting. One tap sends a handwritten page to a vision model.">
 <meta property="og:image" content="https://ryanwisth.github.io/img/card.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#f58fb0" media="(prefers-color-scheme: light)">
@@ -65,7 +65,7 @@
     <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-19">19 November 2026</time>.</p>
     <dl>
       <div><dt>Problem</dt><dd>Getting feedback on handwritten work usually means retyping it or taking a photo. And only the maker&rsquo;s own locked code can draw on the tablet&rsquo;s screen.</dd></div>
-      <div><dt>Built</dt><dd>Two projects on one reMarkable Paper Pro, a tablet that feels like writing on paper. Press a Grade button, and an AI checks the handwritten work on the page, then writes its notes back onto it in pen strokes. Separately, I worked out how the tablet&rsquo;s color screen draws, well enough to draw on it with my own code.</dd></div>
+      <div><dt>Built</dt><dd><b>An AI grader that writes back in handwriting.</b> One tap sends a handwritten page to a vision model. Feedback comes back as pen strokes on the same page: the error crossed out, the fix and next steps written in, color-coded, in the order that teaches fastest. Up to 24 pages at a time. Two projects on one reMarkable Paper Pro, a tablet that feels like writing on paper. Press a Grade button, and an AI checks the handwritten work on the page, then writes its notes back onto it in pen strokes. Separately, I worked out how the tablet&rsquo;s color screen draws, well enough to draw on it with my own code.</dd></div>
       <div><dt>My rules</dt><dd><ul><li>Never change the student&rsquo;s writing</li><li>Runs only when the button is tapped</li><li>Look before changing anything</li></ul></dd></div>
       <div><dt>AI wrote</dt><dd>most of the code and analysis</dd></div>
       <div><dt>I tested</dt><dd><ul><li>Every equation checked by a program before it is written</li><li>Used for real on the tablet, 24 pages at a time</li><li>314 files pass their built-in error checks</li></ul></dd></div>
@@ -77,7 +77,7 @@
   <details class="film-script"><summary>Read the script</summary><p id="film-script-text">Tap Grade on a paper tablet, and an AI writes its notes back onto the page in pen strokes. Getting feedback on handwritten work usually means retyping it, or taking a photo. Tap Grade. A program checks every equation first. Then the notes appear in handwriting-style ink. Up to 24 pages are graded at once, from one button press. The student’s own writing is never changed. The AI can add notes, never remove. Built and used on the tablet in August 2026. Feedback on the page, within seconds. Details and code are below.</p></details>
 
   <div class="prose case-part">
-    <p class="lede">Two projects on one reMarkable Paper Pro, a tablet that feels like writing on paper. Press a Grade button, and an AI checks the handwritten work on the page, then writes its notes back onto it in pen strokes. Separately, I worked out how the tablet&rsquo;s color screen draws, well enough to draw on it with my own code. My part: the safety rules, the review steps and the testing. AI wrote most of the code and analysis.</p>
+    <p class="lede"><b>An AI grader that writes back in handwriting.</b> One tap sends a handwritten page to a vision model. Feedback comes back as pen strokes on the same page: the error crossed out, the fix and next steps written in, color-coded, in the order that teaches fastest. Up to 24 pages at a time. Two projects on one reMarkable Paper Pro, a tablet that feels like writing on paper. Press a Grade button, and an AI checks the handwritten work on the page, then writes its notes back onto it in pen strokes. Separately, I worked out how the tablet&rsquo;s color screen draws, well enough to draw on it with my own code. My part: the safety rules, the review steps and the testing. AI wrote most of the code and analysis.</p>
   </div>
 
   <section class="sum sum-method" aria-label="How it was built">
@@ -117,6 +117,10 @@
       <li><b>Look before changing anything.</b> Everything that could be learned from the public software update was learned first. Drawing began only once the decoded files predicted what the tablet&rsquo;s own software does. The first drawing replayed what the screen already gets at every start-up, to keep risk low.</li>
       <li><b>Protect the screen by design.</b> Each plan is built so the push on every dot evens out to zero, or close to it. A plan made for a different temperature range is refused, so a mismatched plan never reaches the screen.</li>
     </ul>
+  </div>
+
+  <div class="prose" id="screen">
+    <p><b>Reverse engineered an undocumented color e-ink display.</b> The reMarkable Paper Pro&rsquo;s screen is closed: nothing published, and only the maker&rsquo;s software can draw on it. I decoded all 314 of its drawing files and got my own code rendering on it in color.</p>
   </div>
 
   <figure class="figure">

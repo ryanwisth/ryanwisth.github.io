@@ -768,14 +768,17 @@ html[data-look="history"]:not(#_):not(#_) .vh-stats b { display: block; font: 60
 html[data-look="history"]:not(#_):not(#_) .vh-stats b :is(small, span, i) { font: inherit; color: inherit; }
 html[data-look="history"]:not(#_):not(#_) .vh-stats span { display: block; margin: 6px 0 0; font-size: 15px; line-height: 1.4; color: var(--vh-muted); }
 
-/* the three to start with: equal plates in one row */
+/* the five to start with: two plates, then three */
 html[data-look="history"]:not(#_):not(#_) #featured.vh-sec { padding-top: 6px; }
 html[data-look="history"]:not(#_):not(#_) #featured.vh-sec > h2 { margin-bottom: 12px; }
-html[data-look="history"]:not(#_):not(#_) .vh-stars { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+html[data-look="history"]:not(#_):not(#_) .vh-stars { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; }
+html[data-look="history"]:not(#_):not(#_) .vh-stars .vh-star.vh-star0, html[data-look="history"]:not(#_):not(#_) .vh-stars .vh-star.vh-star1 { grid-column: span 3; }
+html[data-look="history"]:not(#_):not(#_) .vh-stars .vh-star.vh-star2, html[data-look="history"]:not(#_):not(#_) .vh-stars .vh-star.vh-star3, html[data-look="history"]:not(#_):not(#_) .vh-stars .vh-star.vh-star4 { grid-column: span 2; }
 html[data-look="history"]:not(#_):not(#_) .vh-stars .vh-star { display: flex; flex-direction: column; grid-column: auto; padding: 12px; }
 html[data-look="history"]:not(#_):not(#_) .vh-stars .vh-star .vh-poster { margin: 0 0 10px; border-radius: 4px; aspect-ratio: 16 / 9; }
 html[data-look="history"]:not(#_):not(#_) .vh-stars .vh-poster img { height: 100%; }
 html[data-look="history"]:not(#_):not(#_) .vh-stars .vh-shot img { object-position: 50% 0; }
+html[data-look="history"]:not(#_):not(#_) .vh-stars .vh-shot img[src*="slot-"] { object-position: 50% 50%; }
 html[data-look="history"]:not(#_):not(#_) .vh-stars .vh-star .vh-ptext { display: flex; flex-direction: column; flex: 1; padding: 0; }
 html[data-look="history"]:not(#_):not(#_) .vh-stars .vh-pk { margin: 0 0 4px; font-size: 14px; }
 html[data-look="history"]:not(#_):not(#_) .vh-stars .vh-star .vh-pname { font-size: 19px; line-height: 1.2; letter-spacing: -.012em; }
@@ -801,6 +804,7 @@ html[data-look="history"]:not(#_):not(#_) .vh-how.vh-sec { padding-top: 36px; }
   html[data-look="history"]:not(#_):not(#_) .vh-stats b { font-size: 30px; }
   html[data-look="history"]:not(#_):not(#_) .vh-stats span { margin: 0; }
   html[data-look="history"]:not(#_):not(#_) .vh-stars { grid-template-columns: minmax(0, 1fr); }
+  html[data-look="history"]:not(#_):not(#_) .vh-stars > .vh-star.vh-star { grid-column: auto; }
   html[data-look="history"]:not(#_):not(#_) .vh-stars .vh-star .vh-more { align-self: flex-start; margin: 10px 0 0; }
   html[data-look="history"]:not(#_):not(#_) .vh-stars .vh-star .vh-inline[data-open] { margin: 10px -12px -12px; }
   html[data-look="history"]:not(#_):not(#_) footer.site .wrap { align-items: flex-start; }

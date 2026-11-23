@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Spending rules an AI can&rsquo;t skip | Ryan Wisth</title>
-<meta name="description" content="Four automatic checks and nine cheaper kinds of AI helper that stop my AI assistant from using far more than the work needs.">
+<meta name="description" content="Spending rules an AI agent can&rsquo;t talk its way around. Rules written as instructions get agreed to, then broken an hour later.">
 <meta property="og:title" content="Spending rules an AI can&rsquo;t skip | Ryan Wisth">
 <meta property="og:url" content="https://ryanwisth.github.io/token-guard.html">
-<meta property="og:description" content="Four automatic checks and nine cheaper kinds of AI helper that stop my AI assistant from using far more than the work needs.">
+<meta property="og:description" content="Spending rules an AI agent can&rsquo;t talk its way around. Rules written as instructions get agreed to, then broken an hour later.">
 <meta property="og:image" content="https://ryanwisth.github.io/img/card.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#f58fb0" media="(prefers-color-scheme: light)">
@@ -71,7 +71,7 @@
     <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-19">19 November 2026</time>.</p>
     <dl>
       <div><dt>Problem</dt><dd>Every step costs tokens, the units AI use is billed in. Spending rules written into my instructions did not hold: the AI agreed with them and broke them an hour later.</dd></div>
-      <div><dt>Built</dt><dd>Claude Code is Anthropic’s AI coding assistant, and it can hand parts of a job to AI helpers. Four automatic checks and nine cheaper kinds of helper stop it from using far more than the work needs.</dd></div>
+      <div><dt>Built</dt><dd><b>Spending rules an AI agent can&rsquo;t talk its way around.</b> Rules written as instructions get agreed to, then broken an hour later. These run as checks on every step and block the wasteful action. Each block tells the agent the fix, so it corrects itself. Starting cost per helper fell by about two thirds. Claude Code is Anthropic’s AI coding assistant, and it can hand parts of a job to AI helpers. Four automatic checks and nine cheaper kinds of helper stop it from using far more than the work needs.</dd></div>
       <div><dt>My rules</dt><dd><ul><li>Check every step, not just my instructions</li><li>Two size limits, not one</li><li>Block the heavy default helper</li></ul></dd></div>
       <div><dt>AI wrote</dt><dd>most of the code</dd></div>
       <div><dt>I tested</dt><dd><ul><li>Each check measured in the next week&rsquo;s scan</li><li>15 sample cases, allowed and blocked</li></ul></dd></div>
@@ -83,7 +83,7 @@
   <details class="film-script"><summary>Read the script</summary><p id="film-script-text">Automatic checks stop an AI assistant from using more than the work needs. Written rules did not hold. The AI agreed, then broke them an hour later. Each message is checked, then every step. Every block says the fix. 482 of 662 AI helpers ran as the heavy default type. Now blocked. Its first step takes 53.8k tokens. Lighter types, 16k to 20k. So the AI corrects itself. In daily use since October 2026. 4 checks, 9 lighter helper types. Details and code are below.</p></details>
 
   <div class="prose case-part">
-    <p class="lede">Claude Code is Anthropic’s AI coding assistant, and it can hand parts of a job to AI helpers. Four automatic checks and nine cheaper kinds of helper stop it from using far more than the work needs. My part: measuring the leaks, the rules and the testing. AI wrote most of the code.</p>
+    <p class="lede"><b>Spending rules an AI agent can&rsquo;t talk its way around.</b> Rules written as instructions get agreed to, then broken an hour later. These run as checks on every step and block the wasteful action. Each block tells the agent the fix, so it corrects itself. Starting cost per helper fell by about two thirds. Claude Code is Anthropic’s AI coding assistant, and it can hand parts of a job to AI helpers. Four automatic checks and nine cheaper kinds of helper stop it from using far more than the work needs. My part: measuring the leaks, the rules and the testing. AI wrote most of the code.</p>
   </div>
 
   <section class="sum sum-method" aria-label="How it was built">
