@@ -36,6 +36,8 @@ var LOOK_ROWS = [
   ["dots",  "Dots & Panels",   ["#f6f0dc", "#272015"],    ["#f6f0dc", "#c8321e"],    true],
   /* history: light and dark (dark added Nov 21 2026; replaced Studio, which git keeps). Films: video/film-<page>-history.mp4 + img/film-<page>-history.jpg from _tools/history-films/out/ (the light twins in both settings). */
   ["history", "Studio",          ["#e9ecef", "#34332f"],  ["#e9ecef", "#14594a"],    true],
+  /* gouache: every page (Nov 21 2026); look-gouache.js paints the field under the page. Films (Nov 22): video/film-<page>-gouache.mp4 + img/film-<page>-gouache.jpg from pf-gouache/out/gouache/. */
+  ["gouache", "Gouache & Shape", ["#f4d7da", "#0b378d"],  ["#f4d7da", "#195fbf"],    true],
   /* hatch: sample (Nov 21 2026), home first. No films yet (false): the yarn films play; look-hatch.js gives the home
      film this look's own calm poster. */
   ["hatch", "Pen & Hatch",       ["#e3ddc8", "#264247"],  ["#e3ddc8", "#2a2725"],    false]
@@ -83,7 +85,7 @@ var LOOK_ROWS = [
       sheet.rel = "stylesheet"; sheet.href = BASE + "look-" + look + ".css"; sheet.setAttribute("blocking", "render");
       head.appendChild(sheet);
     } else document.write('<link rel="stylesheet" href="' + BASE + 'look-' + look + '.css">');
-    if (look === "mini" || look === "hatch") {     // mini: the ground under the page, drawn once; hatch: the home film's poster
+    if (look === "mini" || look === "gouache" || look === "hatch") {   // mini, gouache: the ground under the page, drawn once; hatch: the home film's poster
       var mjs = document.createElement("script"); mjs.src = BASE + "look-" + look + ".js"; mjs.async = true;
       (head || document.documentElement).appendChild(mjs);
     }
