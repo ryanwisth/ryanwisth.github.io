@@ -38,6 +38,8 @@ var LOOK_ROWS = [
   ["history", "Studio",          ["#e9ecef", "#34332f"],  ["#e9ecef", "#14594a"],    true],
   /* gouache: every page (Nov 21 2026); look-gouache.js paints the field under the page. Films (Nov 22): video/film-<page>-gouache.mp4 + img/film-<page>-gouache.jpg from pf-gouache/out/gouache/. */
   ["gouache", "Gouache & Shape", ["#f4d7da", "#0b378d"],  ["#f4d7da", "#195fbf"],    true],
+  /* backdrop: every page (Nov 21 2026), Ryan picked option B, "Matte plate"; all CSS. Films (Nov 22): video/film-<page>-backdrop.mp4 + img/film-<page>-backdrop.jpg from pf-backdrop/out/backdrop/. */
+  ["backdrop", "Backdrop & Spotlight", ["#423630", "#3c324b"], ["#554437", "#a02a26"], true],
   /* hatch: every page (Nov 22 2026). Films (Nov 22): video/film-<page>-hatch.mp4 + img/film-<page>-hatch.jpg from pf-hatch/out/hatch/. */
   ["hatch", "Pen & Hatch",       ["#e3ddc8", "#264247"],  ["#e3ddc8", "#2a2725"],    true]
 ];
