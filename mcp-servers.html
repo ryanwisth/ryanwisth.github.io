@@ -44,7 +44,7 @@
       <figure class="figure sum-vis">
         <div class="chart-card">
       <h3>Reply size for one day of price history</h3>
-      <p class="sub">Characters the price-history tool uses for each day of prices, before and after a format change. In the wordy format (JSON) the reply hit the 12,000-character limit after about 81 days. In a compact table format (CSV), with fewer points over long spans, five years come back whole.</p>
+      <p class="sub">Characters per day of prices in each format. The wordy format (JSON) hit the reply limit after about 81 days; the compact table (CSV), with fewer points over long spans, returns five years whole.</p>
       <div class="bars" role="img" aria-label="Bar chart. Wordy format (JSON) about 149 characters per day of prices, table format (CSV) about 48.">
         <div class="row" title="Wordy (JSON): about 149"><span class="lab">Wordy (JSON)</span><span class="track"><i class="" style="--v:90%"></i></span><span class="val">about 149</span></div>
         <div class="row" title="Table (CSV): about 48"><span class="lab">Table (CSV)</span><span class="track"><i class="" style="--v:29%"></i></span><span class="val">about 48</span></div>
@@ -52,30 +52,30 @@
     </div>
       </figure>
       <div class="facts">
-        <div class="fact"><b>90 tools</b><span>and about 100k tokens of instructions in one public toolkit built for big online AIs: minutes of reading per new chat on a laptop</span></div>
-        <div class="fact"><b>15 or fewer</b><span>tools in each toolkit here, each one saying when to use it</span></div>
-        <div class="fact"><b>12,000</b><span>character reply limit, with any cut-off announced so the AI never mistakes part of an answer for the whole</span></div>
+        <div class="fact"><b>Sized for a laptop AI</b><span>15 or fewer tools per toolkit, each saying when to use it.</span></div>
+        <div class="fact"><b>Five years of prices in one reply</b><span>instead of cutting off after about 81 days.</span></div>
+        <div class="fact"><b>No silent cut-offs</b><span>The AI never mistakes part of an answer for the whole.</span></div>
       </div>
     </div>
   </section>
 
   <div class="prose case-part">
     <dl class="brief">
-      <dt>Problem</dt><dd>An AI on a laptop knows nothing after the date it was trained, and cannot look anything up. Public toolkits are built for big online AIs: one lists 90 tools and about 100k tokens of instructions (the units AI use is billed in), enough to swamp a laptop AI before the chat starts.</dd>
-      <dt>Result</dt><dd>Six one-file toolkits give the laptop AI live data and local tools, with 15 or fewer tools each, against 90 in one public toolkit. A format change cut price-history replies from about 149 to about 48 characters per day. So five years of prices now fit under the 12,000-character limit, instead of cutting off after about 81 days. The company-data toolkit is in real use in a chat app on my laptop.</dd>
+      <dt>Problem</dt><dd>An AI on a laptop knows nothing after it was trained and can&rsquo;t look anything up. Public toolkits are built for big online AIs and swamp a laptop AI before the chat starts.</dd>
+      <dt>Result</dt><dd>A mid-sized laptop AI picks the right tool and reads the answer without drowning in it. The company-data toolkit is in real use in a chat app.</dd>
     </dl>
   </div>
 
   <!-- hx-log: the Version History look's changelog. Built by _tools/history/stamp.mjs from this page's own lede, method list and Problem/Result, with dates from git; edit those parts, then re-run. Every other look hides it. -->
   <section class="hx-log" aria-label="Changelog">
-    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-19">19 November 2026</time>.</p>
+    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-23">23 November 2026</time>.</p>
     <dl>
-      <div><dt>Problem</dt><dd>An AI on a laptop knows nothing after the date it was trained, and cannot look anything up. Public toolkits are built for big online AIs: one lists 90 tools and about 100k tokens of instructions (the units AI use is billed in), enough to swamp a laptop AI before the chat starts.</dd></div>
-      <div><dt>Built</dt><dd><b>Six tool servers sized for a small local model.</b> Public MCP toolkits are built for large cloud models and fill a small model&rsquo;s working memory before the chat starts. These give a laptop model live news, market data, security checks and equation reading without swamping it. Six toolkits (in a standard format AI apps understand, called MCP) that give the AI running on my laptop what it lacks: live world news, market prices and company figures, a check of software parts for known security holes, a look-only study coach, and a reader that turns pictures of equations into text.</dd></div>
+      <div><dt>Problem</dt><dd>An AI on a laptop knows nothing after it was trained and can&rsquo;t look anything up. Public toolkits are built for big online AIs and swamp a laptop AI before the chat starts.</dd></div>
+      <div><dt>Built</dt><dd><b>Six tool servers sized for a small local model.</b> Public MCP toolkits are built for large cloud models and fill a small model&rsquo;s working memory before the chat starts. These give a laptop model live news, market data, security checks and equation reading without swamping it.</dd></div>
       <div><dt>My rules</dt><dd><ul><li>Shape tools for the AI that reads them</li><li>Math done by code, not by the AI</li><li>Look, never change</li></ul></dd></div>
       <div><dt>AI wrote</dt><dd>most of the code</dd></div>
       <div><dt>I tested</dt><dd><ul><li>Company data: live data, September 18, 2026</li><li>Security check: a test program</li><li>Study coach: all six tools returned data</li></ul></dd></div>
-      <div><dt>Now</dt><dd>Six one-file toolkits give the laptop AI live data and local tools, with 15 or fewer tools each, against 90 in one public toolkit. A format change cut price-history replies from about 149 to about 48 characters per day. So five years of prices now fit under the 12,000-character limit, instead of cutting off after about 81 days. The company-data toolkit is in real use in a chat app on my laptop.</dd></div>
+      <div><dt>Now</dt><dd>A mid-sized laptop AI picks the right tool and reads the answer without drowning in it. The company-data toolkit is in real use in a chat app.</dd></div>
     </dl>
   </section>
   <!-- /hx-log -->
@@ -83,7 +83,7 @@
   <details class="film-script"><summary>Read the script</summary><p id="film-script-text">Six small toolkits give a laptop AI live news, market prices, a security check and a study coach. A laptop AI knows nothing after its training date, and cannot look anything up. Each toolkit keeps a short tool list and limited replies, and code does the math. 15 tools or fewer in each, against 90 in one public toolkit. 5 years of prices now fit in one reply, instead of cutting off after about 81 days. The company-data toolkit, tested live in September 2026, is in real use. Sized for a laptop AI. Details and code are below.</p></details>
 
   <div class="prose case-part">
-    <p class="lede"><b>Six tool servers sized for a small local model.</b> Public MCP toolkits are built for large cloud models and fill a small model&rsquo;s working memory before the chat starts. These give a laptop model live news, market data, security checks and equation reading without swamping it. Six toolkits (in a standard format AI apps understand, called MCP) that give the AI running on my laptop what it lacks: live world news, market prices and company figures, a check of software parts for known security holes, a look-only study coach, and a reader that turns pictures of equations into text. My part: the rules for each toolkit and the testing. AI wrote most of the code.</p>
+    <p class="lede"><b>Six tool servers sized for a small local model.</b> Public MCP toolkits are built for large cloud models and fill a small model&rsquo;s working memory before the chat starts. These give a laptop model live news, market data, security checks and equation reading without swamping it. My part: the rules for each toolkit and the testing. AI wrote most of the code.</p>
   </div>
 
   <section class="sum sum-method" aria-label="How it was built">
@@ -96,8 +96,7 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>Build or buy: data services publish their own toolkits, but they are built for big online AIs. One lists 90 tools and about 100k tokens of instructions. On a laptop, that costs minutes per new chat and most of what the AI can hold in mind at once.</p>
-    <p>So I built each toolkit here small and by hand: 15 or fewer tools, small default requests and limited replies, so a mid-sized laptop AI can pick the right tool and read the answer without drowning in it.</p>
+    <p>Data services publish their own toolkits, built for big online AIs. One lists 90 tools, which on a laptop costs minutes per new chat and most of what the AI can hold in mind. So each toolkit here is small and built by hand, with short tool lists, small default requests and limited replies.</p>
   </div>
 
   <figure class="figure">
@@ -107,34 +106,34 @@
       <li class="key"><b>Six small toolkits</b><span>short tool lists, limited replies, math done by code</span></li>
       <li><b>Live services and local tools</b><span>three data services; a security checker, a practice app and an equation reader</span></li>
     </ol>
-    <figcaption>Simplified from the diagram in the project&rsquo;s notes.</figcaption>
+    <figcaption>Simplified from the project&rsquo;s notes.</figcaption>
   </figure>
 
   <div class="prose">
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>Shape tools for the AI that will read them.</b> Each tool list is short, each tool says when to use it, default requests are small, and tools that can only fail on the free plan are left out.</li>
-      <li><b>Do math in code, not in the AI.</b> The comparison tool returns ranked percent changes, not raw prices, because math over long lists of numbers is exactly where small AIs go wrong.</li>
-      <li><b>Make empty data loud.</b> A wrong stock symbol comes back from the data service as blanks, not an error. The risk: an AI handed blanks tends to report them as data, so the toolkit turns them into a clear error.</li>
-      <li><b>Measure before raising a limit.</b> In the wordy format, the history tool hit the 12,000-character limit after about 81 days. The compact table format cut each day from about 149 to about 48 characters, and using fewer points over long spans lets five years come back whole, with the limit unchanged.</li>
-      <li><b>Look, never change.</b> There are no tools to buy or sell anywhere, and the study coach leaves out everything that would fetch or answer a question.</li>
-      <li><b>Errors an AI can read.</b> Errors come back in plain English, never as technical dumps, and a missing login returns a setup message instead of failing or freezing.</li>
+      <li><b>Shape tools for the AI that will read them.</b> Short lists, each tool says when to use it, and tools that can only fail on the free plan are left out.</li>
+      <li><b>Do math in code, not in the AI.</b> The comparison tool returns ranked percent changes, because math over long lists is where small AIs go wrong.</li>
+      <li><b>Make empty data loud.</b> A wrong stock symbol comes back as blanks, which an AI tends to report as data, so the toolkit returns a clear error.</li>
+      <li><b>Measure before raising a limit.</b> A compact table format and fewer points over long spans fit five years in the same reply limit.</li>
+      <li><b>Look, never change.</b> No tools to buy or sell, and the study coach leaves out anything that would fetch or answer a question.</li>
+      <li><b>Errors an AI can read.</b> Plain English, and a missing login returns a setup message instead of failing or freezing.</li>
     </ul>
   </div>
 
   <div class="prose">
     <h2>How it was tested</h2>
     <ul>
-      <li><b>Company data: working, in real use.</b> Tested with live data on September 18, 2026 and added to a chat app on my laptop.</li>
-      <li><b>Security check: working.</b> Tested on November 13, 2026 with a test program.</li>
-      <li><b>Study coach: working.</b> Tested on November 13, 2026 against the practice app with its 21 sample questions; all six tools returned data.</li>
-      <li><b>World news: built and self-tested.</b> 15 tools listed, a missing or expired login returns the setup message, and a free self-test ran against the live service.</li>
+      <li><b>Company data: working, in real use.</b> Tested with live data and added to a chat app.</li>
+      <li><b>Security check: working.</b> Tested with a test program.</li>
+      <li><b>Study coach: working.</b> All six tools returned data from the practice app.</li>
+      <li><b>World news: built and self-tested</b> against the live service, including the setup message for a missing login.</li>
     </ul>
   </div>
 
   <figure class="figure">
     <div class="term"><div class="bar"><i></i><i></i><i></i><em>drill/server.py through an in-memory client</em></div><pre tabindex="0" role="img" aria-label="Terminal output: drill/server.py through an in-memory client"><span class="ln dim"># list the tools, then call one against the practice engine serving its 21-item sample bank</span><span class="ln hl">6 tools</span><span class="ln">  drill_sections     List the sections in the question bank with their live item counts. Ca…</span><span class="ln">  drill_archetypes   Mastery table: one row per archetype (mistake pattern) with status, st…</span><span class="ln">  drill_progress     Practice summary for a recent window: attempts, accuracy, on-time answ…</span><span class="ln">  drill_sets         Recent timed sets with their scores and ids (use an id with drill_pace…</span><span class="ln">  drill_pace         Pacing report for one finished timed set: checkpoints against plan, it…</span><span class="ln">  drill_audit        Question-bank health: unverified items, retired items and archetypes r…</span><span class="ln"></span><span class="ln hl">&gt; drill_sections()   [124 characters]</span><span class="ln">[</span><span class="ln"> {</span><span class="ln">  "section": "Logic",</span><span class="ln">  "archetypes": 2,</span><span class="ln">  "items": 6</span><span class="ln"> },</span><span class="ln"> {</span><span class="ln">  "section": "Math",</span><span class="ln">  "archetypes": 5,</span><span class="ln">  "items": 14</span><span class="ln"> }</span><span class="ln">]</span></pre></div>
-    <figcaption>The smallest of the six toolkits, listed and called by a test program: six tools, descriptions cut at 70 characters for display, and a 124-character reply. One sample question had been retired by a practice run, so Math shows 14 live questions.</figcaption>
+    <figcaption>The smallest toolkit, listed and called by a test program, with descriptions cut for display. Math shows 14 live questions because a practice run retired one.</figcaption>
   </figure>
 
   <div class="prose">

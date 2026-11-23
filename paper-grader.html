@@ -46,30 +46,30 @@
     <figcaption>A made-up note and its feedback as pen strokes from the grader&rsquo;s handwriting part (<code>ems.py</code>), in the tablet&rsquo;s blue and red. Drawn here as a picture, not a photo of the tablet.</figcaption>
       </figure>
       <div class="facts">
-        <div class="fact"><b>0</b><span>erase or delete commands in the link to the tablet: the AI can add, never remove</span></div>
-        <div class="fact"><b>24 pages</b><span>graded at once on the tablet, from one button press</span></div>
-        <div class="fact"><b>314</b><span>screen drawing files decoded, all passing error checks before anything was drawn</span></div>
+        <div class="fact"><b>Feedback in handwriting</b><span>The mistake crossed out, the fix and next steps written in, color-coded, on the same page.</span></div>
+        <div class="fact"><b>Never touches the student&rsquo;s writing</b><span>The link to the tablet can add, never erase.</span></div>
+        <div class="fact"><b>A closed screen, decoded</b><span>Separate project: all 314 of its drawing files, then my own code drawing in color.</span></div>
       </div>
     </div>
   </section>
 
   <div class="prose case-part">
     <dl class="brief">
-      <dt>Problem</dt><dd>Getting feedback on handwritten work usually means retyping it or taking a photo. And only the maker&rsquo;s own locked code can draw on the tablet&rsquo;s screen.</dd>
-      <dt>Result</dt><dd>Built and used on the tablet in August 2026. Before, feedback meant retyping or a photo. Now I tap Grade, and within seconds the page shows a verdict, the mistake crossed out, and the next steps, in handwriting-style ink, up to 24 pages at a time. Every equation is checked by a program first, and the student&rsquo;s own writing is changed 0 times. All 314 of the screen&rsquo;s drawing files were decoded and pass their error checks. My own code then drew on the color screen in three modes, from 11 steps (about 0.13 s) for fast black-and-white to 86 (about 1 s) for full color.</dd>
+      <dt>Problem</dt><dd>Feedback on handwritten work usually means retyping it or taking a photo. Separately, only the maker&rsquo;s locked code can draw on the tablet&rsquo;s screen.</dd>
+      <dt>Result</dt><dd>The grader puts a verdict and next steps on the page within seconds, and the student&rsquo;s own writing is changed 0 times. The screen research ends with my own code drawing on it in three modes, from fast black-and-white to full color.</dd>
     </dl>
   </div>
 
   <!-- hx-log: the Version History look's changelog. Built by _tools/history/stamp.mjs from this page's own lede, method list and Problem/Result, with dates from git; edit those parts, then re-run. Every other look hides it. -->
   <section class="hx-log" aria-label="Changelog">
-    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-19">19 November 2026</time>.</p>
+    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-23">23 November 2026</time>.</p>
     <dl>
-      <div><dt>Problem</dt><dd>Getting feedback on handwritten work usually means retyping it or taking a photo. And only the maker&rsquo;s own locked code can draw on the tablet&rsquo;s screen.</dd></div>
-      <div><dt>Built</dt><dd><b>An AI grader that writes back in handwriting.</b> One tap sends a handwritten page to a vision model. Feedback comes back as pen strokes on the same page: the error crossed out, the fix and next steps written in, color-coded, in the order that teaches fastest. Up to 24 pages at a time. Two projects on one reMarkable Paper Pro, a tablet that feels like writing on paper. Press a Grade button, and an AI checks the handwritten work on the page, then writes its notes back onto it in pen strokes. Separately, I worked out how the tablet&rsquo;s color screen draws, well enough to draw on it with my own code.</dd></div>
+      <div><dt>Problem</dt><dd>Feedback on handwritten work usually means retyping it or taking a photo. Separately, only the maker&rsquo;s locked code can draw on the tablet&rsquo;s screen.</dd></div>
+      <div><dt>Built</dt><dd><b>An AI grader that writes back in handwriting.</b> One tap sends a handwritten page to a vision model. Feedback comes back as pen strokes on the same page: the error crossed out, the fix and next steps written in, color-coded, in the order that teaches fastest. Up to 24 pages at a time.</dd></div>
       <div><dt>My rules</dt><dd><ul><li>Never change the student&rsquo;s writing</li><li>Runs only when the button is tapped</li><li>Look before changing anything</li></ul></dd></div>
       <div><dt>AI wrote</dt><dd>most of the code and analysis</dd></div>
       <div><dt>I tested</dt><dd><ul><li>Every equation checked by a program before it is written</li><li>Used for real on the tablet, 24 pages at a time</li><li>314 files pass their built-in error checks</li></ul></dd></div>
-      <div><dt>Now</dt><dd>Built and used on the tablet in August 2026. Before, feedback meant retyping or a photo. Now I tap Grade, and within seconds the page shows a verdict, the mistake crossed out, and the next steps, in handwriting-style ink, up to 24 pages at a time. Every equation is checked by a program first, and the student&rsquo;s own writing is changed 0 times. All 314 of the screen&rsquo;s drawing files were decoded and pass their error checks. My own code then drew on the color screen in three modes, from 11 steps (about 0.13 s) for fast black-and-white to 86 (about 1 s) for full color.</dd></div>
+      <div><dt>Now</dt><dd>The grader puts a verdict and next steps on the page within seconds, and the student&rsquo;s own writing is changed 0 times. The screen research ends with my own code drawing on it in three modes, from fast black-and-white to full color.</dd></div>
     </dl>
   </section>
   <!-- /hx-log -->
@@ -77,7 +77,7 @@
   <details class="film-script"><summary>Read the script</summary><p id="film-script-text">Tap Grade on a paper tablet, and an AI writes its notes back onto the page in pen strokes. Getting feedback on handwritten work usually means retyping it, or taking a photo. Tap Grade. A program checks every equation first. Then the notes appear in handwriting-style ink. Up to 24 pages are graded at once, from one button press. The student’s own writing is never changed. The AI can add notes, never remove. Built and used on the tablet in August 2026. Feedback on the page, within seconds. Details and code are below.</p></details>
 
   <div class="prose case-part">
-    <p class="lede"><b>An AI grader that writes back in handwriting.</b> One tap sends a handwritten page to a vision model. Feedback comes back as pen strokes on the same page: the error crossed out, the fix and next steps written in, color-coded, in the order that teaches fastest. Up to 24 pages at a time. Two projects on one reMarkable Paper Pro, a tablet that feels like writing on paper. Press a Grade button, and an AI checks the handwritten work on the page, then writes its notes back onto it in pen strokes. Separately, I worked out how the tablet&rsquo;s color screen draws, well enough to draw on it with my own code. My part: the safety rules, the review steps and the testing. AI wrote most of the code and analysis.</p>
+    <p class="lede"><b>An AI grader that writes back in handwriting.</b> One tap sends a handwritten page to a vision model. Feedback comes back as pen strokes on the same page: the error crossed out, the fix and next steps written in, color-coded, in the order that teaches fastest. Up to 24 pages at a time. My part: the safety rules, the review steps and the testing. AI wrote most of the code and analysis.</p>
   </div>
 
   <section class="sum sum-method" aria-label="How it was built">
@@ -90,8 +90,7 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>Working problems by hand on a paper-like screen is good for learning. But getting feedback means taking the work off the page. I wanted feedback on the tablet itself: write, tap Grade, and a few seconds later the margin shows a verdict, the mistake crossed out, and the next steps from where things went wrong.</p>
-    <p>On the screen side, only the maker&rsquo;s locked code could draw. The wrong signals can leave lasting marks on this kind of screen or damage it, so every step had to be safe by design.</p>
+    <p>Working problems by hand on a paper-like screen is good for learning, but feedback means taking the work off the page. The grader keeps it there: write, tap Grade, and the margin answers.</p>
   </div>
 
   <figure class="figure">
@@ -109,18 +108,21 @@
   <div class="prose">
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>Never change the student&rsquo;s writing.</b> Notes go on their own &ldquo;AI Feedback&rdquo; layer that the student can delete. The link to the tablet has 0 erase or delete commands, so the worst case is a missed note, never damaged work.</li>
-      <li><b>Runs only on a tap.</b> Nothing grades in the background. The button grades the current page, a set number of pages, or the whole notebook. The student decides when feedback appears.</li>
-      <li><b>Two-step review.</b> A fast AI handles clean, correct pages. The trade-off: anything doubtful goes to a stronger AI, so the costly one is used only where a page needs it.</li>
-      <li><b>Describe what the page shows, not why.</b> The AI&rsquo;s instructions forbid guessing why a mistake happened, and remarks about motives or feelings are filtered out. Feedback stays on the work.</li>
-      <li><b>Readable handwriting over fancy handwriting.</b> AI handwriting tools garbled math symbols and digits. So the notes use a simple pen-stroke font with natural movement that keeps every digit and symbol readable.</li>
-      <li><b>Look before changing anything.</b> Everything that could be learned from the public software update was learned first. Drawing began only once the decoded files predicted what the tablet&rsquo;s own software does. The first drawing replayed what the screen already gets at every start-up, to keep risk low.</li>
-      <li><b>Protect the screen by design.</b> Each plan is built so the push on every dot evens out to zero, or close to it. A plan made for a different temperature range is refused, so a mismatched plan never reaches the screen.</li>
+      <li><b>Never change the student&rsquo;s writing.</b> Notes go on their own &ldquo;AI Feedback&rdquo; layer, and the link has no erase commands, so the worst case is a missed note.</li>
+      <li><b>Runs only on a tap.</b> The current page, a set number of pages or the whole notebook; nothing grades in the background.</li>
+      <li><b>Two-step review.</b> A fast AI handles clean pages; only doubtful ones go to the stronger, costlier AI.</li>
+      <li><b>Describe what the page shows, not why.</b> Guesses about motives or feelings are filtered out, so feedback stays on the work.</li>
+      <li><b>Readable over fancy handwriting.</b> AI handwriting tools garbled math symbols, so notes use a simple pen-stroke font that keeps every digit readable.</li>
     </ul>
   </div>
 
   <div class="prose" id="screen">
     <p><b>Reverse engineered an undocumented color e-ink display.</b> The reMarkable Paper Pro&rsquo;s screen is closed: nothing published, and only the maker&rsquo;s software can draw on it. I decoded all 314 of its drawing files and got my own code rendering on it in color.</p>
+    <p>A separate project on the same tablet. The wrong signals can leave lasting marks on this kind of screen or damage it, so every step had to be safe by design.</p>
+    <ul>
+      <li><b>Look before changing anything.</b> Drawing began only once the decoded files predicted what the maker&rsquo;s software does, and the first drawing replayed the screen&rsquo;s own start-up.</li>
+      <li><b>Protect the screen by design.</b> Each plan evens out the push on every dot, and a plan made for a different temperature range is refused.</li>
+    </ul>
   </div>
 
   <figure class="figure">
@@ -132,20 +134,24 @@
       <li class="key"><b>Drawing plan</b><span>sealed and tied to a temperature range</span></li>
       <li><b>Draw</b><span>one step at a time, on the screen</span></li>
     </ol>
-    <figcaption>The screen research, safety first: read, then watch, then draw. Simplified.</figcaption>
+    <figcaption>The screen research, safety first: read, then watch, then draw.</figcaption>
   </figure>
 
   <div class="prose">
     <h2>How it was tested</h2>
+    <p><b>The grader</b></p>
     <ul>
-      <li><b>No wrong math on the page.</b> Every equation the AI wants to write is checked by a program first. Wrong ones are dropped, so an AI mistake never reaches the page.</li>
-      <li><b>No double grading.</b> A fingerprint of the student&rsquo;s strokes stops an unchanged page from being graded twice. Pressing Grade again never piles up repeat notes.</li>
-      <li><b>Used for real.</b> The whole process (tap, copy, review, notes on their own layer) was built and used on the tablet in August 2026, including 24 pages at a time.</li>
-      <li><b>Bugs traced to the cause.</b> A bug drew notes 18% too large on Letter-size worksheets. The root cause, in the position math, was fixed.</li>
-      <li><b>The decoded files are intact.</b> All 314 drawing files decode and pass their error checks.</li>
-      <li><b>Predictions matched the screen before any drawing.</b> What the tablet&rsquo;s own software sends was compared with the decoded files, confirming they describe what the screen really gets.</li>
-      <li><b>My own code drew on the screen:</b> a replay of the start-up sequence, a black-and-white test card, color cards in three modes, a redraw of part of the screen without clearing it, and two gray levels.</li>
-      <li><b>Every finding says how sure it is:</b> confirmed on the tablet, confirmed only by reading the code, or a best guess.</li>
+      <li><b>No wrong math on the page.</b> Every equation is checked by a program first, and wrong ones are dropped.</li>
+      <li><b>No double grading.</b> An unchanged page is never graded twice, so repeat notes never pile up.</li>
+      <li><b>Used for real</b> on the tablet, including 24 pages at a time.</li>
+      <li><b>Bugs traced to the cause.</b> Notes drawn too large on Letter-size worksheets were traced to the position math and fixed.</li>
+    </ul>
+    <p><b>The tablet screen</b></p>
+    <ul>
+      <li><b>The decoded files are intact.</b> All 314 decode and pass their error checks.</li>
+      <li><b>Predictions matched the screen before any drawing.</b> What the maker&rsquo;s software sends matched the decoded files.</li>
+      <li><b>My own code drew on the screen:</b> a start-up replay, a black-and-white test card, color cards in three modes, a partial redraw and two gray levels.</li>
+      <li><b>Every finding says how sure it is:</b> confirmed on the tablet, confirmed by reading the code, or a best guess.</li>
     </ul>
   </div>
 
@@ -154,7 +160,7 @@
       <figure><p class="tagline">Original image</p><img src="img/panel-source.png" alt="A color test card: a full rainbow strip, a gray scale and eight bright color patches" width="960" height="600" loading="lazy"></figure>
       <figure><p class="tagline">As the screen would show it</p><img src="img/panel-simulated.jpg" alt="The same test card as the screen would show it: dull, low-contrast colors, with greens and reds pulled toward gray" width="960" height="600" loading="lazy"></figure>
     </div>
-    <figcaption>The screen research: a test card, and the same card run through <code>panel-model/panel_sim.py</code>, a model of the screen&rsquo;s colors built from a photo of it. This is a simulation, not a photo of the tablet.</figcaption>
+    <figcaption>The screen research: a test card, and the same card run through <code>panel-model/panel_sim.py</code>, a model of the screen&rsquo;s colors built from a photo of it. A simulation, not a photo of the tablet.</figcaption>
   </figure>
 
   <figure class="figure">

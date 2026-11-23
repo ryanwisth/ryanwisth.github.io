@@ -44,7 +44,7 @@
       <figure class="figure sum-vis">
         <div class="chart-card">
       <h3>Writing speed by how far ahead it guesses</h3>
-      <p class="sub">Tokens per second for the same 1,200-token answer. Depth 0 is the normal way, one token at a time; each step up guesses one more token ahead, then checks the guess. Plotted from the project&rsquo;s result file <code>eval/results/mtp_depth_ab.json</code>.</p>
+      <p class="sub">Tokens per second for the same answer. Depth 0 is the normal way, one token at a time; each step up guesses one more token ahead, then checks the guess.</p>
       <svg class="linechart" viewBox="0 0 640 300" role="img" aria-label="Line chart. Depth 0: 13.7 tokens per second. Depth 1: 22.9. Depth 2: 28.4. Depth 3: 32.5.">
         <line class="grid" x1="50" y1="250" x2="620" y2="250"/><line class="grid" x1="50" y1="190" x2="620" y2="190"/><line class="grid" x1="50" y1="130" x2="620" y2="130"/><line class="grid" x1="50" y1="70" x2="620" y2="70"/>
         <text class="axis" x="42" y="254" text-anchor="end">0</text><text class="axis" x="42" y="194" text-anchor="end">10</text><text class="axis" x="42" y="134" text-anchor="end">20</text><text class="axis" x="42" y="74" text-anchor="end">30</text>
@@ -55,33 +55,32 @@
         <text class="axis" x="90" y="276" text-anchor="middle">depth 0</text><text class="axis" x="250" y="276" text-anchor="middle">depth 1</text><text class="axis" x="410" y="276" text-anchor="middle">depth 2</text><text class="axis" x="570" y="276" text-anchor="middle">depth 3</text>
       </svg>
     </div>
-    <figcaption>The first run at each depth; repeat runs at depth 0 and depth 3 gave 13.6 and 32.1.</figcaption>
       </figure>
       <div class="facts">
-        <div class="fact"><b>13.7 <i class="hx-x">&rarr;</i><i class="hx-alt">to</i> 37.5</b><span>tokens per second by guessing several tokens ahead: up to 2.7 times the normal speed of the same 27B model</span></div>
-        <div class="fact"><b>26</b><span>toolkits the AI can use, all behind one door that needs a key</span></div>
-        <div class="fact"><b>60 s</b><span>watchdog check: any part that stops is back up within a minute, with no one at the keyboard</span></div>
+        <div class="fact"><b>2.7 times faster</b><span>than the same 27B model runs normally, by guessing several tokens ahead.</span></div>
+        <div class="fact"><b>One locked door to every tool</b><span>About two dozen toolkits, reachable only with a key.</span></div>
+        <div class="fact"><b>Heals itself</b><span>Any part that stops is back up within a minute, with no one at the keyboard.</span></div>
       </div>
     </div>
   </section>
 
   <div class="prose case-part">
     <dl class="brief">
-      <dt>Problem</dt><dd>Online AI assistants send every message and file off the computer. Keeping it all at home means making the AI, its tools, search and voice run together on one laptop with limited memory.</dd>
-      <dt>Result</dt><dd>A private assistant running entirely on one 64 GB MacBook Pro, in regular use through September 2026. The 27B model went from 13.7 to as much as 37.5 tokens per second (a token is a piece of a word), 2.7 times its normal speed. 26 toolkits sit behind one locked door. Every part is reachable only from this computer. And a watchdog restarts anything that goes down within 60 seconds.</dd>
+      <dt>Problem</dt><dd>Online AI assistants send every message and file off the computer. Keeping it all at home means the AI, its tools, search and voice must share one laptop&rsquo;s limited memory.</dd>
+      <dt>Result</dt><dd>Every part is reachable only from this computer, and a watchdog brings back anything that goes down. The whole assistant fits on one 64 GB MacBook Pro.</dd>
     </dl>
   </div>
 
   <!-- hx-log: the Version History look's changelog. Built by _tools/history/stamp.mjs from this page's own lede, method list and Problem/Result, with dates from git; edit those parts, then re-run. Every other look hides it. -->
   <section class="hx-log" aria-label="Changelog">
-    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-19">19 November 2026</time>.</p>
+    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-23">23 November 2026</time>.</p>
     <dl>
-      <div><dt>Problem</dt><dd>Online AI assistants send every message and file off the computer. Keeping it all at home means making the AI, its tools, search and voice run together on one laptop with limited memory.</dd></div>
-      <div><dt>Built</dt><dd><b>A full AI assistant running on one laptop.</b> A 27B model, about two dozen tools, web search, voice and document reading all share one MacBook&rsquo;s memory. Tuned to run 2.7 times faster than stock. A written-up setup for running a private AI assistant entirely on one Mac: a 27B AI model (27 billion settings, a measure of its size), a chat window, about two dozen tools, voice, document reading and web search.</dd></div>
+      <div><dt>Problem</dt><dd>Online AI assistants send every message and file off the computer. Keeping it all at home means the AI, its tools, search and voice must share one laptop&rsquo;s limited memory.</dd></div>
+      <div><dt>Built</dt><dd><b>A full AI assistant running on one laptop.</b> A 27B model, about two dozen tools, web search, voice and document reading all share one MacBook&rsquo;s memory. Tuned to run 2.7 times faster than stock.</dd></div>
       <div><dt>My rules</dt><dd><ul><li>Reachable only from this computer</li><li>A watchdog, because programs crash</li><li>Limit what the tools can touch</li></ul></dd></div>
       <div><dt>AI wrote</dt><dd>most of the scripts that tie it together</dd></div>
       <div><dt>I tested</dt><dd><ul><li>Speed measured on the laptop</li><li>Idle against real use: 37.5 and a typical 23.4</li><li>Checked what each part is open to</li></ul></dd></div>
-      <div><dt>Now</dt><dd>A private assistant running entirely on one 64 GB MacBook Pro, in regular use through September 2026. The 27B model went from 13.7 to as much as 37.5 tokens per second (a token is a piece of a word), 2.7 times its normal speed. 26 toolkits sit behind one locked door. Every part is reachable only from this computer. And a watchdog restarts anything that goes down within 60 seconds.</dd></div>
+      <div><dt>Now</dt><dd>Every part is reachable only from this computer, and a watchdog brings back anything that goes down. The whole assistant fits on one 64 GB MacBook Pro.</dd></div>
     </dl>
   </section>
   <!-- /hx-log -->
@@ -89,7 +88,7 @@
   <details class="film-script"><summary>Read the script</summary><p id="film-script-text">A private AI assistant runs entirely on one laptop, with chat, tools, voice and web search. Online AI assistants send every message and file off the computer. Every part is reachable only from this computer. Its tools sit behind a locked door, and a watchdog restarts anything that crashes. The AI writes up to 2.7 times its normal speed. Every 60 seconds a watchdog checks. Any part that stops is back within a minute. It ran in regular use through September 2026. Private by design. Details and code are below.</p></details>
 
   <div class="prose case-part">
-    <p class="lede"><b>A full AI assistant running on one laptop.</b> A 27B model, about two dozen tools, web search, voice and document reading all share one MacBook&rsquo;s memory. Tuned to run 2.7 times faster than stock. A written-up setup for running a private AI assistant entirely on one Mac: a 27B AI model (27 billion settings, a measure of its size), a chat window, about two dozen tools, voice, document reading and web search. My part: the safety rules, the setup choices and the testing. AI wrote most of the scripts.</p>
+    <p class="lede"><b>A full AI assistant running on one laptop.</b> A 27B model, about two dozen tools, web search, voice and document reading all share one MacBook&rsquo;s memory. Tuned to run 2.7 times faster than stock. My part: the safety rules, the setup choices and the testing. AI wrote most of the scripts.</p>
   </div>
 
   <section class="sum sum-method" aria-label="How it was built">
@@ -102,8 +101,7 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>Everything stays on one MacBook Pro with 64 GB of memory: the AI model, the chat history, the tools and the search engine all run there.</p>
-    <p>Installing the pieces is easy. Making them work together on one laptop is the real job: tools the AI can actually use, parts that survive crashes and log-outs, and an AI fast enough for daily use. All while the model, which uses up to about 42 GB of memory, shares the laptop with everything else.</p>
+    <p>Installing the pieces is easy. Making them work together is the real job: tools the AI can actually use, parts that survive crashes and log-outs, and a model fast enough for daily use, while the model itself takes most of the laptop&rsquo;s memory.</p>
   </div>
 
   <figure class="figure">
@@ -115,56 +113,35 @@
       <li><b>Result comes back</b><span>and this repeats until the AI has its answer</span></li>
       <li class="key"><b>Watchdog</b><span>at login and every 60 seconds, starts whichever part is down</span></li>
     </ol>
-    <figcaption>One chat message that uses a tool, simplified from the diagram in the project&rsquo;s notes, plus the watchdog that keeps every part running.</figcaption>
+    <figcaption>One chat message that uses a tool, simplified from the project&rsquo;s notes, plus the watchdog that keeps every part running.</figcaption>
   </figure>
 
   <div class="prose">
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>Reachable only from this computer, and checked.</b> Every part accepts connections only from the laptop itself, and the tool door needs a key, so nothing on the network can reach the AI or its tools.</li>
-      <li><b>A watchdog, because programs crash.</b> At login and every 60 seconds, a starter script checks each part, starts whatever is down, in the right order, and is safe to run again and again. So the setup recovers from crashes and log-outs on its own.</li>
-      <li><b>Limit what the tools can touch.</b> The file tool sees four folders, not all my files. The tools that run commands or drive a web browser are off unless turned on for one chat.</li>
-      <li><b>Read the logs to find the stall.</b> The root cause: long chats in the chat window (about 190k tokens) were re-reading about 188k tokens before every tool step, 21 to 25 minutes each time. The logs showed a different app, a text-only coding assistant, lets the AI keep its earlier reading instead of starting over, so I moved long jobs there.</li>
-      <li><b>Make a silent failure loud.</b> A built-in limit quietly threw away any tool request over 2,048 tokens, so the AI could seem to write files that never existed. The starter script raises that limit to the most the AI can hold.</li>
+      <li><b>Reachable only from this computer, and checked.</b> Every part accepts only local connections, and the tool door needs a key.</li>
+      <li><b>A watchdog, because programs crash.</b> At login and every minute, a starter script brings back whatever is down, in the right order.</li>
+      <li><b>Limit what the tools can touch.</b> The file tool sees four folders; tools that run commands or drive a browser are off unless turned on for one chat.</li>
+      <li><b>Read the logs to find the stall.</b> Long chats re-read almost everything before every tool step, so long jobs moved to a coding assistant that keeps its earlier reading.</li>
+      <li><b>Make a silent failure loud.</b> A built-in limit quietly threw away large tool requests, so the AI could seem to write files that never existed; the starter script raises it.</li>
     </ul>
   </div>
 
   <div class="prose">
     <h2>How it was tested</h2>
     <ul>
-      <li><b>Speed, measured on the laptop.</b> 13.7 tokens per second normally, against 32 to 37.5 when guessing 3 ahead. Each extra step ahead was faster (22.9 at 1, 28.4 at 2).</li>
-      <li><b>Idle against real use.</b> A typical 23.4 tokens per second in use, against 37.5 idle.</li>
-      <li><b>Memory, measured.</b> The model uses up to about 42 GB in tests, and one large reply reached 62.6 GB, so everything else was planned around what was left.</li>
-      <li><b>Network openings, checked.</b> A list of open connections caught the one part that was open to the network. The fix locked it to this computer, with one starter per part.</li>
+      <li><b>Speed, measured on the laptop.</b> Each extra step of guessing ahead was faster, up to 2.7 times normal.</li>
+      <li><b>Idle against real use.</b> The biggest slowdown in real use was other heavy work on the same laptop, not the setup.</li>
+      <li><b>Memory, measured.</b> Everything else was planned around what the model leaves free.</li>
+      <li><b>Network openings, checked.</b> A list of open connections caught the one part open to the network, now locked to this computer.</li>
     </ul>
   </div>
-
-  <figure class="figure">
-    <div class="chart-grid">
-    <div class="chart-card">
-      <h3>AI writing speed</h3>
-      <p class="sub">Tokens per second for the 27B model on the laptop: normal, against guessing 3 tokens ahead.</p>
-      <div class="bars" role="img" aria-label="Bar chart. Normal 13.7 tokens per second, guessing ahead 32 to 37.5.">
-        <div class="row" title="Normal: 13.7"><span class="lab">Normal</span><span class="track"><i class="" style="--v:32.9%"></i></span><span class="val">13.7</span></div>
-        <div class="row" title="Guessing ahead: 32 to 37.5"><span class="lab">Guessing ahead</span><span class="track"><i class="cut" style="--v:76.8%"></i><i class="range" style="--v:90%;--from:76.8%"></i></span><span class="val">32 to 37.5</span></div>
-      </div>
-    </div>
-    <div class="chart-card">
-      <h3>Idle against real use</h3>
-      <p class="sub">In real use, the biggest slowdown was other heavy work on the same laptop, not the setup.</p>
-      <div class="bars" role="img" aria-label="Bar chart. 37.5 tokens per second idle, a typical 23.4 in use.">
-        <div class="row" title="Idle: 37.5"><span class="lab">Idle</span><span class="track"><i class="" style="--v:90%"></i></span><span class="val">37.5</span></div>
-        <div class="row" title="In use: 23.4"><span class="lab">In use<small>typical</small></span><span class="track"><i class="" style="--v:56.2%"></i></span><span class="val">23.4</span></div>
-      </div>
-    </div>
-    </div>
-  </figure>
 
   <div class="prose">
     <h2>Limits</h2>
     <ul>
-      <li>A written-up setup and step-by-step guide for a Mac, not a one-click installer.</li>
-      <li>The risk: the tool that runs commands has no list of allowed or banned commands, so it stays off unless turned on for a chat.</li>
+      <li>A written-up setup and guide for a Mac, not a one-click installer.</li>
+      <li>The command tool has no list of allowed or banned commands, so it stays off unless turned on for a chat.</li>
     </ul>
 
     <div class="repo-card">

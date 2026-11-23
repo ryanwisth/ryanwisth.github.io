@@ -40,42 +40,30 @@
   </div>
 
   <section class="sum" aria-label="Summary">
-    <div class="sum-top">
-      <figure class="figure sum-vis">
-        <div class="chart-card">
-      <h3>Size of an AI helper&rsquo;s first step</h3>
-      <p class="sub">Typical tokens in a helper&rsquo;s first step, from my logs: the heavy default type against the lighter types.</p>
-      <div class="bars" role="img" aria-label="Bar chart. Default helper type 53.8k tokens, lighter types 16k to 20k.">
-        <div class="row" title="Default type: 53.8k"><span class="lab">Default type</span><span class="track"><i class="" style="--v:89.7%"></i></span><span class="val">53.8k</span></div>
-        <div class="row" title="Lighter types: 16k to 20k"><span class="lab">Lighter types</span><span class="track"><i class="cut" style="--v:26.7%"></i><i class="range" style="--v:33.3%;--from:26.7%"></i></span><span class="val">16k to 20k</span></div>
-      </div>
-    </div>
-      </figure>
       <div class="facts">
-        <div class="fact"><b>39%</b><span>of a week&rsquo;s re-reading happened after a chat passed 200k tokens; a check on every step now covers it</span></div>
-        <div class="fact"><b>482 of 662</b><span>AI helpers ran as the heavy default type; the guard now blocks it</span></div>
-        <div class="fact"><b>4,816</b><span>images read in one week; large ones are now blocked</span></div>
+        <div class="fact"><b>Blocks waste before it runs</b><span>Every step is checked first.</span></div>
+        <div class="fact"><b>Self-correcting</b><span>Each block tells the agent the fix, with no person involved.</span></div>
+        <div class="fact"><b>About two thirds cheaper</b><span>to start each AI helper.</span></div>
       </div>
-    </div>
   </section>
 
   <div class="prose case-part">
     <dl class="brief">
-      <dt>Problem</dt><dd>Every step costs tokens, the units AI use is billed in. Spending rules written into my instructions did not hold: the AI agreed with them and broke them an hour later.</dd>
-      <dt>Result</dt><dd>In daily use since October 2026. The checks block the waste my scans measured. That includes the 482 of 662 helpers that ran as the heavy default type: 53.8k tokens in the first step, against 16k to 20k. Every block says the fix, so the AI corrects itself without me stepping in.</dd>
+      <dt>Problem</dt><dd>An AI agent re-reads its whole conversation on every step, so cost grows with every message. Telling it to be careful doesn&rsquo;t work.</dd>
+      <dt>Result</dt><dd>Four automatic checks that stop the expensive habits.</dd>
     </dl>
   </div>
 
   <!-- hx-log: the Version History look's changelog. Built by _tools/history/stamp.mjs from this page's own lede, method list and Problem/Result, with dates from git; edit those parts, then re-run. Every other look hides it. -->
   <section class="hx-log" aria-label="Changelog">
-    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-19">19 November 2026</time>.</p>
+    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-23">23 November 2026</time>.</p>
     <dl>
-      <div><dt>Problem</dt><dd>Every step costs tokens, the units AI use is billed in. Spending rules written into my instructions did not hold: the AI agreed with them and broke them an hour later.</dd></div>
-      <div><dt>Built</dt><dd><b>Spending rules an AI agent can&rsquo;t talk its way around.</b> Rules written as instructions get agreed to, then broken an hour later. These run as checks on every step and block the wasteful action. Each block tells the agent the fix, so it corrects itself. Starting cost per helper fell by about two thirds. Claude Code is Anthropic’s AI coding assistant, and it can hand parts of a job to AI helpers. Four automatic checks and nine cheaper kinds of helper stop it from using far more than the work needs.</dd></div>
-      <div><dt>My rules</dt><dd><ul><li>Check every step, not just my instructions</li><li>Two size limits, not one</li><li>Block the heavy default helper</li></ul></dd></div>
+      <div><dt>Problem</dt><dd>An AI agent re-reads its whole conversation on every step, so cost grows with every message. Telling it to be careful doesn&rsquo;t work.</dd></div>
+      <div><dt>Built</dt><dd><b>Spending rules an AI agent can&rsquo;t talk its way around.</b> Rules written as instructions get agreed to, then broken an hour later. These run as checks on every step and block the wasteful action, and each block tells the agent the fix.</dd></div>
+      <div><dt>My rules</dt><dd><ul><li>Enforce in code, not in the prompt</li><li>Check every step, not every message</li><li>Fail open</li></ul></dd></div>
       <div><dt>AI wrote</dt><dd>most of the code</dd></div>
-      <div><dt>I tested</dt><dd><ul><li>Each check measured in the next week&rsquo;s scan</li><li>15 sample cases, allowed and blocked</li></ul></dd></div>
-      <div><dt>Now</dt><dd>In daily use since October 2026. The checks block the waste my scans measured. That includes the 482 of 662 helpers that ran as the heavy default type: 53.8k tokens in the first step, against 16k to 20k. Every block says the fix, so the AI corrects itself without me stepping in.</dd></div>
+      <div><dt>I tested</dt><dd><ul><li>Each check targets a leak found in real logs</li><li>15 sample cases, allowed and blocked</li></ul></dd></div>
+      <div><dt>Now</dt><dd>Four automatic checks that stop the expensive habits.</dd></div>
     </dl>
   </section>
   <!-- /hx-log -->
@@ -83,58 +71,55 @@
   <details class="film-script"><summary>Read the script</summary><p id="film-script-text">Automatic checks stop an AI assistant from using more than the work needs. Written rules did not hold. The AI agreed, then broke them an hour later. Each message is checked, then every step. Every block says the fix. 482 of 662 AI helpers ran as the heavy default type. Now blocked. Its first step takes 53.8k tokens. Lighter types, 16k to 20k. So the AI corrects itself. In daily use since October 2026. 4 checks, 9 lighter helper types. Details and code are below.</p></details>
 
   <div class="prose case-part">
-    <p class="lede"><b>Spending rules an AI agent can&rsquo;t talk its way around.</b> Rules written as instructions get agreed to, then broken an hour later. These run as checks on every step and block the wasteful action. Each block tells the agent the fix, so it corrects itself. Starting cost per helper fell by about two thirds. Claude Code is Anthropic’s AI coding assistant, and it can hand parts of a job to AI helpers. Four automatic checks and nine cheaper kinds of helper stop it from using far more than the work needs. My part: measuring the leaks, the rules and the testing. AI wrote most of the code.</p>
+    <p class="lede"><b>Spending rules an AI agent can&rsquo;t talk its way around.</b> Rules written as instructions get agreed to, then broken an hour later. These run as checks on every step and block the wasteful action, and each block tells the agent the fix. My part: measuring the leaks, the rules and the testing. AI wrote most of the code.</p>
   </div>
 
   <section class="sum sum-method" aria-label="How it was built">
     <ol class="method" aria-label="What was set, who wrote it, how it was checked">
-      <li><p class="who">My rules</p><ul class="ticks"><li>Check every step, not just my instructions</li><li>Two size limits, not one</li><li>Block the heavy default helper</li></ul></li>
+      <li><p class="who">My rules</p><ul class="ticks"><li>Enforce in code, not in the prompt</li><li>Check every step, not every message</li><li>Fail open</li></ul></li>
       <li class="ag"><p class="who">AI wrote</p><p>most of the code</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
-      <li><p class="who">I tested</p><ul class="ticks ok"><li>Each check measured in the next week&rsquo;s scan</li><li>15 sample cases, allowed and blocked</li></ul></li>
+      <li><p class="who">I tested</p><ul class="ticks ok"><li>Each check targets a leak found in real logs</li><li>15 sample cases, allowed and blocked</li></ul></li>
     </ol>
   </section>
 
   <div class="prose">
-    <h2>The problem</h2>
-    <p>The AI re-reads the whole chat on every step. So three habits multiply the cost without improving the work:</p>
+    <h2>What it blocks</h2>
     <ul>
-      <li><b>Long chats.</b> A chat that holds 250k tokens pays for 250k on every step.</li>
-      <li><b>Helpers with no model named.</b> A helper started without naming an AI model gets the main chat&rsquo;s model.</li>
-      <li><b>Heavy results.</b> One read of a whole large file, or one full-size screenshot, stays in the chat and is paid for on every later step.</li>
+      <li><b>Helpers with no model named,</b> which default to the most expensive one.</li>
+      <li><b>The heavy default helper.</b> Nine lean helper types replace it.</li>
+      <li><b>Whole large files and full-size screenshots,</b> which get re-read on every later step.</li>
+      <li><b>Chats that have grown too long</b> and aren&rsquo;t saving their progress.</li>
     </ul>
   </div>
 
   <figure class="figure">
     <ol class="flow c4">
-      <li><b>Message check</b><span>one check lets it run, warns, or blocks, by how long the chat has grown</span></li>
+      <li><b>Message check</b><span>lets a message run, warns, or blocks it, by how long the chat has grown</span></li>
       <li><b>Each step</b><span>every step passes three more checks before it runs</span></li>
-      <li class="key"><b>Block the wasteful step</b><span>no AI model named, the heavy helper type, a whole large file, a wide image, or a chat past 260k not saving its progress</span></li>
-      <li class="key"><b>The block says the fix</b><span>so the AI corrects itself on its next try</span></li>
+      <li class="key"><b>Block the wasteful step</b><span>no AI model named, the heavy helper type, a whole large file, a full-size image, or a long chat not saving its progress</span></li>
+      <li class="key"><b>The block says the fix</b><span>so the agent corrects itself on its next try</span></li>
     </ol>
-    <figcaption>Simplified from the diagram in the project&rsquo;s notes. A step that breaks no rule runs as normal.</figcaption>
+    <figcaption>Simplified from the project&rsquo;s notes. A step that breaks no rule runs as normal.</figcaption>
   </figure>
 
   <div class="prose">
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>Check every step, not just my instructions.</b> A blocked step is a fact the AI must work around, and the block message tells it how.</li>
-      <li><b>Two size limits, not one.</b> The soft limit at 200k gives the AI one turn to save its progress. Over 240k, new messages are blocked with a ready-to-paste start for a fresh chat, so a chat always ends with a clean handoff.</li>
-      <li><b>Guard every step, not just every message.</b> The root cause: the message check runs only when a person types. Yet 39% of one week&rsquo;s re-reading came past the soft limit, mostly during long stretches with nobody typing. The check on every step closes that gap: past 260k, any work that is not saving progress is blocked.</li>
-      <li><b>Saving progress is always allowed.</b> A blocked chat ends with its progress written down, never at a dead end.</li>
-      <li><b>Block the heavy default helper.</b> Nine lighter helper types, each with a set AI model, a step limit and few tools, became the only way through. That fixed the 482 of 662.</li>
-      <li><b>Images cost the most.</b> One week held 4,816 images in the chat, so large originals are now blocked, and the message gives the exact command to shrink them.</li>
-      <li><b>When unsure, step aside.</b> The risk: a broken check stopping good work. If a check hits an error or can&rsquo;t find the chat log, it lets the step run.</li>
+      <li><b>Enforce in code, not in the prompt.</b> An instruction is a suggestion; a blocked step is a fact.</li>
+      <li><b>Check every step, not every message.</b> Most waste happens while nobody is typing.</li>
+      <li><b>A long chat always ends in a clean handoff.</b> It gets a warning, then a ready-made start for a fresh chat.</li>
+      <li><b>Fail open.</b> If a check breaks, the step runs. A broken guard never stops good work.</li>
     </ul>
   </div>
 
   <figure class="figure">
     <div class="chart-card">
       <h3>The check on each message</h3>
-      <p class="sub">What happens to a new message, by how many tokens the chat already holds. From the project&rsquo;s notes.</p>
+      <p class="sub">What happens to a new message as the chat grows. From the project&rsquo;s notes.</p>
       <div class="band3">
-        <div class="ok"><b>Under 200k</b>It runs.</div>
-        <div class="warn"><b>200k to 240k</b>It runs, and the AI is told to save its progress and wrap up.</div>
-        <div class="stop"><b>Over 240k</b>It is blocked, with a ready-to-paste start for a fresh chat.</div>
+        <div class="ok"><b>Short chat</b>It runs.</div>
+        <div class="warn"><b>Getting long</b>It runs, and the agent is told to save its progress and wrap up.</div>
+        <div class="stop"><b>Too long</b>It is blocked, with a ready-made start for a fresh chat.</div>
       </div>
     </div>
   </figure>
@@ -142,20 +127,20 @@
   <div class="prose">
     <h2>How it was tested</h2>
     <ul>
-      <li>Each check targets a leak measured in my real logs, and each moved the numbers in the next week&rsquo;s scan: <a href="token-scan.html">Finding where my AI spending went</a>.</li>
-      <li>15 sample cases, covering what each of the four checks allows and blocks, behave as described.</li>
+      <li><b>Each check targets a leak found in real logs,</b> and each one shrank the following week: <a href="token-scan.html">Finding where my AI spending went</a>.</li>
+      <li><b>15 sample cases</b> cover what each check allows and blocks.</li>
     </ul>
   </div>
 
   <figure class="figure">
     <div class="term soft"><div class="bar"><i></i><i></i><i></i><em>hooks/agent_guard.py</em></div><pre tabindex="0" role="img" aria-label="Terminal output: hooks/agent_guard.py"><span class="ln cmd">printf '%s' '{"tool_name":"Agent","tool_input":{"prompt":"x"}}' | python3 hooks/agent_guard.py</span><span class="ln">{"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": <b class="bad">"deny"</b>, "permissionDecisionReason": <span class="hl">"Agent call has no `model`. Rule: pin model on every spawn (sonnet for mechanical, haiku for sweeps, opus for judgment); omitting it inherits the session model. Better: use a lean-* subagent_type, which carries its model, a turn cap and no MCP tool schemas: lean-sweep (haiku, 10 turns), lean-reader / lean-reader-long (sonnet, 15/40), …"}}</span></span><span class="ln"></span><span class="ln cmd">printf '%s' '{"tool_name":"Agent","tool_input":{"subagent_type":"lean-sweep","prompt":"x"}}' | python3 hooks/agent_guard.py</span><span class="ln dim">(no output: the call is allowed)</span></pre></div>
-    <figcaption>The example from the project&rsquo;s notes, run as written: a helper with no AI model named is blocked, and the message says what to do instead (shortened where marked). A lighter helper passes quietly.</figcaption>
+    <figcaption>Run as written in the project&rsquo;s notes: a helper with no AI model named is blocked, and the message says what to do instead (shortened where marked). A lean helper passes quietly.</figcaption>
   </figure>
 
   <div class="prose">
     <h2>Limits</h2>
     <ul>
-      <li>The limits are set for my own usage and plan; treat them as starting points.</li>
+      <li>The limits are tuned to my own plan; treat them as starting points.</li>
       <li>Free to reuse (MIT license); not made or endorsed by Anthropic, the maker of Claude.</li>
     </ul>
 

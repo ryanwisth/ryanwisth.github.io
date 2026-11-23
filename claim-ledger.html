@@ -52,30 +52,30 @@
     </div>
       </figure>
       <div class="facts">
-        <div class="fact"><b>517</b><span>statements checked and recorded in 29 batches</span></div>
-        <div class="fact"><b>0 of 28</b><span>late corrections filled in the required &ldquo;best case&rdquo; when the rules lived only in the chat; code now refuses any that skip it</span></div>
-        <div class="fact"><b>27% <i class="hx-x">&rarr;</i><i class="hx-alt">to</i> 7%</b><span>problem rate, first 9 batches against the last 20: the sign for when to stop</span></div>
+        <div class="fact"><b>Every claim gets a verdict</b><span>517 statements in one report, checked riskiest first.</span></div>
+        <div class="fact"><b>Can&rsquo;t get lazy late</b><span>Code rejects any incomplete check, so the checklist can&rsquo;t drift.</span></div>
+        <div class="fact"><b>Knows when to stop</b><span>Problems found per first check fell from 27% to 7%, the sign for when to stop.</span></div>
       </div>
     </div>
   </section>
 
   <div class="prose case-part">
     <dl class="brief">
-      <dt>Problem</dt><dd>A long research report written by AI sounds right and is wrong in places, and nobody can tell where by reading it. Rules given to the AI in the chat held at first, then slipped.</dd>
-      <dt>Result</dt><dd>Used daily since October 2026 inside Claude Code, Anthropic’s AI coding assistant. It checked 517 statements in one AI-written report, riskiest first. Before, with the rules only in the chat, 0 of 28 late corrections were complete. Now code enforces the checklist. Fixes go straight into the report through a script that recomputes every new number, and every verdict stays in a log that is only ever added to.</dd>
+      <dt>Problem</dt><dd>A long AI-written report sounds right and is wrong in places, and reading it won&rsquo;t show you where. Rules given to the AI in the chat hold at first, then slip.</dd>
+      <dt>Result</dt><dd>Fixes go straight into the report through a script that recomputes every new number. Every verdict stays in a log that is only ever added to.</dd>
     </dl>
   </div>
 
   <!-- hx-log: the Version History look's changelog. Built by _tools/history/stamp.mjs from this page's own lede, method list and Problem/Result, with dates from git; edit those parts, then re-run. Every other look hides it. -->
   <section class="hx-log" aria-label="Changelog">
-    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-19">19 November 2026</time>.</p>
+    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-23">23 November 2026</time>.</p>
     <dl>
-      <div><dt>Problem</dt><dd>A long research report written by AI sounds right and is wrong in places, and nobody can tell where by reading it. Rules given to the AI in the chat held at first, then slipped.</dd></div>
-      <div><dt>Built</dt><dd><b>A fact-checker for AI-written reports.</b> It splits a long report into single claims and checks them riskiest first. Code, not the model, enforces that every claim gets a verdict, so it can&rsquo;t skip or get lazy late in a long job. It checked 517 statements in one report. A tool for fact-checking a long AI-written report one statement at a time, riskiest first, with a permanent record of every verdict.</dd></div>
+      <div><dt>Problem</dt><dd>A long AI-written report sounds right and is wrong in places, and reading it won&rsquo;t show you where. Rules given to the AI in the chat hold at first, then slip.</dd></div>
+      <div><dt>Built</dt><dd><b>A fact-checker for AI-written reports.</b> It splits a long report into single claims and checks them riskiest first. Code, not the model, enforces that every claim gets a verdict, so it can&rsquo;t skip or get lazy late in a long job. It checked 517 statements in one report.</dd></div>
       <div><dt>My rules</dt><dd><ul><li>Checklist in code, not in the chat</li><li>Riskiest first</li><li>Flag the AI checking its own notes</li></ul></dd></div>
       <div><dt>AI wrote</dt><dd>most of the code</dd></div>
       <div><dt>I tested</dt><dd><ul><li>546 entries rerun: matched the review done by hand</li><li>27 start-to-finish checks pass</li></ul></dd></div>
-      <div><dt>Now</dt><dd>Used daily since October 2026 inside Claude Code, Anthropic’s AI coding assistant. It checked 517 statements in one AI-written report, riskiest first. Before, with the rules only in the chat, 0 of 28 late corrections were complete. Now code enforces the checklist. Fixes go straight into the report through a script that recomputes every new number, and every verdict stays in a log that is only ever added to.</dd></div>
+      <div><dt>Now</dt><dd>Fixes go straight into the report through a script that recomputes every new number. Every verdict stays in a log that is only ever added to.</dd></div>
     </dl>
   </section>
   <!-- /hx-log -->
@@ -83,7 +83,7 @@
   <details class="film-script"><summary>Read the script</summary><p id="film-script-text">A tool fact-checks a long AI-written report, one statement at a time, riskiest first. AI reports sound right and are wrong in places. Rules given in the chat held at first, then slipped. Riskiest statements go first. Code enforces the checklist. Every verdict is kept in a log. 517 statements, checked and recorded in 29 batches. Problems found per first check fell from 27% to 7%, the sign for when to stop. In daily use since October 2026. The checklist cannot drift. Details and code are below.</p></details>
 
   <div class="prose case-part">
-    <p class="lede"><b>A fact-checker for AI-written reports.</b> It splits a long report into single claims and checks them riskiest first. Code, not the model, enforces that every claim gets a verdict, so it can&rsquo;t skip or get lazy late in a long job. It checked 517 statements in one report. A tool for fact-checking a long AI-written report one statement at a time, riskiest first, with a permanent record of every verdict. My part: the checklist rules, riskiest-first order and testing. AI wrote most of the code.</p>
+    <p class="lede"><b>A fact-checker for AI-written reports.</b> It splits a long report into single claims and checks them riskiest first. Code, not the model, enforces that every claim gets a verdict, so it can&rsquo;t skip or get lazy late in a long job. It checked 517 statements in one report. My part: the checklist rules, riskiest-first order and testing. AI wrote most of the code.</p>
   </div>
 
   <section class="sum sum-method" aria-label="How it was built">
@@ -96,8 +96,7 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>Asking the AI to &ldquo;double-check&rdquo; gives a second confident answer, with no record of what was checked or how.</p>
-    <p>The first fix, rules written into the chat, worked at first and then wore off. A review measured how far, and that shaped the rebuild.</p>
+    <p>Rules written into the chat worked at first, then wore off. A review measured how far, and that shaped the rebuild.</p>
   </div>
 
   <figure class="figure">
@@ -109,31 +108,31 @@
       <li><b>Permanent log</b><span>every verdict, only ever added to</span></li>
       <li class="key"><b>Review</b><span>problem rate and checklist drift by batch</span></li>
     </ol>
-    <figcaption>One round of the routine, simplified from the project&rsquo;s own diagram. The log feeds the next line-up.</figcaption>
+    <figcaption>One round, simplified from the project&rsquo;s own diagram. The log feeds the next line-up.</figcaption>
   </figure>
 
   <div class="prose">
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>Put the checklist in code, not in the chat.</b> By the late batches, &ldquo;best case&rdquo; was filled in on 0 of 28 corrections, and &ldquo;what would make it wrong&rdquo; on 57% of entries. Now one incomplete entry rejects the whole batch and nothing is written, so the checklist cannot drift.</li>
-      <li><b>Riskiest first.</b> Re-checks go first, then points whose wording changed, then open statements prioritized by importance times weakness, so the most damaging errors show up earliest.</li>
-      <li><b>Flag the AI checking its own notes.</b> A verdict that rests on the project&rsquo;s own notes is marked that way and listed for a person to verify.</li>
-      <li><b>Stopping is a cost decision for a person.</b> The trade-off: batches 10 to 29 were 73% of the work and found problems in 7% of first checks. The tool reports the rate and an estimate of what is left, so the call to stop is made on numbers.</li>
+      <li><b>Checklist in code, not in the chat.</b> One incomplete entry rejects the whole batch and nothing is written, so required parts can&rsquo;t be skipped late.</li>
+      <li><b>Riskiest first.</b> Re-checks, then changed wording, then importance times weakness, so the worst errors show up earliest.</li>
+      <li><b>Flag the AI checking its own notes.</b> Those verdicts are listed for a person to verify.</li>
+      <li><b>Stopping is a person&rsquo;s cost call.</b> The tool reports the problem rate and an estimate of what is left, so the call is made on numbers.</li>
     </ul>
   </div>
 
   <div class="prose">
     <h2>How it was tested</h2>
     <ul>
-      <li>Rerunning the first report&rsquo;s 546 entries through the new review gives the same result as the review done by hand, including the drift it found.</li>
-      <li>A self-test runs 27 start-to-finish checks on a throwaway report and passes on the public copy.</li>
-      <li>The stop rule counts only first checks, after the review showed 42 of 66 early problems came from re-checks.</li>
+      <li><b>Matches the review done by hand</b> on the first report&rsquo;s 546 entries, including the drift it found.</li>
+      <li><b>27 start-to-finish checks</b> pass on a throwaway report.</li>
+      <li><b>The stop rule counts only first checks,</b> since most early problems came from re-checks.</li>
     </ul>
   </div>
 
   <figure class="figure">
     <div class="term soft"><div class="bar"><i></i><i></i><i></i><em>skill/selftest.py</em></div><pre tabindex="0" role="img" aria-label="Terminal output: skill/selftest.py"><span class="ln cmd">python3 -I skill/selftest.py</span><span class="ln ok">PASS: markers sit on the 9 points, not on the 1-word parent 'Staffing:'</span><span class="ln ok">PASS: the original report is backed up before marking</span><span class="ln ok">PASS: queue puts the important ESTIMATE (2-002, P9) first</span><span class="ln ok">PASS: record rejects empty wrong_if, empty best_case on CORRECTED, evidence without a quote</span><span class="ln ok">PASS: record rejects CORRECTED on a point whose text did not change</span><span class="ln ok">PASS: a rejected batch writes nothing to the log</span><span class="ln ok">PASS: record rejects a 15-word quote</span><span class="ln ok">PASS: the edit script rejects an added number that check() does not re-derive</span><span class="ln ok">PASS: a checked point edited outside the ledger comes back as CHANGED</span><span class="ln ok">PASS: the stop rule empties the queue once the rate falls below it</span><span class="ln dim">… 17 more PASS lines</span><span class="ln hl">ALL PASS (…/claim-ledger-test-v5nhmpb6)</span></pre></div>
-    <figcaption>The tool&rsquo;s self-test on a throwaway sample report: 10 of its 27 checks shown.</figcaption>
+    <figcaption>The self-test on a throwaway report: 10 of its 27 checks shown.</figcaption>
   </figure>
 
   <div class="prose">

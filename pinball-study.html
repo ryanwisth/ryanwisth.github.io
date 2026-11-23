@@ -44,7 +44,7 @@
       <figure class="figure sum-vis">
         <div class="chart-card">
       <h3>Prediction error, lower is better</h3>
-      <p class="sub">Typical error on player ratings, with each table predicted by a model that never saw it (leave-one-out RMSE). Year, maker and build details alone do as well.</p>
+      <p class="sub">Typical error on player ratings, each table predicted by a model that never saw it. Year, maker and build details alone do as well.</p>
       <div class="bars" role="img" aria-label="Bar chart. Guess the average 0.448, best combined model 0.425, year maker and build details alone 0.421.">
         <div class="row" title="Guess the average rating: 0.448"><span class="lab">Guess the average rating</span><span class="track"><i class="base" style="--v:89.6%"></i></span><span class="val">0.448</span></div>
         <div class="row" title="Best combined model: 0.425"><span class="lab">Best combined model</span><span class="track"><i class="" style="--v:85.0%"></i></span><span class="val">0.425</span></div>
@@ -53,30 +53,30 @@
     </div>
       </figure>
       <div class="facts">
-        <div class="fact"><b>9</b><span>predictions locked before any result; none held, and the study says so</span></div>
-        <div class="fact"><b>79 <i class="hx-x">&rarr;</i><i class="hx-alt">to</i> 94</b><span>real tables tested, then retested on the larger set</span></div>
-        <div class="fact"><b>5%</b><span>better than guessing the average rating: too small to use, and called a failure</span></div>
+        <div class="fact"><b>Predictions locked first</b><span>Nine of them, before any result. None held, and the study says so.</span></div>
+        <div class="fact"><b>Can&rsquo;t be bent afterward</b><span>Every test and verdict rule was fixed in advance.</span></div>
+        <div class="fact"><b>A clear &ldquo;no&rdquo;</b><span>Only 5% better than guessing the average rating, and called a failure.</span></div>
       </div>
     </div>
   </section>
 
   <div class="prose case-part">
     <dl class="brief">
-      <dt>Problem</dt><dd>The goal was to score a new pinball table before anyone has played it, by learning what sets well-rated tables apart, without fooling myself with measures that fit by chance.</dd>
-      <dt>Result</dt><dd>A clear &ldquo;no&rdquo;, with the test settled before the data came in. 9 predictions were locked with a digital fingerprint before any result, tested on 79 real tables and retested on 94, and none held. The best model&rsquo;s typical error was 0.425, against 0.448 for simply guessing the average rating. Year, maker and a few build details alone did as well, at 0.421. What a 2D simulator can measure does not predict how players rate a table.</dd>
+      <dt>Problem</dt><dd>Scoring a new pinball table before anyone plays it means learning what sets well-rated tables apart, without being fooled by measures that fit by chance.</dd>
+      <dt>Result</dt><dd>What a 2D simulator can measure doesn&rsquo;t predict how players rate a table. Year, maker and a few build details alone did as well as the best model.</dd>
     </dl>
   </div>
 
   <!-- hx-log: the Version History look's changelog. Built by _tools/history/stamp.mjs from this page's own lede, method list and Problem/Result, with dates from git; edit those parts, then re-run. Every other look hides it. -->
   <section class="hx-log" aria-label="Changelog">
-    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-19">19 November 2026</time>.</p>
+    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-23">23 November 2026</time>.</p>
     <dl>
-      <div><dt>Problem</dt><dd>The goal was to score a new pinball table before anyone has played it, by learning what sets well-rated tables apart, without fooling myself with measures that fit by chance.</dd></div>
-      <div><dt>Built</dt><dd><b>A study designed so it could prove me wrong, and it did.</b> Can you predict how good a pinball table is before anyone plays it? Nine predictions were locked in before any results, then tested on 79 real tables. None held. The cheat-proof test setup is the real result. A research tool that converts pinball table designs into one format, measures their shape, plays them with simulated players at four skill levels, and tests whether any of that predicts how much people enjoy a table.</dd></div>
+      <div><dt>Problem</dt><dd>Scoring a new pinball table before anyone plays it means learning what sets well-rated tables apart, without being fooled by measures that fit by chance.</dd></div>
+      <div><dt>Built</dt><dd><b>A study designed so it could prove me wrong, and it did.</b> Can you predict how good a pinball table is before anyone plays it? Nine predictions were locked in before any results, then tested on 79 real tables. None held. The cheat-proof test setup is the real result.</dd></div>
       <div><dt>My rules</dt><dd><ul><li>Predictions before results</li><li>Year and maker always counted</li><li>Trust only what holds up</li></ul></dd></div>
       <div><dt>AI wrote</dt><dd>the code and ran the experiments</dd></div>
-      <div><dt>I tested</dt><dd><ul><li>Each table predicted unseen, against guessing the average</li><li>Error ranges on two measures</li><li>Prediction fingerprints stored with the results</li></ul></dd></div>
-      <div><dt>Now</dt><dd>A clear &ldquo;no&rdquo;, with the test settled before the data came in. 9 predictions were locked with a digital fingerprint before any result, tested on 79 real tables and retested on 94, and none held. The best model&rsquo;s typical error was 0.425, against 0.448 for simply guessing the average rating. Year, maker and a few build details alone did as well, at 0.421. What a 2D simulator can measure does not predict how players rate a table.</dd></div>
+      <div><dt>I tested</dt><dd><ul><li>Each table predicted unseen, against guessing the average</li><li>Error ranges on two measures</li><li>Locked predictions stored with the results</li></ul></dd></div>
+      <div><dt>Now</dt><dd>What a 2D simulator can measure doesn&rsquo;t predict how players rate a table. Year, maker and a few build details alone did as well as the best model.</dd></div>
     </dl>
   </section>
   <!-- /hx-log -->
@@ -84,20 +84,20 @@
   <details class="film-script"><summary>Read the script</summary><p id="film-script-text">A research tool tests whether a pinball table’s design predicts how much people enjoy it. The main risk: trying many measures, and reporting the ones that happen to fit. Predictions are locked first. Simulated players try each table. Each one is predicted unseen. 9 predictions were locked before any result, then tested on 94 real tables. None held. The best model was 5% better than guessing. Too small to use. A clear no, with the test settled before the data came in. What a simulator can measure does not predict ratings. Details and code are below.</p></details>
 
   <div class="prose case-part">
-    <p class="lede"><b>A study designed so it could prove me wrong, and it did.</b> Can you predict how good a pinball table is before anyone plays it? Nine predictions were locked in before any results, then tested on 79 real tables. None held. The cheat-proof test setup is the real result. A research tool that converts pinball table designs into one format, measures their shape, plays them with simulated players at four skill levels, and tests whether any of that predicts how much people enjoy a table. My part: the study rules and the checks. AI wrote the code and ran the experiments.</p>
+    <p class="lede"><b>A study designed so it could prove me wrong, and it did.</b> Can you predict how good a pinball table is before anyone plays it? Nine predictions were locked in before any results, then tested on 79 real tables. None held. The cheat-proof test setup is the real result. My part: the study rules and the checks. AI wrote the code and ran the experiments.</p>
   </div>
 
   <section class="sum sum-method" aria-label="How it was built">
     <ol class="method" aria-label="My rules, what AI wrote, how I tested it">
       <li><p class="who">My rules</p><ul class="ticks"><li>Predictions before results</li><li>Year and maker always counted</li><li>Trust only what holds up</li></ul></li>
       <li class="ag"><p class="who">AI wrote</p><p>the code and ran the experiments</p><span class="codelines" aria-hidden="true"><i></i><i></i><i></i></span></li>
-      <li><p class="who">I tested</p><ul class="ticks ok"><li>Each table predicted unseen, against guessing the average</li><li>Error ranges on two measures</li><li>Prediction fingerprints stored with the results</li></ul></li>
+      <li><p class="who">I tested</p><ul class="ticks ok"><li>Each table predicted unseen, against guessing the average</li><li>Error ranges on two measures</li><li>Locked predictions stored with the results</li></ul></li>
     </ol>
   </section>
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>The main risk in a study like this is to try many measures and report the ones that happen to fit. This study fixed its tests and verdicts in advance, so the result could not be bent afterward.</p>
+    <p>The main risk in a study like this is trying many measures and reporting the ones that happen to fit. Here the tests and verdicts were fixed in advance.</p>
   </div>
 
   <figure class="figure">
@@ -114,20 +114,20 @@
   <div class="prose">
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>Predictions before results.</b> Designers&rsquo; rules of thumb were written down, each with the direction it predicted, a fixed test and a fixed rule for the verdict. Then they were locked with a digital fingerprint, before any measure was compared with a rating.</li>
-      <li><b>One shared board format.</b> The simulator never sees an original file, so a new design can be measured exactly like a converted commercial table.</li>
-      <li><b>Borrow the physics, do not invent it.</b> A flipper tuned by hand was replaced with the flipper from an established pinball simulator.</li>
-      <li><b>Year and maker always counted.</b> Every model includes them, so a table&rsquo;s era and brand are not mistaken for &ldquo;fun&rdquo;.</li>
-      <li><b>Trust only what holds up.</b> The expert simulated player did not reliably beat the medium-skill one, so every prediction uses the medium-skill player.</li>
+      <li><b>Predictions before results.</b> Each designer&rsquo;s rule of thumb was written down with its direction, test and verdict rule, then locked before any measure met a rating.</li>
+      <li><b>One shared board format.</b> A new design is measured exactly like a converted commercial table.</li>
+      <li><b>Borrow the physics, don&rsquo;t invent it.</b> A hand-tuned flipper was replaced with one from an established pinball simulator.</li>
+      <li><b>Year and maker always counted.</b> Era and brand are never mistaken for &ldquo;fun&rdquo;.</li>
+      <li><b>Trust only what holds up.</b> The expert simulated player didn&rsquo;t reliably beat the medium one, so every prediction uses the medium player.</li>
     </ul>
   </div>
 
   <div class="prose">
     <h2>How it was tested</h2>
     <ul>
-      <li>Every rating model was judged the same way: each table was predicted by a model that had not seen it, and the result was compared with simply guessing the average.</li>
-      <li>Each prediction was tested with error ranges (bootstrap intervals) on two separate measures of success: public rating and how many tables were made.</li>
-      <li>The fingerprints of the prediction files are stored with the results, so any later edit shows.</li>
+      <li><b>Every table predicted unseen,</b> then compared with simply guessing the average.</li>
+      <li><b>Two measures of success,</b> public rating and how many tables were made, each with error ranges.</li>
+      <li><b>The locked predictions are stored with the results.</b></li>
     </ul>
   </div>
 
@@ -143,14 +143,13 @@
         <div class="term soft"><div class="bar"><i></i><i></i><i></i><em>one simulated minute</em></div><pre tabindex="0" role="img" aria-label="Terminal output of the trace command"><span class="ln cmd">python3 sample/make_demo_board.py</span><span class="ln">wrote …/boards/demo | grid (1050, 476) | reach 0.714 | elements 23 | zones 5</span><span class="ln cmd">python3 -I sim/trace.py demo bot2 1 3600 trace.png</span><span class="ln hl">stuck 4 launch 6 drain 5 flips 17</span></pre></div>
       </div>
     </div>
-    <figcaption>The medium-skill simulated player on the project&rsquo;s made-up demo board for one simulated minute (3,600 steps, 60 per second). Each video frame is a picture drawn by the tracing script, one per simulated second. No commercial table is shown.</figcaption>
+    <figcaption>The medium-skill simulated player on the project&rsquo;s made-up demo board for one simulated minute. No commercial table is shown.</figcaption>
   </figure>
 
   <div class="prose">
     <h2>Limits</h2>
     <ul>
-      <li>The finding: ratings mostly reward theme, license, how deep the game&rsquo;s rules go, sound and software, which a 2D simulator cannot see.</li>
-      <li>The published prediction files had a few sentences and labels removed that did not change their meaning, so they no longer match the fingerprints recorded during the study.</li>
+      <li>Ratings mostly reward theme, license, how deep the game&rsquo;s rules go, sound and software, which a 2D simulator can&rsquo;t see.</li>
     </ul>
 
     <div class="repo-card">

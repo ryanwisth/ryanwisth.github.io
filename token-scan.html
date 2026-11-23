@@ -40,52 +40,30 @@
   </div>
 
   <section class="sum" aria-label="Summary">
-    <div class="sum-top">
-      <figure class="figure sum-vis">
-        <div class="chart-grid">
-    <div class="chart-card">
-      <h3>Size of an AI helper&rsquo;s first step</h3>
-      <p class="sub">Typical tokens in a helper&rsquo;s first step.</p>
-      <div class="bars" role="img" aria-label="Bar chart. Default helper type 53.8k tokens, lighter types 16k to 20k.">
-        <div class="row" title="Default type: 53.8k"><span class="lab">Default type</span><span class="track"><i class="" style="--v:89.7%"></i></span><span class="val">53.8k</span></div>
-        <div class="row" title="Lighter types: 16k to 20k"><span class="lab">Lighter types</span><span class="track"><i class="cut" style="--v:26.7%"></i><i class="range" style="--v:33.3%;--from:26.7%"></i></span><span class="val">16k to 20k</span></div>
-      </div>
-    </div>
-    <div class="chart-card">
-      <h3>Which type the helpers ran as</h3>
-      <p class="sub">After the lighter types already existed.</p>
-      <div class="bars" role="img" aria-label="Bar chart. 482 of 662 AI helpers ran as the heavy default type.">
-        <div class="row" title="Heavy default type: 482"><span class="lab">Heavy default type</span><span class="track"><i class="" style="--v:72.8%"></i></span><span class="val">482</span></div>
-        <div class="row" title="All helpers: 662"><span class="lab">All helpers</span><span class="track"><i class="base" style="--v:100%"></i></span><span class="val">662</span></div>
-      </div>
-    </div>
-    </div>
-      </figure>
       <div class="facts">
-        <div class="fact"><b>482 of 662</b><span>AI helpers found running as the heavy default type</span></div>
-        <div class="fact"><b>53.8k</b><span>tokens in a default helper&rsquo;s typical first step, against 16k to 20k for lighter types: 2.7 to 3.4 times the cost before any work starts</span></div>
-        <div class="fact"><b>4,816</b><span>images held in the AI&rsquo;s working memory in one week, found by one scan</span></div>
+        <div class="fact"><b>From a total to causes</b><span>Turns the usage meter&rsquo;s bare total into causes that can be fixed.</span></div>
+        <div class="fact"><b>Found the expensive default</b><span>Most AI helpers ran as the heaviest type, about three times the starting cost.</span></div>
+        <div class="fact"><b>Every finding became a rule</b><span>Each one is now enforced by the spending guard.</span></div>
       </div>
-    </div>
   </section>
 
   <div class="prose case-part">
     <dl class="brief">
-      <dt>Problem</dt><dd>Every AI call costs tokens, the units AI use is billed in. The usage meter shows a total, not a cause. When a week&rsquo;s allowance ran out early, I needed to know what used it up.</dd>
-      <dt>Result</dt><dd>Six scans turned a bare total on the meter into causes I could fix. 482 of 662 AI helpers ran as the heavy default type: 53.8k tokens in the first step, against 16k to 20k for lighter types. And 39% of cache reads (the AI re-reading text it saved earlier) came during long stretches with nobody typing, which a check on each message never saw. Each finding became a rule in my spending guard.</dd>
+      <dt>Problem</dt><dd>Every AI call costs tokens, the units AI use is billed in. When an allowance runs out early, the meter can&rsquo;t say what used it.</dd>
+      <dt>Result</dt><dd>Each finding became a rule in the spending guard, and the next week&rsquo;s scan showed whether the leak had closed.</dd>
     </dl>
   </div>
 
   <!-- hx-log: the Version History look's changelog. Built by _tools/history/stamp.mjs from this page's own lede, method list and Problem/Result, with dates from git; edit those parts, then re-run. Every other look hides it. -->
   <section class="hx-log" aria-label="Changelog">
-    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-19">19 November 2026</time>.</p>
+    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-23">23 November 2026</time>.</p>
     <dl>
-      <div><dt>Problem</dt><dd>Every AI call costs tokens, the units AI use is billed in. The usage meter shows a total, not a cause. When a week&rsquo;s allowance ran out early, I needed to know what used it up.</dd></div>
-      <div><dt>Built</dt><dd><b>Cost analysis for an AI coding agent, from its own logs.</b> The usage meter shows a total, not a cause. Six scripts read the agent&rsquo;s logs and found the causes: 482 of 662 helper agents running in the heaviest setup, and 39% of re-reading happening with nobody typing. Claude Code is Anthropic’s AI coding assistant. Six small scripts read its logs and show where the usage went: by project, AI model, day, chat and tool.</dd></div>
+      <div><dt>Problem</dt><dd>Every AI call costs tokens, the units AI use is billed in. When an allowance runs out early, the meter can&rsquo;t say what used it.</dd></div>
+      <div><dt>Built</dt><dd><b>Cost analysis for an AI coding agent, from its own logs.</b> The usage meter shows a total, not a cause. Six scripts read the agent&rsquo;s logs and found the causes: 482 of 662 helper agents running in the heaviest setup, and 39% of re-reading happening with nobody typing.</dd></div>
       <div><dt>My rules</dt><dd><ul><li>One number to compare everything</li><li>Count each step once</li><li>One question per script</li></ul></dd></div>
       <div><dt>AI wrote</dt><dd>the code</dd></div>
       <div><dt>I tested</dt><dd><ul><li>Used in a real weekly spending review</li><li>Findings turned into enforced rules</li></ul></dd></div>
-      <div><dt>Now</dt><dd>Six scans turned a bare total on the meter into causes I could fix. 482 of 662 AI helpers ran as the heavy default type: 53.8k tokens in the first step, against 16k to 20k for lighter types. And 39% of cache reads (the AI re-reading text it saved earlier) came during long stretches with nobody typing, which a check on each message never saw. Each finding became a rule in my spending guard.</dd></div>
+      <div><dt>Now</dt><dd>Each finding became a rule in the spending guard, and the next week&rsquo;s scan showed whether the leak had closed.</dd></div>
     </dl>
   </section>
   <!-- /hx-log -->
@@ -93,7 +71,7 @@
   <details class="film-script"><summary>Read the script</summary><p id="film-script-text">Six small scripts read an AI assistant’s logs, and show where the usage went. The usage meter shows a total, not a cause. A week’s allowance ran out early. The AI’s own logs are read. Each script answers one question, in a simple table. 482 of 662 AI helpers ran as the heavy default type. Its first step took 53.8k tokens: up to 3.4 times the cost, before any work. Used for a real weekly spending review in November 2026. Each finding became a rule. Details and code are below.</p></details>
 
   <div class="prose case-part">
-    <p class="lede"><b>Cost analysis for an AI coding agent, from its own logs.</b> The usage meter shows a total, not a cause. Six scripts read the agent&rsquo;s logs and found the causes: 482 of 662 helper agents running in the heaviest setup, and 39% of re-reading happening with nobody typing. Claude Code is Anthropic’s AI coding assistant. Six small scripts read its logs and show where the usage went: by project, AI model, day, chat and tool. My part: the questions, the rules and the testing. AI wrote the code.</p>
+    <p class="lede"><b>Cost analysis for an AI coding agent, from its own logs.</b> The usage meter shows a total, not a cause. Six scripts read the agent&rsquo;s logs and found the causes: 482 of 662 helper agents running in the heaviest setup, and 39% of re-reading happening with nobody typing. My part: the questions, the rules and the testing. AI wrote the code.</p>
   </div>
 
   <section class="sum sum-method" aria-label="How it was built">
@@ -106,7 +84,7 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>Every AI call&rsquo;s tokens are already written to log files on my computer. But nothing added them up. Without a root cause, every fix was a guess.</p>
+    <p>Every AI call&rsquo;s tokens are already written to log files on the computer, but nothing added them up. Without a root cause, every fix is a guess.</p>
   </div>
 
   <figure class="figure">
@@ -115,32 +93,32 @@
       <li class="key"><b>Six scans</b><span>one question each</span></li>
       <li><b>Simple tables</b><span>by project, model, day, chat and tool</span></li>
     </ol>
-    <figcaption>Simplified from the diagram in the project&rsquo;s notes.</figcaption>
+    <figcaption>Simplified from the project&rsquo;s notes.</figcaption>
   </figure>
 
   <div class="prose">
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>One comparable number.</b> Each AI call gets one number, weighted by the price list, so cheap kinds of usage and expensive kinds land on the same scale. It is a ruler for comparing, not a bill.</li>
-      <li><b>Count each call once.</b> One reply can fill several log lines, so each reply is counted once, by its ID.</li>
-      <li><b>One question per script.</b> Six short scripts each print one table: totals, heavy results and images, why saved text had to be stored again, kinds of chat, re-reading of notes, and usage by model. Each answer can be checked on its own.</li>
-      <li><b>Read-only and local.</b> No extra software to install, and nothing leaves the computer.</li>
-      <li><b>Guesses written down.</b> Where a script has to guess, the rule is written down and its numbers can be changed, so every figure can be traced back to its rule.</li>
+      <li><b>One comparable number.</b> Each call is weighted by the price list, so cheap and expensive usage land on one scale: a ruler, not a bill.</li>
+      <li><b>Count each call once.</b> One reply can fill several log lines, so replies are counted by their ID.</li>
+      <li><b>One question per script.</b> Each of six short scripts prints one table, so each answer can be checked on its own.</li>
+      <li><b>Read-only and local.</b> Nothing to install, and nothing leaves the computer.</li>
+      <li><b>Guesses written down.</b> Where a script has to guess, the rule is written down and adjustable, so every figure traces back to it.</li>
     </ul>
   </div>
 
   <div class="prose">
     <h2>How it was tested</h2>
     <ul>
-      <li>Used for a real weekly spending review in November 2026, then kept as tools to reuse.</li>
-      <li>The findings became rules in <a href="https://github.com/ryanwisth/claude-code-token-guard">claude-code-token-guard</a>, aimed at the heavy helper type behind 482 of 662 helpers and the unattended stretches behind 39% of cache reads.</li>
-      <li>Each new rule was checked against the next week&rsquo;s scan, so the same scripts that found a leak showed it was closed.</li>
+      <li><b>Used for a real weekly spending review,</b> then kept as reusable tools.</li>
+      <li><b>The findings became rules</b> in <a href="https://github.com/ryanwisth/claude-code-token-guard">claude-code-token-guard</a>, aimed at the heavy helper type and the stretches with nobody typing.</li>
+      <li><b>Each new rule was checked by the next week&rsquo;s scan,</b> so the scripts that found a leak showed it was closed.</li>
     </ul>
   </div>
 
   <figure class="figure">
     <div class="term"><div class="bar"><i></i><i></i><i></i><em>usage_by_model.py</em></div><pre tabindex="0" role="img" aria-label="Terminal output: usage_by_model.py"><span class="ln cmd">python3 -I usage_by_model.py 2026-01-05T00:00:00Z --root sample-transcripts</span><span class="ln">since 2026-01-05T00:00:00Z: 3 transcript files, 290 model calls</span><span class="ln hl">model                      calls   input  cache-write  cache-read   output   units(M)  share</span><span class="ln">claude-haiku-5-5             128    0.0M        0.2M       11.6M     0.1M       2.0  43.5%</span><span class="ln">claude-sonnet-5-5            111    0.0M        0.2M       12.4M     0.1M       2.0  43.0%</span><span class="ln">claude-opus-5-5               51    0.0M        0.1M        3.0M     0.0M       0.6  13.5%</span><span class="ln"></span><span class="ln hl">by day (units, M):      claude-haiku-5-5  claude-sonnet-5-   claude-opus-5-5</span><span class="ln">Mon 05                               0.2               0.1               0.1</span><span class="ln">Tue 06                               0.2               0.2               0.1</span><span class="ln">Wed 07                               0.2               0.3               0.1</span><span class="ln dim">…</span><span class="ln"></span><span class="ln hl">by project folder (units, M):</span><span class="ln">notes-app                                    claude-haiku:0.6  claude-sonne:2.0</span><span class="ln">website                                      claude-haiku:1.3</span><span class="ln">data-cleanup                                 claude-haiku:0.1  claude-opus-:0.6</span></pre></div>
-    <figcaption>One of the scripts, run on a few made-up logs (290 AI calls in three project folders). The layout is real; the numbers mean nothing. The figures above come from the real scans.</figcaption>
+    <figcaption>One of the scripts, run on a few made-up logs. The layout is real; the numbers mean nothing.</figcaption>
   </figure>
 
   <div class="prose">

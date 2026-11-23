@@ -46,30 +46,30 @@
     <figcaption>One session: a practice plan with chosen targets, two right answers, a wrong one that resets the streak, and the required note. The circle is the recording&rsquo;s pointer.</figcaption>
       </figure>
       <div class="facts">
-        <div class="fact"><b>10<i class="hx-x"> &middot;</i><i class="hx-alt">,</i> 10<i class="hx-x"> &middot;</i><i class="hx-alt">,</i> 5</b><span>in a row to clear easy, medium and hard</span></div>
-        <div class="fact"><b>1 wrong answer</b><span>or one guess resets the streak to zero</span></div>
-        <div class="fact"><b>66</b><span>sample questions, every answer checked by a program</span></div>
+        <div class="fact"><b>A guess doesn&rsquo;t count</b><span>A wrong answer or a lucky guess resets the streak to zero.</span></div>
+        <div class="fact"><b>Every miss gets written down</b><span>The next question waits until the note is written.</span></div>
+        <div class="fact"><b>Any multiple-choice subject</b><span>Topics come from one data file, not the code.</span></div>
       </div>
     </div>
   </section>
 
   <div class="prose case-part">
     <dl class="brief">
-      <dt>Problem</dt><dd>A percent score hides weak spots: 80% on a topic can mean you know it, or that you guess well.</dd>
-      <dt>Result</dt><dd>A working app that enforces streaks: 10, 10 and 5 right in a row on easy, medium and hard. Any wrong answer or guess resets the count to zero, and a short written note is required before the next question. It comes with 66 sample questions, every answer checked by a program. It runs from two files plus Python 3.9, and nothing leaves the computer.</dd>
+      <dt>Problem</dt><dd>A percent score hides weak spots: it can&rsquo;t tell knowing a topic from guessing well.</dd>
+      <dt>Result</dt><dd>A working app that moves from easy to hard only on streaks of 10, 10 and 5 right in a row. It comes with sample questions whose answers are all checked by a program.</dd>
     </dl>
   </div>
 
   <!-- hx-log: the Version History look's changelog. Built by _tools/history/stamp.mjs from this page's own lede, method list and Problem/Result, with dates from git; edit those parts, then re-run. Every other look hides it. -->
   <section class="hx-log" aria-label="Changelog">
-    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-19">19 November 2026</time>.</p>
+    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-23">23 November 2026</time>.</p>
     <dl>
-      <div><dt>Problem</dt><dd>A percent score hides weak spots: 80% on a topic can mean you know it, or that you guess well.</dd></div>
-      <div><dt>Built</dt><dd><b>A study app built so a score can&rsquo;t lie.</b> 80% can mean knowing it or guessing well. Here one wrong answer, or one lucky guess, resets the streak to zero, and the miss gets written down before the next question. A study app for any multiple-choice subject. You work one topic at a time, easy to hard, and one wrong answer resets your streak.</dd></div>
+      <div><dt>Problem</dt><dd>A percent score hides weak spots: it can&rsquo;t tell knowing a topic from guessing well.</dd></div>
+      <div><dt>Built</dt><dd><b>A study app built so a score can&rsquo;t lie.</b> 80% can mean knowing it or guessing well. Here one wrong answer, or one lucky guess, resets the streak to zero, and the miss gets written down before the next question.</dd></div>
       <div><dt>My rules</dt><dd><ul><li>The app enforces the rules</li><li>A guess does not count</li><li>No repeats</li></ul></dd></div>
       <div><dt>AI wrote</dt><dd>most of the code</dd></div>
       <div><dt>I tested</dt><dd><ul><li>Every main step tried from start to finish</li><li>Every sample answer checked by a program</li><li>Tested by using the app</li></ul></dd></div>
-      <div><dt>Now</dt><dd>A working app that enforces streaks: 10, 10 and 5 right in a row on easy, medium and hard. Any wrong answer or guess resets the count to zero, and a short written note is required before the next question. It comes with 66 sample questions, every answer checked by a program. It runs from two files plus Python 3.9, and nothing leaves the computer.</dd></div>
+      <div><dt>Now</dt><dd>A working app that moves from easy to hard only on streaks of 10, 10 and 5 right in a row. It comes with sample questions whose answers are all checked by a program.</dd></div>
     </dl>
   </section>
   <!-- /hx-log -->
@@ -77,7 +77,7 @@
   <details class="film-script"><summary>Read the script</summary><p id="film-script-text">A study app for any multiple-choice subject, where one wrong answer resets your streak. A percent score hides weak spots. 80% can mean you know it, or that you guess well. Work from easy to hard. A guess resets the streak, like a wrong answer. Each break needs a written note. 10 right in a row clears easy, then 10 on medium, and 5 on hard. 66 sample questions come with it, every answer checked by a program. A working app, and nothing leaves the computer. Every break gets a written note. Details and code are below.</p></details>
 
   <div class="prose case-part">
-    <p class="lede"><b>A study app built so a score can&rsquo;t lie.</b> 80% can mean knowing it or guessing well. Here one wrong answer, or one lucky guess, resets the streak to zero, and the miss gets written down before the next question. A study app for any multiple-choice subject. You work one topic at a time, easy to hard, and one wrong answer resets your streak. My part: the streak rules and the testing. AI wrote most of the code.</p>
+    <p class="lede"><b>A study app built so a score can&rsquo;t lie.</b> 80% can mean knowing it or guessing well. Here one wrong answer, or one lucky guess, resets the streak to zero, and the miss gets written down before the next question. My part: the streak rules and the testing. AI wrote most of the code.</p>
   </div>
 
   <section class="sum sum-method" aria-label="How it was built">
@@ -90,8 +90,7 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>A streak tells the two apart. You move from easy to medium to hard only after 10, 10 and 5 right in a row. Any wrong answer, or any right answer you guessed, sends the count back to zero.</p>
-    <p>The payoff comes at each break. Before the next question, you write down what went wrong and what you will do differently. The app enforces this.</p>
+    <p>A streak tells the two apart, and the payoff comes at each break: before the next question, you write down what went wrong and what you&rsquo;ll do differently.</p>
   </div>
 
   <figure class="figure">
@@ -102,11 +101,11 @@
   <div class="prose">
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>The app enforces the rules.</b> Streaks, cleared levels and the required note are handled behind the scenes, so the screen cannot stray from the method.</li>
-      <li><b>A guess does not count.</b> A right answer marked &ldquo;I guessed&rdquo; resets the count, just like a wrong one.</li>
-      <li><b>No repeats.</b> Each question is shown at most once, so a streak cannot come from memory.</li>
+      <li><b>The app enforces the rules.</b> Streaks, cleared levels and the required note are handled behind the scenes, so the screen can&rsquo;t stray from the method.</li>
+      <li><b>A guess doesn&rsquo;t count.</b> A right answer marked &ldquo;I guessed&rdquo; resets the count, like a wrong one.</li>
+      <li><b>No repeats.</b> Each question is shown at most once, so a streak can&rsquo;t come from memory.</li>
       <li><b>History is never rewritten.</b> Every answer is saved, and the streak is counted back from the latest one.</li>
-      <li><b>Any subject.</b> Sections and topics come from one data file. Nothing about a subject is built into the code, so any multiple-choice subject works.</li>
+      <li><b>Any subject.</b> Sections and topics come from one data file, with nothing about a subject built into the code.</li>
     </ul>
   </div>
 
@@ -125,9 +124,9 @@
   <div class="prose">
     <h2>How it was tested</h2>
     <ul>
-      <li>Every main step (plans, notes, cleared levels, speed rounds, the tracker, loading questions) was tried from start to finish.</li>
-      <li>The 66 sample questions are made from fill-in patterns, and a program checks every answer.</li>
-      <li>Tested by using the app.</li>
+      <li><b>Every main step tried, start to finish:</b> plans, notes, cleared levels, speed rounds, the tracker and loading questions.</li>
+      <li><b>Every sample answer checked by a program.</b> The 66 sample questions are made from fill-in patterns.</li>
+      <li><b>Tested in real use.</b></li>
     </ul>
   </div>
 

@@ -46,30 +46,30 @@
     <figcaption>A short session with the sample questions: two right answers, a wrong one that names the mistake and retires the question, then the Progress tab. The circle is the recording&rsquo;s pointer.</figcaption>
       </figure>
       <div class="facts">
-        <div class="fact"><b>3 in a row</b><span>correct, on-time answers on 3 different questions master a kind of mistake</span></div>
-        <div class="fact"><b>3, 7, 21</b><span>days later, a mastered mistake is checked again; one wrong answer reopens it</span></div>
-        <div class="fact"><b>2 files</b><span>run the whole app, with Python 3.9</span></div>
+        <div class="fact"><b>Drills the mistake, not the topic</b><span>Every question is labeled with the root mistake it tests.</span></div>
+        <div class="fact"><b>Mastery means right and on time</b><span>Three in a row, on three different questions.</span></div>
+        <div class="fact"><b>Mastery has to last</b><span>Checked again after 3, 7 and 21 days; one wrong answer reopens it.</span></div>
       </div>
     </div>
   </section>
 
   <div class="prose case-part">
     <dl class="brief">
-      <dt>Problem</dt><dd>Practicing by topic treats every wrong answer on &ldquo;percents&rdquo; the same. But most come from one root cause: adding two percent changes instead of multiplying them, or averaging times instead of adding rates.</dd>
-      <dt>Result</dt><dd>A working app that practices each mistake until it is mastered: 3 correct, on-time answers in a row on 3 different questions. It checks again after 3, 7 and 21 days, so mastery has to last. It runs from 2 files plus Python 3.9, and loads anyone&rsquo;s own questions from a spreadsheet file.</dd>
+      <dt>Problem</dt><dd>Practicing by topic treats every wrong answer on &ldquo;percents&rdquo; the same. But most come from one root cause, such as adding two percent changes instead of multiplying them.</dd>
+      <dt>Result</dt><dd>A working app that loads anyone&rsquo;s own questions from a spreadsheet file and grades timed sets on pacing as well as score.</dd>
     </dl>
   </div>
 
   <!-- hx-log: the Version History look's changelog. Built by _tools/history/stamp.mjs from this page's own lede, method list and Problem/Result, with dates from git; edit those parts, then re-run. Every other look hides it. -->
   <section class="hx-log" aria-label="Changelog">
-    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-21">21 November 2026</time>.</p>
+    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-23">23 November 2026</time>.</p>
     <dl>
-      <div><dt>Problem</dt><dd>Practicing by topic treats every wrong answer on &ldquo;percents&rdquo; the same. But most come from one root cause: adding two percent changes instead of multiplying them, or averaging times instead of adding rates.</dd></div>
-      <div><dt>Built</dt><dd><b>A study app that drills the mistake, not the topic.</b> Questions are grouped by the root mistake they test. Each mistake keeps coming back until it is beaten three times in a row, then gets rechecked days and weeks later. A study app that groups questions by the mistake they test, and practices each mistake until it is fixed, on time. Timed sets are graded on pacing as well as score.</dd></div>
+      <div><dt>Problem</dt><dd>Practicing by topic treats every wrong answer on &ldquo;percents&rdquo; the same. But most come from one root cause, such as adding two percent changes instead of multiplying them.</dd></div>
+      <div><dt>Built</dt><dd><b>A study app that drills the mistake, not the topic.</b> Questions are grouped by the root mistake they test. Each mistake keeps coming back until it is beaten three times in a row, then gets rechecked days and weeks later.</dd></div>
       <div><dt>My rules</dt><dd><ul><li>Practice the mistake, not the topic</li><li>Speed is part of mastery</li><li>A missed question is retired</li></ul></dd></div>
       <div><dt>AI wrote</dt><dd>the code</dd></div>
       <div><dt>I tested</dt><dd><ul><li>Every screen tested, from practice to progress</li><li>21 sample questions, each checked by a program</li><li>Used for my own study</li></ul></dd></div>
-      <div><dt>Now</dt><dd>A working app that practices each mistake until it is mastered: 3 correct, on-time answers in a row on 3 different questions. It checks again after 3, 7 and 21 days, so mastery has to last. It runs from 2 files plus Python 3.9, and loads anyone&rsquo;s own questions from a spreadsheet file.</dd></div>
+      <div><dt>Now</dt><dd>A working app that loads anyone&rsquo;s own questions from a spreadsheet file and grades timed sets on pacing as well as score.</dd></div>
     </dl>
   </section>
   <!-- /hx-log -->
@@ -77,7 +77,7 @@
   <details class="film-script"><summary>Read the script</summary><p id="film-script-text">A study app practices each mistake until it is fixed. Practicing by topic treats every wrong answer the same. But most come from one root cause. Questions are grouped by mistake. Right answers must be on time. Mastery is checked again later. 3 right, on-time answers in a row, on 3 different questions, master a mistake. It checks again after 3, 7 and 21 days. One wrong answer reopens it. A working app, used for real study, that loads anyone’s own questions. So mastery has to last. Details and code are below.</p></details>
 
   <div class="prose case-part">
-    <p class="lede"><b>A study app that drills the mistake, not the topic.</b> Questions are grouped by the root mistake they test. Each mistake keeps coming back until it is beaten three times in a row, then gets rechecked days and weeks later. A study app that groups questions by the mistake they test, and practices each mistake until it is fixed, on time. Timed sets are graded on pacing as well as score. My part: the mastery rules and the testing. AI wrote the code.</p>
+    <p class="lede"><b>A study app that drills the mistake, not the topic.</b> Questions are grouped by the root mistake they test. Each mistake keeps coming back until it is beaten three times in a row, then gets rechecked days and weeks later. My part: the mastery rules and the testing. AI wrote the code.</p>
   </div>
 
   <section class="sum sum-method" aria-label="How it was built">
@@ -90,7 +90,7 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>Practicing the whole chapter again never targets that one error. Here, every question is labeled with the mistake it tests. A mistake counts as mastered only after 3 correct, on-time answers on 3 different questions. Checks at 3, 7 and 21 days prove the fix held, and one wrong answer reopens it.</p>
+    <p>Practicing the whole chapter again never targets that one error. Here every question is labeled with the mistake it tests, so practice goes straight at it.</p>
   </div>
 
   <figure class="figure">
@@ -101,11 +101,11 @@
   <div class="prose">
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>Practice the mistake, not the topic.</b> Each question belongs to one mistake, so practice goes straight at the error.</li>
-      <li><b>Speed is part of mastery.</b> A slow right answer does not add to the streak. Mastered means right and on time.</li>
-      <li><b>Mastery needs different questions.</b> The streak has to come from 3 different questions. Getting one question right over and over only proves memory.</li>
-      <li><b>A missed question is retired.</b> Once its explanation is shown, a later right answer could just be memory, so it never comes up again.</li>
-      <li><b>Pacing gets its own grade.</b> The report separates time spent on right answers from time lost on wrong ones.</li>
+      <li><b>Practice the mistake, not the topic.</b> Each question belongs to exactly one mistake.</li>
+      <li><b>Speed is part of mastery.</b> A slow right answer doesn&rsquo;t count toward the streak.</li>
+      <li><b>Mastery needs different questions.</b> One question right over and over only proves memory.</li>
+      <li><b>A missed question is retired.</b> After its explanation is shown, a later right answer could just be memory.</li>
+      <li><b>Pacing gets its own grade.</b> Time on right answers is reported apart from time lost on wrong ones.</li>
     </ul>
   </div>
 
@@ -123,10 +123,10 @@
   <div class="prose">
     <h2>How it was tested</h2>
     <ul>
-      <li>I built the sample questions, ran the app, and tried every part: practice, timed sets, progress, pacing and the quality check.</li>
-      <li>All 21 sample questions are checked by a program, and only checked questions are shown.</li>
-      <li>A built-in quality check flags wrong answer keys, repeated choices, near-copies of questions, and mistakes with too few questions. If any row of a question file fails, the whole file is refused.</li>
-      <li>I tested the rules by using the app for my own study.</li>
+      <li><b>Every part tried:</b> practice, timed sets, progress, pacing and the quality check.</li>
+      <li><b>Only checked questions are shown.</b> All 21 sample questions are checked by a program.</li>
+      <li><b>Bad question files are refused.</b> A quality check flags wrong answer keys, repeated choices and near-copies, and one failing row refuses the whole file.</li>
+      <li><b>The rules were tested in real study.</b></li>
     </ul>
   </div>
 

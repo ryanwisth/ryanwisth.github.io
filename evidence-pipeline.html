@@ -53,30 +53,30 @@
     </div>
       </figure>
       <div class="facts">
-        <div class="fact"><b>31</b><span>quick-pass statements rejected by skeptic AIs before reaching the tree</span></div>
-        <div class="fact"><b>3 of 147</b><span>careful-pass statements rejected by a second AI trying to disprove them</span></div>
-        <div class="fact"><b>12 of 16</b><span>demo statements passed the free code filter; 4 dropped without any AI cost</span></div>
+        <div class="fact"><b>Every fact quotes a record</b><span>A register entry, census line or headstone, never another user&rsquo;s tree.</span></div>
+        <div class="fact"><b>Weak guesses stay out</b><span>Skeptic AIs rejected 31 quick-pass statements before they reached the tree.</span></div>
+        <div class="fact"><b>Free checks first</b><span>Code drops rule-breakers before any AI time is spent.</span></div>
       </div>
     </div>
   </section>
 
   <div class="prose case-part">
     <dl class="brief">
-      <dt>Problem</dt><dd>Online family trees copy each other. So two trees agreeing is not proof; often it is the same mistake copied twice.</dd>
-      <dt>Result</dt><dd>Three research rounds on a private family tree in September 2026. Every accepted fact quotes an original record. In round 1, &ldquo;skeptic&rdquo; AIs, told to hunt for mistakes, rejected 31 statements from a quick first pass and 3 of 147 from a careful one, so weak guesses never reached the tree. By round 3, moving checks into simple code brought AI use down to about 57k tokens (the units AI use is billed in) per research target.</dd>
+      <dt>Problem</dt><dd>Online family trees copy each other, so two trees agreeing is often the same mistake copied twice.</dd>
+      <dt>Result</dt><dd>Three research rounds on a real family tree. Even a careful pass lost 3 of 147 statements to the skeptic, and by round 3 most checks ran as simple code instead of AI.</dd>
     </dl>
   </div>
 
   <!-- hx-log: the Version History look's changelog. Built by _tools/history/stamp.mjs from this page's own lede, method list and Problem/Result, with dates from git; edit those parts, then re-run. Every other look hides it. -->
   <section class="hx-log" aria-label="Changelog">
-    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-19">19 November 2026</time>.</p>
+    <p class="hx-when">Added <time datetime="2026-11-13">13 November 2026</time>. Last changed <time datetime="2026-11-23">23 November 2026</time>.</p>
     <dl>
-      <div><dt>Problem</dt><dd>Online family trees copy each other. So two trees agreeing is not proof; often it is the same mistake copied twice.</dd></div>
-      <div><dt>Built</dt><dd><b>A family-tree research pipeline where every fact must cite its source.</b> A fact is accepted only if it quotes an original record. Code checks what it can, and skeptic AIs try to disprove each one first. 31 weak guesses never made it in. A research workflow for a family tree. AI helpers suggest additions. Free code checks what it can. A second AI tries to disprove each one. Accepted facts go into a permanent record that is only ever added to.</dd></div>
+      <div><dt>Problem</dt><dd>Online family trees copy each other, so two trees agreeing is often the same mistake copied twice.</dd></div>
+      <div><dt>Built</dt><dd><b>A family-tree research pipeline where every fact must cite its source.</b> A fact is accepted only if it quotes an original record. Code checks what it can, and skeptic AIs try to disprove each one first. 31 weak guesses never made it in.</dd></div>
       <div><dt>My rules</dt><dd><ul><li>AI suggests; code checks</li><li>A second AI tries to disprove</li><li>Nothing is deleted</li></ul></dd></div>
       <div><dt>AI wrote</dt><dd>most of the code</dd></div>
       <div><dt>I tested</dt><dd><ul><li>Runs start to finish offline with one command</li><li>Merged 423 people into 420: none lost a fact</li><li>Every original line survives</li></ul></dd></div>
-      <div><dt>Now</dt><dd>Three research rounds on a private family tree in September 2026. Every accepted fact quotes an original record. In round 1, &ldquo;skeptic&rdquo; AIs, told to hunt for mistakes, rejected 31 statements from a quick first pass and 3 of 147 from a careful one, so weak guesses never reached the tree. By round 3, moving checks into simple code brought AI use down to about 57k tokens (the units AI use is billed in) per research target.</dd></div>
+      <div><dt>Now</dt><dd>Three research rounds on a real family tree. Even a careful pass lost 3 of 147 statements to the skeptic, and by round 3 most checks ran as simple code instead of AI.</dd></div>
     </dl>
   </section>
   <!-- /hx-log -->
@@ -84,7 +84,7 @@
   <details class="film-script"><summary>Read the script</summary><p id="film-script-text">A research workflow adds facts to a family tree only when they quote a real record. Online trees copy each other, so two trees agreeing is often one mistake, copied twice. AI suggests additions. Free code checks what it can. A skeptic AI hunts for mistakes. Skeptic AIs rejected 31 weak guesses before they reached the tree. A made-up test family merged from 423 people to 420. None lost a fact. Three research rounds ran in September 2026. Every fact quotes its record. Details and code are below.</p></details>
 
   <div class="prose case-part">
-    <p class="lede"><b>A family-tree research pipeline where every fact must cite its source.</b> A fact is accepted only if it quotes an original record. Code checks what it can, and skeptic AIs try to disprove each one first. 31 weak guesses never made it in. A research workflow for a family tree. AI helpers suggest additions. Free code checks what it can. A second AI tries to disprove each one. Accepted facts go into a permanent record that is only ever added to. My part: the proof rules and the testing. AI wrote most of the code.</p>
+    <p class="lede"><b>A family-tree research pipeline where every fact must cite its source.</b> A fact is accepted only if it quotes an original record. Code checks what it can, and skeptic AIs try to disprove each one first. 31 weak guesses never made it in. My part: the proof rules and the testing. AI wrote most of the code.</p>
   </div>
 
   <section class="sum sum-method" aria-label="How it was built">
@@ -97,8 +97,7 @@
 
   <div class="prose">
     <h2>The problem</h2>
-    <p>A &ldquo;source&rdquo; on a big family-history website is often just another user&rsquo;s tree.</p>
-    <p>This process sets a higher bar. Every new person, parent link or date must name an original record (a register entry, a census line, a headstone), quote it, match the person in the tree on at least two details, and survive a check built to disprove it.</p>
+    <p>A &ldquo;source&rdquo; on a big family-history website is often just another user&rsquo;s tree. Here every new person, parent link or date must quote an original record, match the person on at least two details, and survive a check built to disprove it.</p>
   </div>
 
   <figure class="figure">
@@ -113,40 +112,40 @@
       <li><b>Permanent record</b><span>each item stamped with its round and entry number</span></li>
       <li><b>New file, checks and report</b><span>rebuilt from the original plus the record, then checked</span></li>
     </ol>
-    <figcaption>The whole process, simplified from the project&rsquo;s own diagram. After step 9, the next round starts again at step 4.</figcaption>
+    <figcaption>Simplified from the project&rsquo;s own diagram. After step 9, the next round starts at step 4.</figcaption>
   </figure>
 
   <div class="prose">
     <h2>Decisions I made</h2>
     <ul>
-      <li><b>AI suggests; code checks what code can check.</b> On the private tree, round 2&rsquo;s AI helpers averaged 78 back-and-forth steps each. For round 3 I moved the case files, the filter and short review sheets into simple code, and the round ran at about 57k tokens per target.</li>
-      <li><b>A second AI tries to disprove.</b> The skeptic&rsquo;s rule is &ldquo;when you cannot confirm, reject&rdquo;.</li>
-      <li><b>A free filter between the two rounds of AI.</b> Before any skeptic time is spent, it drops statements that name no record, match on fewer than two details, repeat a recorded fact, duplicate a child already in the tree, or add a living person.</li>
-      <li><b>Quotes are matched loosely, not word for word.</b> The filter ignores capital letters, accents, punctuation and field labels, and looks for 80% of the telling words close together. A miss flags the statement for the skeptic instead of dropping it.</li>
-      <li><b>Nothing is deleted.</b> Disproved parent links are recorded and left out of later counts. The original file is never edited, so every change can be traced to its round and entry.</li>
-      <li><b>Offline by default.</b> Going online must be switched on, with a fixed pause between requests and a cap on how many.</li>
+      <li><b>AI suggests; code checks what code can check.</b> Case files, the filter and short review sheets moved from AI helpers into simple code.</li>
+      <li><b>A second AI tries to disprove.</b> Its rule: when you can&rsquo;t confirm, reject.</li>
+      <li><b>A free filter between the two rounds of AI.</b> It drops statements that name no record, match on fewer than two details, repeat a known fact or add a living person.</li>
+      <li><b>Quotes are matched loosely, not word for word.</b> Capitals, accents and punctuation are ignored, and a miss goes to the skeptic instead of being dropped.</li>
+      <li><b>Nothing is deleted.</b> The original file is never edited, so every change traces to its round and entry.</li>
+      <li><b>Offline by default.</b> Going online must be switched on, with a pause between requests and a cap on how many.</li>
     </ul>
   </div>
 
   <div class="prose">
     <h2>How it was tested</h2>
     <ul>
-      <li>One command runs the public copy start to finish offline, on a made-up family of 420 people.</li>
-      <li>The duplicate scan found all 3 planted duplicates. The merge took 423 people down to 420, and the checker proved none of the 3 merged people lost a fact.</li>
-      <li>The filter kept 12 of the 16 suggested statements and dropped 4: a duplicate child, its parent link, a living person and a fact citing only an online tree.</li>
-      <li>The new family-tree file is rebuilt from the original plus the permanent record, then checked: every original line survives and every link inside the file still works.</li>
+      <li><b>Runs offline, start to finish,</b> with one command, on a made-up family of 420 people.</li>
+      <li><b>Merges lose nothing.</b> The scan found all 3 planted duplicates, and the checker proved no merged person lost a fact.</li>
+      <li><b>The filter drops what it should:</b> a duplicate child, its parent link, a living person and a fact citing only an online tree.</li>
+      <li><b>Every original line survives</b> the rebuild, and every link inside the file still works.</li>
     </ul>
   </div>
 
   <figure class="figure">
     <div class="term soft"><div class="bar"><i></i><i></i><i></i><em>run_demo.sh</em></div><pre tabindex="0" role="img" aria-label="Terminal output: run_demo.sh"><span class="ln cmd">./run_demo.sh</span><span class="ln dim">demo inputs in …/work/in: 3 duplicate records injected, 16 claims in the journal, 3 saved pages, 1 fixture verdict lane</span><span class="ln dim">…</span><span class="ln hl">== 4. cleanup: prove nothing was dropped</span><span class="ln">  checked 3 merged individuals — 0 lost a fact</span><span class="ln ok">PASSED — every individual accounted for, every fact preserved,</span><span class="ln ok">         no dangling pointers, valid UTF-8, longest line 71 chars.</span><span class="ln dim">…</span><span class="ln hl">== 6. research: gate the finder journal (offline, saved pages only)</span><span class="ln">| lane-a | 5 | 4 | 0 | 3 | 12 | 4 | not-fetched 1, quote-found 2, quote-missing 1 |</span><span class="ln">lanes 1  fetches left 0  (offline: saved pages only)</span><span class="ln"></span><span class="ln hl">== 7. research: fold the (fixture) skeptic verdicts into the ledger</span><span class="ln">lane-a: 4 people, 2 families, 2 facts, 1 notes, 2 sources</span><span class="ln">total new: 4 people, 2 families, 2 facts, 1 notes, 2 sources</span><span class="ln"></span><span class="ln hl">== 8. research: write the ledger into a new GEDCOM (append-only)</span><span class="ln">wrote …/work/research/tree-research.ged: +4 people, +2 families, +2 sources, 20 lines added to 3 existing records</span><span class="ln dim">…</span><span class="ln">ancestors 24  dead ends 13  targets 16 in 7 agents  overflow 4  excluded 0</span></pre></div>
-    <figcaption>The offline demo on the made-up family, shortened where marked. The filter keeps 12 statements and drops 4, then the permanent record is written back, adding only. The skeptic step uses a saved sample answer, not a live AI.</figcaption>
+    <figcaption>The offline demo on the made-up family, shortened where marked. The skeptic step uses a saved sample answer, not a live AI.</figcaption>
   </figure>
 
   <div class="prose">
     <h2>Limits</h2>
     <ul>
-      <li>Every person, place and record in the public sample and demo is made up; the round numbers come from the private tree.</li>
+      <li>Every person, place and record in the public demo is made up; the round results come from the private tree.</li>
       <li>The public code works from saved record pages that the user provides.</li>
     </ul>
 
