@@ -41,9 +41,9 @@ var LOOK_ROWS = [
   /* backdrop: every page (Nov 21 2026), Ryan picked option B, "Matte plate"; all CSS. Films (Nov 22): video/film-<page>-backdrop.mp4 + img/film-<page>-backdrop.jpg from pf-backdrop/out/backdrop/. */
   ["backdrop", "Backdrop & Spotlight", ["#423630", "#3c324b"], ["#554437", "#a02a26"], true],
   /* silhouette: Silhouette & Tint (Nov 21 2026, Ryan's pick: way C, "cut window"). Black card ground, every part with words a
-     window of lit tinted glass. No films of its own yet (false): the home film shows this look's own poster and waits for a click.
-     look-silhouette.js sets the baked scenes into the page; look.js loads it (below), not site.js. */
-  ["silhouette", "Silhouette & Tint", ["#000000", "#000000"], ["#e2d691", "#000000"], false]
+     window of lit tinted glass. look-silhouette.js sets the baked scenes into the page; look.js loads it (below), not site.js.
+     Films (Nov 22): video/film-<page>-silhouette.mp4 + img/film-<page>-silhouette.jpg from pf-silhouette/out/silhouette/. */
+  ["silhouette", "Silhouette & Tint", ["#000000", "#000000"], ["#e2d691", "#000000"], true]
 ];
 
 /* To try a look without changing anything, add ?look=<key> (?look=wash, ?look=mini, ?look=yarn ...) to any page address.
