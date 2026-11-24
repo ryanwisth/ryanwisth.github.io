@@ -1,5 +1,5 @@
 /* Studio (key "history"), the Inspector (Ryan's pick "B: Inspector", Nov 21 2026). The site behaves like a tool.
-   Home, on wide screens: a canvas of plates (the claim, the five to start with large, the other 12 as rows) and a sticky
+   Home, on wide screens: a canvas of plates (the claim, the six to start with large, the other 11 as rows) and a sticky
    inspector that shows the record of what is selected. Selection works like a design tool: the selected plate wears a
    1 px green outline with four square handles (one frame, .vh-sel, moved without animation). Pointing, Tab, and the up and
    down arrows (while a plate has focus) move it; Escape goes back to the claim, which shows the site's own record (its film
@@ -43,7 +43,8 @@
     'slot':           { line: 1, shot: 'img/slot-link.jpg', fig: '28 of 28', find: '28 of 28', cap: 'linked-play checks passed, handheld to handheld by radio' },
     'claude-phone':   { line: 1, shot: 'img/claude-phone.jpg', fig: '6 s', find: '6 seconds', cap: 'from my reply on the phone to the answer starting' },
     'paper-grader':   { line: 1, shot: null, fig: '0', find: 'changed 0 times', cap: 'changes to the student\u2019s own writing' },
-    'family-tree-3d': { line: 1, shot: 'img/family-tree-3d.jpg', fig: '1 MB', find: 'about 1 MB', cap: 'one page with the whole tree, no internet needed' }
+    'family-tree-3d': { line: 1, shot: 'img/family-tree-3d.jpg', fig: '1 MB', find: 'about 1 MB', cap: 'one page with the whole tree, no internet needed' },
+    'claim-ledger':   { line: 1, shot: null, fig: '517', find: '517 statements', cap: 'statements checked in one report, none skipped' }
   };
   /* the hero's three figures, in this order, taken from the page's own facts list by their figures */
   var HERO_FIGS = ['16', '\u2212\u2154', '13'];
@@ -286,7 +287,7 @@
       plate.appendChild(b); plate.appendChild(spot);
     }
 
-    /* the five to start with, in page order: two then three; picture, kicker, title, one line, one figure */
+    /* the six to start with, in page order: three then three; picture, kicker, title, one line, one figure */
     var fs = el('section', 'vh-sec'); fs.id = 'featured'; fs.appendChild(el('h2', null, H.featuredH.innerHTML));
     var stars = el('div', 'vh-stars');
     P.filter(function (p) { return p.starter; }).forEach(function (p, i) {
@@ -306,11 +307,11 @@
       stars.appendChild(pl);
     });
     fs.appendChild(stars); cv.appendChild(fs);
-    /* how each one is built: directly under the five to start with */
+    /* how each one is built: directly under the six to start with */
     var hs = el('section', 'vh-sec vh-how'); hs.id = 'how'; hs.appendChild(el('h2', null, H.howH.innerHTML)); hs.appendChild(H.method);
     cv.appendChild(hs);
 
-    /* the other 12: rows, grouped as the page groups them */
+    /* the other 11: rows, grouped as the page groups them */
     var ws = el('section', 'vh-sec'); ws.id = 'work'; ws.appendChild(el('h2', null, H.workH.innerHTML));
     H.groups.forEach(function (g) {
       var gs = el('div', 'vh-group'); gs.appendChild(el('h3', 'vh-gname', g.name));

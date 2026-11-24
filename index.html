@@ -43,11 +43,11 @@
         <p class="film-cap">Narrated film, 39 s. <span class="hx-x">Press ♪ for sound.</span><span class="hx-alt">It starts muted.</span></p>
         <details class="film-script"><summary>Read the script</summary><p id="film-script-text">16 projects, each one built with AI, and each one tested. AI feedback, handwritten onto a paper tablet. One tap checks up to 24 pages. A 3D family tree you can turn, with a map of moves, all in one small file. And a private phone app to follow and answer AI chats running on a computer. The desktop features I use most work there. In a fact-checking routine, new problems found fell from 27% to 7% as the checks went on. The code for 13 is public on GitHub. Pick a project below.</p></details>
       </div>
-        <p class="hero-sub">Here are 16 of my projects. For each one, I decided what it had to do, AI wrote most of the code, and I tested it before calling it finished. One of them cut each AI helper&rsquo;s starting cost by about two thirds. Start with these five.</p>
+        <p class="hero-sub">Here are 16 of my projects. For each one, I decided what it had to do, AI wrote most of the code, and I tested it before calling it finished. One of them cut each AI helper&rsquo;s starting cost by about two thirds. Start with these six.</p>
         <p class="hero-mail"><a href="mailto:ryanwisth@gmail.com">ryanwisth@gmail.com</a></p>
         <p class="hero-ctas"><a class="btn primary" href="#featured">See the projects</a><a class="btn" href="https://github.com/ryanwisth">github.com/ryanwisth<span class="hx-x"> &rarr;</span></a></p>
       </div>
-      <div class="leads-head" id="featured"><p class="kick">Featured</p><h2>Start with these five</h2></div>
+      <div class="leads-head" id="featured"><p class="kick">Featured</p><h2>Start with these six</h2></div>
       <div class="leads">
         <a class="card lead h-violet" href="paper-grader.html#screen">
             <span class="thumb-wrap"><img class="thumb" src="img/panel-simulated.jpg" alt="A color test card as the tablet&rsquo;s screen would show it: dull, low-contrast colors, with greens and reds pulled toward gray" loading="lazy" width="960" height="600"></span>
@@ -68,6 +68,10 @@
           </a>
           <a class="badge badge-link" href="demo/family-tree-3d.html"><span class="dot"></span>Live demo</a>
         </div>
+        <a class="card lead h-teal" href="claim-ledger.html">
+            <span class="thumb-wrap"><img class="thumb" src="img/film-claim-ledger.jpg" alt="A frame from the fact-checker&rsquo;s film: a long report split into single claims, checked riskiest first" loading="lazy" width="960" height="540"></span>
+            <div class="body"><p class="lead-k">Checking AI&rsquo;s work</p><h4 role="heading" aria-level="2" style="view-transition-name: t-claim-ledger">A fact-checker for AI-written reports</h4><p class="lead-what"><b>A fact-checker for AI-written reports.</b> It splits a long report into single claims and checks them riskiest first. Code, not the model, enforces that every claim gets a verdict, so it can&rsquo;t skip or get lazy late in a long job. It checked 517 statements in one report.</p><p class="lead-role"><b>My rules</b> Checklist in code, not in the chat<span class="hx-x"> &middot;</span><span class="hx-alt">;</span> riskiest first<span class="hx-x"> &middot;</span><span class="hx-alt">;</span> flag the AI checking its own notes</p><dl class="hx-lead-log"><div class="hx-added"><dt>Added</dt><dd><time datetime="2026-11-13">13 November 2026</time></dd></div><div><dt>I tested</dt><dd><ul><li>546 entries rerun: matched the review done by hand</li><li>27 start-to-finish checks pass</li></ul></dd></div><div><dt>Now</dt><dd>Fixes go straight into the report through a script that recomputes every new number. Every verdict stays in a log that is only ever added to.</dd></div></dl><span class="lead-go">See the project<span class="hx-x"> &rarr;</span></span></div>
+        </a>
         <a class="card lead h-indigo" href="slot.html">
             <span class="thumb-wrap"><img class="thumb" src="img/slot-link.jpg" alt="The handheld&rsquo;s link screen: the word HOST at the top, a purple link cable plug in the middle, and two lines of advice" loading="lazy" width="720" height="480"></span>
             <div class="body"><p class="lead-k">Things I use</p><h4 role="heading" aria-level="2" style="view-transition-name: t-slot">Game Boy link play, with no cable</h4><p class="lead-what"><b>Wireless link play for Game Boy handhelds.</b> The link cable, rebuilt over radio at 98% of real-cable speed: trades, four players off one cartridge, sending a whole game to another device. The handhelds also got screens that look like the original hardware, TV output and AirPods sound. Every build is verified on a rig of four real handhelds that compares game state about once a second. The latest passed 28 of 28.</p><p class="lead-role"><b>My rules</b> It should feel like plugging in the cable<span class="hx-x"> &middot;</span><span class="hx-alt">;</span> any emulator, at the original speed<span class="hx-x"> &middot;</span><span class="hx-alt">;</span> only handheld-to-handheld radio counts</p><dl class="hx-lead-log"><div class="hx-added"><dt>Added</dt><dd><time datetime="2026-11-21">21 November 2026</time></dd></div><div><dt>I tested</dt><dd><ul><li>Each build by hand on my handhelds</li><li>Caught breaks the automatic tests passed</li><li>Supplied my own games and saves for the rig</li></ul></dd></div><div><dt>Now</dt><dd>Linking feels close to plugging in the cable, and players on different emulators can trade. The newest build passed 28 of 28 linked-play checks, handheld to handheld by radio.</dd></div></dl><span class="lead-go">See the project<span class="hx-x"> &rarr;</span></span></div>
@@ -86,7 +90,7 @@
   <section class="section" id="work">
     <div class="wrap">
       <div class="section-head">
-        <h2>12 more projects</h2>
+        <h2>11 more projects</h2>
       </div>
       <div class="more">
         <div class="more-g h-indigo" id="g-products">
@@ -102,7 +106,6 @@
           <ul>
             <li><a href="checking-ai-work.html"><img class="more-thumb" src="img/film-checking-ai-work.jpg" alt="" width="960" height="540" loading="lazy" decoding="async"><b>Making AI work easy to check</b><span>The AI proposes, plain code enforces the rules, and a second AI whose only job is to find mistakes tries to prove the first one wrong</span></a></li>
             <li><a href="evidence-pipeline.html"><img class="more-thumb" src="img/film-evidence-pipeline.jpg" alt="" width="960" height="540" loading="lazy" decoding="async"><b>A family tree built only from real records</b><span>A fact is accepted only if it quotes an original record</span></a></li>
-            <li><a href="claim-ledger.html"><img class="more-thumb" src="img/film-claim-ledger.jpg" alt="" width="960" height="540" loading="lazy" decoding="async"><b>A fact-checking routine that stopped slipping</b><span>It splits a long report into single claims and checks them riskiest first</span></a></li>
             <li><a href="pinball-study.html"><img class="more-thumb" src="img/film-pinball-study.jpg" alt="" width="960" height="540" loading="lazy" decoding="async"><b>A study set up so it could prove me wrong</b><span>Can you predict how good a pinball table is before anyone plays it? Nine predictions were locked in before any results, then tested on 79 real tables</span></a></li>
           </ul>
         </div>
